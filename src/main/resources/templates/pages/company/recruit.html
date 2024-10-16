@@ -1,58 +1,71 @@
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Join to LOTTE ON</title>
+    <title>Join LOTTE ON</title>
     <link rel="stylesheet" th:href="@{/css/company/index.css}">
     <link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css}">
     <link th:href="@{https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap}" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css}">
 </head>
+
 <header th:replace="layout/company/header.html"></header>
 
-    <section class="hero-banner">
-        <img src="/images/optimize.webp" alt="LotteON Banner" class="banner-img">
-    </section>
+<!-- 배너 섹션 -->
+<section class="hero-banner">
+    <img src="/images/optimize.webp" alt="LotteON Banner" class="banner-img">
+    <div class="banner-text">
+        <h1>Join LOTTE ON</h1>
+        <button class="apply-btn">상시채용</button>
+    </div>
+</section>
+
 <main class="container">
-    <div class="contentHead">
-        <h2>쇼핑을 새롭게, 세상을 이롭게 이끌</h2>
-        <p>쇼핑 좀 해 본 인재를 모십니다!</p>
+    <!-- 컨텐츠 헤드 -->
+    <div class="content-head">
+        <h2>쇼핑을 새롭게, 세상을 이롭게</h2>
+        <p>쇼핑 경험을 재정의할 인재를 찾습니다!</p>
     </div>
 
-    <div class="companyIntro">
-        <p>롯데ON은 안정성과 혁신을 기반으로 우리만의 문화를 만들어가고 있습니다.<br>
-            롯데ON과 함께 성장하실 분들을 기다립니다.</p>
+    <!-- 회사 소개 -->
+    <div class="company-intro">
+        <p>롯데ON은 혁신과 안정성을 기반으로 독창적인 문화를 만들어가고 있습니다.<br>
+            여러분을 기다립니다. 롯데ON과 함께 성장하세요.</p>
     </div>
 
+    <!-- 채용 정보 섹션 -->
     <section class="recruitment-section">
-        <div class="recruitTable">
+        <div class="filters">
+            <!-- Job category, location, type filters -->
+            <select>
+                <option>전체 직군</option>
+            </select>
+            <select>
+                <option>전체 소속</option>
+            </select>
+            <select>
+                <option>전체 고용 형태</option>
+            </select>
+            <input type="text" placeholder="키워드 검색">
+        </div>
+        <div class="recruit-table">
             <a href="#" class="recruit-card">
                 <div>
-                    <h3>광고 플랫폼 기획</h3>
-                    <span>광고사업 | UX | 경력 3~4년 | 롯데월드타워</span>
+                    <h3>뷰티 (백화점, 명품) MD</h3>
+                    <span>영업 | MD | 경력 6~12년 | 정규직 | 롯데커머스 삼성오피스</span>
                 </div>
-                <button>Apply Now</button>
+                <div class="status">상시 채용</div>
             </a>
             <a href="#" class="recruit-card">
                 <div>
-                    <h3>IT 인재 상시 영입(경력)</h3>
-                    <span>IT | 경력 2~15년 | 롯데월드타워</span>
+                    <h3>퍼포먼스마케터 (Paid 광고)</h3>
+                    <span>마케팅 | 경력 4~12년 | 정규직 | 롯데커머스 삼성오피스</span>
                 </div>
-                <button>Apply Now</button>
-            </a>
-            <a href="#" class="recruit-card">
-                <div>
-                    <h3>IT 인재 영입(신입)</h3>
-                    <span>IT | 신입 | 롯데월드타워</span>
-                </div>
-                <button>Apply Now</button>
+                <div class="status">상시 채용</div>
             </a>
         </div>
     </section>
 </main>
+
 <footer th:replace="layout/company/footer.html"></footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-<script>
-    AOS.init(); // AOS 애니메이션 초기화
-</script>
+</html>
