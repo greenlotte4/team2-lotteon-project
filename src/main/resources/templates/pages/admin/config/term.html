@@ -1,12 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" th:href="@{/css/admin/config/term.css}">
-    <link rel="stylesheet" th:href="@{/css/basic.css}">
-</head>
+<link rel="stylesheet" th:href="@{/css/admin/config/term.css}">
+<link rel="stylesheet" th:href="@{/css/basic.css}">
 <body>
     <header th:replace="layout/admin/header.html"></header>
     <main>
@@ -15,9 +8,9 @@
             <div class="header">
                 <span class="header-title">약관관리</span>
                 <div class="header-right">
-                    <span>HOME</span>
+                    <span><a th:href="@{/admin/config/index}">HOME</a></span>
                     <span>></span>
-                    <span>환경설정</span>
+                    <span><a th:href="@{/admin/config}">환경설정</a>환경설정</span>
                     <span>></span>
                     <span class="bold">약관관리</span>
                 </div>

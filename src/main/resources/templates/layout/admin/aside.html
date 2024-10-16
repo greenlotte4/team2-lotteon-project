@@ -11,24 +11,24 @@
         <div class="navi">
             <li onclick="openMenu(event, 'menu1')">환경설정</li>
             <div class="menues" id="menu1">
-                <a href="">- 기본설정</a>
-                <a href="">- 배너관리</a>
-                <a href="">- 약관관리</a>
-                <a href="">- 버전관리</a>
+                <a th:href="@{/admin/config/basic}">- 기본설정</a>
+                <a th:href="@{/admin/config/banner}">- 배너관리</a>
+                <a th:href="@{/admin/config/term}">- 약관관리</a>
+                <a th:href="@{/admin/config/version}">- 버전이력</a>
             </div>
         </div>
         <div class="navi">
             <li onclick="openMenu(event, 'menu2')">상점관리</li>
             <div class="menues" id="menu2">
-                <a href="">- 상품목록</a>
-                <a href="">- 상품등록</a>
+                <a href="">- 상점목록</a>
+                <a href="">- 매출현황</a>
             </div>
         </div>
         <div class="navi">
             <li onclick="openMenu(event, 'menu3')">회원관리</li>
             <div class="menues" id="menu3">
-                <a href="">- 상품목록</a>
-                <a href="">- 상품등록</a>
+                <a href="">- 회원목록</a>
+                <a href="">- 포인트관리</a>
             </div>
         </div>
         <div class="navi">
@@ -41,8 +41,8 @@
         <div class="navi">
             <li onclick="openMenu(event, 'menu5')">주문관리</li>
             <div class="menues" id="menu5">
-                <a href="">- 상품목록</a>
-                <a href="">- 상품등록</a>
+                <a href="">- 주문현황</a>
+                <a href="">- 배송현황</a>
             </div>
         </div>
         <div class="navi">
@@ -52,7 +52,7 @@
                 <a href="">- 자주묻는질문</a>
                 <a href="">- 문의하기</a>
             </div>
-        </div> 
+        </div>
     </aside>
 
     <script>

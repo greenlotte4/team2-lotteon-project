@@ -1,14 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" th:href="@{/css/admin/config/basic.css}">
-    <link rel="stylesheet" th:href="@{/css/basic.css}">
-</head>
+<link rel="stylesheet" th:href="@{/css/admin/config/basic.css}">
+<link rel="stylesheet" th:href="@{/css/basic.css}">
 <body>
-<header th:replace="layout/admin/header.html"></header>
+    <header th:replace="layout/admin/header.html"></header>
     <main>
         <aside th:replace="layout/admin/aside.html"></aside>
         <div class="container">
@@ -24,8 +17,8 @@
             </div>
             <div class="header-gubun"></div>
 
-            <section class="s1">
-                <article class="header-title2">버전 정보</article>
+            <section class="s2">
+                <article class="header-title1">버전 정보</article>
                 <article class="dis1">
                     현재 사이트 버전입니다.
                 </article>
@@ -37,9 +30,9 @@
                 </table>
             </section>
             <section class="s2">
-                <article class="header-title2">사이트</article>
+                <article class="header-title1">사이트</article>
                 <article class="dis1">
-                    브라우저 텝 , 헤더 및 푸터 노출정보입니다.
+                    브라우저 탭 , 헤더 및 푸터 노출정보입니다.
                 </article>
                 <table class="tb2">
                     <tr>
@@ -61,10 +54,10 @@
                     <button>수정하기</button>
                 </article>
             </section>
-            <section class="s3">
+            <section class="s2">
                 <article class="header-title2">로고</article>
                 <article class="dis1">
-                    브라우저 텝 , 헤더 및 푸터 노출 로고입니다.
+                    브라우저 탭 , 헤더 및 푸터 노출 로고입니다.
                 </article>
                 <table class="tb3">
                     <tr>
