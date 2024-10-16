@@ -1,5 +1,6 @@
-<link rel="stylesheet" th:href="@{/css/admin/product/categoryProduct.css}" />
+<link rel="stylesheet" th:href="@{/css/admin/product/category.css}" />
 <link rel="stylesheet" th:href="@{/css/basic.css}">
+<link rel="stylesheet" th:href="@{/css/reset.css}">
 <body>
 <header th:replace="layout/admin/header.html"></header>
 <main>
@@ -25,44 +26,28 @@
 
         <section class="categoryProduct">
             <aside id="sidebar">
-                <div class="navi">
-                    <li onclick="openMenu2(event, 'main-menu1')">여성패션 <button class="delete-btn parent-btn">삭제</button></li>
-                    <div class="menues" id="main-menu1">
-                        <div>- 브랜드의류 <button class="delete-btn">삭제</button></div>
-                        <div>- 브랜드가방 <button class="delete-btn">삭제</button></div>
-                        <div>- 브랜드신발 <button class="delete-btn">삭제</button></div>
-                        <div>- 브랜드잡화 <button class="delete-btn">삭제</button></div>
-                        <button class="add-categoryProduct">
-                            <div class="add-icon">+</div>
-                            <div class="add-text">카테고리 추가하기</div>
-                        </button>
-                    </div>
+                <div class="navi2">
+                    <ul>
+                        <li onclick="openMenu2(event, 'main-menu1')">여성패션 <button class="delete-btn parent-btn">삭제</button></li>
+                        <div class="menues" id="main-menu1">
+                            <li onclick="openMenu2(event, 'main-menu2')"> 브랜드의류<button class="delete-btn parent-btn">삭제</button></li>
+                            <div class="menues2" id="main-menu2">
+                                <div>- 브랜드의류 <button class="delete-btn">삭제</button></div>
+                                <div>- 브랜드가방 <button class="delete-btn">삭제</button></div>
+                                <div>- 브랜드신발 <button class="delete-btn">삭제</button></div>
+                            </div>
+                            <button class="add-subCategory">
+                                <div class="add-icon">+</div>
+                                <div class="add-text">카테고리 추가하기</div>
+                            </button>
+                        </div>
+                    </ul>
                 </div>
-                <div class="navi">
-                    <li onclick="openMenu(event, 'main-menu2')">남성패션 <button class="delete-btn">삭제</button></li>
-                    <div class="menues" id="main-menu2">
-                        <div>- 브랜드의류2 <button class="delete-btn">삭제</button></div>
-                        <div>- 브랜드가방2 <button class="delete-btn">삭제</button></div>
-                        <div>- 브랜드신발2 <button class="delete-btn">삭제</button></div>
-                        <div>- 브랜드잡화2 <button class="delete-btn">삭제</button></div>
-                        <button class="add-categoryProduct">
-                            <div class="add-icon">+</div>
-                            <div class="add-text">카테고리 추가하기</div>
-                        </button>
-                    </div>
-                </div>
-                <div class="navi">
-                    <li onclick="openMenu2(event, 'main-menu3')">브랜드의류 <button class="delete-btn">삭제</button></li>
-                    <div class="menues" id="main-menu3">
-                        <div>- 브랜드의류3 <button class="delete-btn">삭제</button></div>
-                        <div>- 브랜드가방3 <button class="delete-btn">삭제</button></div>
-                        <div>- 브랜드신발3 <button class="delete-btn">삭제</button></div>
-                        <div>- 브랜드잡화3 <button class="delete-btn">삭제</button></div>
-                        <button class="add-categoryProduct">
-                            <div class="add-icon">+</div>
-                            <div class="add-text">카테고리 추가하기</div>
-                        </button>
-                    </div>
+                <div class="navi2">
+                    <button class="add-mainCategory">
+                        <div class="add-icon">+</div>
+                        <div class="add-text">카테고리 추가하기</div>
+                    </button>
                 </div>
             </aside>
         </section>
