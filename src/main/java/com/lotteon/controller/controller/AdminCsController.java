@@ -24,6 +24,8 @@ public class AdminCsController {
 
     @GetMapping("/faq")
     public String faq(Model model) {
+        return "pages/admin/cs/faq/view";
+    }
 
 
     @GetMapping("/faq/write")

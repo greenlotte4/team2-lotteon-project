@@ -6,12 +6,7 @@ import com.lotteon.service.term.TermsService;
 
 import lombok.extern.log4j.Log4j2;
 
-import ch.qos.logback.core.model.Model;
 import lombok.RequiredArgsConstructor;
-<<<<<<< HEAD
-=======
-
->>>>>>> 3a9912354edfd3d3173db3c5419e6390b8f37a5e
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +17,6 @@ import java.util.List;
 
 @Log4j2
 @Controller
-@RequiredArgsConstructor
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
