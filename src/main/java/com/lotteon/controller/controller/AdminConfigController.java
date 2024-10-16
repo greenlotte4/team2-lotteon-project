@@ -16,19 +16,19 @@ public class AdminConfigController {
     public String index(Model model) {
         return "pages/admin/index";
     }
-    @GetMapping("/banner")
-    public String banner(Model model) {
-        return "pages/admin/config/banner";
-    }
-    @GetMapping("/basic")
+    @GetMapping("/basics")
     public String basic(Model model) {
         return "pages/admin/config/basic";
     }
+    @GetMapping("/banners")
+    public String banner(Model model) {
+        return "pages/admin/config/banner";
+    }
     @GetMapping("/terms")
     public String terms(Model model) {
-        return "pages/admin/config/terms";
+        return "pages/admin/config/term";
     }
-    @GetMapping("/version")
+    @GetMapping("/versions")
     public String version(Model model) {
         return "pages/admin/config/version";
     }

@@ -1,4 +1,4 @@
-<link rel="stylesheet" th:href="@{/css/admin/config/banner/banner.css}">
+<link rel="stylesheet" th:href="@{/css/admin/config/banner.css}">
 <link rel="stylesheet" th:href="@{/css/basic.css}">
 <body>
     <header th:replace="layout/admin/header.html"></header>
@@ -201,7 +201,7 @@
                     <div class="title">배너등록</div>
                     <div onclick="closeBanner()" class="btn">X</div>
                 </div>
-                <form action="">
+                <form method="post">
                     <table class="tb2">
                         <tr>
                             <th>배너이름</th>
@@ -270,8 +270,6 @@
     <script>
         const popup = document.querySelector('.popup')
         const bg = document.querySelector('.popupbg')
-        
-
 
         function openBanner(){
             popup.style.display = 'block'

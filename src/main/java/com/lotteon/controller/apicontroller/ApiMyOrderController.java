@@ -7,5 +7,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/my")
 @RequiredArgsConstructor
-public class ApiMyController {
+public class ApiMyOrderController {
 }

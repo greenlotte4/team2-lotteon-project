@@ -23,4 +23,9 @@ public class AdminProdController {
         return "pages/admin/product/register";
     }
 
+    @GetMapping("/category")
+    public String cate(Model model) {
+        return "pages/admin/product/category";
+    }
+
 }
