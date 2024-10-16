@@ -24,6 +24,6 @@ public class TermsService {
 
 
 
-    
+
 }
 

@@ -14,21 +14,27 @@
                             <label class="label-id label">아이디 <input name="userName" class="id inp" type="text"></label>
                         </div>
                         <div class="inp-pwd">
-                            <label class="label-pwd label">비밀번호 <input name="pwd" class="pwd inp" type="password"></label>
+                            <label class="label-pwd label">비밀번호<input name="pwd" class="pwd inp" type="password"></label>
                         </div>
                     </div>
                     <div class="top-right">
-                        <button type="submit" class="login-btn">로그인</button>
+                        <button type="submit" class="login-btn"><a th:href="@{/auth/login}">로그인</a></button>
                     </div>
                 </form>
                 <div class="inp-bottom">
                     <div class="link-auto link"><input class="auto" type="checkbox">자동로그인</div>
                     <div class="link">|</div>
-                    <div class="link-find-id link">아이디 찾기</div>
+                    <div class="link-find-id link">
+                        <a href="#">아이디 찾기</a>
+                    </div>
                     <div class="link">|</div>
-                    <div class="link-find-pwd link">비밀번호 찾기</div>
+                    <div class="link-find-pwd link">
+                        <a href="#">비밀번호 찾기</a>
+                    </div>
                     <div class="link">|</div>
-                    <div class="link-signup link">회원가입</div>
+                    <div class="link-signup link">
+                        <a th:href="@{/auth/join}">회원가입</a>
+                    </div>
                 </div>
             </div>
             <div class="main-img">
@@ -37,13 +43,13 @@
         </div>
         <div class="header-gubun-bottom"></div>
         <div class="award-logos">
-            <div class="logo logo1"><img src="/images/x-img.png" alt=""></div>
-            <div class="logo logo2"><img src="/images/x-img.png" alt=""></div>
-            <div class="logo logo3"><img src="/images/x-img.png" alt=""></div>
-            <div class="logo logo4"><img src="/images/x-img.png" alt=""></div>
-            <div class="logo logo5"><img src="/images/x-img.png" alt=""></div>
-            <div class="logo logo6"><img src="/images/x-img.png" alt=""></div>
-            <div class="logo logo7"><img src="/images/x-img.png" alt=""></div>
+            <div class="logo logo1"><img th:src="@{/images/x-img.png}" alt=""></div>
+            <div class="logo logo2"><img th:src="@{/images/x-img.png}" alt=""></div>
+            <div class="logo logo3"><img th:src="@{/images/x-img.png}" alt=""></div>
+            <div class="logo logo4"><img th:src="@{/images/x-img.png}" alt=""></div>
+            <div class="logo logo5"><img th:src="@{/images/x-img.png}" alt=""></div>
+            <div class="logo logo6"><img th:src="@{/images/x-img.png}" alt=""></div>
+            <div class="logo logo7"><img th:src="@{/images/x-img.png}" alt=""></div>
         </div>
     </div>
 </main>
