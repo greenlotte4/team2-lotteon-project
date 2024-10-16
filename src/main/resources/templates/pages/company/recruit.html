@@ -1,62 +1,58 @@
-<link rel="stylesheet" th:href="@{/css/company/index.css}">
-<link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css}">
-<link th:href="@{https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap}" rel="stylesheet">
-<link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join to LOTTE ON</title>
+    <link rel="stylesheet" th:href="@{/css/company/index.css}">
+    <link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css}">
+    <link th:href="@{https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css}">
+</head>
 <header th:replace="layout/company/header.html"></header>
-<style>
-    /* 전체 페이지의 너비를 1200px로 제한하고 중앙에 배치 */
-    body {
-        max-width: 1200px;
-        margin: 100px auto;
-    }
 
-    /* 메인 배너와 같은 섹션은 전체 너비를 100%로 유지 */
-    .main-banner, .banner-img, .navbar, footer {
-        max-width: 100%;
-    }
-</style>
-<div class="container">
-    <div class="header">
-        <span class="header-title">채용공고</span>
-        <div class="header-right">
-            <span>HOME</span>
-            <span>></span>
-            <span>회사소개</span>
-            <span>></span>
-            <span class="bold">채용공고</span>
-        </div>
-    </div>
-    <div class="header-gubun"></div>
-    <section class="C1">
-        <p>미래를 예측하는 가장 좋은 방법은 미래를 창조하는 것이라고 합니다.<br>
-            더 높은 목표를 위해 도전을 두려워하지 않고,<br>
-            변화와 혁신에 적극적으로 동참할 준비가 되어 있는 분들의 지원을 기다립니다.</p>
+    <section class="hero-banner">
+        <img src="/images/optimize.webp" alt="LotteON Banner" class="banner-img">
     </section>
+<main class="container">
+    <div class="contentHead">
+        <h2>쇼핑을 새롭게, 세상을 이롭게 이끌</h2>
+        <p>쇼핑 좀 해 본 인재를 모십니다!</p>
+    </div>
 
-    <nav class="navigation">
-        <button>전체</button>
-        <button>경력</button>
-        <button>신입</button>
-    </nav>
+    <div class="companyIntro">
+        <p>롯데ON은 안정성과 혁신을 기반으로 우리만의 문화를 만들어가고 있습니다.<br>
+            롯데ON과 함께 성장하실 분들을 기다립니다.</p>
+    </div>
 
-    <table class="tb1">
-        <tr>
-            <th>마감</th>
-            <td>
-                <div class="tag">
-                    <p >신입 사무지원직군 채용공고(개인영업총괄 영업지원)</p>
-                    <button>#신입</button>
-                    <button>#개인영업(영업지원)</button>
-                    <button>#대구</button>
-                    <button>#창원</button><br>
-                    <span>신입 2024.09.23 ~ 2024.09.30</span>
+    <section class="recruitment-section">
+        <div class="recruitTable">
+            <a href="#" class="recruit-card">
+                <div>
+                    <h3>광고 플랫폼 기획</h3>
+                    <span>광고사업 | UX | 경력 3~4년 | 롯데월드타워</span>
                 </div>
-
-                <div class="btns">
-                    <button class="btn">지원하기</button>
+                <button>Apply Now</button>
+            </a>
+            <a href="#" class="recruit-card">
+                <div>
+                    <h3>IT 인재 상시 영입(경력)</h3>
+                    <span>IT | 경력 2~15년 | 롯데월드타워</span>
                 </div>
-            </td>
-        </tr>
-    </table>
-</div>
+                <button>Apply Now</button>
+            </a>
+            <a href="#" class="recruit-card">
+                <div>
+                    <h3>IT 인재 영입(신입)</h3>
+                    <span>IT | 신입 | 롯데월드타워</span>
+                </div>
+                <button>Apply Now</button>
+            </a>
+        </div>
+    </section>
+</main>
 <footer th:replace="layout/company/footer.html"></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script>
+    AOS.init(); // AOS 애니메이션 초기화
+</script>

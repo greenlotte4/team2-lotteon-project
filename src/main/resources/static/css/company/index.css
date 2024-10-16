@@ -337,7 +337,7 @@ footer {
 }
 
 .footer-menu ul li a.active {
-    color: hsl(130, 78%, 41%);
+    color: #87CEEB;
     font-weight: bold;
 }
 
@@ -346,7 +346,7 @@ footer {
 }
 
 .footer-contact a {
-    color: hsl(130, 78%, 41%);
+    color: #87CEEB;
     text-decoration: none;
     font-size: 16px;
 }
@@ -403,7 +403,16 @@ footer p {
     font-size: 14px;
     color: #666;
 }
+.footer-menu {
+    margin-top: -20px; /* 위로 20px 이동 */
+    text-align: center; /* 중앙 정렬 */
+}
 
+.footer-menu a img {
+    width: 150px; /* 로고 크기 조정 (필요에 따라 변경 가능) */
+    display: inline-block;
+    margin-bottom: 50px;
+}
 /* job 섹션 스타일 */
 .job {
     display: flex;

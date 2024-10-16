@@ -1,3 +1,5 @@
+/* Google Fonts 추가 */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@600;700&display=swap');
 /* 전체 레이아웃 설정 */
 body {
     max-width: 1200px;
@@ -82,7 +84,7 @@ em {
     font-weight: 700;
     text-align: center;
     margin: 60px 0;
-    color: #ff3300; /* 연한 빨간색 */
+    color: #333333; /* 연한 빨간색 */
     animation: slide-in 1s ease-out forwards; /* 헤더 타이틀 슬라이드 애니메이션 */
 }
 
@@ -114,7 +116,7 @@ em {
 /* 헤더 오른쪽 텍스트 스타일 */
 .header-right {
     font-size: 1em;
-    color: #666;
+    color: #ff6f61;
     text-align: right;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -209,43 +211,55 @@ button:hover {
     border-radius: 10px; /* 이미지 모서리 둥글게 */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
 }
+
 /* s1 섹션 스타일 */
 .s1 {
-    background-color: #f4f4f4; /* 밝은 배경색 */
+    background-color: #fff; /* 밝은 배경색 */
     padding: 60px 20px; /* 패딩 추가 */
     border-radius: 10px; /* 코너 둥글게 */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
     text-align: center; /* 중앙 정렬 */
+    margin-bottom: 20px;
+    background-image: url('/images/banner.jpg'); /* 배너 이미지 추가 */
+    background-size: cover; /* 이미지가 영역을 덮도록 설정 */
+    background-position: center; /* 이미지를 중앙에 배치 */
+    color: black; /* 기본 검은색으로 변경 */
 }
 
 /* 큰 제목 스타일 */
 .highlight-title {
-    font-size: 2.2em;
+    font-family: 'Poppins', sans-serif; /* 새로운 폰트 추가 */
+    font-size: 2.5em;
     font-weight: 700;
-    color: #ef2a23; /* 진한 빨간색 */
+    color: #ff6f61; /* 진한 빨간색 유지 */
     margin-bottom: 20px;
     line-height: 1.4;
+    text-shadow: none; /* 텍스트 그림자 제거 */
 }
 
 /* 작은 제목 스타일 */
 .highlight-subtitle {
-    font-size: 1.4em;
+    font-family: 'Roboto', sans-serif; /* 새로운 폰트 추가 */
+    font-size: 1.5em;
     font-weight: 400;
-    color: #333; /* 기본 검은색 */
-    line-height: 1.6;
+    color: #333; /* 검은색으로 변경 */
+    line-height: 1.8;
     margin-bottom: 20px;
+    text-shadow: none; /* 텍스트 그림자 제거 */
 }
 
 /* 강조된 텍스트 스타일 */
 .highlight {
-    color: #ef2a23; /* 강조된 텍스트 색상 */
+    color: #ff6f61; /* 강조된 텍스트 색상 유지 */
     font-weight: 600;
+    font-family: 'Poppins', sans-serif; /* 강조된 텍스트에 특별한 폰트 */
 }
 
 /* strong 태그 스타일 */
 strong {
-    color: #0277bd; /* 파란색 강조 */
+    color: #ff6f61; /* 파란색 강조 */
     font-weight: 700;
+    font-family: 'Poppins', sans-serif;
 }
 
 /* 반응형 디자인 */
@@ -257,5 +271,8 @@ strong {
     .highlight-subtitle {
         font-size: 1.2em;
     }
-}
 
+    .s1 {
+        padding: 40px 10px; /* 모바일에서 패딩 조정 */
+    }
+}
