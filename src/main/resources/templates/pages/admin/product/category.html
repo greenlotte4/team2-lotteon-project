@@ -36,6 +36,18 @@
                                 <div>- 브랜드가방 <button class="delete-btn">삭제</button></div>
                                 <div>- 브랜드신발 <button class="delete-btn">삭제</button></div>
                             </div>
+                            <li onclick="openMenu2(event, 'main-menu3')"> 브랜드의류<button class="delete-btn parent-btn">삭제</button></li>
+                            <div class="menues2" id="main-menu3">
+                                <div>- 브랜드의류 <button class="delete-btn">삭제</button></div>
+                                <div>- 브랜드가방 <button class="delete-btn">삭제</button></div>
+                                <div>- 브랜드신발 <button class="delete-btn">삭제</button></div>
+                            </div>
+                            <li onclick="openMenu2(event, 'main-menu4')"> 브랜드의류<button class="delete-btn parent-btn">삭제</button></li>
+                            <div class="menues2" id="main-menu4">
+                                <div>- 브랜드의류 <button class="delete-btn">삭제</button></div>
+                                <div>- 브랜드가방 <button class="delete-btn">삭제</button></div>
+                                <div>- 브랜드신발 <button class="delete-btn">삭제</button></div>
+                            </div>
                             <button class="add-subCategory">
                                 <div class="add-icon">+</div>
                                 <div class="add-text">카테고리 추가하기</div>
@@ -62,17 +74,6 @@
 <footer th:replace="layout/admin/footer.html"></footer>
 <script>
     function openMenu2(event, menuId) {
-        const allMenus = document.querySelectorAll('.menues');
-
-        // 모든 메뉴를 닫기
-        allMenus.forEach(menu => {
-            if (menu.id !== menuId) {
-                menu.classList.remove('open');
-                menu.style.transition = 'none';
-                menu.style.maxHeight = '0';  // 즉시 닫기
-                menu.style.padding = '0';
-            }
-        });
 
         // 클릭된 메뉴 열기/닫기
         const selectedMenu = document.getElementById(menuId);
@@ -86,8 +87,8 @@
             // 열릴 때 transition을 다시 추가해서 부드럽게 열리도록 함
             setTimeout(() => {
                 selectedMenu.style.transition = 'max-height 0.5s ease-out, padding 0.5s ease-out';
-                selectedMenu.style.maxHeight = '500px';  // 부드럽게 열기
-                selectedMenu.style.padding = '20px 0';
+                selectedMenu.style.maxHeight = 'none';  // 부드럽게 열기
+                selectedMenu.style.padding = '10px 0';
             }, 10);  // 약간의 지연을 줘서 transition이 적용되도록
         }
     }

@@ -84,6 +84,7 @@ li {list-style: none;}
     flex-direction: column;
     gap: 10px;
     max-height: 0;
+    overflow: hidden;
     transition: max-height 0.5s ease-out, padding 0.5s ease-out;
 }
 
@@ -93,14 +94,12 @@ li {list-style: none;}
 
 .menues.open {
     width: 196px;
-    max-height: none; /* 메뉴에 따른 최대 높이 설정 */
-    padding: 20px 0;
+    max-height: 1000px; /* 메뉴에 따른 최대 높이 설정 */
 }
 
 .menues2.open {
     width: 196px;
     max-height: none; /* 메뉴에 따른 최대 높이 설정 */
-    padding: 20px 0;
 }
 
 .menues a {
@@ -109,6 +108,7 @@ li {list-style: none;}
     font-size: 14px;
     padding-left: 10px;
 }
+
 
 .navi2 {
     border: 2px solid #dfdfdf;
@@ -124,6 +124,17 @@ li {list-style: none;}
     padding-right: 5px;
     background-color: #ffffff;
     font-size: 16px;
+}
+
+.menues > li {
+    padding: 5px 0;
+    cursor: pointer;
+    padding-left: 10px;
+    display: flex;
+    justify-content: space-between;
+    padding-right: 5px;
+    background-color: #ffffff;
+    font-size: 14px;
 }
 
 .advice-footer {
@@ -163,6 +174,7 @@ li {list-style: none;}
     display: flex;
     align-items: center;
     cursor: pointer;
+    margin-bottom: 20px;
     &:hover {
         .add-icon {
             background-color: #8EB4E3;
