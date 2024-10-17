@@ -24,64 +24,95 @@
             <div class="product_info">
                 <img src="https://via.placeholder.com/353x211" alt="상품 이미지" />
                 <div class="product_details">
-                    <table class="tb1">
-                        <tr>
-                            <td class="td_company">
-                                <span>상호명</span>
-                                <span>상품번호 : 111111</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="prod_name">
-                                <span>상품명</span> <br>
-                                <img src="https://via.placeholder.com/56x17" alt="별점">
-                                <a href="#">상품평보기</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="price">
-                                <del>30,000원&nbsp;</del>
-                                <span>10%&#8595;</span> <br>
-                                <span>27,000원</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="delivery">
-                                <span>무료배송 </span>
-                                <span>모레 (금) 7/8 도착예정</span> <br>
-                                <span>본상품은 국내배송만 가능합니다.</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <img src="https://via.placeholder.com/33x17" alt="별점">
-                                <span>무이자 할부 </span>
-                                <img src="https://via.placeholder.com/33x17" alt="별점">
-                                <span>카드 추가 혜택</span> <br>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="des">원산지 - 상세설명 참조</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="qty">수량 </span>
-                                <input type="number" class="count" value="1"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="total">
-                                <span>총 상품 금액 </span>
-                                <span>27,000원</span>
-                            </td>
-                        </tr>
-                    </table> <!-- .tb1-->
-                    <div class="buttons">
-                        <button type="button" class="cart"><a th:href="@{/prod/cart}"> 장바구니</a></button>
+                    <form th:action="@{/prod/cart}" method="post">
+                        <table class="tb1">
+                            <tr>
+                                <td class="td_company">
+                                    <span>상호명</span>
+                                    <span>상품번호 : 111111</span>
+                                    <input type="hidden" value="상품번호" name="prodId">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="prod_name">
+                                    <span>상품명</span> <br>
+                                    <img src="https://via.placeholder.com/56x17" alt="별점">
+                                    <a href="#">상품평보기</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="price">
+                                    <del>30,000원&nbsp;</del>
+                                    <span>10%&#8595;</span> <br>
+                                    <span>27,000원</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="delivery">
+                                    <span>무료배송 </span>
+                                    <span>모레 (금) 7/8 도착예정</span> <br>
+                                    <span>본상품은 국내배송만 가능합니다.</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img src="https://via.placeholder.com/33x17" alt="별점">
+                                    <span>무이자 할부 </span>
+                                    <img src="https://via.placeholder.com/33x17" alt="별점">
+                                    <span>카드 추가 혜택</span> <br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="des">원산지 - 상세설명 참조</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select name="option1">
+                                        <option>사이즈 선택</option>
+                                        <option>S</option>
+                                        <option>M</option>
+                                        <option>L</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select  name="option2">
+                                        <option>색상 선택</option>
+                                        <option>red</option>
+                                        <option>green</option>
+                                        <option>blue</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select name="option3">
+                                        <option>또 뭐 선택하등가</option>
+                                        <option>S</option>
+                                        <option>M</option>
+                                        <option>L</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <span class="qty">수량 </span>
+                                    <input name="quantity" type="number" class="count" value="1"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="total">
+                                    <span>총 상품 금액 </span>
+                                    <span>27,000원</span>
+                                </td>
+                            </tr>
+                        </table> <!-- .tb1-->
+                        <div class="buttons">
+                            <button type="button" class="cart"><a th:href="@{/prod/cart}"> 장바구니</a></button>
                             <button  type="button" class="order"><a th:href="@{/prod/cart/direct}"> 구매하기</a></button>
-                    </div> <!-- .buttons -->
+                        </div> <!-- .buttons -->
+                    </form>
                 </div> <!-- .product_details -->
             </div> <!-- .product_info -->
             <h2 class="sub_tit2">상품보기</h2>

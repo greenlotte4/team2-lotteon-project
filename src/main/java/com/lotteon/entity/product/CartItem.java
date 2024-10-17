@@ -26,6 +26,7 @@ public class CartItem {
     @JoinColumn(name = "prod_id")
     private Product product;
 
+    @Setter
     @Column(name = "cart_item_quantity")
     private int quantity;
 
@@ -39,5 +40,6 @@ public class CartItem {
     @OneToMany(mappedBy = "cartItem", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<CartItemOption> selectedOptions = new ArrayList<>();
+
 
 }
