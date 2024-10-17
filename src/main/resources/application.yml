@@ -24,6 +24,6 @@ spring:
     config :
         import:
             - optional:classpath:application-local.yml
-            - optional:classpath:application-ec2.yml
+            - classpath:application-ec2.yml
 
 
