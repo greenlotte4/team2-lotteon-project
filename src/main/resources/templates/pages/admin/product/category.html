@@ -25,40 +25,28 @@
         </section>
 
         <section class="categoryProduct">
-            <aside id="sidebar">
+            <aside id="sidebar2">
                 <div class="navi2">
-                    <ul>
-                        <li onclick="openMenu2(event, 'main-menu1')">여성패션 <button class="delete-btn parent-btn">삭제</button></li>
-                        <div class="menues" id="main-menu1">
-                            <li onclick="openMenu2(event, 'main-menu2')"> 브랜드의류<button class="delete-btn parent-btn">삭제</button></li>
-                            <div class="menues2" id="main-menu2">
-                                <div>- 브랜드의류 <button class="delete-btn">삭제</button></div>
-                                <div>- 브랜드가방 <button class="delete-btn">삭제</button></div>
-                                <div>- 브랜드신발 <button class="delete-btn">삭제</button></div>
-                            </div>
-                            <li onclick="openMenu2(event, 'main-menu3')"> 브랜드의류<button class="delete-btn parent-btn">삭제</button></li>
-                            <div class="menues2" id="main-menu3">
-                                <div>- 브랜드의류 <button class="delete-btn">삭제</button></div>
-                                <div>- 브랜드가방 <button class="delete-btn">삭제</button></div>
-                                <div>- 브랜드신발 <button class="delete-btn">삭제</button></div>
-                            </div>
-                            <li onclick="openMenu2(event, 'main-menu4')"> 브랜드의류<button class="delete-btn parent-btn">삭제</button></li>
-                            <div class="menues2" id="main-menu4">
-                                <div>- 브랜드의류 <button class="delete-btn">삭제</button></div>
-                                <div>- 브랜드가방 <button class="delete-btn">삭제</button></div>
-                                <div>- 브랜드신발 <button class="delete-btn">삭제</button></div>
-                            </div>
-                            <button class="add-subCategory">
-                                <div class="add-icon">+</div>
-                                <div class="add-text">카테고리 추가하기</div>
+                    <li onclick="open1('sub')">여성패션 <button class="delBtn parent">삭제</button></li>
+                    <div class="subCate" id="sub">
+                        <li onclick="open1('third')">브랜드의류 <button class="delBtn parent">삭제</button></li>
+                        <div class="thdCate" id="third">
+                            <div>- 브랜드의류 <button class="delBtn 1">삭제</button></div>
+                            <div>- 브랜드가방 <button class="delBtn 1">삭제</button></div>
+                            <div>- 브랜드신발 <button class="delBtn 1">삭제</button></div>
+                            <button class="addThd" onclick="addThd('third')">
+                                <div class="icon">+</div>
+                                <div>카테고리 추가하기</div>
                             </button>
-                        </div>
-                    </ul>
-                </div>
-                <div class="navi2">
-                    <button class="add-mainCategory">
-                        <div class="add-icon">+</div>
-                        <div class="add-text">카테고리 추가하기</div>
+                        </div><!-- thd category -->
+                        <button class="addSub">
+                            <div class="icon">+</div>
+                            <div>서브 카테고리 추가하기</div>
+                        </button>
+                    </div>
+                    <button class="addMain">
+                        <div class="icon">+</div>
+                        <div>메인 카테고리 추가하기</div>
                     </button>
                 </div>
             </aside>
@@ -72,24 +60,4 @@
     </div>
 </main>
 <footer th:replace="layout/admin/footer.html"></footer>
-<script>
-    function openMenu2(event, menuId) {
-
-        // 클릭된 메뉴 열기/닫기
-        const selectedMenu = document.getElementById(menuId);
-        if (selectedMenu.classList.contains('open')) {
-            selectedMenu.classList.remove('open');
-            selectedMenu.style.transition = 'none';  // 닫을 때는 transition을 제거
-            selectedMenu.style.maxHeight = '0';
-            selectedMenu.style.padding = '0';
-        } else {
-            selectedMenu.classList.add('open');
-            // 열릴 때 transition을 다시 추가해서 부드럽게 열리도록 함
-            setTimeout(() => {
-                selectedMenu.style.transition = 'max-height 0.5s ease-out, padding 0.5s ease-out';
-                selectedMenu.style.maxHeight = 'none';  // 부드럽게 열기
-                selectedMenu.style.padding = '10px 0';
-            }, 10);  // 약간의 지연을 줘서 transition이 적용되도록
-        }
-    }
-</script>
+<script type="text/javascript" src="/js/category.js"></script>

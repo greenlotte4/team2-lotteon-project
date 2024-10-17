@@ -57,14 +57,14 @@ li {list-style: none;}
     margin-bottom: 20px;
 }
 
-#sidebar {
+#sidebar2 {
     width: 200px;
     height: auto;
     /* background-color: #d9d9d9; */
 
 }
 
-.menues {
+.subCate {
     background-color: #f2f2f2;
     width: 200px;
     padding: 0;
@@ -76,7 +76,7 @@ li {list-style: none;}
     transition: max-height 0.5s ease-out, padding 0.5s ease-out;
 }
 
-.menues2 {
+.thdCate {
     background-color: #f2f2f2;
     width: 200px;
     padding: 0;
@@ -88,21 +88,21 @@ li {list-style: none;}
     transition: max-height 0.5s ease-out, padding 0.5s ease-out;
 }
 
-.menues div {
+.subCate div {
     margin-left: 10px;
 }
 
-.menues.open {
+.subCate.open {
     width: 196px;
     max-height: 1000px; /* 메뉴에 따른 최대 높이 설정 */
 }
 
-.menues2.open {
+.thdCate.open {
     width: 196px;
     max-height: none; /* 메뉴에 따른 최대 높이 설정 */
 }
 
-.menues a {
+.subCate a {
     text-decoration: none;
     color: black;
     font-size: 14px;
@@ -126,7 +126,7 @@ li {list-style: none;}
     font-size: 16px;
 }
 
-.menues > li {
+.subCate > li {
     padding: 5px 0;
     cursor: pointer;
     padding-left: 10px;
@@ -147,7 +147,7 @@ li {list-style: none;}
     color: #595959;
 }
 
-.add-subCategory {
+.addSub, .addThd {
     display: flex;
     /* gap: 3px; */
     border: none;
@@ -162,7 +162,7 @@ li {list-style: none;}
     }
 }
 
-.add-mainCategory{
+.addMain{
     gap: 5px;
     border: none;
     padding: 10px 0;
@@ -182,7 +182,7 @@ li {list-style: none;}
     }
 }
 
-.add-icon {
+.icon {
     border: 1px solid #909090;
     width: 15px;
     height: 15px;
@@ -207,7 +207,7 @@ li {list-style: none;}
     height: 36.79px;
 }
 
-.delete-btn {
+.delBtn {
     border: 1px solid red;
     color: red;
     background-color: transparent;
