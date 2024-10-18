@@ -10,32 +10,29 @@
     const productInfo = new FormData(document.getElementById('productInfo'));
     const detail = new FormData(document.getElementById('detail'));
 
-
+    const productAll = new FormData();
 
        e.preventDefault();
-       console.log("123123");
         for (const [key, value] of prodCate.entries()) {
-            console.log(key, value)
+            productAll.append(`postProdCateMapperDTO.${key}`, value)
         }
         for (const [key, value] of productInfo.entries()) {
-            console.log(key, value)
+            productAll.append(`postProductDTO.${key}`, value)
         }
         for (const [key, value] of detail.entries()) {
-            console.log(key, value)
+            productAll.append(`postProdDetailDTO.${key}`, value)
         }
 
-        const prodData = Object.fromEntries(productInfo.entries());
+        for (const [key, value] of productAll.entries()) {
+            console.log(key, value)
+        }
 
         fetch('/admin/prod/info', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json' // JSON 형식으로 전송
-            },
-            body: JSON.stringify(prodData)
+            body: productAll
         })
             .then(resp => resp.json())
             .then(data => {
-                console.log("22222221 : " + data);
                 if (data.success) {
                     alert('결제 정보가 등록되었습니다!');
                 } else {

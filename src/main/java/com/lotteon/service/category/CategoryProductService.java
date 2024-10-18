@@ -58,6 +58,7 @@ public class CategoryProductService {
         }
     }
 
+
     public List<GetCategoryDto> findCategory() {
         List<CategoryProduct> categoryProducts = categoryProductRepository.findAllByCategoryLevel(1);
         System.out.println(categoryProducts);
@@ -90,4 +91,14 @@ public class CategoryProductService {
 
         return map;
     }
+
+    public void insertProdCate() {
+        Product product = productRepository.findById((long)1).orElse(null);
+        List<CategoryProduct> categoryProduct1 = categoryProductRepository.findAllByCategoryId((long)28);
+        categoryProduct1.stream().forEach(v-> System.out.println(v.getParent().getCategoryId()));
+
+//        categoryProdMapperRepository.save(categoryProduct);
+
+    }
+
 }

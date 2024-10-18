@@ -24,5 +24,4 @@ public class CategoryProductMapper {
     @JoinColumn(name = "category_id")
     private CategoryProduct category;
 
-
 }
