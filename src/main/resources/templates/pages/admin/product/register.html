@@ -1,11 +1,60 @@
 
 <link rel="stylesheet" th:href="@{/css/admin/product/register.css}" />
 <link rel="stylesheet" th:href="@{/css/basic.css}">
+<script>
+    window.onload = function (){
+    const prodInsert = document.getElementsByClassName('submit-btn')[0];
+    prodInsert.addEventListener('click', (e) =>{
+
+    const prodCate = new FormData(document.getElementById('prodCategory'));
+    const productInfo = new FormData(document.getElementById('productInfo'));
+    const detail = new FormData(document.getElementById('detail'));
+
+
+
+       e.preventDefault();
+       console.log("123123");
+        for (const [key, value] of prodCate.entries()) {
+            console.log(key, value)
+        }
+        for (const [key, value] of productInfo.entries()) {
+            console.log(key, value)
+        }
+        for (const [key, value] of detail.entries()) {
+            console.log(key, value)
+        }
+
+        const prodData = Object.fromEntries(productInfo.entries());
+
+        fetch('/admin/prod/info', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json' // JSON 형식으로 전송
+            },
+            body: JSON.stringify(prodData)
+        })
+            .then(resp => resp.json())
+            .then(data => {
+                console.log("22222221 : " + data);
+                if (data.success) {
+                    alert('결제 정보가 등록되었습니다!');
+                } else {
+                    alert('결제 정보 등록에 실패하였습니다');
+                }
+
+            })
+            .catch(err => {
+                console.log(err);
+            });
+
+    });
+    }
+</script>
 <body>
 <header th:replace="layout/admin/header.html"></header>
 <main>
     <aside th:replace="layout/admin/aside.html"></aside>
-    <form class="container">
+    <section class="container">
         <div class="header">
             <span class="header-title">상품등록</span>
             <div class="header-right">
@@ -18,86 +67,100 @@
         </div>
 
         <div class="header-gubun"></div>
-
-        <div class="main">
-            <div class="main-title">상품분류</div>
-            <div class="main-description">1차 , 2차 카테고리 기본분류는 반드시 선택하셔야 합니다. </div>
-            <table class="tb1">
-                <tr>
-                    <th>1차 분류</th>
-                    <td>
-                        <select class="classify">
-                            <option value="">1차분류 선택</option>
-                            <option value="cate1">cate1</option>
-                            <option value="cate2">cate2</option>
-                            <option value="cate3">cate3</option>
-                            <option value="cate4">cate4</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <th>2차 분류</th>
-                    <td>
-                        <select class="classify">
-                            <option value="">2차분류 선택</option>
-                            <option value="cate1">cate1</option>
-                            <option value="cate2">cate2</option>
-                            <option value="cate3">cate3</option>
-                            <option value="cate4">cate4</option>
-                        </select>
-                    </td>
-                </tr>
-            </table>
-        </div>
+        <form id="prodCategory">
+            <div class="main">
+                <div class="main-title">상품분류</div>
+                <div class="main-description">1차 , 2차 카테고리 기본분류는 반드시 선택하셔야 합니다. </div>
+                <table class="tb1">
+                    <tr>
+                        <th>1차 분류</th>
+                        <td>
+                            <select class="cate1" name="cate1">
+                                <option value="">1차분류 선택</option>
+                                <option value="cate1">cate1</option>
+                                <option value="cate2">cate2</option>
+                                <option value="cate3">cate3</option>
+                                <option value="cate4">cate4</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>2차 분류</th>
+                        <td>
+                            <select class="cate2" name="cate2">
+                                <option value="">2차분류 선택</option>
+                                <option value="cate1">cate1</option>
+                                <option value="cate2">cate2</option>
+                                <option value="cate3">cate3</option>
+                                <option value="cate4">cate4</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>3차 분류</th>
+                        <td>
+                            <select class="cate3" name="cate3">
+                                <option value="">3차분류 선택</option>
+                                <option value="cate1">cate1</option>
+                                <option value="cate2">cate2</option>
+                                <option value="cate3">cate3</option>
+                                <option value="cate4">cate4</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </form>
+        <form id="productInfo">
         <div class="main2">
             <div class="main-title">기본정보</div>
             <div class="main-description">기본정보는 반드시 선택하셔야 합니다. </div>
             <table class="tb2">
                 <tr class="name">
                     <th>상품명</th>
-                    <td><input type="text" placeholder="상품명 입력"></td>
+                    <td><input type="text" name="prodName" placeholder="상품명 입력"></td>
                 </tr>
                 <tr class="summary">
                     <th>기본설명</th>
-                    <td><input type="text" placeholder="요약설명 입력"></td>
+                    <td><input type="text" name="prodSummary" placeholder="요약설명 입력"></td>
                 </tr>
                 <tr class="company">
                     <th>제조사</th>
-                    <td><input type="text" placeholder="제조사 입력"></td>
+                    <td><input type="text" name="manufacture" placeholder="제조사 입력"></td>
                 </tr>
                 <tr class="price">
                     <th>상품금액</th>
-                    <td><input type="text" placeholder="금액 입력"> 원</td>
+                    <td><input type="text" name="prodPrice" placeholder="금액 입력"> 원</td>
                 </tr>
                 <tr class="discount">
                     <th>할인율</th>
-                    <td><input type="text" placeholder="할인율 입력"> %</td>
+                    <td><input type="text" name="prodDiscount" placeholder="할인율 입력"> %</td>
                 </tr>
                 <tr class="point">
                     <th>포인트</th>
-                    <td><input type="text" placeholder="포인트 입력"> p</td>
+                    <td><input type="text" name="prodPoint" placeholder="포인트 입력"> p</td>
                 </tr>
                 <tr class="stock">
                     <th>재고수량</th>
-                    <td><input type="text" placeholder="재고량 입력"> 개</td>
+                    <td><input type="text" name="prodStock" placeholder="재고량 입력"> 개</td>
                 </tr>
                 <tr class="delivery">
                     <th>배송비</th>
-                    <td><input type="text" placeholder="배송비 입력"> 원</td>
+                    <td><input type="text" name="prodDeliver" placeholder="배송비 입력"> 원</td>
                 </tr>
                 <tr class="images">
                     <th>상품이미지</th>
                     <td class="td-images">
                         <div class="img1">
-                            <input type="file" name="file1" id="file1">
+                            <input type="file" name="file1" id="prodListImg">
                             <span>크기 190 x 190, 상품 목록에 출력될 이미지입니다.</span>
                         </div>
                         <div class="img2">
-                            <input type="file" name="file2" id="file2">
+                            <input type="file" name="file2" id="prodBasicImg">
                             <span>크기 230 x 230, 상품 메인에 출력될 이미지입니다.</span>
                         </div>
                         <div class="img3">
-                            <input type="file" name="file3" id="file3">
+                            <input type="file" name="file3" id="prodDetailImg">
                             <span>크기 450 x 450, 상품 상세에 출력될 이미지입니다.</span>
                         </div>
                     </td>
@@ -106,14 +169,15 @@
                     <th>상품 상세정보</th>
                     <td class="td-detail">
                         <div class="detail-img">
-                            <input type="file" name="file3" id="file3">
+                            <input type="file" name="file4" id="description">
                             <span>크기 가로 940px 세로 제약없음 , 크기 최대 1MB</span>
                         </div>
                     </td>
                 </tr>
             </table>
         </div>
-
+        </form>
+        <form id="detail">
         <div class="main3">
             <div class="main-title">상품정보 제공고시</div>
             <div class="main-description">[전자상거래에 관한 상품정보 제공에 관한 고시] 항목에 의거하여 반드시 등록해야 합니다. </div>
@@ -121,11 +185,11 @@
             <table class="tb3">
                 <tr class="state">
                     <th>상품상태</th>
-                    <td><input type="text" value="새상품"></td>
+                    <td><input type="text"  name="stat" value="새상품"></td>
                 </tr>
                 <tr class="taxation">
                     <th>부가세 면세여부</th>
-                    <td><input type="text" value="과세상품"></td>
+                    <td><input type="text" name="tax" value="과세상품"></td>
                 </tr>
                 <tr class="recipt">
                     <th>영수증 발행</th>
@@ -137,17 +201,17 @@
                 </tr>
                 <tr class="made-in">
                     <th>원산지</th>
-                    <td><input type="text" value="국내산"></td>
+                    <td><input type="text" name="madeIn" value="국내산"></td>
                 </tr>
             </table>
         </div>
-
+        </form>
         <div class="advice-footer">
             전자상거래등에서의 상품등의 정보제공에 관한 고시에따라 총 35개 상품군에대해 상품특성들을 양식에따라 입력할 수 있습니다.
         </div>
         <div class="btn">
-            <button class="submit-btn" type="submit">등록하기</button>
+            <button class="submit-btn">등록하기</button>
         </div>
-    </form>
+    </section>
 </main>
 <footer th:replace="layout/admin/footer.html"></footer>

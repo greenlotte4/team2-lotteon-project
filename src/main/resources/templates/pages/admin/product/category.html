@@ -26,20 +26,20 @@
 
         <section class="categoryProduct">
             <aside id="sidebar2">
-                <div class="navi2">
+                <div class="navi2" id="mainCate">
                     <li onclick="open1('sub')">여성패션 <button class="delBtn parent">삭제</button></li>
                     <div class="subCate" id="sub">
                         <li onclick="open1('third')">브랜드의류 <button class="delBtn parent">삭제</button></li>
                         <div class="thdCate" id="third">
-                            <div>- 브랜드의류 <button class="delBtn 1">삭제</button></div>
-                            <div>- 브랜드가방 <button class="delBtn 1">삭제</button></div>
-                            <div>- 브랜드신발 <button class="delBtn 1">삭제</button></div>
+                            <div>- 브랜드의류 <button class="delBtn">삭제</button></div>
+                            <div>- 브랜드가방 <button class="delBtn">삭제</button></div>
+                            <div>- 브랜드신발 <button class="delBtn">삭제</button></div>
                             <button class="addThd" onclick="addThd('third')">
                                 <div class="icon">+</div>
                                 <div>카테고리 추가하기</div>
                             </button>
                         </div><!-- thd category -->
-                        <button class="addSub">
+                        <button class="addSub" onclick="addSub('sub')">
                             <div class="icon">+</div>
                             <div>서브 카테고리 추가하기</div>
                         </button>

@@ -73,9 +73,9 @@ function addThd(e) {
 }
 
 let num = 1;
-
-document.querySelector('.addSub').addEventListener('click', function() {
-    const subCate = document.getElementById('sub'); // 서브 카테고리가 추가될 영역
+let numMain = 1;
+function addSub(e) {
+    const subCate = document.getElementById(e); // 서브 카테고리가 추가될 영역
 
     // 이미 input이 있으면 더 이상 생성되지 않게
     if (subCate.querySelector('input')) {
@@ -97,17 +97,14 @@ document.querySelector('.addSub').addEventListener('click', function() {
     inputContainer.appendChild(addButton);
 
     // 새로운 서브 카테고리 추가 영역을 subCate에 삽입
-    subCate.appendChild(inputContainer);
+    subCate.insertAdjacentElement('beforeend', inputContainer);
 
     // 추가 버튼 클릭 이벤트
     addButton.addEventListener('click', function() {
         const subCategoryName = inputField.value.trim();
 
-
-
         // 서브 카테고리 이름이 비어있지 않은 경우에만 추가
         if (subCategoryName) {
-            let id = 'third';
             // 새로운 서브 카테고리 생성
             const newSubCategory = document.createElement('li');
             newSubCategory.innerHTML = `
@@ -120,7 +117,6 @@ document.querySelector('.addSub').addEventListener('click', function() {
 
             // div 요소의 innerHTML 설정
             thdCateDiv.innerHTML = `
-                <div>- 브랜드의류 <button class="delBtn 1">삭제</button></div>
                 <button class="addThd">
                     <div class="icon">+</div>
                     <div>카테고리 추가하기</div>
@@ -132,9 +128,13 @@ document.querySelector('.addSub').addEventListener('click', function() {
             thdCateDiv.id = 'third' + num;
             num++;
 
+            const addSub = document.getElementsByClassName('.addSub')[0];
+
             // 필요한 위치에 요소를 추가 (li 뒤에 div 추가)
-            subCate.insertBefore(newSubCategory, inputContainer);
+            const subAdd = document.getElementsByClassName('addSub')[0];
+            subCate.insertBefore(newSubCategory, subAdd);
             newSubCategory.insertAdjacentElement('afterend', thdCateDiv);
+
             newSubCategory.onclick = function() {
                 open1(thdCateDiv.id); // 클릭할 때만 함수 호출
             };
@@ -150,6 +150,7 @@ document.querySelector('.addSub').addEventListener('click', function() {
             newSubCategory.querySelector('.delBtn').addEventListener('click', function() {
                 if (confirm("삭제하시겠습니까?")) {
                     newSubCategory.remove();
+                    thdCateDiv.remove();
                 }
             });
 
@@ -163,9 +164,99 @@ document.querySelector('.addSub').addEventListener('click', function() {
             alert("서브 카테고리 이름을 입력하세요.");
         }
     });
+}
+
+document.querySelector('.addMain').addEventListener('click', function() {
+    const mainCate = document.getElementById('mainCate'); // 서브 카테고리가 추가될 영역
+
+    // 이미 input이 있으면 더 이상 생성되지 않게
+    if (mainCate.querySelector('input')) {
+        alert("메인 카테고리 입력창이 이미 있습니다.");
+        return;
+    }
+
+    // 입력 필드와 추가 버튼을 감싸는 div 생성
+    const inputContainer = document.createElement('div');
+    const inputField = document.createElement('input');
+    const addButton = document.createElement('button');
+
+    inputField.type = 'text';
+    inputField.placeholder = '새 메인 카테고리 이름 입력';
+    addButton.textContent = '메인 카테고리 추가';
+
+    // input과 버튼을 div에 추가
+    inputContainer.appendChild(inputField);
+    inputContainer.appendChild(addButton);
+
+    // 새로운 서브 카테고리 추가 영역을 subCate에 삽입
+    mainCate.insertAdjacentElement('beforeend', inputContainer);
+
+    // 추가 버튼 클릭 이벤트
+    addButton.addEventListener('click', function() {
+        const mainCategoryName = inputField.value.trim();
+
+
+
+        // 메인 카테고리 이름이 비어있지 않은 경우에만 추가
+        if (mainCategoryName) {
+            // 새로운 메인 카테고리 생성
+            const newMainCategory = document.createElement('li');
+            newMainCategory.innerHTML = `
+                ${mainCategoryName} <button class="delBtn parent">삭제</button>
+            `;
+
+            // li 요소 다음에 추가할 div 요소 생성
+            const subCateDiv = document.createElement('div');
+            subCateDiv.classList.add('subCate');
+
+            // div 요소의 innerHTML 설정
+            subCateDiv.innerHTML = `
+                <button class="addSub">
+                    <div class="icon">+</div>
+                    <div>서브 카테고리 추가하기</div>
+                </button>
+            `;
+
+            // div 요소에 id 동적 설정
+
+            subCateDiv.id = 'sub' + numMain;
+            numMain++;
+
+            // 필요한 위치에 요소를 추가 (li 뒤에 div 추가)
+            const mainAdd = document.getElementsByClassName('addMain')[0];
+            mainCate.insertBefore(newMainCategory, mainAdd);
+            newMainCategory.insertAdjacentElement('afterend', subCateDiv);
+
+            newMainCategory.onclick = function() {
+                open1(subCateDiv.id); // 클릭할 때만 함수 호출
+            };
+            console.log(subCateDiv.id);
+
+
+            // 새로운 서브 카테고리를 subCate 영역에 추가
+
+            // 입력 필드 제거
+            inputContainer.remove();
+
+            // 삭제 버튼 클릭 이벤트
+            newMainCategory.querySelector('.delBtn').addEventListener('click', function() {
+                if (confirm("삭제하시겠습니까?")) {
+                    newMainCategory.remove();
+                    subCateDiv.remove();
+                }
+            });
+
+            // 2차 카테고리 추가 버튼 이벤트
+            subCateDiv.querySelector('.addSub').addEventListener('click', function() {
+                console.log(subCateDiv.id);
+                addSub(subCateDiv.id);
+            });
+
+        } else {
+            alert("서브 카테고리 이름을 입력하세요.");
+        }
+    });
 });
-
-
 
 function setupDeleteButtons() {
     const deleteButtons = document.querySelectorAll('.delBtn'); // 모든 삭제 버튼 선택
