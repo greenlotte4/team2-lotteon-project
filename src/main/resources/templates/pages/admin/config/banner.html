@@ -19,20 +19,21 @@
 
             <div class="main">
                 <div class="section">
-                    <div onclick="nav(event)" class="tab1 banner-main-top active">메인상단 배너</div>
-                    <div onclick="nav(event)" class="tab2 banner-main-slide">메인슬라이드 배너</div>
-                    <div onclick="nav(event)" class="tab3 banner-product-view">상품 상세보기 배너</div>
-                    <div onclick="nav(event)" class="tab4 banner-login">회원로그인 배너</div>
-                    <div onclick="nav(event)" class="tab5 banner-my">마이페이지 배너</div>
+                    <div onclick="nav(event)" data-tab="1" class="tab1 banner-main-top active">메인상단 배너</div>
+                    <div onclick="nav(event)" data-tab="2" class="tab2 banner-main-slide">메인슬라이드 배너</div>
+                    <div onclick="nav(event)" data-tab="3" class="tab3 banner-product-view">상품 상세보기 배너</div>
+                    <div onclick="nav(event)" data-tab="4" class="tab4 banner-login">회원로그인 배너</div>
+                    <div onclick="nav(event)" data-tab="5" class="tab5 banner-my">마이페이지 배너</div>
                 </div>
 
                 <div class="header-title2">메인상단 배너</div>
                 <div class="header-gubun2"></div>
 
                 <table class="tb1">
+                    <thead>
                     <tr>
                         <th class="checkbox">
-                            <input type="checkbox" id="allCheck">
+                            <input type="checkbox" class="selectall">
                         </th>
                         <th class="no">번호</th>
                         <th class="img">이미지</th>
@@ -44,11 +45,13 @@
                         <th class="end-time">종료시간</th>
                         <th class="admin">관리</th>
                     </tr>
-                    <tr th:each="b,i:${bannerList}">
+                    </thead>
+                    <tbody>
+                    <tr th:each="b:${bannerList}">
                         <td class="checkbox">
-                            <input type="checkbox" name="" id="">
+                            <input type="checkbox" class="select">
                         </td>
-                        <td>[[${i.index+1}]]</td>
+                        <td class="no">[[${b.id}]]</td>
                         <td>
                             <div class="imgBox">
                                 <img th:src="@{'/file/'+${b.bannerImg}}" alt="" class="bannerImg">
@@ -73,10 +76,12 @@
                         <td>[[${#strings.substring(b.bannerStime,11,16)}]]</td>
                         <td>[[${#strings.substring(b.bannerEtime,11,16)}]]</td>
                         <td class="td-admin">
-                            <input type="button" value="[ 활성 ]">
-                            <input type="button" value="[ 비활성 ]">
+                            <input type="button" class="banner-active"
+                                   th:value="${b.bannerState < 1?'[ 활성화 ]':'[ 비활성화 ]'}"
+                                   th:data-state="${b.bannerState}" th:data-no="${b.id}">
                         </td>
                     </tr>
+                    </tbody>
                 </table>
                 <div class="btns">
                     <button class="delete-btn">선택삭제</button>
@@ -190,7 +195,79 @@
         document.getElementById('end-date').addEventListener('focus', function() {
             this.showPicker();
         });
+        const tbody = document.getElementsByTagName('tbody')[0];
 
+        function getLocationText(location) {
+            switch (location) {
+                case 1:
+                    return 'MAIN1';
+                case 2:
+                    return 'MAIN2';
+                case 3:
+                    return 'PRODUCT1';
+                case 4:
+                    return 'MEMBER1';
+                case 5:
+                    return 'MYPAGE1';
+                default:
+                    return '-';
+            }
+        }
+        function selectTab(num){
+            fetch('/admin/config/banners/'+num)
+                .then(resp => {
+                    console.log(resp);
+                    if (!resp.ok) {
+                        return resp.json().then(err => {
+                            console.error('Server responded with an error:', err);
+                            throw new Error(`Error ${resp.status}: ${err.message || JSON.stringify(err)}`);
+                        });
+                    }
+                    return resp.json();
+                })
+                .then(data => {
+                    console.log('Response Data:', data);
+
+                    tbody.innerHTML=``;
+                    data.forEach((b, i) => {
+                        // 각 banner 데이터를 반복하면서 HTML을 생성합니다.
+                        const row = `
+                                        <tr>
+                                            <td class="checkbox">
+                                                <input type="checkbox" class="select">
+                                            </td>
+                                            <td class="no">${b.id}</td>
+                                            <td>
+                                                <div class="imgBox">
+                                                    <img src="/file/${b.bannerImg}" alt="" class="bannerImg">
+                                                </div>
+                                            </td>
+                                            <td class="td-info">
+                                                <div class="name">${b.bannerName}</div>
+                                                <div class="size">크기 : ${b.bannerSize}</div>
+                                                <div class="bgcolor">배경색 : ${b.bannerBg}</div>
+                                                <div class="link">${b.bannerLink}</div>
+                                            </td>
+                                            <td>${getLocationText(b.bannerLocation)}</td>
+                                            <td>${b.bannerSdate.substring(0, 10)}</td>
+                                            <td>${b.bannerEdate.substring(0, 10)}</td>
+                                            <td>${b.bannerStime.substring(11, 16)}</td>
+                                            <td>${b.bannerEtime.substring(11, 16)}</td>
+                                            <td class="td-admin">
+                                                <input type="button" class="banner-active"
+                                                    value="${b.bannerState<1?'[ 활성화 ]':'[ 비활성화 ]'}"
+                                                    data-state="${b.bannerState}" data-no="${b.id}">
+                                            </td>
+                                        </tr>
+                                    `;
+                        tbody.innerHTML += row;  // 생성된 row를 테이블에 추가합니다.
+                    });
+                })
+                .catch(err => {
+                    console.error('Error:', err);
+                    alert('배너 로딩 중 오류가 발생했습니다. 다시 시도해 주세요.');
+                });
+        }
         function nav(event) {
             // 모든 요소에서 active 클래스를 제거
             const allBanners = document.querySelectorAll('.section > div');
@@ -200,7 +277,8 @@
             
             // 클릭한 요소에만 active 클래스 추가
             event.target.classList.add('active');
-            document.querySelector('.header-title2').innerText = document.querySelector('.active').innerText    
+            document.querySelector('.header-title2').innerText = document.querySelector('.active').innerText;
+            selectTab(event.target.dataset.tab);
         }
         function info() {
             var loca = selectBox.value;
@@ -324,7 +402,7 @@
                         Banner.classList.add('active');
 
                         document.querySelector('.header-title2').innerText = document.querySelector('.active').innerText;
-
+                        selectTab(tab);
                         window.scrollTo({
                             top: 0,
                             behavior: 'smooth' // 부드럽게 스크롤 이동
@@ -342,7 +420,84 @@
                 });
         });
 
-        selectBox.addEventListener('change',info());
+        selectBox.addEventListener('change',function (){
+            info();
+        });
+
+        document.addEventListener('click', function(e) {
+            if(e.target.classList.contains('banner-active')){
+                const clickedNo = e.target.dataset.no;
+                const clickState = e.target.dataset.state;
+                const changedState = Math.abs(clickState-1);
+
+                e.target.value = changedState<1?'[ 활성화 ]':'[ 비활성화 ]';
+            }
+
+            const selectall = document.querySelector('.selectall');
+            const checkboxes = document.querySelectorAll('.select');
+
+            if (e.target.classList.contains('selectall')) {selectAll(e.target);}
+            if (e.target.classList.contains('select')) {updateSelectAllCheckbox();}
+
+            function selectAll(selectAllCheckbox) {
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = selectAllCheckbox.checked;
+                });
+            }
+
+            function updateSelectAllCheckbox() {
+                const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+                selectall.checked = allChecked;
+            }
+
+            // 삭제 버튼 클릭 시
+            if (e.target.classList.contains('delete-btn')) {
+                e.preventDefault();
+
+                const selectedCheckboxes = document.querySelectorAll('.select:checked');
+                let selectedIds = [];
+
+                for (let checkbox of selectedCheckboxes) {
+                    const row = checkbox.closest('tr');
+                    const bannerNo = row.querySelector('.no').innerText.trim();
+                    console.log(bannerNo);
+                    selectedIds.push(bannerNo);
+                }
+
+                if (selectedIds.length === 0) {
+                    alert('삭제하려는 배너를 선택하세요.');
+                    return;
+                }
+
+                if (!confirm('선택한 배너를 정말 삭제하시겠습니까?')) {
+                    return;
+                }
+
+                fetch('/admin/config/banners', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(selectedIds)
+                })
+                    .then(resp => resp.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('삭제되었습니다.');
+                            for (let checkbox of selectedCheckboxes) {
+                                const row = checkbox.closest('tr');
+                                row.remove();
+                            }
+                        } else {
+                            alert('삭제에 실패했습니다.');
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Error:', err);
+                        alert('삭제 중 오류가 발생했습니다.');
+                    });
+            }
+        }); // EventListener END
 
     </script>
 </body>

@@ -52,6 +52,16 @@ public class BannerService {
         log.info(bannerList.toString());
 
         return bannerList;
-
+    }
+    public boolean deleteBannersById(List<Long> bannerIds) {
+        try {
+            for(Long bannerId : bannerIds) {
+                bannerRepository.deleteById(bannerId);
+            }
+            return true;
+        }catch (Exception e) {
+            log.error(e.getMessage());
+            return false;
+        }
     }
 }

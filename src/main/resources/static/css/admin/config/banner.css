@@ -1,17 +1,4 @@
-.container {width: 800px;user-select: none;}
 
-.header{
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin: 0 auto;
-    margin-bottom: 20px;
-}
-
-.header-title{font-weight: 600;font-size: 20px;}
-.header-right {font-size: 14px;}
-.header-right .bold {font-weight: 600;}
-.header-gubun {height: 3px;background-image: url(../../../images/Vector.png);margin: 0 auto;margin-bottom: 30px;}
 
 .main {width: 800px;box-sizing: border-box;}
 .section {
@@ -21,20 +8,23 @@
     gap: 5px;
     height: 45px;
     justify-content: center;
-    align-items: center;
-    border: 2px solid #BFBFBF;
+    align-items: end;
+    overflow: hidden;
+    border-radius: 7px;
 }
 .section div {
     width: 146px;
     height: 38px;
-    background-color: #BFBFBF;
+    background-color: #e1e1e1;
     font-size: 14px;
     font-weight: 400;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
+    color: #7b7b7b;
     cursor: pointer;
+    box-shadow: 1px -1px 2px 0px #00000052;
+    border-radius: 7px 7px 0 0;
 
     &:hover{
         opacity: 0.8;
@@ -48,11 +38,6 @@
     font-weight: 600;
     font-size: 15px;
     margin: 20px 0;
-}
-.header-gubun2 {
-    height: 3px;
-    background-image: url(../../../images/Vector2.png);
-    margin: 0 auto;
 }
 
 .tb1 {
