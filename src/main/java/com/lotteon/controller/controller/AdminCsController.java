@@ -38,26 +38,6 @@ public class AdminCsController {
         return "pages/admin/cs/faq/modify";
     }
 
-    @GetMapping("/notices")
-    public String notices(Model model) {
-        return "pages/admin/cs/notice/list";
-    }
-
-    @GetMapping("/notice")
-    public String notice(Model model) {
-        return "pages/admin/cs/notice/view";
-    }
-
-    @GetMapping("/notice/modify")
-    public String noticeModify(Model model) {
-        return "pages/admin/cs/notice/modify";
-    }
-
-    @GetMapping("/notice/write")
-    public String noticeWrite(Model model) {
-        return "pages/admin/cs/notice/write";
-    }
-
     @GetMapping("/qnas")
     public String qnas(Model model) {
         return "pages/admin/cs/qna/list";
