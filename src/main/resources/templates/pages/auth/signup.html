@@ -1,5 +1,6 @@
 <link rel="stylesheet" th:href="@{/css/auth/signup.css}">
 <link rel="stylesheet" th:href="@{/css/basic.css}">
+<script th:src="@{/js/validation.js}"></script>
 <header th:replace="layout/main/header.html"></header>
 <main>
     <form action=""                                                                                                         >
@@ -20,23 +21,28 @@
                     </label>
                 </div>
             </th:block>
-                <th:block th:each="t : ${terms}" th:if="${t.termsName.trim()=='위치정보 이용약관'}">
-                    <div class="title">
-                        <span class="blue">( 선택 )</span>
-                        <span th:text="${t.termsName}"></span>
-                    </div>
-                    <!-- 이용약관 -->
-                    <textarea readonly class="content" th:text="${t.termsContent}"></textarea>
-                    <div class="not-required-check check">
-                        <label for="">
-                            <input type="checkbox"> 동의하기
-                        </label>
-                    </div>
-                </th:block>
+            <th:block th:each="t : ${terms}"
+                      th:if="${t.termsName.trim() == '위치정보 이용약관' and t.termsType == 'customer'}">
+                <div class="title">
+                    <span class="blue">( 선택 )</span>
+                    <span th:text="${t.termsName}"></span>
+                </div>
+                <!-- 이용약관 -->
+                <textarea readonly class="content" th:text="${t.termsContent}"></textarea>
+                <div class="not-required-check check">
+                    <!-- 선택약관 동의여부  -->
+                    <!-- 체크박스 선택 여부에 따라 true=1, false=0  -->
+                    <label for="place">
+                        <input type="checkbox" id="place" value="1" onclick="toggleCheckboxValue(event)"> 동의하기
+                        <input type="hidden" id="placeHidden" name="custOptional">
+                    </label>
+                </div>
+            </th:block>
+
 
             </div>
             <div class="signup">
-                <a th:href="@{/auth/customer}" disabled id="next-btn" class="btnSignUp next-btn">동의하기</a>
+                <button onclick="submitData()" type="button" disabled id="next-btn" class="btnSignUp next-btn">동의하기</button>
             </div>
         </div>
     </form>
@@ -70,7 +76,21 @@
         });
 
         function nextFunction(){
-            
+        }
+        // 선택약관 동의 여부
+        function toggleCheckboxValue(event) {
+            const hiddenInput = document.getElementById('placeHidden')
+            if (event.target.checked) {
+                hiddenInput.value = "1";  // 체크되면 1
+            } else {
+                hiddenInput.value = "0";  // 체크 안되면 0
+            }
+        }
+
+        function submitData(){
+            const hiddenInput = document.getElementById('placeHidden')
+            let url = "/auth/customer/" + hiddenInput.value;
+            window.location.href = url;
         }
 
         

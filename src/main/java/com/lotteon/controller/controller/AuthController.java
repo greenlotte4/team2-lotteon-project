@@ -40,18 +40,21 @@ public class AuthController {
         return "pages/auth/join";
     }
     
-    // 이용약관 Terms
+    // 1. 이용약관 Terms
     @GetMapping("/signup")
     public String signUp(@RequestParam String termsType, Model model) {
         List<GetTermsResponseDto> getterms = termsService.selectTerms(termsType);
         log.info(getterms);
-        model.addAttribute("terms", getterms);
+        model.addAttribute("terms", getterms); // 뷰에서 보이는 거
+        model.addAttribute("termsType", termsType); // 뷰에서 보이는 거
         return "pages/auth/signup";
     }
 
     // 2. 회원가입 (일반회원 정보입력) | optional : 선택약관 동의 여부
+    // 체크박스 선택 여부에 따라 true=1, false=0
     @GetMapping("/customer/{optional}")
-    public String customer(){
+    public String customer(@PathVariable String optional, Model model) {
+        log.info("체크박스 선택 여부에 따라 true=1, false=0 >>>>>>>" + optional);
         return "pages/auth/customer";
     }
 
