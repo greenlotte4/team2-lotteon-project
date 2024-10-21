@@ -19,11 +19,8 @@ public class AdminCsNoticeController {
 
     // 공지사항 목록 조회 (페이징 및 검색 추가)
     @GetMapping("/notices")
-    public String notices(@RequestParam(required = false) String keyword, Pageable pageable, Model model) {
-        Page<NoticeResponseDto> notices = noticeService.getNotices(keyword, pageable);
-        model.addAttribute("notices", notices);
-        model.addAttribute("keyword", keyword);
-        return "pages/admin/cs/notices";
+    public String notices(Model model) {
+        return "pages/admin/cs/notice/list";
     }
 
     // 공지사항 상세 조회
