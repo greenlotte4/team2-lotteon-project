@@ -1,6 +1,6 @@
-
 <link rel="stylesheet" th:href="@{/css/admin/product/register.css}" />
 <link rel="stylesheet" th:href="@{/css/basic.css}">
+<html xmlns:th="http://www.thymeleaf.org">
 <script>
     window.onload = function (){
     const prodInsert = document.getElementsByClassName('submit-btn')[0];
@@ -47,6 +47,18 @@
     });
     }
 </script>
+<script>
+
+    function updateSelect2(){
+        let option1Value = document.getElementsByClassName('cate1')[0];
+
+        console.log(option1Value.value);
+
+
+    }
+
+
+</script>
 <body>
 <header th:replace="layout/admin/header.html"></header>
 <main>
@@ -72,12 +84,14 @@
                     <tr>
                         <th>1차 분류</th>
                         <td>
-                            <select class="cate1" name="cate1">
+                            <select class="cate1" name="cate1" onchange="updateSelect2()">
                                 <option value="">1차분류 선택</option>
-                                <option value="cate1">cate1</option>
-                                <option value="cate2">cate2</option>
-                                <option value="cate3">cate3</option>
-                                <option value="cate4">cate4</option>
+                                <th:block th:each="category : ${prodCate}">
+                                    <option th:if="${category.getCategoryLevel() == 1}"
+                                            th:value="${category.getCategoryId()}"
+                                            th:text="${category.getCategoryName()}">
+                                    </option>
+                                </th:block>
                             </select>
                         </td>
                     </tr>

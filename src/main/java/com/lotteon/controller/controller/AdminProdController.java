@@ -1,6 +1,8 @@
 package com.lotteon.controller.controller;
 
 import com.lotteon.dto.responseDto.GetCategoryDto;
+import com.lotteon.dto.responseDto.GetProdCateDTO;
+import com.lotteon.dto.responseDto.TestResponseDto;
 import com.lotteon.service.category.CategoryProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -31,6 +33,9 @@ public class AdminProdController {
     @GetMapping("/product/post")
     public String post(Model model) {
         model.addAttribute("config", getSideValue());
+        List<GetProdCateDTO> prodCate = categoryProductService.findCateAll();
+        log.info("333333333333333333333333"+prodCate);
+        model.addAttribute("prodCate", prodCate);
         return "pages/admin/product/register";
     }
 

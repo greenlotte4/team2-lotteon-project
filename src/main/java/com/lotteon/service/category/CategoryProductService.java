@@ -1,6 +1,7 @@
 package com.lotteon.service.category;
 
 import com.lotteon.dto.responseDto.GetCategoryDto;
+import com.lotteon.dto.responseDto.GetProdCateDTO;
 import com.lotteon.dto.responseDto.TestResponseDto;
 import com.lotteon.entity.category.CategoryProduct;
 import com.lotteon.entity.category.CategoryProductMapper;
@@ -9,10 +10,12 @@ import com.lotteon.repository.category.CategoryProdMapperRepository;
 import com.lotteon.repository.category.CategoryProductRepository;
 import com.lotteon.repository.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +25,7 @@ public class CategoryProductService {
     private final CategoryProductRepository categoryProductRepository;
     private final CategoryProdMapperRepository categoryProdMapperRepository;
     private final ProductRepository productRepository;
+    private final ModelMapper modelMapper;
 
 //    public List<TestResponseDto                                                                                                                                                                                                                                                                                                                                                                                               > findCate() {
 //
@@ -140,7 +144,7 @@ public class CategoryProductService {
         Optional<CategoryProduct> categoryParent = categoryProductRepository.findById(getCategoryDto.getId());
         if(categoryProduct.get().getCategoryLevel() > categoryParent.get().getCategoryLevel()){
             categoryProduct.get().updateParent(categoryParent.get());
-        } else if (categoryProduct.get().getCategoryLevel() == categoryParent.get().getCategoryLevel() 
+        } else if (categoryProduct.get().getCategoryLevel() == categoryParent.get().getCategoryLevel()
                 && categoryProduct.get().getParent()==categoryParent.get().getParent()
         ){
             categoryProduct.get().replaceOrder(categoryParent.get());
@@ -148,4 +152,16 @@ public class CategoryProductService {
 
 
     }
+
+    public List<GetProdCateDTO> findCateAll(){
+        List<CategoryProduct> categoryProducts = categoryProductRepository.findAll();
+
+        System.out.println("123333322" + categoryProducts);
+
+        return categoryProducts
+                .stream()
+                .map(product -> modelMapper.map(product, GetProdCateDTO.class))
+                .toList();
+    }
+
 }
