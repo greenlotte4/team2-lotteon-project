@@ -23,4 +23,11 @@ public class ArticleDto {
     private Long cate1Id;
     private Long cate2Id;
     private Long memId;
+
+    private String adminName;    // 관리자 이름 (관리자용 추가 필드)
+    private String adminEmail;   // 관리자 이메일 (관리자용 추가 필드)
+
+    private LocalDateTime updateDate;  // 업데이트된 날짜 (필요 시 추가)
+    private String status;       // 글 상태 (예: '작성 중', '게시 완료' 등)
+
 }

@@ -60,12 +60,12 @@
           <td>1</td>
           <td>회원</td>
           <td>가입</td>
-          <td style="text-align: left">개인회원과 법인회원에 차이가 있나요?</td>
+          <td style="text-align: left">삭제 수정 버튼이 될까요 되길 기도해 ~</td>
           <td>120</td>
           <td>00.00.00</td>
           <td>
-            <div>[삭제]</div>
-            <div>[수정]</div>
+            <button type="button" class="delete-btn" data-id="1">[삭제]</button>
+            <button type="button" class="modify-btn" data-id="1">[수정]</button>
           </td>
         </tr>
         <tr>
@@ -154,7 +154,7 @@
 
     <div class="button-group">
       <button class="button--delete">선택삭제</button>
-      <button class="button--write">작성하기</button>
+      <a href="/admin/cs/faq/write" class="button--write">작성하기</a> <!-- 작성 페이지로 이동 -->
     </div>
 
     <!-- 페이지 네비게이션 -->
@@ -171,3 +171,113 @@
 <footer th:replace="layout/admin/footer.html"></footer>
 </body>
 
+  <script>
+    // 1차 선택에 따라 2차 선택 항목을 제공하는 객체
+    const secondOptions = {
+      "user": [
+        {value: "regi", text: "가입"},
+        {value: "leave", text: "탈퇴"},
+        {value: "info", text: "회원정보"},
+        {value: "login", text: "로그인"}
+      ],
+      "coupon": [
+        {value: "lpoint", text: "L.POINT"},
+        {value: "coupon", text: "쿠폰"},
+        {value: "event", text: "이벤트/경품"},
+        {value: "attendance", text: "출석체크"},
+        {value: "gift", text: "사은품"}
+      ],
+      "order": [
+        {value: "orderMethod", text: "주문방법"},
+        {value: "orderChange", text: "주문변경"},
+        {value: "paymentMethod", text: "결제방법"},
+        {value: "easyPayment", text: "간편결제"},
+        {value: "giftReceive", text: "선물받기"},
+        {value: "mobileGift", text: "모바일상품권"},
+        {value: "phonePayment", text: "휴대폰결제"},
+        {value: "applePay", text: "애플페이"}
+      ],
+      "delivery": [
+        {value: "delivery", text: "배송"},
+        {value: "deliveryFee", text: "배송비"},
+        {value: "deliveryMethod", text: "배송방법"},
+        {value: "deliverySchedule", text: "배송일정"},
+        {value: "deliveryAddress", text: "배송지"},
+        {value: "todayArrival", text: "오늘도착"},
+        {value: "overseas", text: "해외직구"},
+        {value: "notReceived", text: "미수령신고"},
+        {value: "recipient", text: "수취인"},
+        {value: "purchaseConfirm", text: "구매확정"}
+      ],
+      "cancel": [
+        {value: "orderCancel", text: "주문취소"},
+        {value: "refundMethod", text: "환불방법"},
+        {value: "cardRefund", text: "카드환불"},
+        {value: "refundSchedule", text: "환불일정"},
+        {value: "phoneRefund", text: "휴대폰결제환불"}
+      ],
+      "travel": [
+        {value: "ecoupon", text: "e쿠폰"},
+        {value: "flight", text: "항공"},
+        {value: "accommodation", text: "숙박"},
+        {value: "ticket", text: "티켓"}
+      ],
+      "safe": [
+        {value: "policyViolation", text: "법령 및 정책위반 상품"},
+        {value: "ipViolation", text: "지적재산권침해"},
+        {value: "serviceViolation", text: "서비스 이용규칙 위반"},
+        {value: "adViolation", text: "표시광고"}
+      ]
+    };
+
+    // 1차 선택에 따라 2차 선택을 동적으로 변경하는 함수
+    document.querySelector(".faqCate").addEventListener("change", function() {
+      const selectedValue = this.value;
+      const select2 = document.querySelector(".faqType");
+      select2.innerHTML = '<option value="" selected disabled hidden>2차선택</option>'; // 초기화
+
+      if (secondOptions[selectedValue]) {
+        secondOptions[selectedValue].forEach(option => {
+          const newOption = document.createElement("option");
+          newOption.value = option.value;
+          newOption.text = option.text;
+          select2.appendChild(newOption);
+        });
+      }
+    });
+
+    // 삭제 버튼 클릭 이벤트
+    document.querySelectorAll('.delete-btn').forEach(button => {
+      button.addEventListener('click', function() {
+        const faqId = this.getAttribute('data-id'); // FAQ ID 가져오기
+        const confirmDelete = confirm('정말로 이 FAQ를 삭제하시겠습니까?');
+
+        if (confirmDelete) {
+          // 서버로 삭제 요청 보내기 (AJAX 또는 폼 제출 방식)
+          fetch(`/admin/cs/faq/delete/${faqId}`, {
+            method: 'DELETE'
+          })
+                  .then(response => {
+                    if (response.ok) {
+                      alert('삭제되었습니다.');
+                      location.reload();  // 페이지 새로고침
+                    } else {
+                      alert('삭제에 실패했습니다. 다시 시도해주세요.');
+                    }
+                  })
+                  .catch(error => {
+                    console.error('Error:', error);
+                    alert('오류가 발생했습니다.');
+                  });
+        }
+      });
+    });
+
+    // 수정 버튼 클릭 이벤트
+    document.querySelectorAll('.modify-btn').forEach(button => {
+      button.addEventListener('click', function() {
+        const faqId = this.getAttribute('data-id');
+        window.location.href = `/admin/cs/faq/modify/${faqId}`; // 수정 페이지로 이동
+      });
+    });
+  </script>
