@@ -21,7 +21,6 @@ public class ProductOption {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "prod_id")
-    @ToString.Exclude
     private Product product;
 
     @Column(name = "prod_option_state")

@@ -31,15 +31,11 @@ public class ApiAdminProdController {
     @PostMapping("/info")
     public ResponseEntity<Map<String, Object>> info(@ModelAttribute PostProdAllDTO postProdAllDTO) {
 
-        log.info("111111111111"+postProdAllDTO);
-
         log.info("124443"+postProdAllDTO.getPostProdDetailDTO());
         log.info("134443"+postProdAllDTO.getPostProductDTO());
 
         Product result = productService.insertProduct(postProdAllDTO.getPostProductDTO());
         postProdAllDTO.getPostProdCateMapperDTO().setProductId(result.getId());
-
-        log.info("14444443"+postProdAllDTO.getPostProdCateMapperDTO());
 
         categoryProductService.insertCateMapper(postProdAllDTO.getPostProdCateMapperDTO());
 
@@ -71,7 +67,7 @@ public class ApiAdminProdController {
     public ResponseEntity<Map<String, Object>> option(@RequestBody PostProductOptionDTO[] optionDTOS) {
 
         for(PostProductOptionDTO optionDTO : optionDTOS) {
-
+            log.info("444545455545454545454545"+optionDTO);
             productService.insertProdOption(optionDTO);
 
         }

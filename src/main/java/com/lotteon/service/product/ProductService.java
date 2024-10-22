@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Log4j2
@@ -98,7 +99,22 @@ public class ProductService {
 
     public void insertProdOption(PostProductOptionDTO optionDTO) {
 
-        ProductOption productOption = modelMapper.map(optionDTO, ProductOption.class);
+        Optional<Product> opt = productRepository.findById(optionDTO.getProductId());
+
+        Product product = null;
+        if(opt.isPresent()){
+            product = opt.get();
+        }
+
+        log.info("666767776767" + product);
+
+        ProductOption productOption = ProductOption.builder()
+                .product(product)
+                .optionName(optionDTO.getOptionName())
+                .optionValue(optionDTO.getOptionValue())
+                .additionalPrice(optionDTO.getAdditionalPrice())
+                .stock(optionDTO.getStock())
+                .build();
 
         productOptionRepository.save(productOption);
     }

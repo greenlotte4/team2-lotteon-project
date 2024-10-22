@@ -4,7 +4,6 @@
 <script>
     const productAll = new FormData();
     let submitData = [];
-    let prodIdSave = null;
     window.onload = function (){
         const prodInsert = document.getElementsByClassName('submit-btn')[0];
         prodInsert.addEventListener('click', (e) => {
@@ -12,7 +11,6 @@
             const prodCate = new FormData(document.getElementById('prodCategory'));
             const productInfo = new FormData(document.getElementById('productInfo'));
             const detail = new FormData(document.getElementById('detail'));
-
 
 
             e.preventDefault();
@@ -29,22 +27,7 @@
             for (const [key, value] of productAll.entries()) {
                 console.log(key, value)
             }
-
-            console.log("332222"+JSON.stringify(submitData));
-
-            fetch("/admin/prod/option", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'  // 서버가 JSON 데이터를 받을 수 있도록 명시
-                },
-                body: JSON.stringify(submitData)
-            }).then(resp => resp.json())
-                .then(data => {
-                    console.log(data);
-                }).catch(err =>{
-                    console.log(err);
-            })
-
+            let prodIdSave = null;
             fetch('/admin/prod/info', {
                 method: 'POST',
                 body: productAll
@@ -53,8 +36,23 @@
                 .then(data => {
                     if (data.success > 0) {
                         alert('결제 정보가 등록되었습니다!');
-                        prodIdSave = data.success().value;
-                        console.log(prodIdSave);
+                        for(let i = 0; i < submitData.length; i++){
+                            submitData[i].productId = String(data.success);
+                        }
+                        console.log("44555"+JSON.stringify(submitData));
+                        fetch("/admin/prod/option", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'  // 서버가 JSON 데이터를 받을 수 있도록 명시
+                            },
+                            body: JSON.stringify(submitData)
+                        }).then(resp => resp.json())
+                            .then(data => {
+                                console.log(data);
+                            }).catch(err => {
+                            console.log(err);
+                        })
+
                     } else {
                         alert('결제 정보 등록에 실패하였습니다');
                     }
@@ -63,7 +61,6 @@
                 .catch(err => {
                     console.log(err);
                 });
-
         });
     }
 
@@ -92,6 +89,7 @@
                 <input type="text" class="option_input option_input_value" placeholder="세부옵션">
                 <input type="text" class="option_input option_input_price" placeholder="추가금액">
                 <input type="text" class="option_input option_input_stock" placeholder="재고량">
+                <button class="btnDelete" type="button" onclick="deleteOption2(event)">삭제</button>
             </div>
         `;
 
@@ -117,17 +115,18 @@
                     <input type="text" class="option_input option_input_stock" placeholder="재고량">
                 </div>
                 <button class="btnOption" type="button" onclick="addOption(event)">세부옵션추가</button>
-
+                <button class="btnDelete" type="button" onclick="deleteOption(event)">삭제</button>
             </td>
         `;
 
         // 테이블에 새로운 행 추가
         options.appendChild(newTr);
 
-        cnt++;
-        if (cnt == 2) {
-            event.preventDefault();
-            limit3.innerText = ' 옵션은 3개까지만 가능합니다';
+        const currentOptionsCount = options.querySelectorAll('tr').length;
+
+        // 옵션이 3개 이상이면 추가를 막음
+        if (currentOptionsCount >= 3) {
+            limit3.innerText = '옵션은 3개까지만 가능합니다';
             document.getElementById('check').disabled = true;
             return;
         }
@@ -135,7 +134,12 @@
     }
 
     function confirmOption(event) {
+        const optionName = document.getElementsByClassName('option_input option_input_name')[0];
 
+        if (!optionName.value.trim()) {
+            alert('옵션 이름을 입력해 주세요.');
+            return; // 함수 실행 중단
+        }
 
         document.querySelectorAll('.option_inputs').forEach(v => {
             let name = v.querySelector('.option_input_name').value;
@@ -147,14 +151,49 @@
                 optionName: name,
                 optionValue: value,
                 additionalPrice: price,
-                stock: stock
+                stock: stock,
+                productId: null
             };
 
             submitData.push(jsonData);
         });
+        let stockTotal = 0;
+        for (let a = 0; a < submitData.length; a++) {
+            stockTotal += submitData[a].stock;
+        }
+        console.log("44" + stockTotal)
         console.log(submitData)
     }
 
+    function deleteOption(event) {
+        const targetRow = event.target.closest('tr'); // 클릭된 버튼과 가장 가까운 tr 찾기
+        targetRow.remove(); // 해당 행을 삭제
+        // 현재 옵션 행의 수를 다시 확인
+        const options = document.querySelector('.tb4');
+        const currentOptionsCount = options.querySelectorAll('tr').length;
+
+        // 옵션이 3개 미만이면 경고 메시지 제거 및 버튼 활성화
+        if (currentOptionsCount < 3) {
+            const limit3 = document.querySelector('.limit3');
+            limit3.innerText = '';
+            document.getElementById('check').disabled = false;
+        }
+    }
+
+    function deleteOption2(event) {
+        const targetRow = event.target.closest('div'); // 클릭된 버튼과 가장 가까운 tr 찾기
+        targetRow.remove(); // 해당 행을 삭제
+        // 현재 옵션 행의 수를 다시 확인
+        const options = document.querySelector('.tb4');
+        const currentOptionsCount = options.querySelectorAll('tr').length;
+
+        // 옵션이 3개 미만이면 경고 메시지 제거 및 버튼 활성화
+        if (currentOptionsCount < 3) {
+            const limit3 = document.querySelector('.limit3');
+            limit3.innerText = '';
+            document.getElementById('check').disabled = false;
+        }
+    }
 
 </script>
 <script>
@@ -162,7 +201,6 @@
         let option1Value = document.getElementsByClassName('cate1')[0];
         let option2Value = document.getElementsByClassName('cate2')[0];
 
-        option2Value.innerHTML = '';
 
         fetch("/admin/prod/cate1", {
             method: 'POST',
@@ -173,14 +211,23 @@
         })
             .then(resp => resp.json())
             .then(data => {
-                console.log(data);
-                data.forEach(item => {
-                    const prodcate_opt = document.createElement('option');
-                    prodcate_opt.value = item.id;
-                    prodcate_opt.innerText = item.name;
-                    option2Value.appendChild(prodcate_opt);
-                })
-            }).catch(err => {
+                option2Value.innerHTML = '';
+                    if (data.length > 0) {
+                        // 데이터가 있을 경우 옵션 추가
+                        data.forEach(item => {
+                            const prodcate_opt = document.createElement('option');
+                            prodcate_opt.value = item.id;
+                            prodcate_opt.innerText = item.name;
+                            option2Value.appendChild(prodcate_opt);
+                            updateSelect3();
+                        });
+                    } else {
+                        // 데이터가 없을 경우 '선택사항 없음' 추가
+                        const prodcate_opt = document.createElement('option');
+                        prodcate_opt.innerText = "선택사항 없음";
+                        option2Value.appendChild(prodcate_opt);
+                    }
+                }).catch(err => {
             console.log(err);
         });
     }
@@ -200,12 +247,20 @@
             .then(data => {
                 console.log(data);
                 option3Value.innerHTML = '';
-                data.forEach(item => {
+                if (data.length > 0) {
+                    // 데이터가 있을 경우 옵션 추가
+                    data.forEach(item => {
+                        const prodcate_opt = document.createElement('option');
+                        prodcate_opt.value = item.id;
+                        prodcate_opt.innerText = item.name;
+                        option3Value.appendChild(prodcate_opt);
+                    });
+                } else {
+                    // 데이터가 없을 경우 '선택사항 없음' 추가
                     const prodcate_opt = document.createElement('option');
-                    prodcate_opt.value = item.id;
-                    prodcate_opt.innerText = item.name;
+                    prodcate_opt.innerText = "선택사항 없음";
                     option3Value.appendChild(prodcate_opt);
-                })
+                }
             }).catch(err => {
             console.log(err);
         });
@@ -245,7 +300,7 @@
                     <tr>
                         <th>1차 분류</th>
                         <td>
-                            <select class="cate1" onchange="updateSelect2()">
+                            <select class="cate1" oninput="updateSelect2()">
                                 <option value="">1차분류 선택</option>
                                 <th:block th:each="category : ${prodCate}">
                                     <option th:if="${category.getCategoryLevel() == 1}"
@@ -259,7 +314,7 @@
                     <tr>
                         <th>2차 분류</th>
                         <td>
-                            <select class="cate2" onchange="updateSelect3()">
+                            <select class="cate2" oninput="updateSelect3()">
                                 <option value="">2차분류 선택</option>
                             </select>
                         </td>
@@ -338,6 +393,7 @@
                             </div>
                         </td>
                     </tr>
+                    <input type="hidden" name="sellId" th:value="${#authentication.principal.user.id}">
                 </table>
             </div>
         </form>
