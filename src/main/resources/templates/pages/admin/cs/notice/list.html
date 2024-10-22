@@ -10,13 +10,8 @@
         <h3>공지사항 목록</h3>
         <p>HOME > 고객센터 > <strong>공지사항</strong></p>
       </nav>
-      <form
-              action="@{'/article/' + ${cate.cateGroup} + '/' + ${cate.cateName}}"
-              class="search"
-      >
-        <input type="hidden" name="content" value="list" />
-        <input type="hidden" name="cateNo" value="${cate.cateNo}" />
-        <!-- - 공지사항 유형 선택할 때마다 목록 출력, 갱신 됨 -->
+      <form class="search">
+        <!-- 공지사항 유형 선택 -->
         <select name="type" class="select_type">
           <option value="typeselect">유형선택</option>
           <option value="customer_service">고객서비스</option>
@@ -26,8 +21,10 @@
         </select>
       </form>
     </div>
+
     <article>
       <table style="width: 100%">
+        <thead>
         <tr>
           <th style="width: 5%"><input type="checkbox" id="selectAll" /></th>
           <th style="width: 5%">번호</th>
@@ -37,75 +34,26 @@
           <th>날짜</th>
           <th>관리</th>
         </tr>
-        <!-- <th:block th:if="${pageResponseDTO.getDtoList().size() == 0}" >
-                                     <tr>
-                                         <td colspan="7" class="td_first"><a  th:href="@{/article/list(pg=1)}">일치하는 내용이 없습니다.</a></td>
-                                     </tr>
-                                  </th:block> -->
-
-        <tr>
+        </thead>
+        <tbody>
+        <!-- 공지사항 리스트 출력 -->
+        <tr th:each="notice, iterStat : ${notices}">
           <td><input type="checkbox" /></td>
-          <td>100</td>
-          <td>고객서비스</td>
-          <td style="text-align: left">[안내] 구매회원 이용약관 개정</td>
-          <td>120</td>
-          <td>00.00.00</td>
+          <td th:text="${iterStat.index + 1}"></td> <!-- 번호 -->
+          <td th:text="${notice.cate1.categoryName}"></td> <!-- 카테고리 1 -->
+          <td style="text-align: left" th:text="${notice.noticeTitle}"></td> <!-- 제목 -->
+          <td th:text="${notice.noticeViews}"></td> <!-- 조회수 -->
+          <td th:text="${#dates.format(notice.noticeRdate, 'yyyy-MM-dd')}"></td> <!-- 날짜 -->
           <td>
-            <div>[삭제]</div>
-            <div>[수정]</div>
+            <div>
+              <a th:href="@{'/admin/cs/notice/delete/' + ${notice.id}}" class="button--delete">[삭제]</a>
+            </div>
+            <div>
+              <a th:href="@{'/admin/cs/notice/modify/' + ${notice.id}}" class="button--edit">[수정]</a>
+            </div>
           </td>
         </tr>
-        <tr>
-          <td><input type="checkbox" /></td>
-          <td>98</td>
-          <td>안전거래</td>
-          <td style="text-align: left">[안내] 로젠택배 반품</td>
-          <td>120</td>
-          <td>00.00.00</td>
-          <td>
-            <div>[삭제]</div>
-            <div>[수정]</div>
-          </td>
-        </tr>
-        <tr>
-          <td><input type="checkbox" /></td>
-          <td>97</td>
-          <td>고객서비스</td>
-          <td style="text-align: left">[안내] 위치정보이용 약관 개정 공지</td>
-          <td>120</td>
-          <td>00.00.00</td>
-          <td>
-            <div>[삭제]</div>
-            <div>[수정]</div>
-          </td>
-        </tr>
-        <tr>
-          <td><input type="checkbox" /></td>
-          <td>96</td>
-          <td>위해상품</td>
-          <td style="text-align: left">
-            [위해상품정보] 무주꾸지뽕 지도점검 회수사 유적발
-          </td>
-          <td>120</td>
-          <td>00.00.00</td>
-          <td>
-            <div>[삭제]</div>
-            <div>[수정]</div>
-          </td>
-        </tr>
-        <tr>
-          <td><input type="checkbox" /></td>
-          <td>95</td>
-          <td>고객서비스</td>
-          <td style="text-align: left">[안내] 구매회원 이용약관 개정</td>
-          <td>120</td>
-          <td>00.00.00</td>
-          <td>
-            <div>[삭제]</div>
-            <div>[수정]</div>
-          </td>
-        </tr>
-        <!-- 한번 반복할때마다 pageStartNum을 1씩 차감 -->
+        </tbody>
       </table>
     </article>
 
@@ -120,10 +68,8 @@
       <a href="#">1</a>
       <a href="#">2</a>
       <a href="#">3</a>
-      <!--페이지 이전 다음 글자 누를 수 있게-->
       <a href="#" class="next">다음</a>
     </div>
   </section>
 </main>
 <footer th:replace="layout/admin/footer.html"></footer>
-

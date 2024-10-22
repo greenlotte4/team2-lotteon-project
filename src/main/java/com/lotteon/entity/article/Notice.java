@@ -60,4 +60,20 @@ public class Notice {
     public void incrementViews() {
         this.noticeViews++;
     }
+
+    // 작성자(Member) 설정
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    // 카테고리 1 설정
+    public void setCate1(CategoryArticle cate1) {
+        this.cate1 = cate1;
+    }
+
+    // 카테고리 2 설정 (optional)
+    public void setCate2(CategoryArticle cate2) {
+        this.cate2 = cate2;
+
+    }
 }

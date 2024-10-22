@@ -16,6 +16,8 @@ public interface CategoryArticleRepository extends JpaRepository<CategoryArticle
     List<CategoryArticle> findByParentIsNull();
     // 특정 부모 카테고리(1차 카테고리)에 해당하는 자식 카테고리(2차 카테고리) 조회
     List<CategoryArticle> findByParent(CategoryArticle parent);
+
+    List<CategoryArticle> findAllByCategoryTypeAndCategoryLevel(int type, int level);
 }
 
 

@@ -1,5 +1,6 @@
 package com.lotteon.entity.category;
 
+import com.lotteon.dto.responseDto.GetArticleCategoryDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -40,5 +41,11 @@ public class CategoryArticle {
     @OneToMany(mappedBy = "parent")
     private List<CategoryArticle> children;
 
+    public GetArticleCategoryDto toGetArticleCategoryDto() {
+        return GetArticleCategoryDto.builder()
+                .id(categoryId)
+                .categoryName(categoryName)
+                .build();
+    }
 
 }

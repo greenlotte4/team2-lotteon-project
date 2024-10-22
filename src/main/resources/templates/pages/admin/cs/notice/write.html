@@ -1,16 +1,44 @@
 <link rel="stylesheet" th:href="@{/css/admin/cs/notice/write.css}" />
-<link rel="stylesheet" th:href="@{/css/basic.css}">
+<link rel="stylesheet" th:href="@{/css/basic.css}" />
 <body>
 <header th:replace="layout/admin/header.html"></header>
 <main>
   <aside th:replace="layout/admin/aside.html"></aside>
   <section id="admin-product-list" class="container">
     <script>
-      function checkSelection() {
-        const cate = document.getElementsByName("noticeCate")[0].value;
-        const type = document.getElementsByName("noticeType")[0].value;
+      function loadChildCategories() {
+        var cateId1 = document.getElementById('cateId1').value;
 
-        if (cate === "유형선택" || type === "타입선택") {
+        if (cateId1) {
+          fetch('/admin/cs/notice/categories/child?parentId=' + cateId1)
+                  .then(response => response.json())
+                  .then(data => {
+                    var cateId2 = document.getElementById('cateId2');
+                    cateId2.innerHTML = '';  // 기존 옵션 초기화
+
+                    // 기본 옵션 추가
+                    var defaultOption = document.createElement('option');
+                    defaultOption.value = '';
+                    defaultOption.text = '타입선택';
+                    cateId2.appendChild(defaultOption);
+
+                    // 새 2차 카테고리 옵션 추가
+                    data.forEach(function(option) {
+                      var opt = document.createElement('option');
+                      opt.value = option.id;
+                      opt.text = option.categoryName;
+                      cateId2.appendChild(opt);
+                    });
+                  })
+                  .catch(error => console.error('Error fetching child categories:', error));
+        }
+      }
+
+      function checkSelection() {
+        const noticeCate = document.getElementsByName("noticeCate")[0].value;
+        const noticeType = document.getElementsByName("noticeType")[0].value;
+
+        if (noticeCate === "유형선택" || noticeType === "타입선택") {
           alert("문의유형의 모든 항목을 선택해주세요.");
           return false;
         }
@@ -37,13 +65,19 @@
           <tr>
             <th>유형</th>
             <td>
-              <select class="noticeCate" name="noticeCate">
-                <option>유형선택</option>
-                <option value="service">고객서비스</option>
-                <option value="event">이벤트당첨</option>
-                <option value="safe">안전거래</option>
-                <option value="danger">위해상품</option>
+              <input type="hidden" name="memberId" th:value="${user.getName()}">
+
+              <!-- 1차 카테고리 -->
+              <select class="noticeCate" id="cateId1" name="cateId1" required onchange="loadChildCategories()">
+                <option value="">유형선택</option>
+                <option th:each="option : ${cate1}" th:value="${option.id}" th:text="${option.categoryName}"></option>
               </select>
+
+              <!-- 2차 카테고리 (1차 카테고리와 동일한 클래스 적용) -->
+              <select class="noticeCate" id="cateId2" name="cateId2">
+                <option value="">타입선택</option>
+              </select>
+
             </td>
           </tr>
           <tr>
@@ -72,12 +106,11 @@
           </tbody>
         </table>
         <div class="button-group">
-          <a th:href="@{/admin/cs/notices}" class="button--back">취소하기</a>
-          <button class="button--write">등록하기</button>
+          <a th:href="@{/admin/cs/notices}" class="button--write">취소하기</a>
+          <button type="submit" class="button--write">등록하기</button>
         </div>
       </form>
     </article>
   </section>
 </main>
 <footer th:replace="layout/admin/footer.html"></footer>
-
