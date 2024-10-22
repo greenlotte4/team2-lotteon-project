@@ -3,14 +3,20 @@ package com.lotteon.controller.apicontroller;
 import ch.qos.logback.core.model.Model;
 import com.lotteon.dto.requestDto.PostProdAllDTO;
 import com.lotteon.dto.requestDto.PostProductDTO;
+import com.lotteon.dto.requestDto.PostProductOptionDTO;
+import com.lotteon.dto.responseDto.GetCategoryDto;
+import com.lotteon.entity.product.Product;
 import com.lotteon.service.category.CategoryProductService;
 import com.lotteon.service.product.ProductService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Log4j2
@@ -23,21 +29,54 @@ public class ApiAdminProdController {
     private final CategoryProductService categoryProductService;
 
     @PostMapping("/info")
-    public ResponseEntity<Map<String, Object>> info(Model model,@ModelAttribute PostProdAllDTO postProdAllDTO) {
+    public ResponseEntity<Map<String, Object>> info(@ModelAttribute PostProdAllDTO postProdAllDTO) {
 
+        log.info("111111111111"+postProdAllDTO);
 
         log.info("124443"+postProdAllDTO.getPostProdDetailDTO());
         log.info("134443"+postProdAllDTO.getPostProductDTO());
+
+        Product result = productService.insertProduct(postProdAllDTO.getPostProductDTO());
+        postProdAllDTO.getPostProdCateMapperDTO().setProductId(result.getId());
+
         log.info("14444443"+postProdAllDTO.getPostProdCateMapperDTO());
 
-//        productService.insertProduct(postProductDTO);
+        categoryProductService.insertCateMapper(postProdAllDTO.getPostProdCateMapperDTO());
 
-        categoryProductService.insertProdCate();
-
+        if(result != null) {
         Map<String, Object> response = new HashMap<>();
-        response.put("success", true);
+        response.put("success", result.getId());
         return ResponseEntity.ok(response);
+        }else {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            return ResponseEntity.ok(response);
+        }
 
+    }
+
+    @PostMapping("/cate1")
+    public ResponseEntity<List<GetCategoryDto>> cateChoice(@RequestBody GetCategoryDto getCategoryDto) {
+
+//        ResponseEntity<List<Category>>
+
+        log.info("222222222"+getCategoryDto.getId());
+
+        log.info("322323333"+categoryProductService.findCategory2(getCategoryDto.getId()));
+        return ResponseEntity.ok(categoryProductService.findCategory2(getCategoryDto.getId()));
+
+    }
+
+    @PostMapping("/option")
+    public ResponseEntity<Map<String, Object>> option(@RequestBody PostProductOptionDTO[] optionDTOS) {
+
+        for(PostProductOptionDTO optionDTO : optionDTOS) {
+
+            productService.insertProdOption(optionDTO);
+
+        }
+
+        return null;
     }
 
 }

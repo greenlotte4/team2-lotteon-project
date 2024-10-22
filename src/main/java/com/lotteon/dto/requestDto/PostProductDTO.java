@@ -7,6 +7,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.OneToMany;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -39,5 +40,9 @@ public class PostProductDTO {
     @CreationTimestamp
     private Timestamp prodRdate;
     private List<ProductOption> options = new ArrayList<>();
+
+    private MultipartFile listImage;
+    private MultipartFile basicImage;
+    private MultipartFile detailImage;
 
 }

@@ -2,66 +2,227 @@
 <link rel="stylesheet" th:href="@{/css/basic.css}">
 <html xmlns:th="http://www.thymeleaf.org">
 <script>
-    window.onload = function (){
-    const prodInsert = document.getElementsByClassName('submit-btn')[0];
-    prodInsert.addEventListener('click', (e) =>{
-
-    const prodCate = new FormData(document.getElementById('prodCategory'));
-    const productInfo = new FormData(document.getElementById('productInfo'));
-    const detail = new FormData(document.getElementById('detail'));
-
     const productAll = new FormData();
+    let submitData = [];
+    let prodIdSave = null;
+    window.onload = function (){
+        const prodInsert = document.getElementsByClassName('submit-btn')[0];
+        prodInsert.addEventListener('click', (e) => {
 
-       e.preventDefault();
-        for (const [key, value] of prodCate.entries()) {
-            productAll.append(`postProdCateMapperDTO.${key}`, value)
-        }
-        for (const [key, value] of productInfo.entries()) {
-            productAll.append(`postProductDTO.${key}`, value)
-        }
-        for (const [key, value] of detail.entries()) {
-            productAll.append(`postProdDetailDTO.${key}`, value)
+            const prodCate = new FormData(document.getElementById('prodCategory'));
+            const productInfo = new FormData(document.getElementById('productInfo'));
+            const detail = new FormData(document.getElementById('detail'));
+
+
+
+            e.preventDefault();
+            for (const [key, value] of prodCate.entries()) {
+                productAll.append(`postProdCateMapperDTO.${key}`, value)
+            }
+            for (const [key, value] of productInfo.entries()) {
+                productAll.append(`postProductDTO.${key}`, value)
+            }
+            for (const [key, value] of detail.entries()) {
+                productAll.append(`postProdDetailDTO.${key}`, value)
+            }
+
+            for (const [key, value] of productAll.entries()) {
+                console.log(key, value)
+            }
+
+            console.log("332222"+JSON.stringify(submitData));
+
+            fetch("/admin/prod/option", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'  // 서버가 JSON 데이터를 받을 수 있도록 명시
+                },
+                body: JSON.stringify(submitData)
+            }).then(resp => resp.json())
+                .then(data => {
+                    console.log(data);
+                }).catch(err =>{
+                    console.log(err);
+            })
+
+            fetch('/admin/prod/info', {
+                method: 'POST',
+                body: productAll
+            })
+                .then(resp => resp.json())
+                .then(data => {
+                    if (data.success > 0) {
+                        alert('결제 정보가 등록되었습니다!');
+                        prodIdSave = data.success().value;
+                        console.log(prodIdSave);
+                    } else {
+                        alert('결제 정보 등록에 실패하였습니다');
+                    }
+
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+
+        });
+    }
+
+    function addOption(event) {
+        // 클릭된 버튼의 부모 td를 찾습니다.
+        const td = event.target.parentElement;
+
+        // 새로운 입력 세트를 추가할 td 생성
+        const newInputs = document.createElement('div'); // div로 여러 input 묶음
+
+        const row = event.target.closest('tr'); // 클릭된 버튼이 있는 tr을 찾습니다.
+        const inputs = row.querySelectorAll('input'); // 해당 tr 내의 모든 인풋을 찾습니다.
+
+        const option1 = inputs[0].value; // 첫 번째 인풋의 값을 가져옵니다.
+
+        if (!option1.trim()) {
+            alert('옵션명을 입력해주세요.')
+            console.log(event)
+            return;
         }
 
-        for (const [key, value] of productAll.entries()) {
-            console.log(key, value)
+        // 새로운 입력 세트 추가
+        newInputs.innerHTML = `
+            <div class="option_inputs">
+                <input type="text" style="opacity:0" class="option_input option_input_name" value="${option1}">
+                <input type="text" class="option_input option_input_value" placeholder="세부옵션">
+                <input type="text" class="option_input option_input_price" placeholder="추가금액">
+                <input type="text" class="option_input option_input_stock" placeholder="재고량">
+            </div>
+        `;
+
+        // 기존 td 내에 새로운 입력 세트 추가
+        td.appendChild(newInputs);
+    }
+
+    let cnt = 0;
+
+    function addParent(event) {
+        const options = document.querySelector('.tb4'); // tbody를 선택하는 대신 tb4로 바로 작업
+        const limit3 = document.querySelector('.limit3');
+
+        // 새로운 옵션 행(tr) 추가
+        const newTr = document.createElement('tr');
+        newTr.innerHTML = `
+            <th>옵션</th>
+            <td class="optionTD">
+                <div class="option_inputs">
+                    <input type="text" class="option_input option_input_name" placeholder="옵션명">
+                    <input type="text" class="option_input option_input_value" placeholder="세부옵션">
+                    <input type="text" class="option_input option_input_price" placeholder="추가금액">
+                    <input type="text" class="option_input option_input_stock" placeholder="재고량">
+                </div>
+                <button class="btnOption" type="button" onclick="addOption(event)">세부옵션추가</button>
+
+            </td>
+        `;
+
+        // 테이블에 새로운 행 추가
+        options.appendChild(newTr);
+
+        cnt++;
+        if (cnt == 2) {
+            event.preventDefault();
+            limit3.innerText = ' 옵션은 3개까지만 가능합니다';
+            document.getElementById('check').disabled = true;
+            return;
         }
 
-        fetch('/admin/prod/info', {
+    }
+
+    function confirmOption(event) {
+
+
+        document.querySelectorAll('.option_inputs').forEach(v => {
+            let name = v.querySelector('.option_input_name').value;
+            let value = v.querySelector('.option_input_value').value;
+            let price = v.querySelector('.option_input_price').value;
+            let stock = v.querySelector('.option_input_stock').value;
+
+            let jsonData = {
+                optionName: name,
+                optionValue: value,
+                additionalPrice: price,
+                stock: stock
+            };
+
+            submitData.push(jsonData);
+        });
+        console.log(submitData)
+    }
+
+
+</script>
+<script>
+    function updateSelect2() {
+        let option1Value = document.getElementsByClassName('cate1')[0];
+        let option2Value = document.getElementsByClassName('cate2')[0];
+
+        option2Value.innerHTML = '';
+
+        fetch("/admin/prod/cate1", {
             method: 'POST',
-            body: productAll
+            headers: {
+                'Content-Type': 'application/json'  // 데이터를 JSON으로 전송하는 경우
+            },
+            body: JSON.stringify({id: option1Value.value})
         })
             .then(resp => resp.json())
             .then(data => {
-                if (data.success) {
-                    alert('결제 정보가 등록되었습니다!');
-                } else {
-                    alert('결제 정보 등록에 실패하였습니다');
-                }
-
-            })
-            .catch(err => {
-                console.log(err);
-            });
-
-    });
-    }
-</script>
-<script>
-
-    function updateSelect2(){
-        let option1Value = document.getElementsByClassName('cate1')[0];
-
-        console.log(option1Value.value);
-
-
+                console.log(data);
+                data.forEach(item => {
+                    const prodcate_opt = document.createElement('option');
+                    prodcate_opt.value = item.id;
+                    prodcate_opt.innerText = item.name;
+                    option2Value.appendChild(prodcate_opt);
+                })
+            }).catch(err => {
+            console.log(err);
+        });
     }
 
+    function updateSelect3() {
+        let option2Value = document.getElementsByClassName('cate2')[0];
+        let option3Value = document.getElementsByClassName('cate3')[0];
 
+        fetch("/admin/prod/cate1", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'  // 데이터를 JSON으로 전송하는 경우
+            },
+            body: JSON.stringify({id: option2Value.value})
+        })
+            .then(resp => resp.json())
+            .then(data => {
+                console.log(data);
+                option3Value.innerHTML = '';
+                data.forEach(item => {
+                    const prodcate_opt = document.createElement('option');
+                    prodcate_opt.value = item.id;
+                    prodcate_opt.innerText = item.name;
+                    option3Value.appendChild(prodcate_opt);
+                })
+            }).catch(err => {
+            console.log(err);
+        });
+
+        if (option3Value == null) {
+            let option3Value = document.getElementsByClassName('cate3')[0];
+            const prodcate_opt = document.createElement('option');
+            prodcate_opt.innerText = "선택사항 없음";
+            option3Value.appendChild(prodcate_opt);
+        }
+
+    }
 </script>
 <body>
 <header th:replace="layout/admin/header.html"></header>
 <main>
+    <input type="hidden" id="productCateAll" th:value="${prodCate}"/>
     <aside th:replace="layout/admin/aside.html"></aside>
     <section class="container">
         <div class="header">
@@ -79,12 +240,12 @@
         <form id="prodCategory">
             <div class="main">
                 <div class="main-title">상품분류</div>
-                <div class="main-description">1차 , 2차 카테고리 기본분류는 반드시 선택하셔야 합니다. </div>
+                <div class="main-description">1차 , 2차 카테고리 기본분류는 반드시 선택하셔야 합니다.</div>
                 <table class="tb1">
                     <tr>
                         <th>1차 분류</th>
                         <td>
-                            <select class="cate1" name="cate1" onchange="updateSelect2()">
+                            <select class="cate1" onchange="updateSelect2()">
                                 <option value="">1차분류 선택</option>
                                 <th:block th:each="category : ${prodCate}">
                                     <option th:if="${category.getCategoryLevel() == 1}"
@@ -98,148 +259,144 @@
                     <tr>
                         <th>2차 분류</th>
                         <td>
-                            <select class="cate2" name="cate2">
+                            <select class="cate2" onchange="updateSelect3()">
                                 <option value="">2차분류 선택</option>
-                                <option value="cate1">cate1</option>
-                                <option value="cate2">cate2</option>
-                                <option value="cate3">cate3</option>
-                                <option value="cate4">cate4</option>
                             </select>
                         </td>
                     </tr>
                     <tr>
                         <th>3차 분류</th>
                         <td>
-                            <select class="cate3" name="cate3">
+                            <select class="cate3" name="categoryId">
                                 <option value="">3차분류 선택</option>
-                                <option value="cate1">cate1</option>
-                                <option value="cate2">cate2</option>
-                                <option value="cate3">cate3</option>
-                                <option value="cate4">cate4</option>
                             </select>
                         </td>
                     </tr>
                 </table>
             </div>
         </form>
-        <form id="productInfo">
-        <div class="main2">
-            <div class="main-title">기본정보</div>
-            <div class="main-description">기본정보는 반드시 선택하셔야 합니다. </div>
-            <table class="tb2">
-                <tr class="name">
-                    <th>상품명</th>
-                    <td><input type="text" name="prodName" placeholder="상품명 입력"></td>
-                </tr>
-                <tr class="summary">
-                    <th>기본설명</th>
-                    <td><input type="text" name="prodSummary" placeholder="요약설명 입력"></td>
-                </tr>
-                <tr class="company">
-                    <th>제조사</th>
-                    <td><input type="text" name="manufacture" placeholder="제조사 입력"></td>
-                </tr>
-                <tr class="price">
-                    <th>상품금액</th>
-                    <td><input type="text" name="prodPrice" placeholder="금액 입력"> 원</td>
-                </tr>
-                <tr class="discount">
-                    <th>할인율</th>
-                    <td><input type="text" name="prodDiscount" placeholder="할인율 입력"> %</td>
-                </tr>
-                <tr class="point">
-                    <th>포인트</th>
-                    <td><input type="text" name="prodPoint" placeholder="포인트 입력"> p</td>
-                </tr>
-                <tr class="stock">
-                    <th>재고수량</th>
-                    <td><input type="text" name="prodStock" placeholder="재고량 입력"> 개</td>
-                </tr>
-                <tr class="delivery">
-                    <th>배송비</th>
-                    <td><input type="text" name="prodDeliver" placeholder="배송비 입력"> 원</td>
-                </tr>
-                <tr class="images">
-                    <th>상품이미지</th>
-                    <td class="td-images">
-                        <div class="img1">
-                            <input type="file" name="file1" id="prodListImg">
-                            <span>크기 190 x 190, 상품 목록에 출력될 이미지입니다.</span>
-                        </div>
-                        <div class="img2">
-                            <input type="file" name="file2" id="prodBasicImg">
-                            <span>크기 230 x 230, 상품 메인에 출력될 이미지입니다.</span>
-                        </div>
-                        <div class="img3">
-                            <input type="file" name="file3" id="prodDetailImg">
-                            <span>크기 450 x 450, 상품 상세에 출력될 이미지입니다.</span>
-                        </div>
-                    </td>
-                </tr>
-                <tr class="detail">
-                    <th>상품 상세정보</th>
-                    <td class="td-detail">
-                        <div class="detail-img">
-                            <input type="file" name="file4" id="description">
-                            <span>크기 가로 940px 세로 제약없음 , 크기 최대 1MB</span>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        </form>
-        <form id="detail">
-        <div class="main3">
-            <div class="main-title">상품 옵션</div>
-            <div class="main-description">상품 옵션은 선택사항입니다. </div>
-            <div class="options">
-                <table class="tb1 tb4" border="1">
-                    <tr class="tr_option">
-                        <th>옵션</th>
-                        <td class="optionTD">
-                            <div class="option_inputs">
-                                <input type="text" class="option_input option_input_name" placeholder="옵션명">
-                                <input type="text" class="option_input option_input_value" placeholder="세부옵션">
-                                <input type="text" class="option_input option_input_price" placeholder="추가금액">
+        <form id="productInfo" enctype="multipart/form-data">
+            <div class="main2">
+                <div class="main-title">기본정보</div>
+                <div class="main-description">기본정보는 반드시 선택하셔야 합니다.</div>
+                <table class="tb2">
+                    <tr class="name">
+                        <th>상품명</th>
+                        <td><input type="text" name="prodName" placeholder="상품명 입력"></td>
+                    </tr>
+                    <tr class="summary">
+                        <th>기본설명</th>
+                        <td><input type="text" name="prodSummary" placeholder="요약설명 입력"></td>
+                    </tr>
+                    <tr class="company">
+                        <th>제조사</th>
+                        <td><input type="text" name="manufacture" placeholder="제조사 입력"></td>
+                    </tr>
+                    <tr class="price">
+                        <th>상품금액</th>
+                        <td><input type="text" name="prodPrice" placeholder="금액 입력"> 원</td>
+                    </tr>
+                    <tr class="discount">
+                        <th>할인율</th>
+                        <td><input type="text" name="prodDiscount" placeholder="할인율 입력"> %</td>
+                    </tr>
+                    <tr class="point">
+                        <th>포인트</th>
+                        <td><input type="text" name="prodPoint" placeholder="포인트 입력"> p</td>
+                    </tr>
+                    <tr class="stock">
+                        <th>재고수량</th>
+                        <td><input type="text" name="prodStock" placeholder="재고량 입력"> 개</td>
+                    </tr>
+                    <tr class="delivery">
+                        <th>배송비</th>
+                        <td><input type="text" name="prodDeliver" placeholder="배송비 입력"> 원</td>
+                    </tr>
+                    <tr class="images">
+                        <th>상품이미지</th>
+                        <td class="td-images">
+                            <div class="img1">
+                                <input type="file" name="listImage" id="prodListImg">
+                                <span>크기 190 x 190, 상품 목록에 출력될 이미지입니다.</span>
                             </div>
-                            <button  class="btnOption btn_blue" type="button" onclick="addOption(event)">세부옵션추가</button>
-
-                         </td>
+                            <div class="img2">
+                                <input type="file" name="basicImage" id="prodBasicImg">
+                                <span>크기 230 x 230, 상품 메인에 출력될 이미지입니다.</span>
+                            </div>
+                            <div class="img3">
+                                <input type="file" name="detailImage" id="prodDetailImg">
+                                <span>크기 450 x 450, 상품 상세에 출력될 이미지입니다.</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="detail">
+                        <th>상품 상세정보</th>
+                        <td class="td-detail">
+                            <div class="detail-img">
+                                <input type="file" name="description" id="description">
+                                <span>크기 가로 940px 세로 제약없음 , 크기 최대 1MB</span>
+                            </div>
+                        </td>
                     </tr>
                 </table>
             </div>
-            <button  class="addoption" type="button" onclick="confirmOption(event)">옵션저장</button>
-            <button type="button" id="check" class="addoption" onclick="addParent(event)">옵션추가</button><span class="limit3"></span>
-        </div>
+        </form>
+        <form>
+            <div class="main3">
+                <div class="main-title">상품 옵션</div>
+                <div class="main-description">상품 옵션은 선택사항입니다.</div>
+                <div class="options">
+                    <table class="tb1 tb4" border="1">
+                        <tr class="tr_option">
+                            <th>옵션</th>
+                            <td class="optionTD">
+                                <div class="option_inputs">
+                                    <input type="text" class="option_input option_input_name" placeholder="옵션명">
+                                    <input type="text" class="option_input option_input_value" placeholder="세부옵션">
+                                    <input type="text" class="option_input option_input_price" placeholder="추가금액">
+                                    <input type="text" class="option_input option_input_stock" placeholder="재고량">
+                                </div>
+                                <button class="btnOption btn_blue" type="button" onclick="addOption(event)">세부옵션추가
+                                </button>
 
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <button class="addoption" type="button" onclick="confirmOption(event)">옵션저장</button>
+                <button type="button" id="check" class="addoption" onclick="addParent(event)">옵션추가</button>
+                <span class="limit3"></span>
+            </div>
+        </form>
 
-        <div class="main3">
-            <div class="main-title">상품정보 제공고시</div>
-            <div class="main-description">[전자상거래에 관한 상품정보 제공에 관한 고시] 항목에 의거하여 반드시 등록해야 합니다. </div>
+        <form id="detail">
+            <div class="main3">
+                <div class="main-title">상품정보 제공고시</div>
+                <div class="main-description">[전자상거래에 관한 상품정보 제공에 관한 고시] 항목에 의거하여 반드시 등록해야 합니다.</div>
 
-            <table class="tb3">
-                <tr class="state">
-                    <th>상품상태</th>
-                    <td><input type="text"  name="stat" value="새상품"></td>
-                </tr>
-                <tr class="taxation">
-                    <th>부가세 면세여부</th>
-                    <td><input type="text" name="tax" value="과세상품"></td>
-                </tr>
-                <tr class="recipt">
-                    <th>영수증 발행</th>
-                    <td><input class="recipt-inp" type="text" value="발행가능 - 신용카드전표 , 온라인현금영수증"></td>
-                </tr>
-                <tr class="business">
-                    <th>사업자 구분</th>
-                    <td><input class="business-inp" type="text" value="사업자판매자"></td>
-                </tr>
-                <tr class="made-in">
-                    <th>원산지</th>
-                    <td><input type="text" name="madeIn" value="국내산"></td>
-                </tr>
-            </table>
-        </div>
+                <table class="tb3">
+                    <tr class="state">
+                        <th>상품상태</th>
+                        <td><input type="text" name="stat" value="새상품"></td>
+                    </tr>
+                    <tr class="taxation">
+                        <th>부가세 면세여부</th>
+                        <td><input type="text" name="tax" value="과세상품"></td>
+                    </tr>
+                    <tr class="recipt">
+                        <th>영수증 발행</th>
+                        <td><input class="recipt-inp" type="text" value="발행가능 - 신용카드전표 , 온라인현금영수증"></td>
+                    </tr>
+                    <tr class="business">
+                        <th>사업자 구분</th>
+                        <td><input class="business-inp" type="text" value="사업자판매자"></td>
+                    </tr>
+                    <tr class="made-in">
+                        <th>원산지</th>
+                        <td><input type="text" name="madeIn" value="국내산"></td>
+                    </tr>
+                </table>
+            </div>
         </form>
         <div class="advice-footer">
             전자상거래등에서의 상품등의 정보제공에 관한 고시에따라 총 35개 상품군에대해 상품특성들을 양식에따라 입력할 수 있습니다.
@@ -252,87 +409,6 @@
 
 
 <script>
-    function addOption(event){
-        // 클릭된 버튼의 부모 td를 찾습니다.
-        const td = event.target.parentElement;
-
-        // 새로운 입력 세트를 추가할 td 생성
-        const newInputs = document.createElement('div'); // div로 여러 input 묶음
-
-        const row = event.target.closest('tr'); // 클릭된 버튼이 있는 tr을 찾습니다.
-        const inputs = row.querySelectorAll('input'); // 해당 tr 내의 모든 인풋을 찾습니다.
-
-        const option1 = inputs[0].value; // 첫 번째 인풋의 값을 가져옵니다.
-
-        if(!option1.trim()){
-            alert('옵션명을 입력해주세요.')
-            console.log(event)
-            return;
-        }
-
-        // 새로운 입력 세트 추가
-        newInputs.innerHTML = `
-            <div class="option_inputs">
-                <input type="text" style="opacity:0" class="option_input option_input_name" value="${option1}">
-                <input type="text" class="option_input option_input_value" placeholder="세부옵션">
-                <input type="text" class="option_input option_input_price" placeholder="추가금액">
-            </div>
-        `;
-
-        // 기존 td 내에 새로운 입력 세트 추가
-        td.appendChild(newInputs);
-    }
-
-    let cnt = 0;
-    function addParent(event) {
-        const options = document.querySelector('.tb4'); // tbody를 선택하는 대신 tb4로 바로 작업
-        const limit3 = document.querySelector('.limit3');
-
-        // 새로운 옵션 행(tr) 추가
-        const newTr = document.createElement('tr');
-        newTr.innerHTML = `
-            <th>옵션</th>
-            <td class="optionTD">
-                <div class="option_inputs">
-                    <input type="text" class="option_input option_input_name" placeholder="옵션명">
-                    <input type="text" class="option_input option_input_value" placeholder="세부옵션">
-                    <input type="text" class="option_input option_input_price" placeholder="추가금액">
-                </div>
-                <button class="btnOption" type="button" onclick="addOption(event)">세부옵션추가</button>
-
-            </td>
-        `;
-
-        // 테이블에 새로운 행 추가
-        options.appendChild(newTr);
-
-        cnt++;
-        if(cnt == 2){
-            event.preventDefault();
-            limit3.innerText = ' 옵션은 3개까지만 가능합니다';
-            document.getElementById('check').disabled = true;
-            return;
-        }
-
-    }
-    function confirmOption(event) {
-        let submitData = [];
-
-        document.querySelectorAll('.option_inputs').forEach(v => {
-            let name = v.querySelector('.option_input_name').value;
-            let value = v.querySelector('.option_input_value').value;
-            let price = v.querySelector('.option_input_price').value;
-
-            let jsonData = {
-                name: name,
-                value: value,
-                price: price
-            };
-
-            submitData.push(jsonData);
-        });
-        console.log(submitData)
-    }
 
 </script>
 <footer th:replace="layout/admin/footer.html"></footer>

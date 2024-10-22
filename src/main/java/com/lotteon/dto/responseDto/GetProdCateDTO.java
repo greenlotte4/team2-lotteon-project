@@ -19,8 +19,8 @@ public class GetProdCateDTO {
     @Override
     public String toString() {
         return "categoryId=" + categoryId +
-                ", categoryName=\"" + categoryName +
-                "\", categoryLevel=" + categoryLevel +
+                ", categoryName=" + categoryName +
+                ", categoryLevel=" + categoryLevel +
                 ", parent=" + parent +
                 ", categoryOrder=" + categoryOrder;
     }

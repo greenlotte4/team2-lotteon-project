@@ -1,5 +1,6 @@
 package com.lotteon.service.category;
 
+import com.lotteon.dto.requestDto.PostProdCateMapperDTO;
 import com.lotteon.dto.responseDto.GetCategoryDto;
 import com.lotteon.dto.responseDto.GetProdCateDTO;
 import com.lotteon.dto.responseDto.TestResponseDto;
@@ -162,6 +163,27 @@ public class CategoryProductService {
                 .stream()
                 .map(product -> modelMapper.map(product, GetProdCateDTO.class))
                 .toList();
+    }
+
+    public void insertCateMapper(PostProdCateMapperDTO postProdCateMapperDTO) {
+
+        Optional<Product> opt = productRepository.findById(postProdCateMapperDTO.getProductId());
+
+        Product product = null;
+
+        if (opt.isPresent()) {
+            product = opt.get();
+        }
+
+        CategoryProductMapper categoryProductMapper = CategoryProductMapper.builder()
+                .id(postProdCateMapperDTO.getId())
+                .category(categoryProductRepository.findByCategoryId(postProdCateMapperDTO.getCategoryId()))
+                .product(product)
+                .build();
+
+        System.out.println("22222222222233333333"+categoryProductMapper);
+
+        categoryProdMapperRepository.save(categoryProductMapper);
     }
 
 }
