@@ -1,16 +1,22 @@
 package com.lotteon.service.product;
 
+import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostProductDTO;
 import com.lotteon.dto.requestDto.PostProductOptionDTO;
+import com.lotteon.entity.member.Seller;
 import com.lotteon.entity.product.Product;
 import com.lotteon.entity.product.ProductOption;
+import com.lotteon.repository.member.SellerRepository;
 import com.lotteon.repository.product.ProductOptionRepository;
 import com.lotteon.repository.product.ProductRepository;
 import com.lotteon.service.config.ImageService;
+import com.lotteon.service.member.SellerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,7 +37,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductOptionRepository productOptionRepository;
     private final ModelMapper modelMapper;
-
+    private final SellerRepository sellerRepository;
     @Value("${file.upload-dir}")
     private String uploadPath;
 
@@ -117,6 +123,34 @@ public class ProductService {
                 .build();
 
         productOptionRepository.save(productOption);
+    }
+
+    public List<PostProductDTO> selectProduct(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Object principal = authentication.getPrincipal();
+
+        long id = Integer.parseInt(((MyUserDetails) principal).getName());
+
+        List<Product> products = productRepository.findBySellId(id);
+
+        List<PostProductDTO> postProductDTOs = new ArrayList<>();
+
+
+        for(Product product : products){
+            Optional<Seller> opt = sellerRepository.findById(product.getSellId());
+            Seller seller = null;
+            if(opt.isPresent()){
+                seller = opt.get();
+            }
+            PostProductDTO postProductDTO = modelMapper.map(product, PostProductDTO.class);
+            postProductDTO.setSellCompany(seller.getSellCompany());
+            postProductDTOs.add(postProductDTO);
+            log.info("@@@"+postProductDTO);
+        }
+
+        log.info("$$$" + products);
+        return postProductDTOs;
     }
 
 

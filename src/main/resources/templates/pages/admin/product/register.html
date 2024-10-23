@@ -27,7 +27,6 @@
             for (const [key, value] of productAll.entries()) {
                 console.log(key, value)
             }
-            let prodIdSave = null;
             fetch('/admin/prod/info', {
                 method: 'POST',
                 body: productAll
@@ -88,7 +87,6 @@
                 <input type="text" style="opacity:0" class="option_input option_input_name" value="${option1}">
                 <input type="text" class="option_input option_input_value" placeholder="세부옵션">
                 <input type="text" class="option_input option_input_price" placeholder="추가금액">
-                <input type="text" class="option_input option_input_stock" placeholder="재고량">
                 <button class="btnDelete" type="button" onclick="deleteOption2(event)">삭제</button>
             </div>
         `;
@@ -112,7 +110,6 @@
                     <input type="text" class="option_input option_input_name" placeholder="옵션명">
                     <input type="text" class="option_input option_input_value" placeholder="세부옵션">
                     <input type="text" class="option_input option_input_price" placeholder="추가금액">
-                    <input type="text" class="option_input option_input_stock" placeholder="재고량">
                 </div>
                 <button class="btnOption" type="button" onclick="addOption(event)">세부옵션추가</button>
                 <button class="btnDelete" type="button" onclick="deleteOption(event)">삭제</button>
@@ -145,23 +142,16 @@
             let name = v.querySelector('.option_input_name').value;
             let value = v.querySelector('.option_input_value').value;
             let price = v.querySelector('.option_input_price').value;
-            let stock = v.querySelector('.option_input_stock').value;
 
             let jsonData = {
                 optionName: name,
                 optionValue: value,
                 additionalPrice: price,
-                stock: stock,
                 productId: null
             };
 
             submitData.push(jsonData);
         });
-        let stockTotal = 0;
-        for (let a = 0; a < submitData.length; a++) {
-            stockTotal += submitData[a].stock;
-        }
-        console.log("44" + stockTotal)
         console.log(submitData)
     }
 
@@ -359,10 +349,6 @@
                         <th>포인트</th>
                         <td><input type="text" name="prodPoint" placeholder="포인트 입력"> p</td>
                     </tr>
-                    <tr class="stock">
-                        <th>재고수량</th>
-                        <td><input type="text" name="prodStock" placeholder="재고량 입력"> 개</td>
-                    </tr>
                     <tr class="delivery">
                         <th>배송비</th>
                         <td><input type="text" name="prodDeliver" placeholder="배송비 입력"> 원</td>
@@ -410,7 +396,6 @@
                                     <input type="text" class="option_input option_input_name" placeholder="옵션명">
                                     <input type="text" class="option_input option_input_value" placeholder="세부옵션">
                                     <input type="text" class="option_input option_input_price" placeholder="추가금액">
-                                    <input type="text" class="option_input option_input_stock" placeholder="재고량">
                                 </div>
                                 <button class="btnOption btn_blue" type="button" onclick="addOption(event)">세부옵션추가
                                 </button>

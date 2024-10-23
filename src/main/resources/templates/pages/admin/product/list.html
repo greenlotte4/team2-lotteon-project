@@ -48,127 +48,28 @@
                 <th class="admin">관리</th>
             </tr>
 
-            <tr>
+            <tr th:each="product:${products}">
                 <td>
                     <input type="checkbox" class="checkbox">
                 </td>
                 <td class="td-picture">
-                    <img src="../../images/x-img2.png" alt="">
-                    <img src="../../images/x-img2.png" alt="">
-                    <img src="../../images/x-img2.png" alt="">
+                    <img th:src="@{'/file/'+${product.getProdListImg()}}" alt="">
+                    <img th:src="@{'/file/'+${product.getProdBasicImg()}}" alt="">
+                    <img th:src="@{'/file/'+${product.getProdDetailImg()}}" alt="">
                 </td>
-                <td class="td-prodId">
-                    201618888
-                </td>
-                <td class="td-name">상품명 #1</td>
-                <td class="td-price">32,000</td>
-                <td class="td-discount">10%</td>
-                <td class="td-point">320p</td>
-                <td class="td-stock">120</td>
-                <td class="td-seller">(주)홍합</td>
-                <td class="td-views">77</td>
+                <td class="td-prodId">[[${product.getId}]]</td>
+                <td class="td-name">[[${product.getProdName}]]</td>
+                <td class="td-price">[[${product.getProdPrice}]]</td>
+                <td class="td-discount">[[${product.getProdDiscount}]]%</td>
+                <td class="td-point">[[${product.getProdPoint}]]p</td>
+                <td class="td-stock">[[${product.getProdStock}]]</td>
+                <td class="td-seller">[[${product.getSellCompany}]]</td>
+                <td class="td-views">[[${product.getProdViews}]]</td>
                 <td class="td-admin">
                     <input type="button" value="[ 삭제 ]">
                     <input type="button" value="[ 수정 ]">
                 </td>
             </tr>
-            <tr>
-                <td>
-                    <input type="checkbox" class="checkbox">
-                </td>
-                <td class="td-picture">
-                    <img src="../../images/x-img2.png" alt="">
-                    <img src="../../images/x-img2.png" alt="">
-                    <img src="../../images/x-img2.png" alt="">
-                </td>
-                <td class="td-prodId">
-                    201618888
-                </td>
-                <td class="td-name">상품명 #1</td>
-                <td class="td-price">32,000</td>
-                <td class="td-discount">10%</td>
-                <td class="td-point">320p</td>
-                <td class="td-stock">120</td>
-                <td class="td-seller">(주)홍합</td>
-                <td class="td-views">77</td>
-                <td class="td-admin">
-                    <input type="button" value="[ 삭제 ]">
-                    <input type="button" value="[ 수정 ]">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="checkbox" class="checkbox">
-                </td>
-                <td class="td-picture">
-                    <img src="../../images/x-img2.png" alt="">
-                    <img src="../../images/x-img2.png" alt="">
-                    <img src="../../images/x-img2.png" alt="">
-                </td>
-                <td class="td-prodId">
-                    201618888
-                </td>
-                <td class="td-name">상품명 #1</td>
-                <td class="td-price">32,000</td>
-                <td class="td-discount">10%</td>
-                <td class="td-point">320p</td>
-                <td class="td-stock">120</td>
-                <td class="td-seller">(주)홍합</td>
-                <td class="td-views">77</td>
-                <td class="td-admin">
-                    <input type="button" value="[ 삭제 ]">
-                    <input type="button" value="[ 수정 ]">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="checkbox" class="checkbox">
-                </td>
-                <td class="td-picture">
-                    <img src="../../images/x-img2.png" alt="">
-                    <img src="../../images/x-img2.png" alt="">
-                    <img src="../../images/x-img2.png" alt="">
-                </td>
-                <td class="td-prodId">
-                    201618888
-                </td>
-                <td class="td-name">상품명 #1</td>
-                <td class="td-price">32,000</td>
-                <td class="td-discount">10%</td>
-                <td class="td-point">320p</td>
-                <td class="td-stock">120</td>
-                <td class="td-seller">(주)홍합</td>
-                <td class="td-views">77</td>
-                <td class="td-admin">
-                    <input type="button" value="[ 삭제 ]">
-                    <input type="button" value="[ 수정 ]">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="checkbox" class="checkbox">
-                </td>
-                <td class="td-picture">
-                    <img src="../../images/x-img2.png" alt="">
-                    <img src="../../images/x-img2.png" alt="">
-                    <img src="../../images/x-img2.png" alt="">
-                </td>
-                <td class="td-prodId">
-                    201618888
-                </td>
-                <td class="td-name">상품명 #1</td>
-                <td class="td-price">32,000</td>
-                <td class="td-discount">10%</td>
-                <td class="td-point">320p</td>
-                <td class="td-stock">120</td>
-                <td class="td-seller">(주)홍합</td>
-                <td class="td-views">77</td>
-                <td class="td-admin">
-                    <input type="button" value="[ 삭제 ]">
-                    <input type="button" value="[ 수정 ]">
-                </td>
-            </tr>
-
         </table>
         <div class="btns">
             <button class="delete-btn">선택삭제</button>

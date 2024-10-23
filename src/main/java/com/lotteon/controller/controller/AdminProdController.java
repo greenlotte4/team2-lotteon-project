@@ -1,11 +1,17 @@
 package com.lotteon.controller.controller;
 
+import com.lotteon.config.MyUserDetails;
+import com.lotteon.dto.requestDto.PostProductDTO;
 import com.lotteon.dto.responseDto.GetCategoryDto;
 import com.lotteon.dto.responseDto.GetProdCateDTO;
 import com.lotteon.dto.responseDto.TestResponseDto;
+import com.lotteon.entity.product.Product;
 import com.lotteon.service.category.CategoryProductService;
+import com.lotteon.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,12 +26,18 @@ import java.util.List;
 public class AdminProdController {
     private final CategoryProductService categoryProductService;
 
+    private final ProductService productService;
+
     private String getSideValue() {
         return "product";  // 실제 config 값을 여기에 설정합니다.
     }
 
     @GetMapping("/products")
     public String products(Model model) {
+
+        List<PostProductDTO> products = productService.selectProduct();
+
+        model.addAttribute("products", products);
         model.addAttribute("config", getSideValue());
         return "pages/admin/product/list";
     }
