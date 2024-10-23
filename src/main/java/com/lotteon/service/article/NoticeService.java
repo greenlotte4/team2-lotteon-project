@@ -11,6 +11,7 @@ import com.lotteon.repository.category.CategoryArticleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;  // Sort 클래스 import 추가
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -52,57 +53,24 @@ public class NoticeService {
 
     // 공지사항 저장 (작성 및 수정)
     public void saveNotice(NoticeRequestDto RequestDto) {
-
         long uid = RequestDto.getMemberId();
-        Optional<Member> optMember = memberRepository.findById(uid);
-        Member member = optMember.get();
-
+        Member member = memberRepository.findById(uid)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다. ID: " + uid));
         RequestDto.setMember(member);
 
-        log.info("서비스 "+RequestDto);
         long cate1 = RequestDto.getCateId1();
         long cate2 = RequestDto.getCateId2();
-        log.info("카테고리확인1"+cate1+cate2);
 
-        Optional<CategoryArticle> optCategoryArticle1 = categoryArticleRepository.findById(cate1);
-        Optional<CategoryArticle> optCategoryArticle2 = categoryArticleRepository.findById(cate2);
-        log.info("카테고리확인2"+ optCategoryArticle1 + optCategoryArticle2);
-
-        CategoryArticle categoryArticle1 = optCategoryArticle1.get();
-        CategoryArticle categoryArticle2 = optCategoryArticle2.get();
+        CategoryArticle categoryArticle1 = categoryArticleRepository.findById(cate1)
+                .orElseThrow(() -> new IllegalArgumentException("카테고리 1을 찾을 수 없습니다. ID: " + cate1));
+        CategoryArticle categoryArticle2 = categoryArticleRepository.findById(cate2)
+                .orElseThrow(() -> new IllegalArgumentException("카테고리 2을 찾을 수 없습니다. ID: " + cate2));
 
         RequestDto.setCate1(categoryArticle1);
         RequestDto.setCate2(categoryArticle2);
 
-        log.info("테스트" + RequestDto);
-
-        Notice entity = modelMapper.map(RequestDto,Notice.class);
-
+        Notice entity = modelMapper.map(RequestDto, Notice.class);
         noticeRepository.save(entity);
-        /*Notice notice = new Notice();
-        // 작성자(Member) 설정
-        Member member = memberRepository.findById(noticeRequestDto.getMemberId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
-        notice.setMember(member);
-
-        // 카테고리(CategoryArticle) 설정
-        CategoryArticle cate1 = categoryArticleRepository.findById(noticeRequestDto.getCate1Id())
-                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리를 찾을 수 없습니다."));
-        notice.setCate1(cate1);
-
-        if (noticeRequestDto.getCate2Id() != null) {
-            CategoryArticle cate2 = categoryArticleRepository.findById(noticeRequestDto.getCate2Id())
-                    .orElseThrow(() -> new IllegalArgumentException("해당 카테고리를 찾을 수 없습니다."));
-            notice.setCate2(cate2);
-        }
-
-        // 공지사항 정보 설정
-        notice.setNoticeTitle(noticeRequestDto.getNoticeTitle());
-        notice.setNoticeContent(noticeRequestDto.getNoticeContent());
-
-        Notice savedNotice = noticeRepository.save(notice);
-        return modelMapper.map(savedNotice, NoticeResponseDto.class);*/
-
     }
 
     // 공지사항 수정
@@ -110,9 +78,16 @@ public class NoticeService {
         Notice notice = noticeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 공지사항을 찾을 수 없습니다. ID: " + id));
 
-        // 필요한 필드만 업데이트 (제목과 내용)
         notice.setNoticeTitle(noticeRequestDto.getNoticeTitle());
         notice.setNoticeContent(noticeRequestDto.getNoticeContent());
+
+        CategoryArticle cate1 = categoryArticleRepository.findById(noticeRequestDto.getCateId1())
+                .orElseThrow(() -> new IllegalArgumentException("카테고리 1을 찾을 수 없습니다. ID: " + noticeRequestDto.getCateId1()));
+        CategoryArticle cate2 = categoryArticleRepository.findById(noticeRequestDto.getCateId2())
+                .orElseThrow(() -> new IllegalArgumentException("카테고리 2을 찾을 수 없습니다. ID: " + noticeRequestDto.getCateId2()));
+
+        notice.setCate1(cate1);
+        notice.setCate2(cate2);
 
         Notice updatedNotice = noticeRepository.save(notice);
         return modelMapper.map(updatedNotice, NoticeResponseDto.class);
@@ -129,17 +104,42 @@ public class NoticeService {
     public NoticeResponseDto getNotice(Long id) {
         Notice notice = noticeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 공지사항을 찾을 수 없습니다. ID: " + id));
-        return modelMapper.map(notice, NoticeResponseDto.class);
+
+        NoticeResponseDto responseDto = modelMapper.map(notice, NoticeResponseDto.class);
+        responseDto.setMemberId(notice.getMember().getId());
+        responseDto.setCateId1(notice.getCate1().getCategoryId());
+        responseDto.setCateId2(notice.getCate2() != null ? notice.getCate2().getCategoryId() : null);
+        responseDto.setCategory1Name(notice.getCate1().getCategoryName());
+        responseDto.setCategory2Name(notice.getCate2() != null ? notice.getCate2().getCategoryName() : null);
+
+        return responseDto;
     }
 
-    // 전체 공지사항 목록 조회
-    public List<Notice> getAllNotices() {
-        return noticeRepository.findAll();
+    // 선택된 공지사항 삭제
+    public void deleteSelectedNotices(List<Long> ids) {
+        List<Notice> noticesToDelete = noticeRepository.findAllById(ids);
+
+        if (noticesToDelete.isEmpty()) {
+            throw new IllegalArgumentException("삭제할 공지사항이 없습니다.");
+        }
+
+        noticeRepository.deleteAllById(ids);
     }
 
-    // ID로 공지사항 조회
-    public Notice getNoticeById(Long id) {
-        return noticeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("공지사항을 찾을 수 없습니다: " + id));
+    // 전체 공지사항 목록을 시간순으로 조회 (최신순)
+    public List<Notice> getAllNoticesSortedByDate() {
+        return noticeRepository.findAll(Sort.by(Sort.Direction.DESC, "noticeRdate"));
+    }
+
+    public List<Notice> searchNotices(String keyword, Pageable pageable) {
+        return noticeRepository.findByNoticeTitleContainingOrNoticeContentContaining(keyword, keyword, pageable).getContent();
+    }
+
+    public Page<Notice> getNotices(Pageable pageable) {
+        return noticeRepository.findAll(pageable);
+    }
+
+    public List<Notice> getNoticesByCategory(Long categoryId, Pageable pageable) {
+        return noticeRepository.findByCate1_CategoryId(categoryId, pageable).getContent();
     }
 }

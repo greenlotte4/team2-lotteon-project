@@ -3,6 +3,7 @@ package com.lotteon.repository.article;
 import com.lotteon.entity.article.Notice;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;  // Sort 클래스 import 추가
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -26,4 +27,7 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
     // 제목 또는 내용에 특정 키워드가 포함된 공지사항을 검색 (페이징 지원)
     Page<Notice> findByNoticeTitleContainingOrNoticeContentContaining(
             String keyword, String keyword1, Pageable pageable);
+
+    // 시간순 정렬로 모든 공지사항 조회 (Sort 객체 사용)
+    List<Notice> findAll(Sort sort);
 }

@@ -27,7 +27,7 @@ public class Notice {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "notice_cate1", nullable = false)
-    private CategoryArticle cate1;  // 카테고리 1
+    private CategoryArticle cate1;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "notice_cate2")
@@ -74,6 +74,5 @@ public class Notice {
     // 카테고리 2 설정 (optional)
     public void setCate2(CategoryArticle cate2) {
         this.cate2 = cate2;
-
     }
 }

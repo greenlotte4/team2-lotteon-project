@@ -11,7 +11,6 @@
         <p>HOME > 고객센터 > <strong>공지사항</strong></p>
       </nav>
       <form class="search">
-        <!-- 공지사항 유형 선택 -->
         <select name="type" class="select_type">
           <option value="typeselect">유형선택</option>
           <option value="customer_service">고객서비스</option>
@@ -36,8 +35,7 @@
         </tr>
         </thead>
         <tbody>
-        <!-- 공지사항 리스트 출력 -->
-        <tr th:each="notice, iterStat : ${notices}">
+        <tr th:each="notice, iterStat : ${notices}" th:data-id="${notice.id}">
           <td><input type="checkbox" /></td>
           <td th:text="${iterStat.index + 1}"></td> <!-- 번호 -->
           <td th:text="${notice.cate1.categoryName}"></td> <!-- 카테고리 1 -->
@@ -46,7 +44,9 @@
           <td th:text="${#dates.format(notice.noticeRdate, 'yyyy-MM-dd')}"></td> <!-- 날짜 -->
           <td>
             <div>
-              <a th:href="@{'/admin/cs/notice/delete/' + ${notice.id}}" class="button--delete">[삭제]</a>
+              <div>
+                <button class="button--delete" th:onclick="'deleteNotice(' + ${notice.id} + ')'">[삭제]</button>
+              </div>
             </div>
             <div>
               <a th:href="@{'/admin/cs/notice/modify/' + ${notice.id}}" class="button--edit">[수정]</a>
@@ -58,11 +58,10 @@
     </article>
 
     <div class="button-group">
-      <button class="button--delete">선택삭제</button>
+      <button class="button--delete" onclick="deleteSelected();">선택삭제</button>
       <a th:href="@{/admin/cs/notice/write}" class="button--write">작성하기</a>
     </div>
 
-    <!-- 페이지 네비게이션 -->
     <div class="paging">
       <a href="#" class="prev">이전</a>
       <a href="#">1</a>
@@ -73,3 +72,78 @@
   </section>
 </main>
 <footer th:replace="layout/admin/footer.html"></footer>
+
+<script>
+  // 공통 함수로 삭제 요청 처리
+  function fetchDeleteRequest(url, successMessage) {
+    fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+            .then(response => {
+              if (response.ok) {
+                alert(successMessage);
+                window.location.reload();
+              } else {
+                alert('삭제에 실패했습니다.');
+              }
+            })
+            .catch(error => {
+              console.error('삭제 중 오류가 발생했습니다.', error);
+              alert('삭제 중 오류가 발생했습니다.');
+            });
+  }
+
+  // 개별 삭제 기능
+  function deleteNotice(noticeId) {
+    if (confirm('정말로 이 공지사항을 삭제하시겠습니까?')) {
+      fetchDeleteRequest(`/admin/cs/notice/delete/${noticeId}`, '삭제가 완료되었습니다.');
+    }
+  }
+
+  // 선택 삭제 기능
+  function deleteSelected() {
+    const selectedIds = [];
+    document.querySelectorAll('tbody input[type="checkbox"]:checked').forEach((checkbox) => {
+      const row = checkbox.closest('tr');
+      const id = row.dataset.id;
+      selectedIds.push(Number(id));
+    });
+
+    if (selectedIds.length > 0) {
+      if (confirm('정말로 선택된 항목을 삭제하시겠습니까?')) {
+        fetch('/admin/cs/notice/deleteSelected', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(selectedIds)
+        })
+                .then(response => response.json())
+                .then(data => {
+                  if (data.success) {
+                    window.location.href = '/admin/cs/notices';
+                  } else {
+                    alert('삭제 실패: ' + data.message);
+                  }
+                })
+                .catch(error => {
+                  alert('삭제 중 오류 발생: ' + error.message);
+                });
+      }
+    } else {
+      alert('삭제할 항목을 선택하세요.');
+    }
+  }
+
+  // 전체 선택 / 해제 기능
+  document.getElementById('selectAll').addEventListener('change', function() {
+    const isChecked = this.checked;
+    document.querySelectorAll('tbody input[type="checkbox"]').forEach((checkbox) => {
+      checkbox.checked = isChecked;
+    });
+  });
+
+</script>

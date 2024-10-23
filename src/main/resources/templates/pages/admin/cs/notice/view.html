@@ -29,23 +29,25 @@
         <input type="hidden" name="noticeHit" value="1" />
         <tr style="height: 60px;">
           <th>유형</th>
-          <td class="notice-type">고객서비스</td>
+          <td class="notice-type" th:text="${notice.cate1.categoryName}">고객서비스</td> <!-- 공지사항 유형 출력 -->
         </tr>
         <tr style="height: 60px;">
           <th>제목</th>
-          <td class="notice-title">[안내] 해외결제 사칭 문자 주의</td>
+          <td class="notice-title" th:text="${notice.noticeTitle}">공지사항 제목</td> <!-- 공지사항 제목 출력 -->
         </tr>
         <tr style="height: 200px;">
           <th>내용</th>
-          <td class="notice-content">안녕하세요. 롯데 ON입니다.</td>
+          <td class="notice-content" th:text="${notice.noticeContent}">공지사항 내용</td> <!-- 공지사항 내용 출력 -->
         </tr>
         </tbody>
       </table>
       <div class="button-group">
-        <button class="button--delete" onclick="deleteNotice(event);"
-                href="/admin/cs/notice/delete?noticeNo=1">삭제</button>
-        <button class="button--modify" href="/admin/cs/notice/modify?noticeNo=1">수정</button>
-        <button class="button--back" href="#" onclick="goBack();">목록</button>
+        <form th:action="@{/admin/cs/notice/delete/{id}(id=${notice.id})}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+          <button type="submit" class="button--delete">삭제</button>
+          <!-- 수정 버튼 -->
+          <a th:href="@{/admin/cs/notice/modify/{id}(id=${notice.id})}" class="button--modify">수정</a>
+          <!-- 목록으로 돌아가기 버튼 -->
+          <button class="button--back" type="button" onclick="window.location.href='/admin/cs/notices';">목록</button>
       </div>
     </article>
   </section>

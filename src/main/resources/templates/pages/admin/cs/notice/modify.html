@@ -62,50 +62,43 @@
       <p>HOME > 고객센터 > <strong>공지사항</strong></p>
     </nav>
     <article>
-      <form class="formBox" method="post">
-        <input type="hidden" name="noticeNo" />
-        <input type="hidden" name="noticeCate2" />
+      <form class="formBox" method="post" th:action="@{/admin/cs/notice/modify/{id}(id=${notice.id})}">
+        <!-- 공지사항 ID 및 기타 숨겨진 필드 -->
+        <input type="hidden" name="id" th:value="${notice.id}" />
+        <input type="hidden" name="memberId" th:value="${notice.memberId}" />
+        <input type="hidden" name="cateId1" th:value="${notice.cateId1}" />
+        <input type="hidden" name="cateId2" th:value="${notice.cateId2}" />
         <input type="hidden" name="noticeType2" />
         <table>
           <tbody>
           <tr>
             <th>유형</th>
             <td>
-              <select class="noticeCate" name="noticeCate">
-                <option>유형선택</option>
-                <option value="service">고객서비스</option>
-                <option value="event">이벤트당첨</option>
-                <option value="safe">안전거래</option>
-                <option value="danger">위해상품</option>
+              <select name="cateId1" th:value="${notice.cateId1}">
+                <option value="service" th:selected="${notice.category1Name == 'service'}">고객서비스</option>
+                <option value="event" th:selected="${notice.category1Name == 'event'}">이벤트당첨</option>
+                <option value="safe" th:selected="${notice.category1Name == 'safe'}">안전거래</option>
+                <option value="danger" th:selected="${notice.category1Name == 'danger'}">위해상품</option>
               </select>
             </td>
           </tr>
           <tr>
             <th>제목</th>
             <td>
-              <input
-                      type="text"
-                      class="noticeTitle"
-                      name="noticeTitle"
-                      placeholder="제목을 입력하세요."
-              />
+              <input type="text" name="noticeTitle" th:value="${notice.noticeTitle}" placeholder="제목을 입력하세요." />
             </td>
           </tr>
           <tr>
             <th>내용</th>
             <td>
-              <textarea
-                      class="noticeContent"
-                      name="noticeContent"
-                      placeholder="내용을 입력하세요."
-              ></textarea>
+              <textarea name="noticeContent" th:text="${notice.noticeContent}" placeholder="내용을 입력하세요."></textarea>
             </td>
           </tr>
           </tbody>
         </table>
         <div class="button-group">
-          <button class="button--back">취소하기</button>
-          <button class="button--write">등록하기</button>
+          <button type="submit" class="button--write">수정하기</button>
+          <button type="button" class="button--back" onclick="window.history.back()">취소하기</button>
         </div>
       </form>
     </article>
