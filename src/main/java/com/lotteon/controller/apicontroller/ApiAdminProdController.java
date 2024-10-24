@@ -68,4 +68,19 @@ public class ApiAdminProdController {
         return null;
     }
 
+    @PostMapping("/product/delete")
+    public ResponseEntity<Map<String, Object>> delete(@RequestBody List<String> ids){
+
+        log.info("9999"+ids.toString());
+
+        for(String id : ids){
+            productService.deleteProduct(Long.parseLong(id));
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        return ResponseEntity.ok(response);
+
+        }
+
 }

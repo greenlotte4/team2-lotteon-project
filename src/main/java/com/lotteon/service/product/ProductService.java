@@ -3,18 +3,23 @@ package com.lotteon.service.product;
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostProductDTO;
 import com.lotteon.dto.requestDto.PostProductOptionDTO;
+import com.lotteon.dto.requestDto.ProductPageRequestDTO;
+import com.lotteon.dto.responseDto.ProductPageResponseDTO;
 import com.lotteon.entity.member.Seller;
 import com.lotteon.entity.product.Product;
 import com.lotteon.entity.product.ProductOption;
 import com.lotteon.repository.member.SellerRepository;
 import com.lotteon.repository.product.ProductOptionRepository;
 import com.lotteon.repository.product.ProductRepository;
-import com.lotteon.service.config.ImageService;
-import com.lotteon.service.member.SellerService;
+import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -46,14 +51,14 @@ public class ProductService {
         File fileUploadPath = new File(uploadPath);
 
         //파일 업로드 디렉터리가 존재하지 않으면 디렉터리 생성
-        if(!fileUploadPath.exists()){
+        if (!fileUploadPath.exists()) {
             fileUploadPath.mkdirs();
         }
 
         //파일 업로드 시스템 경로 구하기
         String path = fileUploadPath.getAbsolutePath();
 
-        log.info("pathpathpathpathpathpath :: "+path);
+        log.info("pathpathpathpathpathpath :: " + path);
 
         List<MultipartFile> prodFiles = new ArrayList<>();  // ArrayList로 초기화
         prodFiles.add(productDTO.getListImage());
@@ -62,8 +67,8 @@ public class ProductService {
 
         int i = 1;  // 이미지 번호를 매기기 위한 인덱스
         boolean isUploadSuccessful = true;
-        for(MultipartFile file : prodFiles){
-            if(!file.isEmpty()){
+        for (MultipartFile file : prodFiles) {
+            if (!file.isEmpty()) {
                 // 원본 파일명 가져오기
                 String oName = file.getOriginalFilename();
                 // 파일 확장자 추출
@@ -74,7 +79,7 @@ public class ProductService {
                 // 파일 저장
                 try {
                     file.transferTo(new File(path, sName));
-                    switch (i){
+                    switch (i) {
                         case 1:
                             productDTO.setProdListImg(sName);
                             break;
@@ -96,9 +101,9 @@ public class ProductService {
             Product product = modelMapper.map(productDTO, Product.class);
             log.info("123123123123" + product);
             Product result = productRepository.save(product);
-            log.info("result.getID 결과값은??????"+result.getId());
+            log.info("result.getID 결과값은??????" + result.getId());
             return result;
-        }else {
+        } else {
             return null;
         }
     }
@@ -108,7 +113,7 @@ public class ProductService {
         Optional<Product> opt = productRepository.findById(optionDTO.getProductId());
 
         Product product = null;
-        if(opt.isPresent()){
+        if (opt.isPresent()) {
             product = opt.get();
         }
 
@@ -125,33 +130,49 @@ public class ProductService {
         productOptionRepository.save(productOption);
     }
 
-    public List<PostProductDTO> selectProduct(){
+    public ProductPageResponseDTO<PostProductDTO> getPageProductListAdmin(ProductPageRequestDTO pageRequestDTO) {
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         Object principal = authentication.getPrincipal();
-
         long id = Integer.parseInt(((MyUserDetails) principal).getName());
 
-        List<Product> products = productRepository.findBySellId(id);
+        log.info("444444444"+ id);
 
-        List<PostProductDTO> postProductDTOs = new ArrayList<>();
-
-
-        for(Product product : products){
-            Optional<Seller> opt = sellerRepository.findById(product.getSellId());
-            Seller seller = null;
-            if(opt.isPresent()){
-                seller = opt.get();
-            }
-            PostProductDTO postProductDTO = modelMapper.map(product, PostProductDTO.class);
-            postProductDTO.setSellCompany(seller.getSellCompany());
-            postProductDTOs.add(postProductDTO);
-            log.info("@@@"+postProductDTO);
+        Pageable pageable = pageRequestDTO.getPageable("id");
+        Page<Tuple> pageProduct = null;
+        if(pageRequestDTO.getKeyword() == null) {
+            pageProduct = productRepository.selectArticleAllForList(pageRequestDTO, pageable, id);
+        }else {
+            pageProduct = productRepository.selectArticleForSearch(pageRequestDTO, pageable, id);
         }
 
-        log.info("$$$" + products);
-        return postProductDTOs;
+        List<String> companys = new ArrayList<>();
+
+        List<PostProductDTO> productList = pageProduct.getContent().stream().map(tuple -> {
+            Product product = tuple.get(0, Product.class);
+            String company = tuple.get(1, String.class);
+            companys.add(company);
+            return modelMapper.map(product, PostProductDTO.class);
+        }).toList();
+
+        for(int i = 0; i < companys.size(); i++) {
+            productList.get(i).setSellCompany(companys.get(i));
+            log.info("서비스 158번째 줄의 로그입니다" + productList.get(i));
+            log.info(productList.size());
+        }
+
+        int total = (int)pageProduct.getTotalElements();
+
+        return ProductPageResponseDTO.<PostProductDTO>builder()
+                .productPageRequestDTO(pageRequestDTO)
+                .dtoList(productList)
+                .total(total)
+                .build();
+
     }
 
+    public void deleteProduct(long id){
+        productRepository.deleteById(id);
+    }
 
 }

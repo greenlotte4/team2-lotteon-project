@@ -2,6 +2,36 @@
 <link rel="stylesheet" th:href="@{/css/admin/product/list.css}" />
 <link rel="stylesheet" th:href="@{/css/basic.css}">
 <body>
+<script>
+    function deleteEvent (){
+
+        let checkboxes = document.querySelectorAll(".checkbox:checked");
+        const checkedValues = Array.from(checkboxes).map(checkbox => checkbox.value);
+        console.log(checkedValues);
+
+        if(confirm("정말 삭제하시겠습니까?")){
+
+            fetch("/admin/prod/product/delete", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(checkedValues)
+            })
+                .then(resp => resp.json())
+                .then(data => {
+                    console.log(data);
+                    if(data.success){
+                        alert("선택하신 상품이 삭제되었습니다!")
+                        location.reload();
+                    }
+                })
+                .catch(err => {
+                console.log(err);
+            })
+        }
+    }
+</script>
 <header th:replace="layout/admin/header.html"></header>
 <main>
     <aside th:replace="layout/admin/aside.html"></aside>
@@ -19,8 +49,8 @@
 
         <div class="header-gubun"></div>
 
-        <form class="search">
-            <select name="search" class="search-option">
+        <form th:action="@{/admin/prod/products}" class="search">
+            <select name="type" class="search-option">
                 <option value="상품명">상품명</option>
                 <option value="상품번호">상품번호</option>
                 <option value="판매자">판매자</option>
@@ -48,9 +78,9 @@
                 <th class="admin">관리</th>
             </tr>
 
-            <tr th:each="product:${products}">
+            <tr th:each="product, i:${products.getDtoList()}">
                 <td>
-                    <input type="checkbox" class="checkbox">
+                    <input type="checkbox" class="checkbox" th:value="${product.getId()}" >
                 </td>
                 <td class="td-picture">
                     <img th:src="@{'/file/'+${product.getProdListImg()}}" alt="">
@@ -72,17 +102,25 @@
             </tr>
         </table>
         <div class="btns">
-            <button class="delete-btn">선택삭제</button>
+            <button class="delete-btn" onclick="deleteEvent()">선택삭제</button>
             <button class="insert-btn">상품등록</button>
         </div>
-        <div class="page">
-            <a href="#" class="first"><<</a>
-            <a class="on" href="#">1</a>
-            <a href="#">2</a>
-            <a href="#">3</a>
-            <a href="#">4</a>
-            <a href="#">5</a>
-            <a href="#" class="last">>></a>
+        <div class="page" th:if="${not #lists.isEmpty(products.dtoList)}">
+
+            <th:block th:if="${products.prev}">
+                <a th:if="${products.keyword == null}" th:href="@{/admin/prod/products/(pg=${products.start - 1})}" class="first"><<</a>
+                <a th:if="${products.keyword != null}" th:href="@{/admin/prod/products/(pg=${products.start - 1}, type=${products.type}, keyword=${products.keyword})}" class="first"><<</a>
+            </th:block>
+            <th:block th:each="num:${#numbers.sequence(products.start, products.end)}">
+                <a th:if="${products.keyword == null}" th:href="@{/admin/prod/products(pg=${num})}" th:class="${num == products.pg} ? 'on' : 'num'">[[${num}]]</a>
+                <a th:if="${products.keyword != null}" th:href="@{/admin/prod/products(pg=${num}, type=${products.type}, keyword=${products.keyword})}" th:class="${num == products.pg} ? 'on' : 'num'">[[${num}]]</a>
+
+            </th:block>
+            <th:block th:if="${products.next}">
+                <a th:if="${products.keyword == null}" th:href="@{/admin/prod/products/(pg=${products.end + 1})}" class="first"><<</a>
+                <a th:if="${products.keyword != null}" th:href="@{/admin/prod/products/(pg=${products.end + 1}, type=${products.type}, keyword=${products.keyword})}" class="first"><<</a>
+            </th:block>
+
         </div>
     </div>
 </main>
