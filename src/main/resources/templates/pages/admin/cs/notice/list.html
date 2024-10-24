@@ -49,7 +49,7 @@
               </div>
             </div>
             <div>
-              <a th:href="@{'/admin/cs/notice/modify/' + ${notice.id}}" class="button--edit">[수정]</a>
+              <button th:href="@{'/admin/cs/notice/modify/' + ${notice.id}}" class="button--edit">[수정]</button>
             </div>
           </td>
         </tr>
@@ -59,7 +59,7 @@
 
     <div class="button-group">
       <button class="button--delete" onclick="deleteSelected();">선택삭제</button>
-      <a th:href="@{/admin/cs/notice/write}" class="button--write">작성하기</a>
+      <button th:href="@{/admin/cs/notice/write}" class="button--write">작성하기</button>
     </div>
 
     <div class="paging">
