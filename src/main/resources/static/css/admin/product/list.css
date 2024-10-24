@@ -189,7 +189,10 @@
     text-decoration: underline;
 }
 
-
+button {
+    background-color: #FFFFFF;
+    border: none;
+}
 
 
 

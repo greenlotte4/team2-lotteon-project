@@ -25,6 +25,8 @@ public class QTerms extends EntityPathBase<Terms> {
 
     public final StringPath termsName = createString("termsName");
 
+    public final StringPath termsTitle = createString("termsTitle");
+
     public final StringPath termsType = createString("termsType");
 
     public QTerms(String variable) {

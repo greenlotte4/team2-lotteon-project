@@ -31,6 +31,34 @@
             })
         }
     }
+    function deleteOne (button){
+        const prodId = button.dataset.id;
+        console.log(prodId);
+
+        if(confirm("정말 삭제하시겠습니까?")){
+
+            fetch("/admin/prod/product/delete", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(prodId)
+            })
+                .then(resp => resp.json())
+                .then(data => {
+                    console.log(data);
+                    if(data.success){
+                        alert("선택하신 상품이 삭제되었습니다!")
+                        location.reload();
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        }
+
+
+    }
 </script>
 <header th:replace="layout/admin/header.html"></header>
 <main>
@@ -39,7 +67,7 @@
         <div class="header">
             <span class="header-title">상품현황</span>
             <div class="header-right">
-                <span>HOME</span>
+                 <span>HOME</span>
                 <span>></span>
                 <span>상품관리</span>
                 <span>></span>
@@ -96,14 +124,14 @@
                 <td class="td-seller">[[${product.getSellCompany}]]</td>
                 <td class="td-views">[[${product.getProdViews}]]</td>
                 <td class="td-admin">
-                    <input type="button" value="[ 삭제 ]">
-                    <input type="button" value="[ 수정 ]">
+                    <input type="button" class="deleteBtn" value="[ 삭제 ]" th:data-id="${product.getId()}" onclick="deleteOne(this)">
+                    <input type="button" class="modifyBtn" value="[ 수정 ]" th:data-id="${product.getId()}">
                 </td>
             </tr>
         </table>
         <div class="btns">
             <button class="delete-btn" onclick="deleteEvent()">선택삭제</button>
-            <button class="insert-btn">상품등록</button>
+            <button class="insert-btn" onclick="location.href='/admin/prod/product/post'">상품등록</button>
         </div>
         <div class="page" th:if="${not #lists.isEmpty(products.dtoList)}">
 

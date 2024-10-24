@@ -1,62 +1,62 @@
     const productAll = new FormData();
     let submitData = [];
     window.onload = function (){
-    const prodInsert = document.getElementsByClassName('submit-btn')[0];
-    prodInsert.addEventListener('click', (e) => {
+        const prodInsert = document.getElementsByClassName('submit-btn')[0];
+        prodInsert.addEventListener('click', (e) => {
 
-    const prodCate = new FormData(document.getElementById('prodCategory'));
-    const productInfo = new FormData(document.getElementById('productInfo'));
-    const detail = new FormData(document.getElementById('detail'));
+        const prodCate = new FormData(document.getElementById('prodCategory'));
+        const productInfo = new FormData(document.getElementById('productInfo'));
+        const detail = new FormData(document.getElementById('detail'));
 
 
-    e.preventDefault();
-    for (const [key, value] of prodCate.entries()) {
-    productAll.append(`postProdCateMapperDTO.${key}`, value)
-}
-    for (const [key, value] of productInfo.entries()) {
-    productAll.append(`postProductDTO.${key}`, value)
-}
-    for (const [key, value] of detail.entries()) {
-    productAll.append(`postProdDetailDTO.${key}`, value)
-}
+        e.preventDefault();
+        for (const [key, value] of prodCate.entries()) {
+            productAll.append(`postProdCateMapperDTO.${key}`, value)
+        }
+        for (const [key, value] of productInfo.entries()) {
+            productAll.append(`postProductDTO.${key}`, value)
+        }
+        for (const [key, value] of detail.entries()) {
+            productAll.append(`postProdDetailDTO.${key}`, value)
+        }
 
-    for (const [key, value] of productAll.entries()) {
-    console.log(key, value)
-}
-    fetch('/admin/prod/info', {
-    method: 'POST',
-    body: productAll
-})
-    .then(resp => resp.json())
-    .then(data => {
-    if (data.success > 0) {
-    alert('결제 정보가 등록되었습니다!');
-    for(let i = 0; i < submitData.length; i++){
-    submitData[i].productId = String(data.success);
-}
-    console.log("44555"+JSON.stringify(submitData));
-    fetch("/admin/prod/option", {
-    method: 'POST',
-    headers: {
-    'Content-Type': 'application/json'  // 서버가 JSON 데이터를 받을 수 있도록 명시
-},
-    body: JSON.stringify(submitData)
-}).then(resp => resp.json())
-    .then(data => {
-    console.log(data);
-}).catch(err => {
-    console.log(err);
-})
+        for (const [key, value] of productAll.entries()) {
+            console.log(key, value)
+        }
+        fetch('/admin/prod/info', {
+            method: 'POST',
+            body: productAll
+         })
+            .then(resp => resp.json())
+            .then(data => {
+            if (data.success > 0) {
+            alert('결제 정보가 등록되었습니다!');
+            for(let i = 0; i < submitData.length; i++){
+                submitData[i].productId = String(data.success);
+            }
+            console.log("44555"+JSON.stringify(submitData));
+            fetch("/admin/prod/option", {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json'  // 서버가 JSON 데이터를 받을 수 있도록 명시
+            },
+                body: JSON.stringify(submitData)
+         }).then(resp => resp.json())
+            .then(data => {
+            console.log(data);
+        }).catch(err => {
+            console.log(err);
+        })
+        window.location.href ="/admin/prod/products";
+        } else {
+            alert('결제 정보 등록에 실패하였습니다');
+        }
 
-} else {
-    alert('결제 정보 등록에 실패하였습니다');
-}
-
-})
-    .catch(err => {
-    console.log(err);
-});
-});
+        })
+            .catch(err => {
+             console.log(err);
+        });
+    });
 }
 
     function addOption(event) {
