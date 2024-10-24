@@ -1,0 +1,60 @@
+<link rel="stylesheet" th:href="@{/css/event/attendance.css}">
+<link rel="stylesheet" th:href="@{/css/basic.css}">
+<script th:src="@{/js/main.js}"></script>
+<header th:replace="layout/main/header.html"></header>
+<main style="margin-top: 140px; gap: 0">
+    <div id="wrap" style=" margin: 0 auto;">
+        <main id="main" style="height: auto;">
+            <nav id="navi" style="width: 810px;">
+                <h2 class="sub_tit">이벤트</h2>
+                <p class="location">
+                    <span>HOME</span>
+                    <span>이벤트</span>
+                    <span>출석이벤트</span>
+                </p>
+            </nav>
+            <div class="event-img" style="margin: 0 auto; margin-top: 50px">
+                <img th:src="@{/images/event-attendance.jpg}">
+            </div>
+            <div class="event-stamps" style="display: flex; gap: 20px; margin-top: 50px">
+                <div style="width: 100px; height: 100px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <p>1일차</p>
+                    <img th:if="${days>=1}" th:src="@{/images/event-stamp-on.png}" style="width: 90px; height: 90px;">
+                    <img th:if="${days<1}" th:src="@{/images/60x60.png}" style="width: 90px; height: 90px;">
+                </div>
+                <div style="width: 100px; height: 100px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <p>2일차</p>
+                    <img th:if="${days>=2}" th:src="@{/images/event-stamp-on.png}" style="width: 90px; height: 90px;">
+                    <img th:if="${days<2}" th:src="@{/images/60x60.png}" style="width: 90px; height: 90px;">
+                </div>
+                <div style="width: 100px; height: 100px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <p>3일차</p>
+                    <img th:if="${days>=3}" th:src="@{/images/event-stamp-on.png}" style="width: 90px; height: 90px;">
+                    <img th:if="${days<3}" th:src="@{/images/60x60.png}" style="width: 90px; height: 90px;">
+                </div>
+                <div style="width: 100px; height: 100px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <p>4일차</p>
+                    <img th:if="${days>=4}" th:src="@{/images/event-stamp-on.png}" style="width: 90px; height: 90px;">
+                    <img th:if="${days<4}" th:src="@{/images/60x60.png}" style="width: 90px; height: 90px;">
+                </div>
+                <div style="width: 100px; height: 100px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <p>5일차</p>
+                    <img th:if="${days>=5}" th:src="@{/images/event-stamp-on.png}" style="width: 90px; height: 90px;">
+                    <img th:if="${days<5}" th:src="@{/images/60x60.png}" style="width: 90px; height: 90px;">
+                </div>
+                <div style="width: 100px; height: 100px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <p>6일차</p>
+                    <img th:if="${days>=6}" th:src="@{/images/event-stamp-on.png}" style="width: 90px; height: 90px;">
+                    <img th:if="${days<6}" th:src="@{/images/60x60.png}" style="width: 90px; height: 90px;">
+                </div>
+                <div style="width: 100px; height: 100px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <p>7일차</p>
+                    <img th:if="${days>=7}" th:src="@{/images/event-stamp-on.png}" style="width: 90px; height: 90px;">
+                    <img th:if="${days<7}" th:src="@{/images/60x60.png}" style="width: 90px; height: 90px;">
+                </div>
+            </div>
+            <div class="event-month">10월</div>
+        </main>
+    </div>
+</main>
+<footer th:replace="layout/main/footer.html"></footer>

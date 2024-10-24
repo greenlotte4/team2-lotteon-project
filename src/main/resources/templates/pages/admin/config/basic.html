@@ -1,6 +1,5 @@
 <link rel="stylesheet" th:href="@{/css/admin/config/basic.css}">
 <link rel="stylesheet" th:href="@{/css/basic.css}">
-<body>
     <header th:replace="layout/admin/header.html"></header>
     <main>
         <aside th:replace="layout/admin/aside.html"></aside>
@@ -25,7 +24,7 @@
                 <table class="tb1">
                     <tr>
                         <th>사이트 버전</th>
-                        <td>[[${site.configVersion}]]</td>
+                        <td>[[${appVersion}]]</td>
                     </tr>
                 </table>
             </section>

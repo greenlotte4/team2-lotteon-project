@@ -1,15 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// 유효성 검사에 사용할 상태변수
-let isMemIdOk   = false; // 판매자 ID
-let isMemPwdOk  = false; // 판매자 PW
-let isSellGradeOk = false; // 판매자 회원 등급
-let isSellCompanyOk = false; // 회사명
-let isSellRepresentativeOk = false; // 대표명
-let isSellBusinessCodeOk = false; // 사업자등록번호
-let isSellOrderCodeOk = false; // 통신판매업번호
-let isSellHpOk = false; // 전화번호
-let isSellFaxOk = false; // 팩스번호
-let isSellAddrOk = false; // 회사주소
+
+//유효성 검사에 사용할 상태변수
+let isUidOk   = false;
+let isPassOk  = false;
+let isNameOk  = false;
+let isNickOk  = false;
+let isEmailOk = false;
+let isHpOk    = false;
 
 // 유효성 검사에 사용할 정규표현식
 const reUid   = /^[a-z]+[a-z0-9]{4,19}$/g;
@@ -19,40 +15,34 @@ const reNick  = /^[a-zA-Zㄱ-힣0-9][a-zA-Zㄱ-힣0-9]*$/;
 const reEmail = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
 const reHp    = /^01(?:0|1|[6-9])-(?:\d{4})-\d{4}$/;
 
-const reMemId   = /^[a-z]+[a-z0-9]{4,19}$/g;
-const reMemPwd  = /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{5,16}$/;
-const reSellRepresentative  = /^[가-힣]{2,10}$/
-const reSellHp = /^01(?:0|1|[6-9])-(?:\d{4})-\d{4}$/;
-const reSellFax = /^(070|02|0[3-9]{1}[0-9]{1})[0-9]{3,4}[0-9]{4}$/;
-
 
 window.onload = function (){
 
-    // 1. 아이디 유효성 검사
-    const inputMemIds = document.getElementsByClassName('inputMemId');
-    const resultMemId = document.getElementById('resultMemId');
-    const btnCheckMemId = document.getElementById('btnCheckMemId');
+    // 아이디 유효성 검사
+    const inputUids = document.getElementsByClassName('inputUid');
+    const resultUid = document.getElementById('resultUid');
+    const btnCheckUid = document.getElementById('btnCheckUid');
 
     btnCheckUid.onclick = function(){
         const type    = this.dataset.type;
-        const value   = inputMemIds[0].value;
+        const value   = inputUids[0].value;
         console.log('type : ' + type + ', value : ' + value);
 
-        // 1-1.아이디 정규식 검사
-        if(!value.match(reMemId)){
-            showResultInvalid(resultMemId, '아이디 형식이 맞지 않습니다.')
-            isMemIdOk = false;
+        // 정규식 검사
+        if(!value.match(reUid)){
+            showResultInvalid(resultUid, '아이디 형식이 맞지 않습니다.')
+            isUidOk = false;
             return;
         }
 
         setTimeout(async () => {
             const data = await fetchGet(`/farmstory/user/${type}/${value}`);
             if(data.result > 0){
-                showResultInvalid(resultMemId, '이미 사용 중인 아이디 입니다.');
-                isMemIdOk = false;
+                showResultInvalid(resultUid, '이미 사용 중인 아이디 입니다.');
+                isUidOk = false;
             }else{
-                showResultValid(resultMemId, '사용 가능한 아이디 입니다.');
-                isMemIdOk = true;
+                showResultValid(resultUid, '사용 가능한 아이디 입니다.');
+                isUidOk = true;
             }
         }, 1000);
     }

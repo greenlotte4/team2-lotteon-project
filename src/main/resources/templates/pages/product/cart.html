@@ -1,6 +1,113 @@
 <link rel="stylesheet" th:href="@{/css/product/cart.css}">
 <link rel="stylesheet" th:href="@{/css/basic.css}">
 <script th:src="@{/js/main.js}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const btnDel = document.querySelector('#btnDel');
+    const selectAllCheckbox = document.querySelector('.checkboxAll');
+    const itemCheckboxes = document.querySelectorAll('.checkboxItem');
+
+    // 전체 선택 체크박스 클릭 시
+    selectAllCheckbox.addEventListener('change', function() {
+      itemCheckboxes.forEach(checkbox => {
+        checkbox.checked = selectAllCheckbox.checked;
+      });
+    });
+
+    // 개별 체크박스 클릭 시 전체 선택 체크박스 상태 업데이트
+    itemCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+        if ([...itemCheckboxes].every(item => item.checked)) {
+          selectAllCheckbox.checked = true;
+        } else {
+          selectAllCheckbox.checked = false;
+        }
+      });
+    });
+
+
+    btnDel.addEventListener('click', function (e){
+      e.preventDefault();
+
+      // 선택된 체크박스들 중에서 value를 가져옴
+      const selectedValues = [...document.querySelectorAll('.checkboxItem')]
+              .filter(checkbox => checkbox.checked)
+              .map(checkbox => checkbox.value);
+
+      if (selectedValues.length > 0) {
+        console.log('선택된 항목의 ID들:', selectedValues);  // 선택된 체크박스의 value들 출력
+
+        fetch('/prod/cart',{
+          method:'DELETE',
+          headers:{
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(selectedValues)
+        })
+                .then(resp => resp.json())
+                .then(data =>{
+                    console.log(data);
+                    if(data>0 && data!=null){
+                      alert(`선택한 상품 ${data}개를 장바구니에서 삭제하였습니다.`)
+                      location.reload();
+                    }
+                }).catch();
+
+      } else {
+        alert('선택된 항목이 없습니다.');
+      }
+    });
+
+    const btnOrder = document.querySelector('#btnOrder');
+    btnOrder.addEventListener('click', function (e){
+      e.preventDefault();
+
+      // 선택된 체크박스와 함께 해당 tr에서 product id를 가져옴
+      const selectedProducts = [...document.querySelectorAll('.checkboxItem')]
+              .filter(checkbox => checkbox.checked)
+              .map(checkbox => {
+                // 체크된 체크박스가 포함된 tr을 찾고 그 안의 product id를 추출
+                const tr = checkbox.closest('tr');
+                const productId = tr.getAttribute('data-product-id'); // 여기서 product id를 가져옴
+                const quantity = tr.getAttribute('data-quantity');
+                return {
+                  cartItemId: checkbox.value,
+                  productId: productId,
+                  quantity: quantity
+                };
+              });
+
+      if (selectedProducts.length > 0) {
+
+
+        console.log('선택된 항목들:', selectedProducts);
+
+        fetch('/prod/cart/save',{
+          method:'Post',
+          headers:{
+            'Content-Type': 'application/json'
+          },
+          body:  JSON.stringify(selectedProducts)
+        })
+                .then(resp => resp.json())
+                .then(data =>{
+                  console.log(data);
+                  if (data){
+                    alert('주문서로 이동합니다.')
+                    location.replace('/prod/order')
+                  }else{
+                    alert('주문 정보를 확인할 수 없습니다. 장바구니를 다시 확인해 주세요.')
+                  }
+                }).catch();
+
+      } else {
+        alert('선택된 항목이 없습니다.');
+      }
+    })
+
+  });//dom
+
+</script>
 <header th:replace="layout/main/header.html"></header>
 <main style="margin-top: 140px; gap: 0">
   <aside id="aside" style="margin: 0; margin-right: 30px">
@@ -44,18 +151,22 @@
       <!-- .navi-->
       <table class="tb1">
         <colgroup>
-          <col style="width: 3%" />
-          <col style="width: 32%" />
+          <col style="width: 7%" />
           <col style="width: 10%" />
-          <col style="width: 15%" />
+          <col style="width: 25%" />
           <col style="width: 10%" />
+          <col style="width: 5%" />
+          <col style="width: 10%" />
+          <col style="width: 5%" />
           <col style="width: 10%" />
           <col style="width: 10%" />
           <col style="width: 10%" />
         </colgroup>
         <tr>
-          <th><input type="checkbox" class="checkbox" /></th>
+          <th><input type="checkbox" class="checkboxAll" /></th>
+          <th>상품이미지</th>
           <th>상품명</th>
+          <th>옵션</th>
           <th>수량</th>
           <th>판매가</th>
           <th>할인</th>
@@ -63,27 +174,41 @@
           <th>배송비</th>
           <th>총합</th>
         </tr>
-        <tr th:each="cartItem : ${cartItems}">
-          <td><input type="checkbox" class="checkbox" /></td>
+        <tr th:each="cartItem : ${cartItems}" th:data-product-id="${cartItem.product.id}" th:data-quantity="${cartItem.quantity}">
+          <td><input type="checkbox" class="checkboxItem" th:value="${cartItem.cartItemId}"/></td>
           <td>
             <div class="img">
               <img src="https://via.placeholder.com/74x69" />
-              <div class="name_desc">
-                <span>상품명</span> <br />
-                <span>상품설명</span>
-              </div>
+            </div>
+          </td>
+          <td><div class="name_desc">
+            <span th:text="${cartItem.product.prodName}">상품명</span> <br />
+            <span th:text="${cartItem.product.prodSummary}">상품설명</span>
+          </div></td>
+          <td>
+            <div class="cartOptions">
+              <!-- 옵션이 있는 경우 반복문 실행 -->
+              <th:block th:if="${#lists.size(cartItem.cartItemOption) > 0}">
+                <div th:each="cartItemOption, stat : ${cartItem.cartItemOption}">
+                  <span th:text="${cartItemOption.optionValue}">S</span>
+                </div>
+              </th:block>
+              <!-- 옵션이 없을 경우 "옵션없음" 출력 -->
+              <th:block th:if="${#lists.size(cartItem.cartItemOption) == 0}">
+                <span>옵션없음</span>
+              </th:block>
             </div>
           </td>
           <td th:text="${cartItem.quantity}">1</td>
-          <td>27,000</td>
-          <td>5%</td>
-          <td>270</td>
-          <td>무료배송</td>
+          <td th:text="${cartItem.product.prodPrice}">27,000</td>
+          <td th:text="${cartItem.product.prodDiscount}">5%</td>
+          <td th:text="${cartItem.product.prodPoint}">270</td>
+          <td  th:text="${cartItem.product.prodDeliver}">무료배송</td>
           <td>25,650</td>
         </tr>
       </table>
       <!-- .tb1-->
-      <button class="btnDel"><a href="#">선택삭제</a></button>
+      <button class="btnDel" id="btnDel"><a href="#">선택삭제</a></button>
       <div class="total">
         <table class="tb2">
           <tr>
@@ -115,7 +240,7 @@
           </tr>
         </table>
         <!-- .tb2-->
-        <button class="btn_order"><a th:href="@{/prod/order}">주문하기</a></button>
+        <div class="btn_order"><a th:href="@{/prod/order}" id="btnOrder">주문하기</a></div>
       </div>
       <!-- .total-->
     </main>

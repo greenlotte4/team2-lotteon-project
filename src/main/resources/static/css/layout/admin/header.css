@@ -26,4 +26,5 @@ header {
     position: relative;
     top: -50px;
     left: 45px;
+    filter: saturate(0%) brightness(80%);
 }

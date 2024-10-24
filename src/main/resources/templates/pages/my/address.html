@@ -1,0 +1,37 @@
+<link rel="stylesheet" th:href="@{/css/my/address.css}">
+<link rel="stylesheet" th:href="@{/css/basic.css}">
+<header th:replace="layout/main/header.html"></header>
+<th:block th:replace="layout/my/modal"></th:block>
+<main>
+    <div id="my">
+        <th:block th:replace="layout/my/aside.html"></th:block>
+        <main>
+            <th:block th:replace="layout/my/banner.html"></th:block>
+            <section>
+                <h3>배송지 설정</h3>
+                <div class="address-wrapper">
+                    <div th:each="addr : ${addrs}" class="address-box on">
+                        <div th:text="${addr.addrNick}" class="address-name">
+                            기본배송지
+                        </div>
+                        <div>우편번호 : <span th:text="${addr.addr1}">2011120313</span></div>
+                        <div>주소 : <span th:text="${addr.addr2}">신주로 40</span></div>
+                        <div>상세주소 : <span th:text="${addr.addr3}">우남 101 - 1202호</span></div>
+                        <div>결제방법 : <span th:text="${addr.payment}">1515</span></div>
+                    </div>
+
+                    <div class="address-box">
+                        <div onclick="addressPopup()" class="noItem">추가하기</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</main>
+<footer th:replace="layout/main/footer.html"></footer>
+<script>
+    function addressPopup(){
+        console.log("ddd")
+    }
+</script>
+

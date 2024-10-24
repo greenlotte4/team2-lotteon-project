@@ -54,100 +54,20 @@
                                          <td colspan="7" class="td_first"><a  th:href="@{/article/list(pg=1)}">일치하는 내용이 없습니다.</a></td>
                                      </tr>
                                   </th:block> -->
+        <tr th:each="faq : ${faqs}">
+          <td><input type="checkbox"/></td>
+          <td th:text="${faq.id}">7777</td>
+          <td th:text="${faq.cate1.categoryName}">회원</td>
+          <td th:text="${faq.cate2.categoryName}">가입</td>
+          <td style="text-align: left" th:text="${faq.title}">삭제 수정 버튼이 될까요 되길 기도해 ~</td>
+          <td th:text="${faq.views}">120</td>
+          <td th:text="${faq.rdate}">00.00.00</td>
+          <td>
+            <button type="button" th:data-id="${faq.id}" class="delete-btn">[삭제]</button>
+            <button type="button" th:data-id="${faq.id}" class="modify-btn">[수정]</button>
+          </td>
+        </tr>
 
-        <tr>
-          <td><input type="checkbox" /></td>
-          <td>1</td>
-          <td>회원</td>
-          <td>가입</td>
-          <td style="text-align: left">삭제 수정 버튼이 될까요 되길 기도해 ~</td>
-          <td>120</td>
-          <td>00.00.00</td>
-          <td>
-            <button type="button" class="delete-btn" data-id="1">[삭제]</button>
-            <button type="button" class="modify-btn" data-id="1">[수정]</button>
-          </td>
-        </tr>
-        <tr>
-          <td><input type="checkbox" /></td>
-          <td>1</td>
-          <td>회원</td>
-          <td>가입</td>
-          <td style="text-align: left">
-            본인 인증 시 이미 가입되어 있는 정보라고 나옵니다.
-          </td>
-          <td>120</td>
-          <td>00.00.00</td>
-          <td>
-            <div>[삭제]</div>
-            <div>[수정]</div>
-          </td>
-        </tr>
-        <tr>
-          <td><input type="checkbox" /></td>
-          <td>1</td>
-          <td>회원</td>
-          <td>가입</td>
-          <td style="text-align: left">아이디를 여러 개 사용할 수 있나요?</td>
-          <td>120</td>
-          <td>00.00.00</td>
-          <td>
-            <div>[삭제]</div>
-            <div>[수정]</div>
-          </td>
-        </tr>
-        <tr>
-          <td><input type="checkbox" /></td>
-          <td>1</td>
-          <td>회원</td>
-          <td>가입</td>
-          <td style="text-align: left">회원 종류 및 혜택 안내</td>
-          <td>120</td>
-          <td>00.00.00</td>
-          <td>
-            <div>[삭제]</div>
-            <div>[수정]</div>
-          </td>
-        </tr>
-        <tr>
-          <td><input type="checkbox" /></td>
-          <td>1</td>
-          <td>회원</td>
-          <td>탈퇴</td>
-          <td style="text-align: left">회원탈퇴는 어떻게 하나요?</td>
-          <td>120</td>
-          <td>00.00.00</td>
-          <td>
-            <div>[삭제]</div>
-            <div>[수정]</div>
-          </td>
-        </tr>
-        <tr>
-          <td><input type="checkbox" /></td>
-          <td>1</td>
-          <td>회원</td>
-          <td>탈퇴</td>
-          <td style="text-align: left">개인회원과 법인회원에 차이가 있나요?</td>
-          <td>120</td>
-          <td>00.00.00</td>
-          <td>
-            <div>[삭제]</div>
-            <div>[수정]</div>
-          </td>
-        </tr>
-        <tr>
-          <td><input type="checkbox" /></td>
-          <td>1</td>
-          <td>회원</td>
-          <td>가입</td>
-          <td style="text-align: left">개인회원과 법인회원에 차이가 있나요?</td>
-          <td>120</td>
-          <td>00.00.00</td>
-          <td>
-            <div>[삭제]</div>
-            <div>[수정]</div>
-          </td>
-        </tr>
         <!-- 한번 반복할때마다 pageStartNum을 1씩 차감 -->
       </table>
     </article>

@@ -42,7 +42,7 @@ public class CustomerCouponService {
                 .getAuthentication()
                 .getPrincipal();
 
-        Coupon coupon = couponRepository.findById((long)4).orElseThrow();
+        Coupon coupon = couponRepository.findById((long)6).orElseThrow();
 
         Optional<CustomerCoupon> customerCoupon = customerCouponRepository.findByCustomerAndCoupon(auth.getUser().getCustomer(),coupon);
         if(customerCoupon.isPresent()){

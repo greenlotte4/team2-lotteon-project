@@ -36,11 +36,13 @@ public class FaqService {
 
     public void writeFaq(String categoryName1, String categoryName2, String title, String content) {
         // 1. CategoryArticleRepository에서 카테고리 이름으로 카테고리를 찾음
-        CategoryArticle category1 = categoryArticleRepository.findByCategoryName(categoryName1)
+        CategoryArticle category1 = categoryArticleRepository.findByCategoryNameAndCategoryLevelAndCategoryType(categoryName1,1,2)
                 .orElseThrow(() -> new IllegalArgumentException("카테고리 1을 찾을 수 없습니다: " + categoryName1));
-        CategoryArticle category2 = categoryArticleRepository.findByCategoryName(categoryName2)
+        CategoryArticle category2 = categoryArticleRepository.findByCategoryNameAndCategoryLevelAndCategoryType(categoryName2,2,2)
                 .orElseThrow(() -> new IllegalArgumentException("카테고리 2를 찾을 수 없습니다: " + categoryName2));
 
+        System.out.println("category1 = " + category1.getCategoryId());
+        System.out.println("category2 = " + category2.getCategoryId());
         // 2. Faq 엔티티 생성 및 저장
         Faq faq = Faq.builder()
                 .cate1(category1)
@@ -80,9 +82,10 @@ public class FaqService {
     }
 
 
+    public Page<ArticleDto> getAllFaqs(Pageable pageable) {
+        Page<Faq> faqPage = faqRepository.findAll(pageable);
+        System.out.println("faqPage.getContent() = " + faqPage.getContent());
 
-
-
-
-
+        return faqPage.map(ArticleDto::fromEntity);
+    }
 }

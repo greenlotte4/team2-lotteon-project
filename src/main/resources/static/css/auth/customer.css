@@ -51,7 +51,10 @@
     border: 2px solid #bfbfbf;
     width: 200px;
     height: 30px;
+    text-indent: 5px;
 }
+
+.resultId{ display: inline-block; color:#eb413f; margin-top:4px;}
 
 .tb2 {
     width: 1000px;

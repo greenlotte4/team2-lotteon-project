@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.lotteon'
-version = '0.0.3-SNAPSHOT'
+version = '0.0.5-SNAPSHOT'
 
 java {
     toolchain {
@@ -59,4 +59,18 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+def queryDslDir = "src/main/generated"
+
+sourceSets {
+    main.java.srcDirs queryDslDir
+}
+
+tasks.withType(JavaCompile) {
+    options.generatedSourceOutputDirectory = file(queryDslDir)
+}
+
+clean {
+    delete file(queryDslDir)
 }

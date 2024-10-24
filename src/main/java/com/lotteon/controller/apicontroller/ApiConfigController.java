@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lotteon.dto.requestDto.*;
 import com.lotteon.dto.responseDto.GetBannerDTO;
 import com.lotteon.entity.config.*;
+import com.lotteon.entity.term.Terms;
 import com.lotteon.service.config.*;
+import com.lotteon.service.term.TermsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,8 @@ public class ApiConfigController {
     private final FLotteService flotteService;
     private final FCsService fcsService;
     private final CopyrightService copyrightService;
+    private final VersionService versionService;
+    private final TermsService termsService;
 
     @GetMapping("/banners/{tab}")
     public ResponseEntity<?> selectBanner(@PathVariable("tab") String tab) {
@@ -120,10 +124,20 @@ public class ApiConfigController {
         return ResponseEntity.ok().body(copyright);
     }
     @PostMapping("/version")
-    public ResponseEntity<?> insertVersion(@ModelAttribute("id") Long id,
-                                             @RequestParam("copy") String copy) {
-        Copyright copyright = copyrightService.updateCopyright(id, copy);
-        return ResponseEntity.ok().body(copyright);
+    public ResponseEntity<?> insertVersion(@ModelAttribute PostVersionDTO postDTO) {
+        Version version = versionService.insertVersion(postDTO);
+        return ResponseEntity.ok().body(version);
     }
-
+    @DeleteMapping("/versions")
+    public ResponseEntity<?> deleteVersion(@RequestBody List<Long> ids) {
+        Boolean success = versionService.deleteVersionsById(ids);
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", success);
+        return ResponseEntity.ok(response);
+    }
+    @PostMapping("/term")
+    public ResponseEntity<?> modifyTerm(@ModelAttribute PostTermsDTO postDTO) {
+        Terms terms = termsService.modifyTerms(postDTO);
+        return ResponseEntity.ok().body(terms);
+    }
 }

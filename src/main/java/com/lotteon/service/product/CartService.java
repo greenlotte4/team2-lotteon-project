@@ -6,6 +6,8 @@ import com.lotteon.dto.responseDto.CartSessionDto;
 import com.lotteon.dto.responseDto.GetCartDto;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.product.*;
+import com.lotteon.repository.impl.CartItemOptionRepositoryImpl;
+import com.lotteon.repository.impl.CartItemRepositoryImpl;
 import com.lotteon.repository.member.MemberRepository;
 import com.lotteon.repository.product.*;
 import jakarta.servlet.http.HttpSession;
@@ -37,6 +39,8 @@ public class CartService {
     private final CartItemOptionRepository cartItemOptionRepository;
     private final ProductRepository productRepository;
     private final ProductOptionRepository productOptionRepository;
+    private final CartItemRepositoryImpl cartItemRepositoryImpl;
+    private final CartItemOptionRepositoryImpl cartItemOptionRepositoryImpl;
 
     @Transactional
     public ResponseEntity<?> insertCart(PostCartDto postCartDto, HttpSession session) {
@@ -108,6 +112,8 @@ public class CartService {
                 break;
             }
         }
+
+
         if (existingCartItem != null) {
             int newQuantity = existingCartItem.getQuantity() + postCartDto.getQuantity();
             double newPrice = newQuantity * product.getProdPrice();
@@ -164,12 +170,18 @@ public class CartService {
         // 5. 각 카트 아이템을 DTO로 변환
         for (CartItem cartItem : cartItems) {
             Product product = cartItem.getProduct();  // 카트 아이템에 연결된 상품
+            List<Long> sellectedOptions = cartItem.getSelectedOptions().stream()
+                    .map(cartItemOption ->  cartItemOption.getProdOptionId()).toList();
+
+            List<ProductOption> options = sellectedOptions.stream()
+                    .map(sellectedOption -> productOptionRepository.findById(sellectedOption).orElse(null)).toList();
 
             // 6. DTO로 변환
             GetCartDto getCartDto = GetCartDto.builder()
                     .cartItemId(cartItem.getId())
                     .quantity(cartItem.getQuantity())
                     .totalPrice(cartItem.getTotalPrice())
+                    .cartItemOption(options)
                     .product(product)  // 상품 정보를 포함
                     .build();
 
@@ -179,6 +191,20 @@ public class CartService {
 
         // 8. DTO 리스트 반환
         return cartDtoList;
+    }
+
+    public Long deleteCartItem(List<Long> cartItemIds) {
+
+        Long deletedOption = cartItemOptionRepositoryImpl.deleteCartItemOptionsByCartItemId(cartItemIds);
+        log.info("카트아이템 옵션부터 삭제해야 돼 했니? "+deletedOption);
+
+        if(deletedOption!=null){
+            Long deletedCount = cartItemRepositoryImpl.deleteCartItemsByCartItemId(cartItemIds);
+            return deletedCount;
+        }else{
+            return null;
+        }
+
     }
 }
 

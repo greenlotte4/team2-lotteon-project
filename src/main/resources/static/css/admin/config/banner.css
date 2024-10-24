@@ -93,6 +93,12 @@
     height: 100%;
     object-fit: cover;
 }
+tbody{counter-reset:list-number;}
+tr.list[style="display: table-row;"]{counter-increment: list-number;}
+tr.list[style="display: table-row;"]>td.id>span:before {content:counter(list-number);}
+
+
+
 
 .btns {
     margin-top: 30px;

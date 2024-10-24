@@ -1,5 +1,7 @@
 package com.lotteon.service.term;
 
+import com.lotteon.dto.requestDto.PostTermsDTO;
+import com.lotteon.dto.responseDto.GetBannerDTO;
 import com.lotteon.dto.responseDto.GetTermsResponseDto;
 import com.lotteon.entity.term.Terms;
 import com.lotteon.repository.term.TermsRepository;
@@ -57,6 +59,21 @@ public class TermsService {
 //                .collect(Collectors.toList());
 //    }
 
+    public Terms modifyTerms(PostTermsDTO postTermsDTO) {
+        Terms terms = termsRepository.findById(postTermsDTO.getId())
+                .orElseThrow(() -> new IllegalArgumentException("terms not found"));
 
+        terms.setTermsContent(postTermsDTO.getTermsContent());
+
+        return termsRepository.save(terms);
+    }
+
+    public List<GetTermsResponseDto> selectAllTerms() {
+        List<Terms> terms = termsRepository.findAll();
+        System.out.println("Terms list: " + terms);
+        return terms.stream()
+                .map(Entity -> modelMapper.map(Entity, GetTermsResponseDto.class))
+                .toList();
+    }
 }
 

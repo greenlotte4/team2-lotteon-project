@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @ToString
@@ -35,7 +36,7 @@ public class Faq {
     private String faqTitle;
 
     @Column(name = "faq_rdate")
-    private Timestamp faqRdate;
+    private LocalDateTime faqRdate;
 
     @Column(name = "faq_content", columnDefinition = "TEXT")
     private String faqContent;

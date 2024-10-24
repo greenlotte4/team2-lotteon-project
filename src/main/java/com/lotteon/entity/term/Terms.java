@@ -28,6 +28,8 @@ public class Terms {
     @Column(name = "terms_type")
     private String termsType;
 
+    @Column(name = "terms_title")
+    private String termsTitle;
 
     // Entity -> DTO
     public GetTermsResponseDto toDTO(){
@@ -37,6 +39,10 @@ public class Terms {
                 .termsContent(termsContent)
                 .termsType(termsType)
                 .build();
+    }
+
+    public void setTermsContent(String termsContent) {
+        this.termsContent = termsContent;
     }
 
 }

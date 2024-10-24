@@ -5,13 +5,13 @@
         <aside th:replace="layout/admin/aside.html"></aside>
         <div class="container">
             <div class="header">
-                <span class="header-title">배너관리</span>
+                <span class="header-title" onclick="selectTab(0)" style="cursor: pointer">배너관리</span>
                 <div class="header-right">
                     <span>HOME</span>
                     <span>></span>
                     <span>환경설정</span>
                     <span>></span>
-                    <span class="bold">배너관리</span>
+                    <span class="bold" onclick="selectTab(0)" style="cursor: pointer">배너관리</span>
                 </div>
             </div>
 
@@ -19,14 +19,14 @@
 
             <div class="main">
                 <div class="section">
-                    <div onclick="nav(event)" data-tab="1" class="tab1 banner-main-top active">메인상단 배너</div>
+                    <div onclick="nav(event)" data-tab="1" class="tab1 banner-main-top">메인상단 배너</div>
                     <div onclick="nav(event)" data-tab="2" class="tab2 banner-main-slide">메인슬라이드 배너</div>
                     <div onclick="nav(event)" data-tab="3" class="tab3 banner-product-view">상품 상세보기 배너</div>
                     <div onclick="nav(event)" data-tab="4" class="tab4 banner-login">회원로그인 배너</div>
                     <div onclick="nav(event)" data-tab="5" class="tab5 banner-my">마이페이지 배너</div>
                 </div>
 
-                <div class="header-title2">메인상단 배너</div>
+                <div class="header-title2">전체 배너</div>
                 <div class="header-gubun2"></div>
 
                 <table class="tb1">
@@ -47,11 +47,12 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="b:${bannerList}">
+                    <th:block th:each="b:${bannerList}">
+                        <tr th:class="${'list'+b.bannerLocation + ' list'}" style="display: table-row;">
                         <td class="checkbox">
                             <input type="checkbox" class="select">
                         </td>
-                        <td class="no">[[${b.id}]]</td>
+                        <td class="id" th:data-id="${b.id}"><span></span></td>
                         <td>
                             <div class="imgBox">
                                 <img th:src="@{'/file/'+${b.bannerImg}}" alt="" class="bannerImg">
@@ -80,7 +81,8 @@
                                    th:value="${b.bannerState < 1?'[ 활성화 ]':'[ 비활성화 ]'}"
                                    th:data-state="${b.bannerState}" th:data-no="${b.id}">
                         </td>
-                    </tr>
+                        </tr>
+                    </th:block>
                     </tbody>
                 </table>
                 <div class="btns">
@@ -216,59 +218,32 @@
             }
         }
         function selectTab(num){
-            fetch('/admin/config/banners/'+num)
-                .then(resp => {
-                    console.log(resp);
-                    if (!resp.ok) {
-                        return resp.json().then(err => {
-                            console.error('Server responded with an error:', err);
-                            throw new Error(`Error ${resp.status}: ${err.message || JSON.stringify(err)}`);
-                        });
-                    }
-                    return resp.json();
-                })
-                .then(data => {
-                    console.log('Response Data:', data);
 
-                    tbody.innerHTML=``;
-                    data.forEach((b, i) => {
-                        // 각 banner 데이터를 반복하면서 HTML을 생성합니다.
-                        const row = `
-                                        <tr>
-                                            <td class="checkbox">
-                                                <input type="checkbox" class="select">
-                                            </td>
-                                            <td class="no">${b.id}</td>
-                                            <td>
-                                                <div class="imgBox">
-                                                    <img src="/file/${b.bannerImg}" alt="" class="bannerImg">
-                                                </div>
-                                            </td>
-                                            <td class="td-info">
-                                                <div class="name">${b.bannerName}</div>
-                                                <div class="size">크기 : ${b.bannerSize}</div>
-                                                <div class="bgcolor">배경색 : ${b.bannerBg}</div>
-                                                <div class="link">${b.bannerLink}</div>
-                                            </td>
-                                            <td>${getLocationText(b.bannerLocation)}</td>
-                                            <td>${b.bannerSdate.substring(0, 10)}</td>
-                                            <td>${b.bannerEdate.substring(0, 10)}</td>
-                                            <td>${b.bannerStime.substring(11, 16)}</td>
-                                            <td>${b.bannerEtime.substring(11, 16)}</td>
-                                            <td class="td-admin">
-                                                <input type="button" class="banner-active"
-                                                    value="${b.bannerState<1?'[ 활성화 ]':'[ 비활성화 ]'}"
-                                                    data-state="${b.bannerState}" data-no="${b.id}">
-                                            </td>
-                                        </tr>
-                                    `;
-                        tbody.innerHTML += row;  // 생성된 row를 테이블에 추가합니다.
-                    });
-                })
-                .catch(err => {
-                    console.error('Error:', err);
-                    alert('배너 로딩 중 오류가 발생했습니다. 다시 시도해 주세요.');
+            const all_tr = document.getElementsByClassName('list');
+            const select_tr = document.getElementsByClassName(`list${num}`);
+
+            if(+num<1){
+                const allBanners = document.querySelectorAll('.section > div');
+                allBanners.forEach(function(banner) {
+                    banner.classList.remove('active');
                 });
+                document.querySelector('.header-title2').innerText='전체 배너';
+                for(let i = 0; i < all_tr.length; i++) {
+                    all_tr[i].style.display = 'table-row';
+                }
+                return;
+            }
+
+            // 모든 요소의 display를 none으로 설정
+            for(let i = 0; i < all_tr.length; i++) {
+                all_tr[i].style.display = 'none';
+            }
+
+            // 선택한 요소들만 display를 table로 설정
+            for(let i = 0; i < select_tr.length; i++) {
+                select_tr[i].style.display = 'table-row';
+            }
+
         }
         function nav(event) {
             // 모든 요소에서 active 클래스를 제거
@@ -302,7 +277,6 @@
         imgInput.addEventListener('change', function() {
             var file = imgInput.files[0];
 
-            // 파일의 크기를 체크합니다.
             if (file.size > 500 * 1024) {
                 alert('이미지 파일의 크기는 최대 500KB 이하이어야 합니다.');
                 imgInput.value = '';
@@ -478,7 +452,7 @@
 
                 for (let checkbox of selectedCheckboxes) {
                     const row = checkbox.closest('tr');
-                    const bannerNo = row.querySelector('.no').innerText.trim();
+                    const bannerNo = row.querySelector('.id').dataset.id;
                     console.log(bannerNo);
                     selectedIds.push(bannerNo);
                 }

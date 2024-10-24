@@ -1,0 +1,80 @@
+@charset "UTF-8";
+
+*{margin: 0; padding:0; font-family: "Inter", sans-serif; font-size: 12px; font-weight: 400;}
+html{color:#111; position:relative;}
+html, body{height:100%; }
+body{font-size:12px; line-height:18px; font-family: 'Noto Sans KR', sans-serif;}
+a, address, blockquote, br, fieldset, legend, label, form, input, select, textarea, button, cite, code, dl, dt, dd, h1, h2, h3, h4, h5, h6, p, div, iframe, ul, ol, li, hr, img {margin: 0; padding: 0; outline:none;}
+a{color:#111; text-decoration: none;}
+img{border:none; vertical-align: top;}
+ul, ol{list-style:none;}
+address{font-style: normal;}
+/* clearfix */
+.cf{}
+.cf::after {content: ""; display: block; clear: both;}
+
+/* hyper link */
+a, a:link, a:visited, a:active, a:hover{text-decoration: none; color: inherit;}
+
+/* input outline */
+input:active{outline: none;}
+input:focus{outline: none;}
+
+#wrap{
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+}
+/* aside 부분 */
+.aside{
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    height: auto;
+}
+
+.aside1, .aside2{
+    background-color: #111;
+    padding: 20px;
+    margin-bottom: 10px;
+    width: 236px;
+}
+
+/* 메인 */
+#main {
+    width: 811px;
+    height: 747px;
+    /*border: 2px solid #D9D9D9;*/
+}
+
+/* navi 부분 */
+#navi {
+    width: 765px;
+    height: auto;
+    display: flex;
+    justify-content: space-between; /* 두 요소를 양 끝에 배치 */
+    align-items: center;
+    border-bottom: 2px solid #000000;
+    margin: 0 auto;;
+}
+
+.sub_tit {
+    font-size: 16px;
+    font-weight: 700;
+    margin-left: 3px;
+    margin-bottom: 8px;
+    margin-top: 5px;
+}
+
+/* 로케이션 */
+.location > span::after{content: ' \003E'; }
+.location > span:last-of-type{font-weight: 700;}
+.location > span:last-of-type:after{content:none;}
+
+.event-month{
+    position: relative;
+    top: -1000px;
+    left: 64px;
+    color: white;
+    font-size: 40px;
+}

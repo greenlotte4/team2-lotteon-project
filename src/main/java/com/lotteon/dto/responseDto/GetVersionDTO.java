@@ -1,13 +1,10 @@
 package com.lotteon.dto.responseDto;
 
-
-import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Timestamp;
 
-@ToString
-@Getter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,5 +18,7 @@ public class GetVersionDTO {
     private String verContent;
 
     private Timestamp verRdate;
+
+    private String memUid;
 
 }

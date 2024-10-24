@@ -31,24 +31,17 @@ public class ApiAdminProdController {
     @PostMapping("/info")
     public ResponseEntity<Map<String, Object>> info(@ModelAttribute PostProdAllDTO postProdAllDTO) {
 
-        log.info("124443"+postProdAllDTO.getPostProdDetailDTO());
-        log.info("134443"+postProdAllDTO.getPostProductDTO());
+        log.info("124443" + postProdAllDTO.getPostProdDetailDTO());
+        log.info("134443" + postProdAllDTO.getPostProductDTO());
 
         Product result = productService.insertProduct(postProdAllDTO.getPostProductDTO());
         postProdAllDTO.getPostProdCateMapperDTO().setProductId(result.getId());
 
         categoryProductService.insertCateMapper(postProdAllDTO.getPostProdCateMapperDTO());
 
-        if(result != null) {
         Map<String, Object> response = new HashMap<>();
         response.put("success", result.getId());
         return ResponseEntity.ok(response);
-        }else {
-            Map<String, Object> response = new HashMap<>();
-            response.put("success", false);
-            return ResponseEntity.ok(response);
-        }
-
     }
 
     @PostMapping("/cate1")
@@ -74,5 +67,20 @@ public class ApiAdminProdController {
 
         return null;
     }
+
+    @PostMapping("/product/delete")
+    public ResponseEntity<Map<String, Object>> delete(@RequestBody List<String> ids){
+
+        log.info("9999"+ids.toString());
+
+        for(String id : ids){
+            productService.deleteProduct(Long.parseLong(id));
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        return ResponseEntity.ok(response);
+
+        }
 
 }

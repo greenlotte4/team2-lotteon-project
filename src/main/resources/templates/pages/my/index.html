@@ -72,9 +72,9 @@
         </table>
       </article>
 
-      <h3>포인트 적립내역<a th:href="@{/my/points/{page}/{sdate}/{edate}(page=${page}, sdate=${sdate}, edate=${edate})}">더보기 &gt; </a></h3>
+      <h3>포인트 적립내역<a th:href="@{/my/points}">더보기 &gt; </a></h3>
       <article>
-        <table border="0" class="point">
+        <table th:if="${noPoint==false}" border="0" class="point">
           <tr>
             <th>날짜</th>
             <th>구분</th>
@@ -83,23 +83,16 @@
             <th>비고</th>
             <th>유효기간</th>
           </tr>
-          <tr>
-            <td class="date">2022-12-13</td>
-            <td>적립</td>
-            <td>2022121001</td>
-            <td>340</td>
-            <td>상품 구매확정</td>
-            <td>2024-12-10</td>
-          </tr>
-          <tr>
-            <td class="date">2022-12-13</td>
-            <td>적립</td>
-            <td>2022120601</td>
-            <td>120</td>
-            <td>상품 구매확정</td>
-            <td>2024-12-06</td>
+          <tr th:each="point : ${points}">
+            <td th:text="${point.rdate}">날짜</td>
+            <td th:text="${point.pointType}">구분</td>
+            <td th:text="${point.orderId}">주문번호</td>
+            <td th:text="${point.pointVar}">적립금액</td>
+            <td th:text="${point.pointEtc}">비고</td>
+            <td th:classappend="${point.warningExpiration == 'active'} ? 'warning' : ''" th:text="${point.pointExpiration}">유효기간</td>
           </tr>
         </table>
+        <div th:if="${noPoint==true}">포인트 적립내역 없음</div>
       </article>
 
       <h3>상품평<a th:href="@{/my/reviews/{page}(page=${page})}">더보기 &gt; </a></h3>

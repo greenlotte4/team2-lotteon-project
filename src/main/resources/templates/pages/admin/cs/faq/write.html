@@ -1,160 +1,160 @@
-<link rel="stylesheet" th:href="@{/css/admin/cs/faq/write.css}" />
+<link rel="stylesheet" th:href="@{/css/admin/cs/faq/write.css}"/>
 <link rel="stylesheet" th:href="@{/css/basic.css}">
 <body>
 <header th:replace="layout/admin/header.html"></header>
 <main>
-  <aside th:replace="layout/admin/aside.html"></aside>
-  <section id="admin-product-list" class="container">
-    <nav class="faq-nav">
-      <h3>자주묻는질문 작성</h3>
-      <p>HOME > 고객센터 > <strong>자주묻는질문</strong></p>
-    </nav>
-    <!-- 글작성 컨텐츠 시작 -->
-    <article>
-      <form class="formBox" th:action="@{/admin/cs/faq/write}" method="post" onsubmit="return checkSelection()">
-        <table>
-          <tbody>
-          <tr>
-            <th>유형</th>
-            <td>
-              <select class="faqCate" name="faqCate" id="select1">
-                <option value="" selected disabled hidden>1차선택</option>
-                <option value="user">회원</option>
-                <option value="coupon">쿠폰/이벤트</option>
-                <option value="order">주문/결제</option>
-                <option value="delivery">배송</option>
-                <option value="cancel">취소/반품/환불</option>
-                <option value="travel">여행/숙박/항공</option>
-                <option value="safe">안전결제</option>
-              </select>
-              <select class="faqType" name="faqType" id="select2">
-                <option value="" selected disabled hidden>2차선택</option>
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <th>제목</th>
-            <td>
-              <input
-                      type="text"
-                      class="faqTitle"
-                      name="faqTitle"
-                      placeholder="제목을 입력하세요."
-                      required
-              />
-            </td>
-          </tr>
-          <tr>
-            <th>내용</th>
-            <td>
+    <aside th:replace="layout/admin/aside.html"></aside>
+    <section id="admin-product-list" class="container">
+        <nav class="faq-nav">
+            <h3>자주묻는질문 작성</h3>
+            <p>HOME > 고객센터 > <strong>자주묻는질문</strong></p>
+        </nav>
+        <!-- 글작성 컨텐츠 시작 -->
+        <article>
+            <form class="formBox" th:action="@{/admin/cs/faq/write}" method="post" onsubmit="return checkSelection()">
+                <table>
+                    <tbody>
+                    <tr>
+                        <th>유형</th>
+                        <td>
+                            <select class="faqCate" name="faqCate" id="select1">
+                                <option value="" selected disabled hidden>1차선택</option>
+                                <option value="user">회원</option>
+                                <option value="coupon">쿠폰/이벤트</option>
+                                <option value="order">주문/결제</option>
+                                <option value="delivery">배송</option>
+                                <option value="cancel">취소/반품/환불</option>
+                                <option value="travel">여행/숙박/항공</option>
+                                <option value="safe">안전결제</option>
+                            </select>
+                            <select class="faqType" name="faqType" id="select2">
+                                <option value="" selected disabled hidden>2차선택</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>제목</th>
+                        <td>
+                            <input
+                                    type="text"
+                                    class="faqTitle"
+                                    name="faqTitle"
+                                    placeholder="제목을 입력하세요."
+                                    required
+                            />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>내용</th>
+                        <td>
               <textarea
                       class="faqContent"
                       name="faqContent"
                       placeholder="내용을 입력하세요."
                       required
               ></textarea>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-        <div class="button-group">
-          <button class="button--back" type="button" onclick="goBack()">취소하기</button>
-          <button class="button--write" type="submit">등록하기</button>
-        </div>
-      </form>
-    </article>
-  </section>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="button-group">
+                    <button class="button--back" type="button" onclick="goBack()">취소하기</button>
+                    <button class="button--write" type="submit">등록하기</button>
+                </div>
+            </form>
+        </article>
+    </section>
 </main>
 <footer th:replace="layout/admin/footer.html"></footer>
 
 
 <script>
-  // 유형 선택 유효성 검사 함수 (스크립트 위치 이동)
-  function checkSelection() {
-    const cate = document.getElementsByName("faqCate")[0].value;
-    const type = document.getElementsByName("faqType")[0].value;
+    // 유형 선택 유효성 검사 함수 (스크립트 위치 이동)
+    function checkSelection() {
+        const cate = document.getElementsByName("faqCate")[0].value;
+        const type = document.getElementsByName("faqType")[0].value;
 
-    if (cate === "유형선택" || type === "타입선택") {
-      alert("문의유형의 모든 항목을 선택해주세요.");
-      return false;
+        if (cate === "유형선택" || type === "타입선택") {
+            alert("문의유형의 모든 항목을 선택해주세요.");
+            return false;
+        }
+        return true;
     }
-    return true;
-  }
 
-  function goBack() {
-    window.history.back();
-  }
-
-  // 2차 선택 항목 동적으로 생성
-  const secondOptions = {
-    "user": [
-      {value: "regi", text: "가입"},
-      {value: "leave", text: "탈퇴"},
-      {value: "info", text: "회원정보"},
-      {value: "login", text: "로그인"}
-    ],
-    "coupon": [
-      {value: "lpoint", text: "L.POINT"},
-      {value: "coupon", text: "쿠폰"},
-      {value: "event", text: "이벤트/경품"},
-      {value: "attendance", text: "출석체크"},
-      {value: "gift", text: "사은품"}
-    ],
-    "order": [
-      {value: "orderMethod", text: "주문방법"},
-      {value: "orderChange", text: "주문변경"},
-      {value: "paymentMethod", text: "결제방법"},
-      {value: "easyPayment", text: "간편결제"},
-      {value: "giftReceive", text: "선물받기"},
-      {value: "mobileGift", text: "모바일상품권"},
-      {value: "phonePayment", text: "휴대폰결제"},
-      {value: "applePay", text: "애플페이"}
-    ],
-    "delivery": [
-      {value: "delivery", text: "배송"},
-      {value: "deliveryFee", text: "배송비"},
-      {value: "deliveryMethod", text: "배송방법"},
-      {value: "deliverySchedule", text: "배송일정"},
-      {value: "deliveryAddress", text: "배송지"},
-      {value: "todayArrival", text: "오늘도착"},
-      {value: "overseas", text: "해외직구"},
-      {value: "notReceived", text: "미수령신고"},
-      {value: "recipient", text: "수취인"},
-      {value: "purchaseConfirm", text: "구매확정"}
-    ],
-    "cancel": [
-      {value: "orderCancel", text: "주문취소"},
-      {value: "refundMethod", text: "환불방법"},
-      {value: "cardRefund", text: "카드환불"},
-      {value: "refundSchedule", text: "환불일정"},
-      {value: "phoneRefund", text: "휴대폰결제환불"}
-    ],
-    "travel": [
-      {value: "ecoupon", text: "e쿠폰"},
-      {value: "flight", text: "항공"},
-      {value: "accommodation", text: "숙박"},
-      {value: "ticket", text: "티켓"}
-    ],
-    "safe": [
-      {value: "policyViolation", text: "법령 및 정책위반 상품"},
-      {value: "ipViolation", text: "지적재산권침해"},
-      {value: "serviceViolation", text: "서비스 이용규칙 위반"},
-      {value: "adViolation", text: "표시광고"}
-    ]
-
-  };
-  document.getElementById("select1").addEventListener("change", function() {
-    const selectedValue = this.value;
-    const select2 = document.getElementById("select2");
-    select2.innerHTML = '<option value="" selected disabled hidden>2차선택</option>'; // 초기화
-
-    if (secondOptions[selectedValue]) {
-      secondOptions[selectedValue].forEach(option => {
-        const newOption = document.createElement("option");
-        newOption.value = option.value;
-        newOption.text = option.text;
-        select2.appendChild(newOption);
-      });
+    function goBack() {
+        window.history.back();
     }
-  });
+
+    // 2차 선택 항목 동적으로 생성
+    const secondOptions = {
+        "user": [
+            {value: "regi", text: "가입"},
+            {value: "leave", text: "탈퇴"},
+            {value: "info", text: "회원정보"},
+            {value: "login", text: "로그인"}
+        ],
+        "coupon": [
+            {value: "lpoint", text: "L.POINT"},
+            {value: "coupon", text: "쿠폰"},
+            {value: "event", text: "이벤트/경품"},
+            {value: "attendance", text: "출석체크"},
+            {value: "gift", text: "사은품"}
+        ],
+        "order": [
+            {value: "orderMethod", text: "주문방법"},
+            {value: "orderChange", text: "주문변경"},
+            {value: "paymentMethod", text: "결제방법"},
+            {value: "easyPayment", text: "간편결제"},
+            {value: "giftReceive", text: "선물받기"},
+            {value: "mobileGift", text: "모바일상품권"},
+            {value: "phonePayment", text: "휴대폰결제"},
+            {value: "applePay", text: "애플페이"}
+        ],
+        "delivery": [
+            {value: "delivery", text: "배송"},
+            {value: "deliveryFee", text: "배송비"},
+            {value: "deliveryMethod", text: "배송방법"},
+            {value: "deliverySchedule", text: "배송일정"},
+            {value: "deliveryAddress", text: "배송지"},
+            {value: "todayArrival", text: "오늘도착"},
+            {value: "overseas", text: "해외직구"},
+            {value: "notReceived", text: "미수령신고"},
+            {value: "recipient", text: "수취인"},
+            {value: "purchaseConfirm", text: "구매확정"}
+        ],
+        "cancel": [
+            {value: "orderCancel", text: "주문취소"},
+            {value: "refundMethod", text: "환불방법"},
+            {value: "cardRefund", text: "카드환불"},
+            {value: "refundSchedule", text: "환불일정"},
+            {value: "phoneRefund", text: "휴대폰결제환불"}
+        ],
+        "travel": [
+            {value: "ecoupon", text: "e쿠폰"},
+            {value: "flight", text: "항공"},
+            {value: "accommodation", text: "숙박"},
+            {value: "ticket", text: "티켓"}
+        ],
+        "safe": [
+            {value: "policyViolation", text: "법령 및 정책위반 상품"},
+            {value: "ipViolation", text: "지적재산권침해"},
+            {value: "serviceViolation", text: "서비스 이용규칙 위반"},
+            {value: "adViolation", text: "표시광고"}
+        ]
+
+    };
+    document.getElementById("select1").addEventListener("change", function () {
+        const selectedValue = this.value;
+        const select2 = document.getElementById("select2");
+        select2.innerHTML = '<option value="" selected disabled hidden>2차선택</option>'; // 초기화
+
+        if (secondOptions[selectedValue]) {
+            secondOptions[selectedValue].forEach(option => {
+                const newOption = document.createElement("option");
+                newOption.value = option.value;
+                newOption.text = option.text;
+                select2.appendChild(newOption);
+            });
+        }
+    });
 </script>

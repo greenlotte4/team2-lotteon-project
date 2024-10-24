@@ -43,7 +43,7 @@ spring:
     username: sanghun1101088@gmail.com
   application:
     name: lotteon
-    version: 0.0.3-SNAPSHOT
+    version: 0.0.5-SNAPSHOT
   cache:
     type: redis
   servlet:

@@ -54,9 +54,11 @@ public class AuthController {
     // 2-1. 회원가입 (일반회원 정보입력) | optional : 선택약관 동의 여부
     // 체크박스 선택 여부에 따라 true=1, false=0
     @GetMapping("/customer/{optional}")
-    public String customer(@PathVariable Optional<Boolean> optional, Model model) {
+    public String customer(@PathVariable int optional, Model model) {
+        //Boolean isOptional = optional.orElse(false);  // 값이 없으면 기본값 false
         log.info("체크박스 선택 여부에 따라 true=1, false=0 >>>>>>> " + optional);
-        model.addAttribute("custOptional", optional);
+        model.addAttribute("isOptional", optional);
+
         return "pages/auth/customer";
     }
 
@@ -73,6 +75,7 @@ public class AuthController {
     // 2-2. 회원가입 (판매회원 정보입력)
     @GetMapping("/seller")
     public String seller(){
+
 
         return "pages/auth/seller";
     }

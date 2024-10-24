@@ -33,10 +33,12 @@ body{height: 100vh;}
 #my section > .byDate > ul a:hover {text-decoration: underline;}
 #my section > .byDate > .date_3ea {width: 150px;height: 29px;}
 #my section > .byDate > .date_5ea {width: 250px;height: 29px;}
-#my section > .byDate > p {width: 190px;height: 29px;padding: 5px;box-sizing: border-box;background-color: #FFF;margin-right: 5px;}
-#my section > .byDate > p > span {display: inline-block;margin: 0 4px;}
+#my section > .byDate > form {display: flex; gap: 5px;width: 260px;height: 29px;padding: 5px;box-sizing: border-box;background-color: #FFF;margin-right: 5px;}
+#my section > .byDate > form > span {display: inline-block;margin: 0 4px;}
+#my section > .byDate > form > .btnConfirm {width: 69px;border: none;display: flex;justify-content: center;align-items: center;}
 #my section > .byDate input[type=date] {width: 80px;border: none;}
-#my section > .byDate > .btnConfirm {width: 69px;height: 27px;border: none;}
+#my section > .byDate > .date_3ea .on {font-weight: 600;}
+#my section > .byDate > .date_5ea .on {font-weight: 600;}
 
 /* 테이블 공통설정 */
 #my article > table {table-layout: fixed;}
@@ -44,7 +46,7 @@ body{height: 100vh;}
 #my article > table  * {font-family: '돋움';color: #444; text-align: center;}
 #my article > table th {padding: 6px;background-color: #a5a7a5;box-sizing: border-box;color: #fff; font-weight: 600;}
 #my article > table td {padding: 10px;border-bottom: 1px solid #aaa;box-sizing: border-box;overflow: hidden; padding: 20px 0;}
-
+#my article > table .warning {color:red;}
 #my table.order td:nth-of-type(2) *,
 #my table.review td:nth-of-type(3),
 #my table.qna td:nth-of-type(4){text-align: left;}

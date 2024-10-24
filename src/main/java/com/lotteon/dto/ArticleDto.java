@@ -1,5 +1,8 @@
 package com.lotteon.dto;
 
+import com.lotteon.entity.article.Faq;
+import com.lotteon.entity.category.CategoryArticle;
+import com.lotteon.entity.member.Member;
 import lombok.*;
 
 import java.security.Timestamp;
@@ -23,11 +26,27 @@ public class ArticleDto {
     private Long cate1Id;
     private Long cate2Id;
     private Long memId;
-
+    private CategoryArticle cate1;
+    private CategoryArticle cate2;
     private String adminName;    // 관리자 이름 (관리자용 추가 필드)
     private String adminEmail;   // 관리자 이메일 (관리자용 추가 필드)
-
+    private Member member;
     private LocalDateTime updateDate;  // 업데이트된 날짜 (필요 시 추가)
     private String status;       // 글 상태 (예: '작성 중', '게시 완료' 등)
 
+    public static ArticleDto fromEntity(Faq faq){
+        return ArticleDto.builder()
+                .id(faq.getId())
+                .title(faq.getFaqTitle())
+                .content(faq.getFaqContent())
+                .rdate(faq.getFaqRdate())
+                .views(faq.getFaqViews())
+                .cate1(faq.getCate1())
+                .cate2(faq.getCate2())
+                .cate1Id(faq.getCate1() != null ? faq.getCate1().getCategoryId() : null)
+                .cate2Id(faq.getCate1() != null ? faq.getCate2().getCategoryId() : null)
+                .member(faq.getMember())
+                .memId(faq.getMember()!=null ? faq.getMember().getId() : null)
+                .build();
+    }
 }

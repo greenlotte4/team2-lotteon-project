@@ -1,6 +1,5 @@
 <link rel="stylesheet" th:href="@{/css/admin/config/term.css}">
 <link rel="stylesheet" th:href="@{/css/basic.css}">
-<body>
     <header th:replace="layout/admin/header.html"></header>
     <main>
         <aside th:replace="layout/admin/aside.html"></aside>
@@ -17,8 +16,8 @@
             </div>
             <div class="header-gubun"></div>
 
-            <section>
-                <article class="header-title2">구매회원 약관</article>
+            <section th:each="term:${terms}">
+                <article class="header-title2">[[${term.termsTitle}]]</article>
                 <article class="dis1">
                     회원가입 및 정책 페이지 노출 약관 입니다.
                 </article>
@@ -26,124 +25,70 @@
                     <tr>
                         <th>약관내용</th>
                         <td>
-                            <div class="ta1">
-                                <h5>제 1조 (목적)</h5>
-                                <p>
-                                    이 약관은 주식회사 케이마켓(이하 회사라함)가 운영하는 롯데 ON 인터넷 오픈마켓 사이트 (http://localhost:8080~~~) (이하
-                                    롯데ON이라함) 와 스마트폰등 이동통신기기를 제공하는 롯데 ON 모바일 애플리케이션 (이하 모바일롯데ON이라함)을 통해서
-                                    제공하는 전자상거래 관련 서비스 및 기타서비스 (이하 서비스라함)를 이용하는자간의 권리, 의무를 확정하고 이를 이행함으로써
-                                    상호 발전을 도모하는 것을 그 목적으로한다.
-                                </p>
-                            </div>
+                            <textarea class="ta1">[[${term.termsContent}]]</textarea>
                         </td>
                     </tr>
                 </table>
                 <article class="btn">
-                    <button>수정하기</button>
-                </article>
-            </section>
-            <section>
-                <article class="header-title2">판매회원 약관</article>
-                <article class="dis1">
-                    회원가입 및 정책 페이지 노출 약관 입니다.
-                </article>
-                <table class="tb1">
-                    <tr>
-                        <th>약관내용</th>
-                        <td>
-                            <div class="ta1">
-                                <h5>제 1조 (목적)</h5>
-                                <p>
-                                    이 약관은 주식회사 케이마켓(이하 회사라함)가 운영하는 롯데 ON 인터넷 오픈마켓 사이트 (http://localhost:8080~~~) (이하
-                                    롯데ON이라함) 와 스마트폰등 이동통신기기를 제공하는 롯데 ON 모바일 애플리케이션 (이하 모바일롯데ON이라함)을 통해서
-                                    제공하는 전자상거래 관련 서비스 및 기타서비스 (이하 서비스라함)를 이용하는자간의 권리, 의무를 확정하고 이를 이행함으로써
-                                    상호 발전을 도모하는 것을 그 목적으로한다.
-                                </p>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-                <article class="btn">
-                    <button>수정하기</button>
-                </article>
-            </section>
-            <section>
-                <article class="header-title2">전자금융거래 약관</article>
-                <article class="dis1">
-                    회원가입 및 정책 페이지 노출 약관 입니다.
-                </article>
-                <table class="tb1">
-                    <tr>
-                        <th>약관내용</th>
-                        <td>
-                            <div class="ta1">
-                                <h5>제 1조 (목적)</h5>
-                                <p>
-                                    이 약관은 주식회사 케이마켓(이하 회사라함)가 운영하는 롯데 ON 인터넷 오픈마켓 사이트 (http://localhost:8080~~~) (이하
-                                    롯데ON이라함) 와 스마트폰등 이동통신기기를 제공하는 롯데 ON 모바일 애플리케이션 (이하 모바일롯데ON이라함)을 통해서
-                                    제공하는 전자상거래 관련 서비스 및 기타서비스 (이하 서비스라함)를 이용하는자간의 권리, 의무를 확정하고 이를 이행함으로써
-                                    상호 발전을 도모하는 것을 그 목적으로한다.
-                                </p>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-                <article class="btn">
-                    <button>수정하기</button>
-                </article>
-            </section>
-            <section>
-                <article class="header-title2">위치정보이용 약관</article>
-                <article class="dis1">
-                    회원가입 및 정책 페이지 노출 약관 입니다.
-                </article>
-                <table class="tb1">
-                    <tr>
-                        <th>약관내용</th>
-                        <td>
-                            <div class="ta1">
-                                <h5>제 1조 (목적)</h5>
-                                <p>
-                                    이 약관은 주식회사 케이마켓(이하 회사라함)가 운영하는 롯데 ON 인터넷 오픈마켓 사이트 (http://localhost:8080~~~) (이하
-                                    롯데ON이라함) 와 스마트폰등 이동통신기기를 제공하는 롯데 ON 모바일 애플리케이션 (이하 모바일롯데ON이라함)을 통해서
-                                    제공하는 전자상거래 관련 서비스 및 기타서비스 (이하 서비스라함)를 이용하는자간의 권리, 의무를 확정하고 이를 이행함으로써
-                                    상호 발전을 도모하는 것을 그 목적으로한다.
-                                </p>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-                <article class="btn">
-                    <button>수정하기</button>
-                </article>
-            </section>
-            <section>
-                <article class="header-title2">개인정보처리방침</article>
-                <article class="dis1">
-                    회원가입 및 정책 페이지 노출 약관 입니다.
-                </article>
-                <table class="tb1">
-                    <tr>
-                        <th>약관내용</th>
-                        <td>
-                            <div class="ta1">
-                                <h5>제 1조 (목적)</h5>
-                                <p>
-                                    이 약관은 주식회사 케이마켓(이하 회사라함)가 운영하는 롯데 ON 인터넷 오픈마켓 사이트 (http://localhost:8080~~~) (이하
-                                    롯데ON이라함) 와 스마트폰등 이동통신기기를 제공하는 롯데 ON 모바일 애플리케이션 (이하 모바일롯데ON이라함)을 통해서
-                                    제공하는 전자상거래 관련 서비스 및 기타서비스 (이하 서비스라함)를 이용하는자간의 권리, 의무를 확정하고 이를 이행함으로써
-                                    상호 발전을 도모하는 것을 그 목적으로한다.
-                                </p>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-                <article class="btn">
-                    <button>수정하기</button>
+                    <button class="modify" th:data-id="${term.id}">수정하기</button>
                 </article>
             </section>
         </div>
     </main>
     <footer th:replace="layout/admin/footer.html"></footer>
 </body>
+<script>
+    document.addEventListener('click',function (e){
+       if(e.target.classList.contains('modify')){
+
+           // 클릭 후 비활성화로 중복 클릭 방지
+           const button = e.target;
+           button.disabled = true;
+
+           if(!confirm("정말 수정하시겠습니까?")){return;}
+
+           const section = button.closest('section');
+
+           const id = button.dataset.id;
+           const term = section.querySelector('.ta1').value;
+
+           const jsonData = {
+               "id":+id,
+               "termsContent":term
+           }
+
+           fetch('/admin/config/term',{
+               method: 'POST',
+               body: JSON.stringify(jsonData)
+           })
+               .then(resp => {
+                   console.log(resp);
+                   if (!resp.ok) {
+                       return resp.json().then(err => {
+
+                           console.error('Server responded with an error:', err); // 추가된 로그
+                           // 오류 응답을 자세히 로그에 남김
+                           throw new Error(`Error ${resp.status}: ${err.message || JSON.stringify(err)}`);
+                       });
+                   }
+                   return resp.json();
+               })
+               .then(data =>{
+                   console.log('Response Data:', data);
+                   if(data.id>1){
+                       alert('수정이 완료되었습니다.')
+                   }
+               })
+               .catch(err => {
+                   console.error('Error:', err);
+                   alert('오류가 발생했습니다. 다시 시도해 주세요.');
+               })
+               .finally(() => {
+                   // fetch 완료 후 버튼 다시 활성화
+                   button.disabled = false;
+               });
+
+       }
+    });
+</script>
 </html>

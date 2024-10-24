@@ -1,41 +1,53 @@
-
+<link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
 <link rel="stylesheet" th:href="@{/css/auth/customer.css}">
 <link rel="stylesheet" th:href="@{/css/basic.css}">
+<script th:src="@{/js/validation.js}"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <header th:replace="layout/main/header.html"></header>
 <main>
     <div class="container">
         <h3 class="header-title">일반 회원가입</h3>
         <div class="header-gubun"></div>
         <form class="customer" action="/auth/customer" method="post">
+            <input type="hidden" name="option" th:value="${isOptional}"/>
             <table class="tb1">
                 <tr>
                     <th>아이디</th>
                     <td>
-                        <input id="id" name="memId" type="text">
-                        <span>영문 , 숫자 4~12자리 설정</span>
+                        <input id="id" name="memId" type="text" placeholder="아이디 입력" required/>
+
+                        <span class="noti_txt1">영문 , 숫자 4~12자리 설정</span>
+
+                        <span id="resultUid" class="resultId"></span>
                     </td>
                 </tr>
                 <tr>
                     <th>비밀번호</th>
                     <td>
-                        <input id="password" name="memPwd" type="password">
+                        <input id="password" name="memPwd" type="password"  class="inputPass" placeholder="비밀번호 입력"/>
                         <span>영문, 숫자 , 특수문자 8~12자리 설정</span>
                     </td>
                 </tr>
                 <tr>
                     <th>비밀번호확인</th>
-                    <td><input id="confirm" type="password"></td>
+                    <td>
+                        <input id="confirm" type="password" name="pass2" class="inputPass" placeholder="비밀번호 확인 입력"/>
+                        <span class="resultPass desc" id="resultPass"></span>
+                    </td>
                 </tr>
             </table>
             <table class="tb2">
                 <tr>
                     <th>이름</th>
-                    <td><input id="name" name="custName" class="inp" placeholder="이름입력" type="text"></td>
+                    <td>
+                        <input id="name" name="custName" class="inp" placeholder="이름입력" type="text">
+                        <span class="resultName"></span>
+                    </td>
                 </tr>
                 <tr>
                     <th>성별</th>
                     <td>
-                        <label for=""><input value="true" type="radio" name="custGender">남</label>
+                        <label for= ""><input value="true" type="radio" name="custGender">남</label>
                         <label for=""><input value="false" type="radio" name="custGender">여</label>
                     </td>
                 </tr>
@@ -44,6 +56,7 @@
                     <td>
                         <input id="email" class="inp" name="custEmail" type="email" placeholder="이메일입력">
                     </td>
+                    <!-- 이메일 주소가 정확한지 확인해 주세요. -->
                 </tr>
                 <tr>
                     <th>휴대폰</th>
