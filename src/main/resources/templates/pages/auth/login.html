@@ -11,20 +11,14 @@
         <div class="main">
             <div class="main-inp">
                 <form action="/auth/login" method="post" class="inp-top">
-                    <div class="top-left">
-                        <div class="inp-id">
-                            <label class="label-id label">아이디 <input name="userName" class="id inp" type="text"></label>
-                        </div><!-- .inp-id -->
-                        <div class="inp-pwd">
-                            <label class="label-pwd label">비밀번호<input name="pwd" class="pwd inp" type="password"></label>
-                        </div><!-- inp-pwd -->
-                    </div>
-                    <div class="top-right">
+                    <div class="inp-top">
+                        <input name="userName" class="id inp" type="text" placeholder="아이디 입력">
+                        <input name="pwd" class="pwd inp" type="password" placeholder="8~15자리 영문+숫자+특수문자 조합">
                         <button style="border :none;" type="submit" class="login-btn">로그인</button>
                     </div>
                 </form>
                 <div class="inp-bottom">
-                    <div class="link-auto link"><input class="auto" type="checkbox">자동로그인</div>
+                    <div class="link-auto link"><label class="link"><input class="auto" type="checkbox">자동로그인</label></div>
                     <div class="link">|</div>
                     <div class="link-find-id link">
                         <a href="#">아이디 찾기</a>
@@ -40,7 +34,11 @@
                 </div>
             </div>
             <div class="main-img">
-                <img th:src="@{/images/login-banner.png}" alt="" class="login-banner">
+                <th:block th:each="b:${banner}">
+                <a th:href="@{'/'+${b.getBannerLink()}}">
+                    <img th:src="@{'/file/'+${b.getBannerImg()}}" alt="" class="login-banner">
+                </a>
+                </th:block>
             </div>
         </div>
         <div class="header-gubun-bottom"></div>

@@ -2,8 +2,10 @@ package com.lotteon.controller.controller;
 
 
 import com.lotteon.dto.requestDto.PostCustSignupDTO;
+import com.lotteon.dto.responseDto.GetBannerDTO;
 import com.lotteon.dto.responseDto.GetTermsResponseDto;
 import com.lotteon.entity.term.Terms;
+import com.lotteon.service.config.BannerService;
 import com.lotteon.service.member.CustomerService;
 import com.lotteon.service.member.MemberService;
 import com.lotteon.service.member.SellerService;
@@ -30,9 +32,12 @@ public class AuthController {
     private final MemberService memberService;
     private final SellerService sellerService;
     private final TermsService termsService;
+    private final BannerService bannerService;
 
     @GetMapping("/login/view")
-    public String login() {
+    public String login(Model model) {
+        List<GetBannerDTO> bannerList = bannerService.selectUsingBannerAt(4);
+        model.addAttribute("banner", bannerList);
         return "pages/auth/login";
     }
 

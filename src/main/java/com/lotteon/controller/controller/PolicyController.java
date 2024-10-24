@@ -22,9 +22,9 @@ public class PolicyController {
         return "pages/policy/seller";
     }
 
-    @GetMapping("/financy")
-    public String financy(Model model) {
-        return "pages/policy/financy";
+    @GetMapping("/finance")
+    public String finance(Model model) {
+        return "pages/policy/finance";
     }
 
     @GetMapping("/location")

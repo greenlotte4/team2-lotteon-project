@@ -83,4 +83,16 @@ public class BannerService {
 
         return banner;
     }
+
+    public List<GetBannerDTO> selectUsingBannerAt(int bannerLocation) {
+        List<Banner> banners = bannerRepository.findAllByBannerLocationAndBannerState(bannerLocation,1);
+        List<GetBannerDTO> bannerList =
+                banners.stream()
+                        .map(Entity->modelMapper.map(Entity,GetBannerDTO.class))
+                        .toList();
+
+        log.info(bannerList.toString());
+
+        return bannerList;
+    }
 }
