@@ -1,5 +1,11 @@
-<link rel="stylesheet" th:href="@{/css/admin/cs/notice/list.css}" />
-<link rel="stylesheet" th:href="@{/css/basic.css}">
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>공지사항 목록</title>
+  <link rel="stylesheet" th:href="@{/css/admin/cs/notice/list.css}" />
+  <link rel="stylesheet" th:href="@{/css/basic.css}">
+</head>
 <body>
 <header th:replace="layout/admin/header.html"></header>
 <main>
@@ -45,11 +51,11 @@
           <td>
             <div>
               <div>
-                <button class="button--delete" th:onclick="'deleteNotice(' + ${notice.id} + ')'">[삭제]</button>
+                <a class="button--delete1" th:onclick="'deleteNotice(' + ${notice.id} + ')'">삭제</a>
               </div>
             </div>
             <div>
-              <button th:href="@{'/admin/cs/notice/modify/' + ${notice.id}}" class="button--edit">[수정]</button>
+              <a th:href="@{'/admin/cs/notice/modify/' + ${notice.id}}" class="button--edit">수정</a>
             </div>
           </td>
         </tr>
@@ -58,29 +64,81 @@
     </article>
 
     <div class="button-group">
-      <button class="button--delete" onclick="deleteSelected();">선택삭제</button>
-      <button th:href="@{/admin/cs/notice/write}" class="button--write">작성하기</button>
+      <a class="button--delete" onclick="deleteSelected();">선택삭제</a>
+      <a th:href="@{/admin/cs/notice/write}" class="button--write">작성하기</a>
     </div>
 
     <div class="paging">
-      <a href="#" class="prev">이전</a>
-      <a href="#">1</a>
-      <a href="#">2</a>
-      <a href="#">3</a>
-      <a href="#" class="next">다음</a>
+      <a href="#" class="prev" onclick="loadPage(currentPage - 1)">이전</a>
+      <a href="#" onclick="loadPage(1)">1</a>
+      <a href="#" onclick="loadPage(2)">2</a>
+      <a href="#" onclick="loadPage(3)">3</a>
+      <a href="#" class="next" onclick="loadPage(currentPage + 1)">다음</a>
     </div>
   </section>
 </main>
 <footer th:replace="layout/admin/footer.html"></footer>
 
 <script>
+  let currentPage = 1;
+  const itemsPerPage = 10;
+
+  // 페이지 데이터를 로드하는 함수
+  function loadPage(pageNumber) {
+    if (pageNumber < 1) return;
+
+    // 페이지 번호를 출력 (2번을 눌렀을 때 2번을 출력)
+    console.log(`현재 페이지: ${pageNumber}번 페이지로 이동 중입니다.`);
+
+    // fetch를 통해 서버로부터 해당 페이지의 데이터를 받아옴
+    fetch(`/admin/cs/notices/api?page=${pageNumber}&size=${itemsPerPage}`)
+            .then(response => response.json())
+            .then(data => {
+              renderTable(data.notices); // 테이블에 데이터 렌더링
+              currentPage = pageNumber;  // 현재 페이지 업데이트
+              updatePagingControls(data.totalPages); // 페이지 버튼 활성화/비활성화 업데이트
+
+              // 페이지 변경 시 메시지를 화면에 표시하는 로직 추가 (선택사항)
+              document.getElementById('pageStatus').innerText = `${pageNumber}번 페이지로 이동했습니다.`;
+            })
+            .catch(error => {
+              console.error('페이지 데이터를 불러오는 중 오류가 발생했습니다:', error);
+            });
+  }
+
+  // 테이블에 데이터를 렌더링하는 함수
+  function renderTable(notices) {
+    const tableBody = document.querySelector('tbody');
+    tableBody.innerHTML = ''; // 기존 데이터 제거
+
+    notices.forEach((notice, index) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+          <td><input type="checkbox" /></td>
+          <td>${index + 1}</td>
+          <td>${notice.cate1.categoryName}</td>
+          <td style="text-align: left">${notice.noticeTitle}</td>
+          <td>${notice.noticeViews}</td>
+          <td>${new Date(notice.noticeRdate).toLocaleDateString()}</td>
+          <td>
+            <a class="button--delete1" onclick="deleteNotice(${notice.id})">삭제</a>
+            <a href="/admin/cs/notice/modify/${notice.id}" class="button--edit">수정</a>
+          </td>
+        `;
+      tableBody.appendChild(row);
+    });
+  }
+
+  // 페이지 버튼 활성화/비활성화 처리
+  function updatePagingControls(totalPages) {
+    document.querySelector('.prev').style.visibility = currentPage === 1 ? 'hidden' : 'visible';
+    document.querySelector('.next').style.visibility = currentPage === totalPages ? 'hidden' : 'visible';
+  }
   // 공통 함수로 삭제 요청 처리
   function fetchDeleteRequest(url, successMessage) {
     fetch(url, {
       method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
     })
             .then(response => {
               if (response.ok) {
@@ -116,9 +174,7 @@
       if (confirm('정말로 선택된 항목을 삭제하시겠습니까?')) {
         fetch('/admin/cs/notice/deleteSelected', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(selectedIds)
         })
                 .then(response => response.json())
@@ -145,5 +201,6 @@
       checkbox.checked = isChecked;
     });
   });
-
 </script>
+</body>
+</html>

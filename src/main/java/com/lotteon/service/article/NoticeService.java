@@ -11,7 +11,7 @@ import com.lotteon.repository.category.CategoryArticleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Sort;  // Sort 클래스 import 추가
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -131,15 +131,24 @@ public class NoticeService {
         return noticeRepository.findAll(Sort.by(Sort.Direction.DESC, "noticeRdate"));
     }
 
+    // 검색된 공지사항 목록을 페이징 처리하여 조회
     public List<Notice> searchNotices(String keyword, Pageable pageable) {
         return noticeRepository.findByNoticeTitleContainingOrNoticeContentContaining(keyword, keyword, pageable).getContent();
     }
 
+    // 페이징 처리된 공지사항 목록 조회
     public Page<Notice> getNotices(Pageable pageable) {
         return noticeRepository.findAll(pageable);
     }
 
+    // 특정 카테고리의 공지사항 목록 조회 (페이징 포함)
     public List<Notice> getNoticesByCategory(Long categoryId, Pageable pageable) {
         return noticeRepository.findByCate1_CategoryId(categoryId, pageable).getContent();
+    }
+
+    // 공지사항 목록 조회 (페이징 지원)
+    public Page<Notice> findAll(Pageable pageable) {
+        // 공지사항 목록을 페이지 단위로 조회하여 반환
+        return noticeRepository.findAll(pageable);
     }
 }
