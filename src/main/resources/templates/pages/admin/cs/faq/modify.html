@@ -5,67 +5,16 @@
 <main>
   <aside th:replace="layout/admin/aside.html"></aside>
   <section id="admin-product-list" class="container">
-    <script>
-      // 타입별 카테조회
-      function firstOption() {
-        const CateOption = event.target; // 내가 함수를 호출한 현재 태그
-        const CateValue = CateOption.value; // select태그의 value값
-        const faqType = document.getElementsByName("faqType")[0];
 
-        console.log(CateValue);
-        if (CateValue != null) {
-          // 원래 있던 option들 삭제
-          const faqTypeChild = faqType.childNodes; // name이 faqType인 select태그 안에있는 option태그 전부
-          Array.from(faqTypeChild).forEach(function (child) {
-            child.remove();
-          });
-          // 새로운 옵션 삽입
-          const TypeOption = `<option>2차선택</option>
-                                        <option value="guide">안내</option>
-                                        <option value="announce">발표</option>
-                                        <option value="prodinfo">위해상품정보</option>
-                                        <option value="uservice">고객서비스</option>`;
-          faqType.insertAdjacentHTML("beforeend", TypeOption);
-        }
-      }
-      function checkSelection() {
-        const cate = document.getElementsByName("faqCate")[0].value;
-        const type = document.getElementsByName("faqType")[0].value;
-
-        if (cate === "1차선택" || type === "2차선택") {
-          alert("문의유형의 모든 항목을 선택해주세요.");
-          return false;
-        }
-        return true;
-      }
-      document.addEventListener("DOMContentLoaded", function () {
-        const faqCateOption = document.getElementsByName("faqCate")[0];
-        const faqTypeOption = document.getElementsByName("faqType")[0];
-        const faqCateValue = document.getElementsByName("faqCate2")[0];
-        const faqTypeValue = document.getElementsByName("faqType2")[0];
-
-        faqCateOption.value = faqCateValue.value;
-        faqTypeOption.value = faqTypeValue.value;
-      });
-      function goModify(event) {
-        const chk = confirm("정말 수정하시겠습니까?");
-        if (!chk) {
-          event.preventDefault();
-        }
-      }
-      function goBack() {
-        window.history.back();
-      }
-    </script>
     <nav class="faq-nav">
       <h3>자주묻는질문 수정</h3>
       <p>HOME > 고객센터 > <strong>자주묻는질문</strong></p>
     </nav>
     <article>
-      <form class="formBox" method="post">
-        <input type="hidden" name="faqNo" />
-        <input type="hidden" name="faqCate2" />
-        <input type="hidden" name="faqType2" />
+      <form class="formBox" method="post" action="/admin/cs/faq/modify" onsubmit="return checkSelection();">
+        <input type="hidden" name="faqNo" th:value="${faq.id}" />
+        <input type="hidden" name="faqCate2" th:value="${faq.cate1.categoryName}" />
+        <input type="hidden" name="faqType2" th:value="${faq.cate2.categoryName}" />
         <table>
           <tbody>
           <tr>
@@ -97,29 +46,22 @@
           <tr>
             <th>제목</th>
             <td>
-              <input
-                      type="text"
-                      class="faqTitle"
-                      name="faqTitle"
-                      placeholder="제목을 입력하세요."
-              />
+              <input type="text" class="faqTitle" name="faqTitle" th:value="${faq.title}" placeholder="제목을 입력하세요." />
             </td>
           </tr>
           <tr>
             <th>내용</th>
             <td>
-              <textarea
-                      class="faqContent"
-                      name="faqContent"
-                      placeholder="내용을 입력하세요."
-              ></textarea>
+              <textarea class="faqContent" name="faqContent" placeholder="내용을 입력하세요.">${faq.content}</textarea>
+
             </td>
           </tr>
           </tbody>
         </table>
         <div class="button-group">
-          <button class="button--back">취소하기</button>
-          <button class="button--write">수정하기</button>
+          <button type="button" class="button--back" onclick="goBack();">취소하기</button>
+          <button type="submit" class="button--write" onclick="goModify(event);">수정하기</button>
+        </div>
         </div>
       </form>
     </article>
@@ -127,3 +69,55 @@
 </main>
 <footer th:replace="layout/admin/footer.html"></footer>
 
+<script>
+  // 타입별 카테조회
+  function firstOption() {
+    const CateOption = event.target; // 내가 함수를 호출한 현재 태그
+    const CateValue = CateOption.value; // select태그의 value값
+    const faqType = document.getElementsByName("faqType")[0];
+
+    console.log(CateValue);
+    if (CateValue != null) {
+      // 원래 있던 option들 삭제
+      const faqTypeChild = faqType.childNodes; // name이 faqType인 select태그 안에있는 option태그 전부
+      Array.from(faqTypeChild).forEach(function (child) {
+        child.remove();
+      });
+      // 새로운 옵션 삽입
+      const TypeOption = `<option>2차선택</option>
+                                        <option value="guide">안내</option>
+                                        <option value="announce">발표</option>
+                                        <option value="prodinfo">위해상품정보</option>
+                                        <option value="uservice">고객서비스</option>`;
+      faqType.insertAdjacentHTML("beforeend", TypeOption);
+    }
+  }
+  function checkSelection() {
+    const cate = document.getElementsByName("faqCate")[0].value;
+    const type = document.getElementsByName("faqType")[0].value;
+
+    if (cate === "1차선택" || type === "2차선택") {
+      alert("문의유형의 모든 항목을 선택해주세요.");
+      return false;
+    }
+    return true;
+  }
+  document.addEventListener("DOMContentLoaded", function () {
+    const faqCateOption = document.getElementsByName("faqCate")[0];
+    const faqTypeOption = document.getElementsByName("faqType")[0];
+    const faqCateValue = document.getElementsByName("faqCate2")[0];
+    const faqTypeValue = document.getElementsByName("faqType2")[0];
+
+    faqCateOption.value = faqCateValue.value;
+    faqTypeOption.value = faqTypeValue.value;
+  });
+  function goModify(event) {
+    const chk = confirm("정말 수정하시겠습니까?");
+    if (!chk) {
+      event.preventDefault();
+    }
+  }
+  function goBack() {
+    window.history.back();
+  }
+</script>

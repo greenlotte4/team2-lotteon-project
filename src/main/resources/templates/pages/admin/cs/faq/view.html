@@ -16,7 +16,10 @@
         <tbody>
         <tr style="height: 60px">
           <th>유형</th>
-          <td class="faq-type" th:text="${faq.cate1.categoryName} + ' - ' + ${faq.cate2.categoryName}">회원 - 가입</td>
+          <td>
+            <span class="cate1" th:data-value="${faq.cate1.categoryName}"></span> -
+            <span class="cate2" th:data-value="${faq.cate2.categoryName}" th:data-parent="${faq.cate1.categoryName}"></span>
+          </td>
         <tr style="height: 60px">
           <th>제목</th>
           <td class="faq-title" th:text="${faq.title}">개인회원과 법인회원에 차이가 있나요?</td>
@@ -35,10 +38,9 @@
         >
           삭제
         </button>
-        <button class="button--modify" href="/admin/cs/faq/modify?faqNo=1">
-          수정
+        <button class="button--modify" onclick="goModify([[${faq.id}]]);">수정
         </button>
-        <button class="button--back" href="#" onclick="goBack();">목록</button>
+        <button class="button--back" onclick="goToList();">목록</button>
       </div>
     </article>
   </section>
@@ -142,6 +144,17 @@
       }
     });
   });
+
+  function goModify(faqId) {
+    window.location.href = '/admin/cs/faq/modify?faqNo=' + faqId;
+  }
+
+  function goToList() {
+    window.location.href = '/admin/cs/faqs'; // 원하는 목록 페이지의 URL로 변경
+  }
+
+
+
 </script>
 
 

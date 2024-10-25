@@ -105,7 +105,7 @@ public String faqs(Model model, Pageable pageable) {
         model.addAttribute("active","recruits");
         return "pages/admin/cs/recruit/list";
     }
-   /* // FAQ 작성
+    // FAQ 작성
     @PostMapping("/faq/write")
     public String writeFaq(@RequestParam("faqCate") String category1,
                            @RequestParam("faqType") String category2,
@@ -117,6 +117,6 @@ public String faqs(Model model, Pageable pageable) {
         System.out.println("content = " + content);
         faqService.writeFaq(category1, category2, title, content);
         return "redirect:/admin/cs/faqs";
-    }*/
+    }
 
 }

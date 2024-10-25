@@ -40,6 +40,89 @@ td {
   border-bottom: 1px solid #999999;
 }
 
+.button--delete1 {
+  background-color: #f44336;
+  color: white !important; /* 글자 색상을 흰색으로 강제 적용 */
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 13px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  border: none;
+  transition: box-shadow 0.3s ease;
+}
+
+.button--write {
+  background-color: #647264;
+  color: white !important; /* 글자 색상을 흰색으로 강제 적용 */
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 13px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  border: none;
+  transition: box-shadow 0.3s ease;
+}
+
+
+.button--delete {
+  background-color: #f44336;
+  color: white !important; /* 글자 색상을 흰색으로 강제 적용 */
+  padding: 1px 6px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 13px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  border: none;
+  transition: box-shadow 0.3s ease;
+}
+
+
+.button--edit {
+  background-color: #617280;
+  color: white !important; /* 글자 색상을 흰색으로 강제 적용 */
+  padding: 1px 6px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  border: none;
+  transition: box-shadow 0.3s ease;
+}
+
+/*!* 호버 시 섀도우 효과 *!
+.button:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); !* 호버 시 섀도우 추가 *!
+}*/
+/* 삭제 버튼 (호버 효과) */
+.button--delete1:hover, .button--delete:hover {
+  background-color: #d32f2f;
+}
+
+
+
+/* 작성 버튼 호버 효과 */
+.button--write:hover{
+  background-color: #616861;
+}
+
+.button--edit:hover {
+  background-color: #8f9ba6;
+}
+
+
 .button-group {
   display: flex;
   justify-content: space-between;
@@ -47,39 +130,11 @@ td {
   padding: 0 12px;
 }
 
-/* 삭제 버튼과 수정 버튼을 텍스트처럼 보이게 설정 */
-.delete-btn, .modify-btn {
-  background: none;
-  border: none;
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
-  font-size: 14px;
-  display: block;  /* 한 줄에 하나씩 표시 */
-  margin-bottom: 5px;  /* 버튼 사이 간격 추가 */
-}
-
-.delete-btn:hover, .modify-btn:hover {
-  text-decoration: underline;  /* 호버 시 밑줄 표시 */
-}
-
-
-.button--write {
-  width: 100px;
-  height: 40px;
-  background: #8bbedc;
-  border: 0;
-  color: white;
-  font-weight: 700;
-  cursor: pointer;
-}
-
 .paging {
   font-size: 20px;
   font-weight: 500;
   text-align: center;
 }
-
 .faqCate,
 .faqType {
   height: 36px;
