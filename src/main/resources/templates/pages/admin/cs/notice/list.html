@@ -1,6 +1,6 @@
 
-  <link rel="stylesheet" th:href="@{/css/admin/cs/notice/list.css}" />
-  <link rel="stylesheet" th:href="@{/css/basic.css}">
+<link rel="stylesheet" th:href="@{/css/admin/cs/notice/list.css}" />
+<link rel="stylesheet" th:href="@{/css/basic.css}">
 
 <header th:replace="layout/admin/header.html"></header>
 <main style="margin: 0 auto; margin-bottom: 50px; margin-top: 50px;">
@@ -38,7 +38,7 @@
         <tbody>
         <tr th:each="notice, iterStat : ${notices}" th:data-id="${notice.id}">
           <td><input type="checkbox" /></td>
-          <td th:text="${iterStat.index + 1}"></td> <!-- 번호 -->
+          <td th:text="${notice.id}"></td> <!-- 번호 -->
           <td th:text="${notice.cate1.categoryName}"></td> <!-- 카테고리 1 -->
           <td style="text-align: left" th:text="${notice.noticeTitle}"></td> <!-- 제목 -->
           <td th:text="${notice.noticeViews}"></td> <!-- 조회수 -->
@@ -63,12 +63,14 @@
       <a th:href="@{/admin/cs/notice/write}" class="button--write">작성하기</a>
     </div>
 
-    <div class="paging">
-      <a href="#" class="prev" onclick="loadPage(currentPage - 1)">이전</a>
-      <a href="#" onclick="loadPage(1)">1</a>
-      <a href="#" onclick="loadPage(2)">2</a>
-      <a href="#" onclick="loadPage(3)">3</a>
-      <a href="#" class="next" onclick="loadPage(currentPage + 1)">다음</a>
+    <div class="page">
+      <a class="none" th:href="@{/admin/cs/notices(page=0)}"><<</a>
+      <a class="none" th:href="@{/admin/cs/notices(page=${page - 2})}" th:if="${page>=2}" th:text="${page}-1"></a>
+      <a class="none" th:href="@{/admin/cs/notices(page=${page - 1})}" th:if="${page>=1}" th:text="${page}"></a>
+      <a class="active" style="font-weight: 600; text-decoration: underline;" th:text="${page}+1"></a>
+      <a class="none" th:href="@{/admin/cs/notices(page=${page + 1})}" th:if="${(totalPages - page)>=2}" th:text="${page}+2"></a>
+      <a class="none" th:href="@{/admin/cs/notices(page=${page + 2})}" th:if="${(totalPages - page)>=3}" th:text="${page}+3"></a>
+      <a class="none" th:href="@{/admin/cs/notices(page=${totalPages - 1})}" >>></a>
     </div>
   </section>
 </main>
@@ -169,7 +171,7 @@
       if (confirm('정말로 선택된 항목을 삭제하시겠습니까?')) {
         fetch('/admin/cs/notice/deleteSelected', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {'Content-Type': 'application/json'},
           body: JSON.stringify(selectedIds)
         })
                 .then(response => response.json())
@@ -190,7 +192,7 @@
   }
 
   // 전체 선택 / 해제 기능
-  document.getElementById('selectAll').addEventListener('change', function() {
+  document.getElementById('selectAll').addEventListener('change', function () {
     const isChecked = this.checked;
     document.querySelectorAll('tbody input[type="checkbox"]').forEach((checkbox) => {
       checkbox.checked = isChecked;

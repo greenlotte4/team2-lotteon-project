@@ -12,6 +12,7 @@
           event.preventDefault();
         }
       }
+
       function goBack() {
         window.history.back();
       }
@@ -26,7 +27,7 @@
     <article class="sectionBox">
       <table>
         <tbody>
-        <input type="hidden" name="noticeHit" value="1" />
+        <input type="hidden" name="noticeHit" value="1"/>
         <tr style="height: 60px;">
           <th>유형</th>
           <td class="notice-type" th:text="${notice.cate1.categoryName}">고객서비스</td> <!-- 공지사항 유형 출력 -->
@@ -42,7 +43,8 @@
         </tbody>
       </table>
       <div class="button-group">
-        <form th:action="@{/admin/cs/notice/delete/{id}(id=${notice.id})}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+        <form th:action="@{/admin/cs/notice/delete/{id}(id=${notice.id})}" method="post"
+              onsubmit="return confirm('정말 삭제하시겠습니까?');">
           <button type="submit" class="button--delete">삭제</button>
           <!-- 수정 버튼 -->
           <a th:href="@{/admin/cs/notice/modify/{id}(id=${notice.id})}" class="button--modify">수정</a>

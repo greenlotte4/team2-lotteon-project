@@ -1,76 +1,202 @@
 
-<link rel="stylesheet" th:href="@{/css/cs/cs_common.css}">
-<link rel="stylesheet" th:href="@{/css/cs/cs_notice.css}">
+<link rel="stylesheet" th:href="@{/css/admin/cs/notice/list.css}" />
 <link rel="stylesheet" th:href="@{/css/basic.css}">
-<header th:replace="layout/main/header.html"></header>
-<main>
-    <aside class="cs_aside">
-        <h3 class="aside_title">공지사항</h3>
-        <ul class="aside_cate">
-            <li class="cate_list"><a href="#">전체</a></li>
-            <li class="cate_list"><a href="#">고객서비스</a></li>
-            <li class="cate_list"><a href="#">안전거래</a></li>
-            <li class="cate_list"><a href="#">위해상품</a></li>
-            <li class="cate_list"><a href="#">이벤트당첨</a></li>
-        </ul>
-    </aside>
-    <div id="main" style="height: auto">
-        <nav class="cs_nav">
-            <p class="cs_nav_tit"><span>홈</span> > <span>공지사항</span></p>
-        </nav>
-        <div class="box">
 
-            <section class="cs_faq">
-                <div class="cate_bar">
-                    <h3 class="cate_title">전체</h3>
-                    <p class="cate_des">공지사항 전체 내용입니다.</p>
-                </div>
-                <ul class="notice_box">
-                    <li class="notice"><a href="#">
-                        <p class="cate n_cate">안내</p>
-                        <p class="content n_content">해외결제사칭 문자주의</p>
-                        <span class="date n_date">22.10.31</span>
-                    </a></li>
-                    <li class="notice"><a href="#">
-                        <p class="cate n_cate">안내</p>
-                        <p class="content n_content">해외결제사칭 문자주의</p>
-                        <span class="date n_date">22.10.31</span>
-                    </a></li>
-                    <li class="notice"><a href="#">
-                        <p class="cate n_cate">안내</p>
-                        <p class="content n_content">해외결제사칭 문자주의</p>
-                        <span class="date n_date">22.10.31</span>
-                    </a></li>
-                    <li class="notice"><a href="#">
-                        <p class="cate n_cate">안내</p>
-                        <p class="content n_content">해외결제사칭 문자주의</p>
-                        <span class="date n_date">22.10.31</span>
-                    </a></li>
-                    <li class="notice"><a href="#">
-                        <p class="cate n_cate">안내</p>
-
-                        <p class="content n_content">해외결제사칭 문자주의</p>
-                        <span class="date n_date">22.10.31</span>
-                    </a></li>
-                    <li class="notice"><a href="#">
-                        <p class="cate n_cate">안내</p>
-                        <p class="content n_content">해외결제사칭 문자주의</p>
-                        <span class="date n_date">22.10.31</span>
-                    </a></li>
-                </ul>
-                <div class="paging">
-                    <a class="ico btn_prev" href="#"><span>이전</span></a>
-                    <ol>
-                        <li><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
-                    </ol>
-                    <a class="ico btn_next" href="#"><span>다음</span></a>
-                </div>
-            </section>
+<header th:replace="layout/admin/header.html"></header>
+<main style="margin: 0 auto; margin-bottom: 50px; margin-top: 50px;">
+    <aside th:replace="layout/admin/aside.html"></aside>
+    <section id="admin-product-list" class="container">
+        <div id="search_input">
+            <nav class="notice-nav">
+                <h3>공지사항 목록</h3>
+                <p>HOME > 고객센터 > <strong>공지사항</strong></p>
+            </nav>
+            <form class="search">
+                <select name="type" class="select_type">
+                    <option value="typeselect">유형선택</option>
+                    <option value="customer_service">고객서비스</option>
+                    <option value="safe_transaction">안전거래</option>
+                    <option value="hazardous_product">위해상품</option>
+                    <option value="event_winner">이벤트 당첨</option>
+                </select>
+            </form>
         </div>
-    </div>
+
+        <article>
+            <table style="width: 100%">
+                <thead>
+                <tr>
+                    <th style="width: 5%"><input type="checkbox" id="selectAll" /></th>
+                    <th style="width: 5%">번호</th>
+                    <th>유형</th>
+                    <th>제목</th>
+                    <th>조회</th>
+                    <th>날짜</th>
+                    <th>관리</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="notice, iterStat : ${notices}" th:data-id="${notice.id}">
+                    <td><input type="checkbox" /></td>
+                    <td th:text="${notice.id}"></td> <!-- 번호 -->
+                    <td th:text="${notice.cate1.categoryName}"></td> <!-- 카테고리 1 -->
+                    <td style="text-align: left" th:text="${notice.noticeTitle}"></td> <!-- 제목 -->
+                    <td th:text="${notice.noticeViews}"></td> <!-- 조회수 -->
+                    <td th:text="${#dates.format(notice.noticeRdate, 'yyyy-MM-dd')}"></td> <!-- 날짜 -->
+                    <td>
+                        <div>
+                            <div>
+                                <a class="button--delete1" th:onclick="'deleteNotice(' + ${notice.id} + ')'">삭제</a>
+                            </div>
+                        </div>
+                        <div>
+                            <a th:href="@{'/admin/cs/notice/modify/' + ${notice.id}}" class="button--edit">수정</a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </article>
+
+        <div class="button-group">
+            <a class="button--delete" onclick="deleteSelected();">선택삭제</a>
+            <a th:href="@{/admin/cs/notice/write}" class="button--write">작성하기</a>
+        </div>
+
+        <div class="page">
+            <a class="none" th:href="@{/admin/cs/notices(page=0)}"><<</a>
+            <a class="none" th:href="@{/admin/cs/notices(page=${page - 2})}" th:if="${page>=2}" th:text="${page}-1"></a>
+            <a class="none" th:href="@{/admin/cs/notices(page=${page - 1})}" th:if="${page>=1}" th:text="${page}"></a>
+            <a class="active" style="font-weight: 600; text-decoration: underline;" th:text="${page}+1"></a>
+            <a class="none" th:href="@{/admin/cs/notices(page=${page + 1})}" th:if="${(totalPages - page)>=2}" th:text="${page}+2"></a>
+            <a class="none" th:href="@{/admin/cs/notices(page=${page + 2})}" th:if="${(totalPages - page)>=3}" th:text="${page}+3"></a>
+            <a class="none" th:href="@{/admin/cs/notices(page=${totalPages - 1})}" >>></a>
+        </div>
+    </section>
 </main>
-<footer th:replace="layout/main/footer.html"></footer>
+<footer th:replace="layout/admin/footer.html"></footer>
+
+<script>
+    let currentPage = 1;
+    const itemsPerPage = 10;
+
+    // 페이지 데이터를 로드하는 함수
+    function loadPage(pageNumber) {
+        if (pageNumber < 1) return;
+
+        // 페이지 번호를 출력 (2번을 눌렀을 때 2번을 출력)
+        console.log(`현재 페이지: ${pageNumber}번 페이지로 이동 중입니다.`);
+
+        // fetch를 통해 서버로부터 해당 페이지의 데이터를 받아옴
+        fetch(`/admin/cs/notices/api?page=${pageNumber}&size=${itemsPerPage}`)
+            .then(response => response.json())
+            .then(data => {
+                renderTable(data.notices); // 테이블에 데이터 렌더링
+                currentPage = pageNumber;  // 현재 페이지 업데이트
+                updatePagingControls(data.totalPages); // 페이지 버튼 활성화/비활성화 업데이트
+
+                // 페이지 변경 시 메시지를 화면에 표시하는 로직 추가 (선택사항)
+                document.getElementById('pageStatus').innerText = `${pageNumber}번 페이지로 이동했습니다.`;
+            })
+            .catch(error => {
+                console.error('페이지 데이터를 불러오는 중 오류가 발생했습니다:', error);
+            });
+    }
+
+    // 테이블에 데이터를 렌더링하는 함수
+    function renderTable(notices) {
+        const tableBody = document.querySelector('tbody');
+        tableBody.innerHTML = ''; // 기존 데이터 제거
+
+        notices.forEach((notice, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+          <td><input type="checkbox" /></td>
+          <td>${index + 1}</td>
+          <td>${notice.cate1.categoryName}</td>
+          <td style="text-align: left">${notice.noticeTitle}</td>
+          <td>${notice.noticeViews}</td>
+          <td>${new Date(notice.noticeRdate).toLocaleDateString()}</td>
+          <td>
+            <a class="button--delete1" onclick="deleteNotice(${notice.id})">삭제</a>
+            <a href="/admin/cs/notice/modify/${notice.id}" class="button--edit">수정</a>
+          </td>
+        `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    // 페이지 버튼 활성화/비활성화 처리
+    function updatePagingControls(totalPages) {
+        document.querySelector('.prev').style.visibility = currentPage === 1 ? 'hidden' : 'visible';
+        document.querySelector('.next').style.visibility = currentPage === totalPages ? 'hidden' : 'visible';
+    }
+    // 공통 함수로 삭제 요청 처리
+    function fetchDeleteRequest(url, successMessage) {
+        fetch(url, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert(successMessage);
+                    window.location.reload();
+                } else {
+                    alert('삭제에 실패했습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('삭제 중 오류가 발생했습니다.', error);
+                alert('삭제 중 오류가 발생했습니다.');
+            });
+    }
+
+    // 개별 삭제 기능
+    function deleteNotice(noticeId) {
+        if (confirm('정말로 이 공지사항을 삭제하시겠습니까?')) {
+            fetchDeleteRequest(`/admin/cs/notice/delete/${noticeId}`, '삭제가 완료되었습니다.');
+        }
+    }
+
+    // 선택 삭제 기능
+    function deleteSelected() {
+        const selectedIds = [];
+        document.querySelectorAll('tbody input[type="checkbox"]:checked').forEach((checkbox) => {
+            const row = checkbox.closest('tr');
+            const id = row.dataset.id;
+            selectedIds.push(Number(id));
+        });
+
+        if (selectedIds.length > 0) {
+            if (confirm('정말로 선택된 항목을 삭제하시겠습니까?')) {
+                fetch('/admin/cs/notice/deleteSelected', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(selectedIds)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.location.href = '/admin/cs/notices';
+                        } else {
+                            alert('삭제 실패: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        alert('삭제 중 오류 발생: ' + error.message);
+                    });
+            }
+        } else {
+            alert('삭제할 항목을 선택하세요.');
+        }
+    }
+
+    // 전체 선택 / 해제 기능
+    document.getElementById('selectAll').addEventListener('change', function() {
+        const isChecked = this.checked;
+        document.querySelectorAll('tbody input[type="checkbox"]').forEach((checkbox) => {
+            checkbox.checked = isChecked;
+        });
+    });
+</script>
+

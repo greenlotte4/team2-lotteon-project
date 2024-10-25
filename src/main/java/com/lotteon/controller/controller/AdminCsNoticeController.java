@@ -34,26 +34,28 @@ public class AdminCsNoticeController {
     private final NoticeService noticeService;
     private final CategoryArticleService categoryArticleService;
 
-    @ModelAttribute
-    public void pageIndex(Model model) {
-        model.addAttribute("config","cs");
-        model.addAttribute("active","notices");
-    }
-    // 공지사항 목록 조회 (시간순 정렬 추가)
+    // 공지사항 목록 조회 (페이지네이션 추가)
     @GetMapping("/notices")
-    public String notices(Model model) {
-        // 시간순 정렬된 공지사항 목록을 가져옴
-        List<Notice> notices = noticeService.getAllNoticesSortedByDate();
-        model.addAttribute("notices", notices);
-        return "pages/admin/cs/notice/list";  // 공지사항 목록 뷰로 이동
+    public String notices(Model model,
+                          @RequestParam(defaultValue = "0") int page) { // 기본 페이지 크기 10
+
+        // 페이지네이션 처리 (해당 페이지의 공지사항 목록을 가져옴)
+        Pageable pageable = PageRequest.of(page , 10);
+        Page<Notice> noticePage = noticeService.findAll(pageable);
+
+        model.addAttribute("notices", noticePage.getContent());
+        model.addAttribute("page", page);
+        model.addAttribute("totalPages", noticePage.getTotalPages());
+
+        return "pages/admin/cs/notice/list"; // 공지사항 목록 뷰로 이동
     }
 
     // 공지사항 상세 조회 (조회수 증가 포함)
     @GetMapping("/notice/{id}")
     public String notice(@PathVariable Long id, Model model) {
         NoticeResponseDto notice = noticeService.incrementViewsAndGetNotice(id);
-        model.addAttribute("notice", notice);  // 공지사항 데이터를 모델에 추가
-        return "pages/admin/cs/notice/view";  // 상세 페이지 뷰 반환
+        model.addAttribute("notice", notice); // 공지사항 데이터를 모델에 추가
+        return "pages/admin/cs/notice/view"; // 상세 페이지 뷰 반환
     }
 
     // 공지사항 작성 폼
@@ -86,9 +88,9 @@ public class AdminCsNoticeController {
 
     // 공지사항 작성 처리
     @PostMapping("/notice/write")
-    public String noticeWrite(@ModelAttribute NoticeRequestDto Dto) {
-        log.info("컨트롤러 " + Dto);
-        noticeService.saveNotice(Dto);
+    public String noticeWrite(@ModelAttribute NoticeRequestDto dto) {
+        log.info("컨트롤러 " + dto);
+        noticeService.saveNotice(dto);
         return "redirect:/admin/cs/notices";
     }
 
@@ -97,13 +99,13 @@ public class AdminCsNoticeController {
     public String noticeModifyForm(@PathVariable Long id, Model model) {
         NoticeResponseDto notice = noticeService.getNotice(id);
         model.addAttribute("notice", notice);
-        return "pages/admin/cs/notice/modify";  // 수정 폼으로 이동
+        return "pages/admin/cs/notice/modify"; // 수정 폼으로 이동
     }
 
     // 공지사항 수정 처리
     @PostMapping("/notice/modify/{id}")
     public String noticeModify(@PathVariable Long id, @ModelAttribute NoticeRequestDto noticeRequestDto) {
-        noticeService.updateNotice(id, noticeRequestDto);  // 수정 처리
+        noticeService.updateNotice(id, noticeRequestDto); // 수정 처리
         return "redirect:/admin/cs/notice/" + id;
     }
 
@@ -112,7 +114,7 @@ public class AdminCsNoticeController {
     public ResponseEntity<?> deleteNotice(@PathVariable Long id) {
         try {
             noticeService.deleteNotice(id);
-            return ResponseEntity.ok().build();  // 성공 응답
+            return ResponseEntity.ok().build(); // 성공 응답
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 실패");
         }
@@ -132,4 +134,5 @@ public class AdminCsNoticeController {
         }
         return result;
     }
+
 }

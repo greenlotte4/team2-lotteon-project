@@ -1,53 +1,55 @@
-<link rel="stylesheet" th:href="@{/css/cs/cs_common.css}">
-<link rel="stylesheet" th:href="@{/css/cs/cs_notice.css}">
+<link rel="stylesheet" th:href="@{/css/admin/cs/notice/view.css}" />
 <link rel="stylesheet" th:href="@{/css/basic.css}">
-<header th:replace="layout/main/header.html"></header>
-<main>
-    <aside class="cs_aside">
-        <h3 class="aside_title">공지사항</h3>
-        <ul class="aside_cate">
-            <li class="cate_list"><a href="#">전체</a></li>
-            <li class="cate_list"><a href="#">고객서비스</a></li>
-            <li class="cate_list"><a href="#">안전거래</a></li>
-            <li class="cate_list"><a href="#">위해상품</a></li>
-            <li class="cate_list"><a href="#">이벤트당첨</a></li>
-        </ul>
-    </aside>
-    <div id="main" style="height: auto">
-        <nav class="cs_nav">
-            <p class="cs_nav_tit"><span>홈</span> > <span>공지사항</span></p>
+<body>
+<header th:replace="layout/admin/header.html"></header>
+<main style="margin: 0 auto; margin-bottom: 50px; margin-top: 50px;">
+    <aside th:replace="layout/admin/aside.html"></aside>
+    <section id="admin-product-list" class="container">
+        <script>
+            function deleteNotice(event) {
+                const chk = confirm("정말 삭제하시겠습니까?");
+                if (!chk) {
+                    event.preventDefault();
+                }
+            }
+            function goBack() {
+                window.history.back();
+            }
+        </script>
+        <nav class="notice-nav">
+            <h3 class="viewTit">공지사항 보기</h3>
+            <p>
+                HOME > 고객센터 > <strong>공지사항</strong>
+            </p>
         </nav>
-        <div class="box">
-
-            <section class="cs_notice">
-                <div class="cate_bar">
-                    <h3 class="cate_title">전체</h3>
-                    <p class="cate_des">공지사항 전체 내용입니다.</p>
-                </div>
-                <div class="view_title">
-                    <p class="v_title cate">안내</p>
-                    <p class="v_title title">해외결제사칭 문자주의</p>
-                    <p class="date rdate">2022.11.30</p>
-                </div>
-                <div class="view_content">
-                    <div>
-                        <p>
-                            안녕하세요. G마켓입니다.<br>
-                            G마켓 해외직구를 사칭하는 피싱문자가 최근 다시 신고되고 있어 주의 안내드립니다.<br>
-                            아래와 같이 지마켓 해외직구 승인결제 피싱문자 또는 발신번호 006, 002등으로 시작하는 피싱문자를 수신하신 고객님께서는 통화 또는 문자내 기재된 번호/링크를 클릭하지 않도록 주의하여 주시기 바랍니다.<br>
-                        </p>
-                    </div>
-                    <div class="autolink">
-                        <p>* 피싱 관련 피해신고<br><br>
-                            > 경찰사이버수사국 (국번없이) 182: http://어쩌구.go.kr<br>
-                            > KISA 인터넷침해대응센터 (국번없이) 182: http://어쩌구.go.kr<br>
-                            감사합니다.
-                        </p>
-                    </div>
-                </div>
-                <a th:href="@{/cs/notices}" class="btn_gray btn_list">목록</a>
-            </section>
-        </div>
-    </div>
+        <!-- 공지사항 컨텐츠 시작 -->
+        <article class="sectionBox">
+            <table>
+                <tbody>
+                <input type="hidden" name="noticeHit" value="1" />
+                <tr style="height: 60px;">
+                    <th>유형</th>
+                    <td class="notice-type" th:text="${notice.cate1.categoryName}">고객서비스</td> <!-- 공지사항 유형 출력 -->
+                </tr>
+                <tr style="height: 60px;">
+                    <th>제목</th>
+                    <td class="notice-title" th:text="${notice.noticeTitle}">공지사항 제목</td> <!-- 공지사항 제목 출력 -->
+                </tr>
+                <tr style="height: 200px;">
+                    <th>내용</th>
+                    <td class="notice-content" th:text="${notice.noticeContent}">공지사항 내용</td> <!-- 공지사항 내용 출력 -->
+                </tr>
+                </tbody>
+            </table>
+            <div class="button-group">
+                <form th:action="@{/admin/cs/notice/delete/{id}(id=${notice.id})}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+                    <button type="submit" class="button--delete">삭제</button>
+                    <!-- 수정 버튼 -->
+                    <a th:href="@{/admin/cs/notice/modify/{id}(id=${notice.id})}" class="button--modify">수정</a>
+                    <!-- 목록으로 돌아가기 버튼 -->
+                    <button class="button--back" type="button" onclick="window.location.href='/admin/cs/notices';">목록</button>
+            </div>
+        </article>
+    </section>
 </main>
-<footer th:replace="layout/main/footer.html"></footer>
+<footer th:replace="layout/admin/footer.html"></footer>

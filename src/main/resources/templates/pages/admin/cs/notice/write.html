@@ -106,8 +106,9 @@
           </tbody>
         </table>
         <div class="button-group">
-          <a th:href="@{/admin/cs/notices}" class="button button--delete">취소하기</a>
-          <a th:href="@{/admin/cs/notices}" class="button button--write">작성하기</a>
+          <div class="button-group">
+            <a th:href="@{/admin/cs/notices}" class="button button--delete">취소하기</a>
+            <button type="submit" class="button button--write">작성하기</button> <!-- 수정된 부분 -->
         </div>
 
         </div>

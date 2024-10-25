@@ -142,13 +142,14 @@ public class NoticeService {
     }
 
     // 특정 카테고리의 공지사항 목록 조회 (페이징 포함)
-    public List<Notice> getNoticesByCategory(Long categoryId, Pageable pageable) {
-        return noticeRepository.findByCate1_CategoryId(categoryId, pageable).getContent();
+    public Page<Notice> getNoticesByCategory(Long categoryId, Pageable pageable) {
+        Long categoryId2 = (long)2;
+        return noticeRepository.findByCate1_CategoryIdAndCate2_CategoryId(categoryId,categoryId2, pageable);
     }
 
     // 공지사항 목록 조회 (페이징 지원)
     public Page<Notice> findAll(Pageable pageable) {
         // 공지사항 목록을 페이지 단위로 조회하여 반환
-        return noticeRepository.findAll(pageable);
+        return noticeRepository.findAllByOrderByIdDesc(pageable);
     }
 }

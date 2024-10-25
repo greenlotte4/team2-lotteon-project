@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;  // Sort 클래스 import 추가
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.net.ContentHandler;
 import java.util.List;
 
 @Repository
@@ -30,4 +31,9 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
 
     // 시간순 정렬로 모든 공지사항 조회 (Sort 객체 사용)
     List<Notice> findAll(Sort sort);
+
+
+    Page<Notice> findAllByOrderByIdDesc(Pageable pageable);
+
+    Page<Notice> findByCate1_CategoryIdAndCate2_CategoryId(Long categoryId, Long categoryId2, Pageable pageable);
 }
