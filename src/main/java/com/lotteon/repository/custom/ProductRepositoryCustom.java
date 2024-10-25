@@ -12,6 +12,6 @@ public interface ProductRepositoryCustom {
     Page<Tuple> selectProductAllForList(ProductPageRequestDTO pageRequestDTO, Pageable pageable, long sellId);
     Page<Tuple> selectProductForSearch(ProductPageRequestDTO pageRequestDTO, Pageable pageable, long sellId);
 
-    List<Tuple> findProductsWithSellerInfoByIds(List<Long> productIds);
+    Page<Tuple> findProductsWithSellerInfoByIds(ProductPageRequestDTO pageRequestDTO, Pageable pageable, List<Long> productIds);
 
 }

@@ -35,7 +35,7 @@ public class Order {
     private String receiverAddr;
 
     @Column(name = "receiver_hp")
-    private int receiverHp;
+    private String receiverHp;
 
     @Column(name = "order_total")
     private int orderTotal;

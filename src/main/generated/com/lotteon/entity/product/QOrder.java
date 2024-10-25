@@ -44,7 +44,7 @@ public class QOrder extends EntityPathBase<Order> {
 
     public final StringPath receiverAddr = createString("receiverAddr");
 
-    public final NumberPath<Integer> receiverHp = createNumber("receiverHp", Integer.class);
+    public final StringPath receiverHp = createString("receiverHp");
 
     public final StringPath receiverName = createString("receiverName");
 

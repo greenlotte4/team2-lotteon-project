@@ -1,13 +1,16 @@
 package com.lotteon.service.category;
 
 import com.lotteon.dto.requestDto.PostProdCateMapperDTO;
+import com.lotteon.dto.requestDto.PostProductDTO;
 import com.lotteon.dto.requestDto.ProductPageRequestDTO;
 import com.lotteon.dto.responseDto.GetCategoryDto;
 import com.lotteon.dto.responseDto.GetProdCateDTO;
+import com.lotteon.dto.responseDto.ProductPageResponseDTO;
 import com.lotteon.dto.responseDto.TestResponseDto;
 import com.lotteon.entity.category.CategoryProduct;
 import com.lotteon.entity.category.CategoryProductMapper;
 import com.lotteon.entity.product.Product;
+import com.lotteon.entity.product.QProduct;
 import com.lotteon.repository.category.CategoryProdMapperRepository;
 import com.lotteon.repository.category.CategoryProductRepository;
 import com.lotteon.repository.product.ProductRepository;
@@ -192,7 +195,7 @@ public class CategoryProductService {
         categoryProdMapperRepository.save(categoryProductMapper);
     }
 
-    public void findProductCategory(String cate, ProductPageRequestDTO pageRequestDTO) {
+    public ProductPageResponseDTO<PostProductDTO> findProductCategory(String cate, ProductPageRequestDTO pageRequestDTO) {
         Optional<CategoryProduct> opt = categoryProductRepository.findById(Long.parseLong(cate));
         CategoryProduct categoryProduct1 = null;
         if(opt.isPresent()){
@@ -204,9 +207,35 @@ public class CategoryProductService {
                 .map(mapper -> mapper.getProduct().getId())
                 .toList();
 
-        List<Product> products = new ArrayList<>(); // 결과를 저장할 리스트 생성
+        Pageable pageable = pageRequestDTO.getPageable("id");
 
+        Page<Tuple> pageProduct = productRepository.findProductsWithSellerInfoByIds(pageRequestDTO, pageable, productIds);
 
+        List<String> companys = new ArrayList<>();
+        List<Integer> grade = new ArrayList<>();
+        List<PostProductDTO> productList = pageProduct.getContent().stream().map(tuple -> {
+            Product product = tuple.get(0, Product.class);
+            String company = tuple.get(1, String.class);
+            Integer sellerGrade = tuple.get(2, Integer.class);
+            companys.add(company);
+            grade.add(sellerGrade);
+            return modelMapper.map(product, PostProductDTO.class);
+        }).toList();
+
+        for(int i = 0; i < companys.size(); i++) {
+            productList.get(i).setSellCompany(companys.get(i));
+            productList.get(i).setSellGrade(grade.get(i));
+        }
+
+        int total = (int)pageProduct.getTotalElements();
+
+        log.info("11111111111111111111" + productList);
+
+        return ProductPageResponseDTO.<PostProductDTO>builder()
+                .productPageRequestDTO(pageRequestDTO)
+                .dtoList(productList)
+                .total(total)
+                .build();
 
     }
 

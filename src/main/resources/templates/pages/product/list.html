@@ -57,86 +57,43 @@
                     <col style="width: 20%;">
                     <col style="width: 20%;">
                 </colgroup>
-                <tr>
-                    <td><img src="https://via.placeholder.com/138x110" alt="상품 이미지"></td>
+                <tr th:each="product, i:${products.getDtoList()}">
+                    <td><img style="width: 138px; height: 110px;" th:src="@{'/file/'+${product.getProdListImg()}}" alt="상품 이미지"></td>
                     <td>
-                        <a th:href="@{/prod/product}">
-                            <span>상품명</span> <br>
-                            <span>간단한 상품 설명</span>
+                        <a th:href="@{/prod/product(prodId=${product.getId()})}">
+                            <span>[[${product.getProdName}]]</span> <br>
+                            <span>[[${product.getProdSummary}]]</span>
                         </a>
                     </td>
                     <td>
                         <span>27,000원</span> <br>
-                        <del>30,000원&nbsp;</del>
-                        <span>10%&#8595;</span> <br>
-                        <span>배송비 2,500</span>
+                        <del>[[${product.getProdPrice}]]원</del>
+                        <span>[[${product.getProdDiscount}]]%&#8595;</span> <br>
+                        <span>배송비 [[${product.getProdDeliver}]]</span>
                         <img src="https://via.placeholder.com/89x19" alt="">
                     </td>
                     <td>
                         <img src="https://via.placeholder.com/19x19">
-                        <span>&nbsp;&nbsp;판매자</span> <br> <br>
-                        <img src="https://via.placeholder.com/76x18"> <br> <br>
+                        <span>&nbsp;&nbsp;[[${product.getSellCompany}]]</span> <br> <br>
+                        <img src="https://via.placeholder.com/76x18" th:alt="${product.getSellGrade()}"> <br> <br>
                         <span>상품평</span>
                         <img src="https://via.placeholder.com/56x17">
                     </td>
                 </tr>
-                <tr>
-                    <td><img src="https://via.placeholder.com/138x110" alt="상품 이미지"></td>
-                    <td>
-                        <a th:href="@{/prod/product}">
-                            <span>상품명</span> <br>
-                            <span>간단한 상품 설명</span>
-                        </a>
-                    </td>
-                    <td>
-                        <span>27,000원</span> <br>
-                        <del>30,000원&nbsp;</del>
-                        <span>10%&#8595;</span> <br>
-                        <span>배송비 2,500</span>
-                        <img src="https://via.placeholder.com/89x19" alt="">
-                    </td>
-                    <td>
-                        <img src="https://via.placeholder.com/19x19">
-                        <span>&nbsp;&nbsp;판매자</span> <br> <br>
-                        <img src="https://via.placeholder.com/76x18"> <br> <br>
-                        <span>상품평</span>
-                        <img src="https://via.placeholder.com/56x17">
-                    </td>
-                </tr>
-                <tr>
-                    <td><img src="https://via.placeholder.com/138x110" alt="상품 이미지"></td>
-                    <td>
-                        <a th:href="@{/prod/product}">
-                            <span>상품명</span> <br>
-                            <span>간단한 상품 설명</span>
-                        </a>
-                    </td>
-                    <td>
-                        <span>27,000원</span> <br>
-                        <del>30,000원&nbsp;</del>
-                        <span>10%&#8595;</span> <br>
-                        <span>배송비 2,500</span>
-                        <img src="https://via.placeholder.com/89x19" alt="">
-                    </td>
-                    <td>
-                        <img src="https://via.placeholder.com/19x19">
-                        <span>&nbsp;&nbsp;판매자</span> <br> <br>
-                        <img src="https://via.placeholder.com/76x18"> <br> <br>
-                        <span>상품평</span>
-                        <img src="https://via.placeholder.com/56x17">
-                    </td>
-                </tr>
-
             </table> <!-- tb1 -->
-            <div class="page">
-                <a href="#">&lt; 이전</a>
-                <button>1</button>
-                <button>2</button>
-                <button>3</button>
-                <button>4</button>
-                <button>5</button>
-                <a href="#">다음 &gt;</a>
-            </div> <!-- page -->
+            <div class="page" th:if="${not #lists.isEmpty(products.dtoList)}">
+
+                <th:block th:if="${products.prev}">
+                    <a th:href="@{/prod/products/(pg=${products.start - 1}, cate=${cate})}" class="first"><<</a>
+                </th:block>
+                <th:block th:each="num:${#numbers.sequence(products.start, products.end)}">
+                    <a th:href="@{/prod/products(pg=${num}, cate=${cate})}" th:class="${num == products.pg} ? 'on' : 'num'">[[${num}]]</a>
+                </th:block>
+                <th:block th:if="${products.next}">
+                    <a th:href="@{/prod/products/(pg=${products.end + 1}, cate=${cate})}" class="first"><<</a>
+                </th:block>
+
+            </div>
         </main> <!-- #main-->
     </div><!-- #wrap -->
 </main>

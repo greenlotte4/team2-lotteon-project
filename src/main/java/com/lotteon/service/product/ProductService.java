@@ -174,6 +174,16 @@ public class ProductService {
                 .build();
     }
 
+    public PostProductDTO selectProduct(long id) {
+       Optional<Product> opt = productRepository.findById(id);
+        PostProductDTO postProductDTO = null;
+       if (opt.isPresent()) {
+           Product product = opt.get();
+           postProductDTO = modelMapper.map(product, PostProductDTO.class);
+       }
+       return postProductDTO;
+    }
+
     public void deleteProduct(long id){
         productRepository.deleteById(id);
     }

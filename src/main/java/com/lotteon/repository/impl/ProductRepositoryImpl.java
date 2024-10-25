@@ -178,17 +178,22 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     @Override
-    public List<Tuple> findProductsWithSellerInfoByIds(List<Long> productIds) {
+    public Page<Tuple> findProductsWithSellerInfoByIds(ProductPageRequestDTO pageRequestDTO, Pageable pageable, List<Long> productIds) {
         // productIds 리스트를 사용하여 Product와 Seller 정보 가져오기
-        List<Tuple> productsWithSellerInfo = queryFactory
+        List<Tuple> content = queryFactory
                 .select(qProduct, qSeller.sellCompany, qSeller.sellGrade) // 필요한 컬럼 선택
                 .from(qProduct)
                 .join(qSeller) // Seller 테이블과 조인
                 .on(qProduct.sellId.eq(qSeller.member.id)) // 조건: Product의 sellId와 Seller의 id가 같을 때
                 .where(qProduct.id.in(productIds)) // productIds 리스트를 사용하여 필터링
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch(); // 쿼리 실행
 
-        return productsWithSellerInfo; // 결과 반환
+        long total = queryFactory.select(qProduct.count())
+                .from(qProduct).where(qProduct.id.in(productIds)).fetchOne();
+
+        return new PageImpl<Tuple>(content, pageable, total);
     }
 
 }
