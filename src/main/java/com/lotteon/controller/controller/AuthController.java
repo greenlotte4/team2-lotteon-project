@@ -92,6 +92,16 @@ public class AuthController {
         return "redirect:/auth/login/view";
     }
 
+    @GetMapping("/findid")
+    public String findId(Model model) {
+
+        return "pages/auth/findid";
+    }
+    @GetMapping("/findpwd")
+    public String findPwd(Model model) {
+
+        return "pages/auth/findpwd";
+    }
 }
 
 

@@ -1,0 +1,29 @@
+body {height: auto!important;}
+
+#find {justify-content: center; align-items: center; flex-direction: column;margin:200px auto; width: 1200px;}
+
+#find>.top-sec{width: 800px; display:flex; justify-content: center;}
+
+#find .findinfo{border-bottom: 1px solid #AAA; width: 550px;}
+#find .findinfo>p>a[href]{margin-left: 5px}
+#find .findinfo>p>a[href]:hover{text-decoration: underline}
+
+#find>.bottom-sec{width: 600px; display: flex; justify-content: space-evenly;}
+#find>.bottom-sec>.usertype{display: block; width: 270px; box-sizing: border-box;padding: 30px; border-radius: 10px; cursor: pointer;}
+
+#find .usertype>p{margin-bottom: 0;}
+#find .usertype>img{float: left; margin: 0 9px 0 -9px; width: 40px;}
+#find .usertype:hover{opacity: 0.8;}
+#find .customer{color: #FFF; background: linear-gradient(135deg,#f43b47 0%, #453a94 100%);}
+#find .customer>img{filter: brightness(500);}
+#find .seller{background-color: #dbdbdb;}
+
+#find .find-sec{display: none; margin-bottom: 20px;}
+#find .find-sec span{margin-top: 20px; display: block; height: 20px; color: #FFF;}
+#find .find-sec .del-btn{display: inline-block; text-align: center; border-radius: 100px; outline: none; border: none; background-color: #FFF; color: #FFF; width: 20px; height: 20px; margin-left: -30px; cursor: text}
+
+#find .find-sec .inp{width: 300px;height: 50px;padding-left: 10px;outline: none;border: none;border-bottom: 1px solid #c7c7c7;font-size: 17px;}
+#find .find-sec a.btn{display: inline-block; width: 95px; background-color: #999; margin-left: 16px; height: 40px; color: #FFF; padding-top: 10px;}
+#find .find-sec .long{width: 400px;}
+#find .find-sec input:focus{border-color: #444;}
+#find .find-sec .authcode-div{display: none;}

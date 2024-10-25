@@ -1,0 +1,163 @@
+<link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+<link rel="stylesheet" th:href="@{/css/auth/find.css}">
+<link rel="stylesheet" th:href="@{/css/basic.css}">
+<header th:replace="layout/main/header.html"></header>
+<main id="find">
+    <section class="top-sec">
+        <article class="findinfo">
+            <h2>비밀번호 찾기</h2>
+            <p>아이디가 기억나지 않나요? &nbsp;>><a th:href="@{/auth/findid}">아이디부터 찾으러 가기</a></p>
+        </article>
+    </section>
+    <section class="bottom-sec">
+        <article class="usertype customer" onclick="openSection('cust')">
+            <img th:src="@{/images/icon_my.svg}">
+            <h4>개인 회원</h4>
+            <p>아이디와 이메일을 알고 있어요</p>
+        </article>
+        <article class="usertype seller" onclick="openSection('seller')">
+            <img th:src="@{/images/icon_my.svg}">
+            <h4>사업자 회원</h4>
+            <p>아이디와 사업자 번호를 알고 있어요</p>
+        </article>
+    </section>
+    <section class="find-sec">
+        <div class="id-div">
+            <span>아이디</span>
+            <input type="text" class="long inp" name="id" placeholder="아이디를 입력해주세요"><a href="" class="del-btn">×</a><br>
+        </div>
+        <div class="bizcode-div">
+            <span>사업자등록번호</span>
+            <input type="text" class="long inp" name="bizcode" placeholder="사업자등록번호 숫자 10자리를 입력해주세요"><a href="" class="del-btn">×</a><br>
+        </div>
+        <div>
+            <span>이메일</span>
+            <input type="email" class="inp" name="email" placeholder="가입시 사용한 이메일을 입력해주세요"><a href="" class="del-btn">×</a><a class="btn send">인증번호 전송</a>
+        </div>
+        <div class="authcode-div">
+            <span>인증코드</span>
+            <input type="number" class="inp" name="authcode" placeholder="인증 코드 숫자 6자리를 입력해주세요"><a href="" class="del-btn">×</a><a class="btn submit">인증하기</a>
+        </div>
+    </section>
+
+
+</main>
+
+<footer th:replace="layout/main/footer.html"></footer>
+<script>
+    const find_section = document.querySelector('.find-sec');
+    const idDiv = document.getElementsByClassName('id-div')[0];
+    const bizDiv = document.getElementsByClassName('bizcode-div')[0];
+    const sendBtn = document.getElementsByClassName('send')[0];
+
+    const idInput = document.getElementsByName('id')[0];
+    const bizInput = document.getElementsByName('bizcode')[0];
+    const emailInput = document.getElementsByName('email')[0];
+    const authInput = document.getElementsByName('authcode')[0];
+
+    const inputs = [idInput, bizInput, emailInput, authInput];
+
+    function view(div){
+        div.querySelector('span').style.color = '#000';
+        div.getElementsByClassName('del-btn')[0].style.background = '#999';
+    }
+
+    function unview(div){
+        div.querySelector('span').style.color = '#FFF';
+        div.getElementsByClassName('del-btn')[0].style.background = '#FFF';
+    }
+
+    function openSection(type){
+        find_section.style.display='block';
+
+        if(type==="cust"){
+            bizInput.value='';
+            idDiv.style.display='block';
+            bizDiv.style.display='none';
+            unview(bizDiv);
+            sendBtn.dataset.type = 'cust';
+        }else if(type==='seller'){
+            idInput.value='';
+            bizDiv.style.display='block';
+            idDiv.style.display='block';
+            unview(idDiv);
+            sendBtn.dataset.type = 'seller';
+        }
+        window.scrollTo({
+            top: 200,
+            behavior: 'smooth'
+        });
+    }
+
+    inputs.forEach(input => {
+        input.addEventListener('keyup', function() {
+            const targetDiv = input.closest('div');
+            if (input.value.trim() !== '') {
+                view(targetDiv);
+            } else {
+                unview(targetDiv);
+            }
+        });
+    });
+
+    document.addEventListener('click', function(e){
+        if(e.target.classList.contains('del-btn')){
+            e.preventDefault();
+            const targetDiv = e.target.closest('div');
+            targetDiv.querySelector('input').value='';
+            unview(targetDiv);
+        }
+        if(e.target.classList.contains('send')){
+            e.preventDefault();
+            const button = e.target;
+            if(button.dataset.send === '1'){return;} //이미 발송했으면 더이상 진행되지 않음
+
+            const where = e.target.dataset.type;
+
+            if(where==='cust') {
+                // 개인 회원
+                const id = idInput.value;
+                const email = emailInput.value;
+            }else{
+                // 사업자 회원
+                const id = idInput.value;
+                const bizcode = bizInput.value;
+                const email = emailInput.value;
+            }
+            // 여기에 코드 전송 쿼리 작성
+            // 굳이 이메일 인증을 한번 더 해야 하나? 싶은 생각은 있습니다
+            // 더 맞는 것 같은 방향으로 가주세요
+            document.querySelector('.authcode-div').style.display='block';
+            window.scrollTo({
+                top: 300,
+                behavior: 'smooth'
+            });
+            alert(where + ' 이메일 인증코드가 전송되었습니다.'); // 확인을 위해 넣어둠 지우길
+            button.style.background='#453a94';
+            button.style.cursor='default';
+            button.innerText='전송됨';
+
+            button.dataset.send = 1;
+        }
+        if(e.target.classList.contains('submit')){
+            e.preventDefault();
+
+            const button = e.target;
+            if(button.dataset.auth === '1'){return;} //이미 인증했으면 더이상 진행되지 않음
+
+            const authcode = authInput.value;
+            // 여기에 AuthCode 비교 쿼리 작성
+
+
+            alert('인증되었습니다.');
+            button.style.background='#3b9a28';
+            button.style.cursor='default';
+            button.innerText='인증완료';
+            button.dataset.auth = 1;
+
+        }
+    });
+
+</script>
+</body>
+</html>
