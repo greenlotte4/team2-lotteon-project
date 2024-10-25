@@ -72,13 +72,8 @@
 
                     <td th:text="${cust.memUid}">아이디</td>
                     <td th:text="${cust.custName}">이름</td>
-                    <td th:text="${cust.custGender}">성별</td>
-<!--                    <td th:text="${cust.custGender?'남':'여'}">성별</td>-->
-<!--                    <td th:if="${cust.custGender == 'false'}" th:data-id="${cust.custGender}">남</td>-->
-<!--                    <td th:if="${cust.custGender == 'true'}" th:data-id="${cust.custGender}">여-->
-<!--                    <td th:if="${cust.custGender == 0}" >남</td>-->
-<!--                    <td th:if="${cust.custGender == 1}">여</td>-->
-                    <!-- 회원 등급 (5가지 - VVIP, VIP, Gold, Silver, Family) -->
+                    <td th:text="${cust.custGender?'남':'여'}">성별</td>
+
                     <td>
                         <select name="search" class="grade custgrade" th:data-id="${cust.memUid}">
                             <option value="VVIP" th:selected="${cust.custGrade}=='VVIP'">VVIP</option>
@@ -93,6 +88,7 @@
                     <td th:text="${cust.custEmail}">이메일</td>
                     <td th:text="${cust.custHp}">휴대폰</td>
                     <td th:text="${cust.memRdate}">가입일</td>
+
                     <!-- 회원상태 (4가지 - 정상, 중지, 휴면, 탈퇴) -->
                     <td th:if="${cust.memState == 'stop'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="condition stop">중지</td>
                     <td th:if="${cust.memState == 'basic'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="condition basic">정상</td>
@@ -112,15 +108,7 @@
                 <button class="delete-btn">선택수정</button>
             </div><!-- .btns -->
 
-<!--            <div class="page">-->
-<!--                <a href="#" class="first">이전</a>-->
-<!--                <a class="on" href="#">1</a>-->
-<!--                <a href="#">2</a>-->
-<!--                <a href="#">3</a>-->
-<!--                <a href="#">4</a>-->
-<!--                <a href="#">5</a>-->
-<!--                <a href="#" class="last">다음</a>-->
-<!--            </div>-->
+            <!-- 페이지 이동 -->
             <div class="page">
                 <a class="none" th:href="@{/admin/user/user(page=0, searchType=${searchType}, keyword=${keyword})}"><<</a>
                 <a class="none" th:href="@{/admin/user/user(page=${page - 2}, searchType=${searchType}, keyword=${keyword})}" th:if="${page>=2}" th:text="${page}-1"></a>
@@ -129,7 +117,7 @@
                 <a class="none" th:href="@{/admin/user/user(page=${page + 1}, searchType=${searchType}, keyword=${keyword})}" th:if="${(totalPages - page)>=2}" th:text="${page}+2"></a>
                 <a class="none" th:href="@{/admin/user/user(page=${page + 2}, searchType=${searchType}, keyword=${keyword})}" th:if="${(totalPages - page)>=3}" th:text="${page}+3"></a>
                 <a class="none" th:href="@{/admin/user/user(page=${totalPages - 1}, searchType=${searchType}, keyword=${keyword})}" >>></a>
-            </div>
+            </div><!-- .page -->
 
             <div class="popup"></div><!-- .popup -->
             <div class="popupbg"></div><!-- .popupbg -->
@@ -223,10 +211,12 @@
         bg.style.display = "flex";
     }
 
+    // 팝업 닫기
     function closePopup() {
         popup.style.display = "none";
         bg.style.display = "none";
     }
+    // 회원 상태 (4가지 - 정상, 중지, 휴면, 탈퇴) if문 스크립트
     async function stateChanger(event){
         const submitData = {
             "id" : event.target.dataset.id
@@ -238,5 +228,9 @@
         })
         window.location.href = "/admin/user/user"
     }
+
+    // 선택 수정
+    // 수정 버튼 클릭 시
+
 
 </script>

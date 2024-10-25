@@ -15,6 +15,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/*
+     날짜 : 2024/10/25 (금)
+     이름 : 김민희
+     내용 : 관리자 회원목록 수정 API Controller 생성
+*/
+
+
 @RestController
 @RequestMapping("/admin/user")
 @RequiredArgsConstructor
@@ -31,10 +38,9 @@ public class ApiAdminUserController {
         log.info(success);
 
         Map<String, Object> response = new HashMap<>(); //택배 상자 준비
-        response.put("success1", success); // 물건 담기
+        response.put("success", success); // 물건 담기
 
         return ResponseEntity.ok(response); // 배송 ㄱㄱ
-
     }
 
 }
