@@ -70,6 +70,10 @@
     const inputs = row.querySelectorAll('input'); // 해당 tr 내의 모든 인풋을 찾습니다.
 
     const option1 = inputs[0].value; // 첫 번째 인풋의 값을 가져옵니다.
+    const option2 = inputs[2].value; // 첫 번째 인풋의 값을 가져옵니다.
+    const option3 = inputs[4].value; // 첫 번째 인풋의 값을 가져옵니다.
+
+        console.log("option값들은?"+option1, option2, option3);
 
     if (!option1.trim()) {
     alert('옵션명을 입력해주세요.')
@@ -81,8 +85,13 @@
     newInputs.innerHTML = `
             <div class="option_inputs">
                 <input type="text" style="opacity:0" class="option_input option_input_name" value="${option1}">
-                <input type="text" class="option_input option_input_value" placeholder="세부옵션">
+                <input type="text" class="option_input option_input_value" placeholder="옵션값1">
+                <input type="text" style="opacity:0" class="option_input option_input_name2" value="${option2}">
+                <input type="text" class="option_input option_input_value2" placeholder="옵션값2">
+                <input type="text" style="opacity:0" class="option_input option_input_name3" value="${option3}">
+                <input type="text" class="option_input option_input_value3" placeholder="옵션값3">
                 <input type="text" class="option_input option_input_price" placeholder="추가금액">
+                <input type="text" class="option_input option_input_stock" placeholder="재고량">
                 <button class="btnDelete" type="button" onclick="deleteOption2(event)">삭제</button>
             </div>
         `;
@@ -103,9 +112,14 @@
             <th>옵션</th>
             <td class="optionTD">
                 <div class="option_inputs">
-                    <input type="text" class="option_input option_input_name" placeholder="옵션명">
-                    <input type="text" class="option_input option_input_value" placeholder="세부옵션">
+                    <input type="text" class="option_input option_input_name" placeholder="옵션명1">
+                    <input type="text" class="option_input option_input_value" placeholder="옵션값1">
+                    <input type="text" class="option_input option_input_name2" placeholder="옵션명2">
+                    <input type="text" class="option_input option_input_value2" placeholder="옵션값2">
+                    <input type="text" class="option_input option_input_name3" placeholder="옵션명3">
+                    <input type="text" class="option_input option_input_value3" placeholder="옵션값3">
                     <input type="text" class="option_input option_input_price" placeholder="추가금액">
+                    <input type="text" class="option_input option_input_stock" placeholder="재고량">
                 </div>
                 <button class="btnOption" type="button" onclick="addOption(event)">세부옵션추가</button>
                 <button class="btnDelete" type="button" onclick="deleteOption(event)">삭제</button>
@@ -137,12 +151,22 @@
     document.querySelectorAll('.option_inputs').forEach(v => {
     let name = v.querySelector('.option_input_name').value;
     let value = v.querySelector('.option_input_value').value;
+    let name2 = v.querySelector('.option_input_name2').value;
+    let value2 = v.querySelector('.option_input_value2').value;
+    let name3 = v.querySelector('.option_input_name3').value;
+    let value3 = v.querySelector('.option_input_value3').value;
     let price = v.querySelector('.option_input_price').value;
+    let stock = v.querySelector('.option_input_stock').value;
 
     let jsonData = {
     optionName: name,
     optionValue: value,
+    optionName2: name2,
+    optionValue2: value2,
+    optionName3: name3,
+    optionValue3: value3,
     additionalPrice: price,
+    stock: stock,
     productId: null
 };
 

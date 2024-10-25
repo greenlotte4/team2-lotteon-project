@@ -79,7 +79,4 @@ public class Product {
     @ToString.Exclude
     private List<ProductOption> options = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product" , cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<ProductStock> stocks = new ArrayList<>();
 }

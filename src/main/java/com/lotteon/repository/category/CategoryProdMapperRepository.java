@@ -13,4 +13,5 @@ public interface CategoryProdMapperRepository extends JpaRepository<CategoryProd
     List<CategoryProductMapper> findAllByCategory(CategoryProduct cate);
 
     List<CategoryProductMapper> findAllByProduct(Product prod);
+
 }

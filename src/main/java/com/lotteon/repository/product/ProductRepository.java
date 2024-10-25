@@ -14,5 +14,5 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Long>, ProductRepositoryCustom {
 
     public Page<Product> findAllBySellId(Pageable pageable, Long sellId);
-
+    List<Product> findAllByIdIn(List<Long> ids);
 }

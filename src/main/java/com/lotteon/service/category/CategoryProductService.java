@@ -1,6 +1,7 @@
 package com.lotteon.service.category;
 
 import com.lotteon.dto.requestDto.PostProdCateMapperDTO;
+import com.lotteon.dto.requestDto.ProductPageRequestDTO;
 import com.lotteon.dto.responseDto.GetCategoryDto;
 import com.lotteon.dto.responseDto.GetProdCateDTO;
 import com.lotteon.dto.responseDto.TestResponseDto;
@@ -10,8 +11,12 @@ import com.lotteon.entity.product.Product;
 import com.lotteon.repository.category.CategoryProdMapperRepository;
 import com.lotteon.repository.category.CategoryProductRepository;
 import com.lotteon.repository.product.ProductRepository;
+import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +26,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Log4j2
 public class CategoryProductService {
 
     private final CategoryProductRepository categoryProductRepository;
@@ -184,6 +190,24 @@ public class CategoryProductService {
         System.out.println("22222222222233333333"+categoryProductMapper);
 
         categoryProdMapperRepository.save(categoryProductMapper);
+    }
+
+    public void findProductCategory(String cate, ProductPageRequestDTO pageRequestDTO) {
+        Optional<CategoryProduct> opt = categoryProductRepository.findById(Long.parseLong(cate));
+        CategoryProduct categoryProduct1 = null;
+        if(opt.isPresent()){
+            categoryProduct1 = opt.get();
+        }
+        List<CategoryProductMapper> cateMappers = categoryProdMapperRepository.findAllByCategory(categoryProduct1);
+        // Step 1: cateMappers에서 productId 리스트 추출
+        List<Long> productIds = cateMappers.stream()
+                .map(mapper -> mapper.getProduct().getId())
+                .toList();
+
+        List<Product> products = new ArrayList<>(); // 결과를 저장할 리스트 생성
+
+
+
     }
 
 }

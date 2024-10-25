@@ -28,11 +28,21 @@ public class QProductOption extends EntityPathBase<ProductOption> {
 
     public final StringPath optionName = createString("optionName");
 
+    public final StringPath optionName2 = createString("optionName2");
+
+    public final StringPath optionName3 = createString("optionName3");
+
     public final NumberPath<Integer> optionState = createNumber("optionState", Integer.class);
 
     public final StringPath optionValue = createString("optionValue");
 
+    public final StringPath optionValue2 = createString("optionValue2");
+
+    public final StringPath optionValue3 = createString("optionValue3");
+
     public final QProduct product;
+
+    public final NumberPath<Integer> stock = createNumber("stock", Integer.class);
 
     public QProductOption(String variable) {
         this(ProductOption.class, forVariable(variable), INITS);

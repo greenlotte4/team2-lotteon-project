@@ -50,7 +50,7 @@ public class OrderService {
                                             .prodSummary(product.get().getProdSummary())
                                             .prodListImg(product.get().getProdListImg())
                                             .sellId(product.get().getSellId())
-                                            .stocks(product.get().getStocks())
+                                            .stock(product.get().getProdStock())
                                             .build();
 
             Long cartItemId = postCartSaveDto.getCartItemId();

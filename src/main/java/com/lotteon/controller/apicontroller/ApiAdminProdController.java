@@ -59,11 +59,14 @@ public class ApiAdminProdController {
     @PostMapping("/option")
     public ResponseEntity<Map<String, Object>> option(@RequestBody PostProductOptionDTO[] optionDTOS) {
 
+        int total = 0;
         for(PostProductOptionDTO optionDTO : optionDTOS) {
             log.info("444545455545454545454545"+optionDTO);
-            productService.insertProdOption(optionDTO);
+            total += productService.insertProdOption(optionDTO);
 
         }
+        log.info("total값은?" + total);
+
 
         return null;
     }

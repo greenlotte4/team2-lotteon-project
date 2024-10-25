@@ -108,7 +108,7 @@ public class ProductService {
         }
     }
 
-    public void insertProdOption(PostProductOptionDTO optionDTO) {
+    public int insertProdOption(PostProductOptionDTO optionDTO) {
 
         Optional<Product> opt = productRepository.findById(optionDTO.getProductId());
 
@@ -123,31 +123,37 @@ public class ProductService {
                 .product(product)
                 .optionName(optionDTO.getOptionName())
                 .optionValue(optionDTO.getOptionValue())
+                .optionName2(optionDTO.getOptionName2())
+                .optionValue2(optionDTO.getOptionValue2())
+                .optionName3(optionDTO.getOptionName3())
+                .optionValue3(optionDTO.getOptionValue3())
                 .additionalPrice(optionDTO.getAdditionalPrice())
-//                .stock(optionDTO.getStock())
+                .stock(optionDTO.getStock())
                 .build();
 
-        productOptionRepository.save(productOption);
+
+        ProductOption option = productOptionRepository.save(productOption);
+        return option.getStock();
+
+
     }
 
     public ProductPageResponseDTO<PostProductDTO> getPageProductListAdmin(ProductPageRequestDTO pageRequestDTO) {
 
+        // 접속한 사람의 ID값 받아오기 (customer일경우 전부, seller일 경우 자신의 상품만)
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
         long id = Integer.parseInt(((MyUserDetails) principal).getName());
 
-        log.info("444444444"+ id);
-
         Pageable pageable = pageRequestDTO.getPageable("id");
         Page<Tuple> pageProduct = null;
         if(pageRequestDTO.getKeyword() == null) {
-            pageProduct = productRepository.selectArticleAllForList(pageRequestDTO, pageable, id);
+            pageProduct = productRepository.selectProductAllForList(pageRequestDTO, pageable, id);
         }else {
-            pageProduct = productRepository.selectArticleForSearch(pageRequestDTO, pageable, id);
+            pageProduct = productRepository.selectProductForSearch(pageRequestDTO, pageable, id);
         }
 
         List<String> companys = new ArrayList<>();
-
         List<PostProductDTO> productList = pageProduct.getContent().stream().map(tuple -> {
             Product product = tuple.get(0, Product.class);
             String company = tuple.get(1, String.class);
@@ -157,8 +163,6 @@ public class ProductService {
 
         for(int i = 0; i < companys.size(); i++) {
             productList.get(i).setSellCompany(companys.get(i));
-            log.info("서비스 158번째 줄의 로그입니다" + productList.get(i));
-            log.info(productList.size());
         }
 
         int total = (int)pageProduct.getTotalElements();
@@ -168,7 +172,6 @@ public class ProductService {
                 .dtoList(productList)
                 .total(total)
                 .build();
-
     }
 
     public void deleteProduct(long id){

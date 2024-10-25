@@ -46,5 +46,6 @@ public class PostProductDTO {
     private MultipartFile detailImage;
 
     private String sellCompany;
+    private String sellGrade;
 
 }
