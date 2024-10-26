@@ -1,303 +1,307 @@
-  <link rel="stylesheet" th:href="@{/css/admin/cs/faq/list.css}">
-  <link rel="stylesheet" th:href="@{/css/basic.css}">
+<link rel="stylesheet" th:href="@{/css/admin/cs/faq/list.css}">
+<link rel="stylesheet" th:href="@{/css/basic.css}">
 <body>
 <header th:replace="layout/admin/header.html"></header>
 <main style="margin: 0 auto; margin-bottom: 50px; margin-top: 50px;">
-  <aside th:replace="layout/admin/aside.html"></aside>
-  <section id="admin-product-list" class="container">
-    <div id="search_input">
-      <nav class="faq-nav">
-        <h3>자주묻는질문 목록</h3>
-        <p>HOME > 고객센터 > <strong>자주묻는질문</strong></p>
-      </nav>
-      <form action="@{'/article/' + ${cate.cateGroup} + '/' + ${cate.cateName}}" class="search">
-        <input type="hidden" name="content" value="list" />
-        <input type="hidden" name="cateNo"  />
-        <!-- 1차 선택 -->
-        <select class="faqCate" name="faqCate" onchange="firstOption()">
-          <option>1차선택</option>
-          <option value="user">회원</option>
-          <option value="coupon">쿠폰/이벤트</option>
-          <option value="order">주문/결제</option>
-          <option value="delivery">배송</option>
-          <option value="cancel">취소/반품/환불</option>
-          <option value="travel">여행/숙박/항공</option>
-          <option value="safe">안전결제</option>
-        </select>
-        <!-- 2차 선택 -->
-        <select class="faqType" name="faqType" onchange="redirectToCateType()">
-          <option>2차선택</option>
-          <option value="regi">가입</option>
-          <option value="leave">탈퇴</option>
-          <option value="info">회원정보</option>
-          <option value="login">로그인</option>
-        </select>
-      </form>
-    </div>
-    <article>
-      <table style="width: 100%">
-        <tr>
-          <th style="width: 5%"><input type="checkbox" id="selectAll" /></th>
-          <th style="width: 5%">번호</th>
-          <th>1차유형</th>
-          <th>2차유형</th>
-          <th>제목</th>
-          <th>조회</th>
-          <th>날짜</th>
-          <th>관리</th>
-        </tr>
-        <!-- 번호를 1부터 오름차순으로 표시 -->
-        <tr th:each="faq, stat : ${faqs}">
-          <td><input type="checkbox"/></td>
+    <aside th:replace="layout/admin/aside.html"></aside>
+    <section id="admin-product-list" class="container">
+        <div id="search_input">
+            <nav class="faq-nav">
+                <h3>자주묻는질문 목록</h3>
+                <p>HOME > 고객센터 > <strong>자주묻는질문</strong></p>
+            </nav>
+            <form action="@{'/article/' + ${cate.cateGroup} + '/' + ${cate.cateName}}" class="search">
+                <input type="hidden" name="content" value="list"/>
+                <input type="hidden" name="cateNo"/>
+                <!-- 1차 선택 -->
+                <select class="faqCate" name="faqCate" onchange="firstOption()">
+                    <option>1차선택</option>
+                    <option value="user">회원</option>
+                    <option value="coupon">쿠폰/이벤트</option>
+                    <option value="order">주문/결제</option>
+                    <option value="delivery">배송</option>
+                    <option value="cancel">취소/반품/환불</option>
+                    <option value="travel">여행/숙박/항공</option>
+                    <option value="safe">안전결제</option>
+                </select>
+                <!-- 2차 선택 -->
+                <select class="faqType" name="faqType" onchange="redirectToCateType()">
+                    <option>2차선택</option>
+                    <option value="regi">가입</option>
+                    <option value="leave">탈퇴</option>
+                    <option value="info">회원정보</option>
+                    <option value="login">로그인</option>
+                </select>
+            </form>
+        </div>
+        <article>
+            <table style="width: 100%">
+                <tr>
+                    <th style="width: 5%"><input type="checkbox" id="selectAll"/></th>
+                    <th style="width: 5%">번호</th>
+                    <th>1차유형</th>
+                    <th>2차유형</th>
+                    <th>제목</th>
+                    <th>조회</th>
+                    <th>날짜</th>
+                    <th>관리</th>
+                </tr>
+                <!-- 번호를 1부터 오름차순으로 표시 -->
+                <tr th:each="faq, stat : ${faqs}">
+                    <td><input type="checkbox"/></td>
 
-          <!-- 번호를 1부터 카운트하여 오름차순으로 표시 (stat.count 사용) -->
-          <td th:text="${stat.count}">1</td>
+                    <!-- 번호를 1부터 카운트하여 오름차순으로 표시 (stat.count 사용) -->
+                    <td th:text="${faq.id}">1</td>
 
-          <!-- 한글 변환 후 출력 -->
-          <td class="cate1" th:data-value="${faq.cate1.categoryName}">회원</td>
-          <td class="cate2" th:data-value="${faq.cate2.categoryName}" th:data-parent="${faq.cate1.categoryName}">로그인</td>
+                    <!-- 한글 변환 후 출력 -->
+                    <td class="cate1" th:data-value="${faq.cate1.categoryName}">회원</td>
+                    <td class="cate2" th:data-value="${faq.cate2.categoryName}"
+                        th:data-parent="${faq.cate1.categoryName}">로그인
+                    </td>
 
-          <!-- 글 제목을 클릭하면 해당 글의 상세보기 페이지로 이동 -->
-          <td style="text-align: left">
-            <a th:href="@{'faq/view/' + ${faq.id}}" th:text="${faq.title}">글 제목이 표시됩니다</a>
-          </td>
+                    <!-- 글 제목을 클릭하면 해당 글의 상세보기 페이지로 이동 -->
+                    <td style="text-align: left">
+                        <a th:href="@{'faq/view/' + ${faq.id}}" th:text="${faq.title}">글 제목이 표시됩니다</a>
+                    </td>
 
-          <td th:text="${faq.views}">120</td>
-          <td th:text="${faq.rdate}">00.00.00</td>
-          <td>
-            <div>
-              <div>
-                <button class="button--delete" th:onclick="'deleteNotice(' + ${faq.id} + ')'">삭제</button>
-              </div>
-            </div>
-            <div>
-              <button th:href="@{'/admin/cs/notice/modify/' + ${faq.id}}" class="button--edit">수정</button>
-            </div>
-          </td>
-        </tr>
+                    <td th:text="${faq.views}">120</td>
+                    <td th:text="${faq.rdate}">00.00.00</td>
+                    <td>
+                        <div>
+                            <div>
+                                <button class="button--delete" th:onclick="'deleteNotice(' + ${faq.id} + ')'">삭제
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <button th:href="@{'/admin/cs/notice/modify/' + ${faq.id}}" class="button--edit">수정</button>
+                        </div>
+                    </td>
+                </tr>
 
-        <!-- <th:block th:if="${pageResponseDTO.getDtoList().size() == 0}" >
-                                     <tr>
-                                         <td colspan="7" class="td_first"><a  th:href="@{/article/list(pg=1)}">일치하는 내용이 없습니다.</a></td>
-                                     </tr>
-                                  </th:block> -->
+                <!-- <th:block th:if="${pageResponseDTO.getDtoList().size() == 0}" >
+                                             <tr>
+                                                 <td colspan="7" class="td_first"><a  th:href="@{/article/list(pg=1)}">일치하는 내용이 없습니다.</a></td>
+                                             </tr>
+                                          </th:block> -->
 
-        <!-- 한번 반복할때마다 pageStartNum을 1씩 차감 -->
-      </table>
-    </article>
+                <!-- 한번 반복할때마다 pageStartNum을 1씩 차감 -->
+            </table>
+        </article>
 
-    <div class="button-group">
-      <button class="button--delete1">선택삭제</button>
-      <button class="button--write" onclick="goToWrite();">작성하기</button>
-    </div>
+        <div class="button-group">
+            <button class="button--delete1">선택삭제</button>
+            <button class="button--write" onclick="goToWrite();">작성하기</button>
+        </div>
 
-    <div class="paging">
-      <a href="#" class="prev">이전</a>
-      <a href="#">1</a>
-      <a href="#">2</a>
-      <a href="#">3</a>
-      <a href="#" class="next">다음</a>
-    </div>
-  </section>
+        <div class="paging">
+            <a href="#" class="prev">이전</a>
+            <a href="#">1</a>
+            <a href="#">2</a>
+            <a href="#">3</a>
+            <a href="#" class="next">다음</a>
+        </div>
+    </section>
 </main>
 <footer th:replace="layout/admin/footer.html"></footer>
 </body>
 
 <script>
-  // 1차 카테고리와 2차 카테고리를 한글로 변환하는 객체
-  const firstCategoryMap = {
-    "user": "회원",
-    "coupon": "쿠폰/이벤트",
-    "order": "주문/결제",
-    "delivery": "배송",
-    "cancel": "취소/반품/환불",
-    "travel": "여행/숙박/항공",
-    "safe": "안전결제"
-  };
+    // 1차 카테고리와 2차 카테고리를 한글로 변환하는 객체
+    const firstCategoryMap = {
+        "user": "회원",
+        "coupon": "쿠폰/이벤트",
+        "order": "주문/결제",
+        "delivery": "배송",
+        "cancel": "취소/반품/환불",
+        "travel": "여행/숙박/항공",
+        "safe": "안전결제"
+    };
 
-  const secondCategoryMap = {
-    "user": {
-      "regi": "가입",
-      "leave": "탈퇴",
-      "info": "회원정보",
-      "login": "로그인"
-    },
-    "coupon": {
-      "lpoint": "L.POINT",
-      "coupon": "쿠폰",
-      "event": "이벤트/경품",
-      "attendance": "출석체크",
-      "gift": "사은품"
-    },
-    "order": {
-      "orderMethod": "주문방법",
-      "orderChange": "주문변경",
-      "paymentMethod": "결제방법",
-      "easyPayment": "간편결제",
-      "giftReceive": "선물받기",
-      "mobileGift": "모바일상품권",
-      "phonePayment": "휴대폰결제",
-      "applePay": "애플페이"
-    },
-    "delivery": {
-      "delivery": "배송",
-      "deliveryFee": "배송비",
-      "deliveryMethod": "배송방법",
-      "deliverySchedule": "배송일정",
-      "deliveryAddress": "배송지",
-      "todayArrival": "오늘도착",
-      "overseas": "해외직구",
-      "notReceived": "미수령신고",
-      "recipient": "수취인",
-      "purchaseConfirm": "구매확정"
-    },
-    "cancel": {
-      "orderCancel": "주문취소",
-      "refundMethod": "환불방법",
-      "cardRefund": "카드환불",
-      "refundSchedule": "환불일정",
-      "phoneRefund": "휴대폰결제환불"
-    },
-    "travel": {
-      "ecoupon": "e쿠폰",
-      "flight": "항공",
-      "accommodation": "숙박",
-      "ticket": "티켓"
-    },
-    "safe": {
-      "policyViolation": "법령 및 정책위반 상품",
-      "ipViolation": "지적재산권침해",
-      "serviceViolation": "서비스 이용규칙 위반",
-      "adViolation": "표시광고"
-  }
-  };
+    const secondCategoryMap = {
+        "user": {
+            "regi": "가입",
+            "leave": "탈퇴",
+            "info": "회원정보",
+            "login": "로그인"
+        },
+        "coupon": {
+            "lpoint": "L.POINT",
+            "coupon": "쿠폰",
+            "event": "이벤트/경품",
+            "attendance": "출석체크",
+            "gift": "사은품"
+        },
+        "order": {
+            "orderMethod": "주문방법",
+            "orderChange": "주문변경",
+            "paymentMethod": "결제방법",
+            "easyPayment": "간편결제",
+            "giftReceive": "선물받기",
+            "mobileGift": "모바일상품권",
+            "phonePayment": "휴대폰결제",
+            "applePay": "애플페이"
+        },
+        "delivery": {
+            "delivery": "배송",
+            "deliveryFee": "배송비",
+            "deliveryMethod": "배송방법",
+            "deliverySchedule": "배송일정",
+            "deliveryAddress": "배송지",
+            "todayArrival": "오늘도착",
+            "overseas": "해외직구",
+            "notReceived": "미수령신고",
+            "recipient": "수취인",
+            "purchaseConfirm": "구매확정"
+        },
+        "cancel": {
+            "orderCancel": "주문취소",
+            "refundMethod": "환불방법",
+            "cardRefund": "카드환불",
+            "refundSchedule": "환불일정",
+            "phoneRefund": "휴대폰결제환불"
+        },
+        "travel": {
+            "ecoupon": "e쿠폰",
+            "flight": "항공",
+            "accommodation": "숙박",
+            "ticket": "티켓"
+        },
+        "safe": {
+            "policyViolation": "법령 및 정책위반 상품",
+            "ipViolation": "지적재산권침해",
+            "serviceViolation": "서비스 이용규칙 위반",
+            "adViolation": "표시광고"
+        }
+    };
 
-// 동적 카테고리 기능 (1차 선택에 따라 2차 선택 항목을 제공)
-document.querySelector(".faqCate").addEventListener("change", function() {
-const selectedValue = this.value;
-const select2 = document.querySelector(".faqType");
-select2.innerHTML = '<option value="" selected disabled hidden>2차선택</option>'; // 초기화
+    // 동적 카테고리 기능 (1차 선택에 따라 2차 선택 항목을 제공)
+    document.querySelector(".faqCate").addEventListener("change", function () {
+        const selectedValue = this.value;
+        const select2 = document.querySelector(".faqType");
+        select2.innerHTML = '<option value="" selected disabled hidden>2차선택</option>'; // 초기화
 
-if (secondCategoryMap[selectedValue]) {
-Object.keys(secondCategoryMap[selectedValue]).forEach(key => {
-const optionText = secondCategoryMap[selectedValue][key];
-const newOption = document.createElement("option");
-newOption.value = key;
-newOption.text = optionText;
-select2.appendChild(newOption);
-});
-}
-});
+        if (secondCategoryMap[selectedValue]) {
+            Object.keys(secondCategoryMap[selectedValue]).forEach(key => {
+                const optionText = secondCategoryMap[selectedValue][key];
+                const newOption = document.createElement("option");
+                newOption.value = key;
+                newOption.text = optionText;
+                select2.appendChild(newOption);
+            });
+        }
+    });
 
-// 리스트에서 1차 및 2차 카테고리 한글 변환
-document.addEventListener('DOMContentLoaded', function() {
+    // 리스트에서 1차 및 2차 카테고리 한글 변환
+    document.addEventListener('DOMContentLoaded', function () {
 // 1차 카테고리 한글 변환
-document.querySelectorAll('.cate1').forEach(function(item) {
-const value = item.getAttribute('data-value');
-item.textContent = firstCategoryMap[value] || value;
-});
+        document.querySelectorAll('.cate1').forEach(function (item) {
+            const value = item.getAttribute('data-value');
+            item.textContent = firstCategoryMap[value] || value;
+        });
 
         if (confirmDelete) {
-          // 서버로 삭제 요청 보내기 (AJAX 또는 폼 제출 방식)
-          fetch(`/admin/cs/faq/delete/${faqId}`, {
-            method: 'DELETE'
-          })
-                  .then(response => {
-                    if (response.ok) {
-                      alert('삭제되었습니다.');
-                      location.reload();  // 페이지 새로고침
-                    } else {
-                      alert('삭제에 실패했습니다. 다시 시도해주세요.');
-                    }
-                  })
-                  .catch(error => {
-                    console.error('Error:', error);
-                    alert('오류가 발생했습니다.');
-                  });
-        }
-      });
-
-  function goToWrite() {
-    window.location.href = '/admin/cs/faq/write';
-  }
-    // 수정 버튼 클릭 이벤트
-    document.querySelectorAll('.modify-btn').forEach(button => {
-      button.addEventListener('click', function() {
-        const faqId = this.getAttribute('data-id');
-        window.location.href = `/admin/cs/faq/modify/${faqId}`; // 수정 페이지로 이동
-      });
-    });
-
-  // 공통 함수로 삭제 요청 처리
-  function fetchDeleteRequest(url, successMessage) {
-    fetch(url, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-            .then(response => {
-              if (response.ok) {
-                alert(successMessage);
-                window.location.reload();
-              } else {
-                alert('삭제에 실패했습니다.');
-              }
+            // 서버로 삭제 요청 보내기 (AJAX 또는 폼 제출 방식)
+            fetch(`/admin/cs/faq/delete/${faqId}`, {
+                method: 'DELETE'
             })
-            .catch(error => {
-              console.error('삭제 중 오류가 발생했습니다.', error);
-              alert('삭제 중 오류가 발생했습니다.');
-            });
-  }
-
-  // 개별 삭제 기능
-  function deleteNotice(noticeId) {
-    if (confirm('정말로 이 자주묻는질문을 삭제하시겠습니까?')) {
-      fetchDeleteRequest(`/admin/cs/faq/delete/${faqId}`, '삭제가 완료되었습니다.');
-    }
-  }
-
-  // 선택 삭제 기능
-  function deleteSelected() {
-    const selectedIds = [];
-    document.querySelectorAll('tbody input[type="checkbox"]:checked').forEach((checkbox) => {
-      const row = checkbox.closest('tr');
-      const id = row.dataset.id;
-      selectedIds.push(Number(id));
-    });
-
-    if (selectedIds.length > 0) {
-      if (confirm('정말로 선택된 항목을 삭제하시겠습니까?')) {
-        fetch('/admin/cs/faq/deleteSelected', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(selectedIds)
-        })
-                .then(response => response.json())
-                .then(data => {
-                  if (data.success) {
-                    window.location.href = '/admin/cs/notices';
-                  } else {
-                    alert('삭제 실패: ' + data.message);
-                  }
+                .then(response => {
+                    if (response.ok) {
+                        alert('삭제되었습니다.');
+                        location.reload();  // 페이지 새로고침
+                    } else {
+                        alert('삭제에 실패했습니다. 다시 시도해주세요.');
+                    }
                 })
                 .catch(error => {
-                  alert('삭제 중 오류 발생: ' + error.message);
+                    console.error('Error:', error);
+                    alert('오류가 발생했습니다.');
                 });
-      }
-    } else {
-      alert('삭제할 항목을 선택하세요.');
-    }
-  }
-
-  // 전체 선택 / 해제 기능
-  document.getElementById('selectAll').addEventListener('change', function() {
-    const isChecked = this.checked;
-    document.querySelectorAll('tbody input[type="checkbox"]').forEach((checkbox) => {
-      checkbox.checked = isChecked;
+        }
     });
-  });
+
+    function goToWrite() {
+        window.location.href = '/admin/cs/faq/write';
+    }
+
+    // 수정 버튼 클릭 이벤트
+    document.querySelectorAll('.modify-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const faqId = this.getAttribute('data-id');
+            window.location.href = `/admin/cs/faq/modify/${faqId}`; // 수정 페이지로 이동
+        });
+    });
+
+    // 공통 함수로 삭제 요청 처리
+    function fetchDeleteRequest(url, successMessage) {
+        fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert(successMessage);
+                    window.location.reload();
+                } else {
+                    alert('삭제에 실패했습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('삭제 중 오류가 발생했습니다.', error);
+                alert('삭제 중 오류가 발생했습니다.');
+            });
+    }
+
+    // 개별 삭제 기능
+    function deleteNotice(noticeId) {
+        if (confirm('정말로 이 자주묻는질문을 삭제하시겠습니까?')) {
+            fetchDeleteRequest(`/admin/cs/faq/delete/${faqId}`, '삭제가 완료되었습니다.');
+        }
+    }
+
+    // 선택 삭제 기능
+    function deleteSelected() {
+        const selectedIds = [];
+        document.querySelectorAll('tbody input[type="checkbox"]:checked').forEach((checkbox) => {
+            const row = checkbox.closest('tr');
+            const id = row.dataset.id;
+            selectedIds.push(Number(id));
+        });
+
+        if (selectedIds.length > 0) {
+            if (confirm('정말로 선택된 항목을 삭제하시겠습니까?')) {
+                fetch('/admin/cs/faq/deleteSelected', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(selectedIds)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.location.href = '/admin/cs/notices';
+                        } else {
+                            alert('삭제 실패: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        alert('삭제 중 오류 발생: ' + error.message);
+                    });
+            }
+        } else {
+            alert('삭제할 항목을 선택하세요.');
+        }
+    }
+
+    // 전체 선택 / 해제 기능
+    document.getElementById('selectAll').addEventListener('change', function () {
+        const isChecked = this.checked;
+        document.querySelectorAll('tbody input[type="checkbox"]').forEach((checkbox) => {
+            checkbox.checked = isChecked;
+        });
+    });
 
 </script>

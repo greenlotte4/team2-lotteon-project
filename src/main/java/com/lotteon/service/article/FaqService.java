@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -90,12 +91,19 @@ public class FaqService {
 
     }
 
+    /**
+     * faq를 페이지네이션으로 들고오는 함수
+     *
+     * @param pageable
+     * @return articleDTO 페이징
+     */
     public Page<ArticleDto> getAllFaqs(Pageable pageable) {
+        // 1. faqRepository에서 페이징 처리된 결과가 반환되게
         Page<Faq> faqPage = faqRepository.findAll(pageable);
         System.out.println("faqPage.getContent() = " + faqPage.getContent());
-
-        return faqPage.map(ArticleDto::fromEntity);
-
+        // 2. FAQ타입을 갖고있는 page를 ArticleDto타입을 갖는 page로 변환
+        Page<ArticleDto> result = faqPage.map(faq-> ArticleDto.fromEntity(faq));
+        return result;
     }
 
     // FAQ 상세 조회 (ID로 조회)

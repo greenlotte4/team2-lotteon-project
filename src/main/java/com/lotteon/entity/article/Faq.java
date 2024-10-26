@@ -4,6 +4,7 @@ import com.lotteon.entity.category.CategoryArticle;
 import com.lotteon.entity.member.Member;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -36,6 +37,7 @@ public class Faq {
     private String faqTitle;
 
     @Column(name = "faq_rdate")
+    @CreationTimestamp
     private LocalDateTime faqRdate;
 
     @Column(name = "faq_content", columnDefinition = "TEXT")

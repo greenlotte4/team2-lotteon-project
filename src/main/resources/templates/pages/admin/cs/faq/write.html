@@ -1,3 +1,12 @@
+<!--
+
+날짜 : 2024/10/26
+이름 : 박경림
+내용 : 유형 선택 유효성 검사 코드 수정
+
+-->
+
+
 <link rel="stylesheet" th:href="@{/css/admin/cs/faq/write.css}"/>
 <link rel="stylesheet" th:href="@{/css/basic.css}">
 <body>
@@ -74,7 +83,7 @@
         const cate = document.getElementsByName("faqCate")[0].value;
         const type = document.getElementsByName("faqType")[0].value;
 
-        if (cate === "유형선택" || type === "타입선택") {
+        if (!!cate === false || !!type === false) {
             alert("문의유형의 모든 항목을 선택해주세요.");
             return false;
         }
