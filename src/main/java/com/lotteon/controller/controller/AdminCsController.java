@@ -96,11 +96,18 @@ public class AdminCsController {
         return "pages/admin/cs/faq/view"; // 상세보기 페이지로 이동
     }
 
-
-    @GetMapping("/faq/modify")
-    public String faqModify(Model model) {
-        model.addAttribute("active", "faqs");
+    // FAQ 수정하기
+    @GetMapping("/faq/modify/{id}")
+    public String faqModify(@PathVariable Long id, Model model) {
+        ArticleDto faq = faqService.getFaqById(id);
+        model.addAttribute("faq", faq);
         return "pages/admin/cs/faq/modify";
+    }
+
+    @PostMapping("/faq/modify/{id}")
+    public  String modifyFaq(@PathVariable Long id, @ModelAttribute ArticleDto faqDto) {
+        faqService.updateFaq(id, faqDto);
+        return "redirect:/admin/cs/faqs";
     }
 
     @GetMapping("/qnas")
@@ -164,5 +171,7 @@ public class AdminCsController {
         faqService.writeFaq(category1, category2, title, content);
         return "redirect:/admin/cs/faqs";
     }
+
+
 
 }

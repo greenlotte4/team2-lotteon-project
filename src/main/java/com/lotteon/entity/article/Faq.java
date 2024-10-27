@@ -45,4 +45,11 @@ public class Faq {
 
     @Column(name = "faq_views")
     private int faqViews;
+
+    public void update(String title, String content, CategoryArticle cate1, CategoryArticle cate2) {
+        this.faqTitle = title;
+        this.faqContent = content;
+        this.cate1 = cate1;
+        this.cate2 = cate2;
+    }
 }

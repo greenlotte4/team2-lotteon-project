@@ -25,6 +25,8 @@ public class ArticleDto {
     private int type;            // QnA 전용: 문의 대상 (판매자 or 관리자)
     private Long cate1Id;
     private Long cate2Id;
+    private String cate1Name;
+    private String cate2Name;
     private Long memId;
     private CategoryArticle cate1;
     private CategoryArticle cate2;

@@ -38,8 +38,8 @@
         >
           삭제
         </button>
-        <button class="button--modify" onclick="goModify([[${faq.id}]]);">수정
-        </button>
+        <a th:href="@{'/admin/cs/faq/modify/' + ${faq.id}}" class="button--modify">수정
+        </a>
         <button class="button--back" onclick="goToList();">목록</button>
       </div>
     </article>

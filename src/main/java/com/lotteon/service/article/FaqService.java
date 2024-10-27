@@ -1,7 +1,10 @@
 package com.lotteon.service.article;
 
 import com.lotteon.dto.ArticleDto;
+import com.lotteon.dto.requestDto.NoticeRequestDto;
+import com.lotteon.dto.responseDto.NoticeResponseDto;
 import com.lotteon.entity.article.Faq;
+import com.lotteon.entity.article.Notice;
 import com.lotteon.entity.category.CategoryArticle;
 import com.lotteon.repository.article.FaqRepository;
 import com.lotteon.repository.category.CategoryArticleRepository;
@@ -77,6 +80,32 @@ public class FaqService {
                 .map(ArticleDto::fromEntity) // DTO로 변환
                 .orElseThrow(() -> new IllegalArgumentException("FAQ를 찾을 수 없습니다."));
     }
+
+
+    // FAQ 수정
+    public ArticleDto updateFaq (Long id, ArticleDto articleDto) {
+
+        Faq faq = faqRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 자주묻는질문을 찾을 수 없습니다. ID: " + id));
+
+        CategoryArticle cate1 = categoryArticleRepository.findByCategoryNameAndCategoryLevelAndCategoryType(articleDto.getCate1Name(),1,2)
+                .orElseThrow(() -> new IllegalArgumentException("카테고리 1을 찾을 수 없습니다."));
+        CategoryArticle cate2 = categoryArticleRepository.findByCategoryNameAndCategoryLevelAndCategoryType(articleDto.getCate2Name(),2,2)
+                .orElseThrow(() -> new IllegalArgumentException("카테고리 2을 찾을 수 없습니다."));
+
+        faq.update(articleDto.getTitle(), articleDto.getContent(), cate1, cate2);
+        return ArticleDto.fromEntity(faq);
+    }
+
+
+
+
+
+
+
+
+
+
 
 
     /* 일반 cs 기능 */
