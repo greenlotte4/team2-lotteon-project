@@ -54,6 +54,7 @@ public class ProductController {
 
         model.addAttribute("options", options);
         model.addAttribute("product", postProductDTO);
+        log.info("4444"+postProductDTO);
         model.addAttribute("category1", category1);
         return "pages/product/view";
     }
