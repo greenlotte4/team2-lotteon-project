@@ -28,6 +28,7 @@ public class GetAdminUserDTO {
     private String  custName;       // 이름
 
     private String custGrade;       // 사용자 등급 (4가지 - VVIP, VIP, GOLD, SILVER, FAMILY)
+
     private Boolean custGender;     // 성별
     private Integer custPoint;      // 포인트 (회원가입 축하포인트 default = "0")
 

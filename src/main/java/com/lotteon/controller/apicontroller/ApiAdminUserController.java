@@ -34,15 +34,22 @@ public class ApiAdminUserController {
 
     private final AuthService authService;
 
-    // 1. 관리자 회원수정 (팝업호출)
+    // 1. 관리자 회원수정 정보조회 (+팝업호출)
     @GetMapping("/user/{id}")
     public ResponseEntity<?> popCust(@PathVariable("id") Long id) {
         log.info("id: "+id+"에 해당하는 회원 정보");
         GetAdminUserDTO custPop = authService.popCust(id);
 
         return ResponseEntity.ok().body(custPop);
-
     }
+
+    // 2. 관리자 회원 수정
+    @PutMapping("/user/{id}")
+    public ResponseEntity<GetAdminUserDTO> updateCust(@PathVariable("id") Long id, @RequestBody GetAdminUserDTO getAdminUserDTO) {
+       GetAdminUserDTO updatedCust = authService.updateCust(id,getAdminUserDTO);
+       return null;
+    }
+
 
     // 2. 관리자 회원목록 선택삭제
     @DeleteMapping("/user")

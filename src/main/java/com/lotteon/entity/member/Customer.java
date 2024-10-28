@@ -1,5 +1,6 @@
 package com.lotteon.entity.member;
 
+import com.lotteon.dto.responseDto.GetAdminUserDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.modelmapper.internal.bytebuddy.implementation.bind.annotation.Default;
@@ -66,4 +67,13 @@ public class Customer {
     public void updatePoint(int point){
         this.custPoint = point;
     }
+
+    // 회원 정보 수정
+    public void updateUser(GetAdminUserDTO dto){
+        this.custName = dto.getCustName();
+        this.custGender = dto.getCustGender();
+        this.custEmail = dto.getCustEmail();
+        this.custHp = dto.getCustHp();
+    }
+
 }

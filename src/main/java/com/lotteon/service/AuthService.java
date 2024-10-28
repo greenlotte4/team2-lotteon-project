@@ -2,6 +2,7 @@ package com.lotteon.service;
 
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.responseDto.GetAdminUserDTO;
+import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Member;
 import com.lotteon.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,16 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+/*
+     날짜 : 2024/10/25 (금)
+     이름 : 김민희
+     내용 : 관리자 회원 Service 생성
+
+     수정이력
+      - 2025/10/27 (일) 김민희 - 회원정보조회 팝업호출 기능 메서드(popCust) 추가
+      - 2025/10/28 (월) 김민희 - 회원수정 기능 메서드 추가
+*/
 
 @Log4j2
 @Service
@@ -77,7 +88,7 @@ public class AuthService implements UserDetailsService {
         return cust;
     }
 
-    // 2. 관리자 회원수정 (팝업호출 = select)
+    // 2. 관리자 회원수정 정보조회 (+팝업호출 = select)
     public GetAdminUserDTO popCust(Long id) {
         Optional<Member> optMember = memberRepository.findById(id);
         if(optMember.isPresent()) {
@@ -101,6 +112,28 @@ public class AuthService implements UserDetailsService {
        //Optional<Member> custPop = memberRepository.findByMemUid(selectCustDto.getMemUid());
         return null;
     }
+
+    // 3. 관리자 회원 수정
+    public GetAdminUserDTO updateCust(Long id, GetAdminUserDTO getAdminUserDTO) {
+        // 1. Member 조회
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 회원이 없습니다: " + id));
+
+        // 2. Customer 엔티티의 updateUser 메서드를 통해 정보 업데이트
+        Customer customer = member.getCustomer();
+        if (customer != null) {
+            customer.updateUser(getAdminUserDTO);
+        } else {
+            throw new IllegalArgumentException("해당 ID의 회원 정보가 존재하지 않습니다.");
+        }
+
+        // 3. 저장 및 반환
+        memberRepository.save(member);  // 연관된 Customer 객체가 자동으로 저장됨
+        return modelMapper.map(member, GetAdminUserDTO.class);
+
+    }
+
+
 
 
 
