@@ -4,6 +4,7 @@ import com.lotteon.dto.responseDto.GetArticleCategoryDto;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -15,9 +16,11 @@ import java.util.List;
 @Table(name = "category_article")
 public class CategoryArticle {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
     private Long categoryId;
+
     @Column(name = "category_name")
     private String categoryName;
 
@@ -41,11 +44,14 @@ public class CategoryArticle {
     @OneToMany(mappedBy = "parent")
     private List<CategoryArticle> children;
 
+    // 공지사항 날짜 필드 추가
+    @Column(name = "notice_date")
+    private LocalDateTime noticeDate;
+
     public GetArticleCategoryDto toGetArticleCategoryDto() {
         return GetArticleCategoryDto.builder()
                 .id(categoryId)
                 .categoryName(categoryName)
                 .build();
     }
-
 }

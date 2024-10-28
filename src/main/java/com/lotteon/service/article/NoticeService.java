@@ -25,8 +25,7 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 public class NoticeService {
-
-    private final NoticeRepository noticeRepository;
+    private final NoticeRepository noticeRepository; // 필드를 final로 선언하여 초기화 보장
     private final ModelMapper modelMapper;
     private final MemberRepository memberRepository;
     private final CategoryArticleRepository categoryArticleRepository;
@@ -152,4 +151,14 @@ public class NoticeService {
         // 공지사항 목록을 페이지 단위로 조회하여 반환
         return noticeRepository.findAllByOrderByIdDesc(pageable);
     }
-}
+    // 최신 공지사항 10개 조회
+    public List<Notice> getTop10Notices() {
+        return noticeRepository.findTop10ByOrderByNoticeRdateDesc();
+    }
+
+    public Notice getNoticeById(Long id) {
+        // NoticeRepository를 통해 ID로 공지사항을 조회
+        return noticeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 공지사항이 없습니다: " + id));
+    }
+    }

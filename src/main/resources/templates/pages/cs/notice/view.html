@@ -43,9 +43,6 @@
             </table>
             <div class="button-group">
                 <form th:action="@{/admin/cs/notice/delete/{id}(id=${notice.id})}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
-                    <button type="submit" class="button--delete">삭제</button>
-                    <!-- 수정 버튼 -->
-                    <a th:href="@{/admin/cs/notice/modify/{id}(id=${notice.id})}" class="button--modify">수정</a>
                     <!-- 목록으로 돌아가기 버튼 -->
                     <button class="button--back" type="button" onclick="window.location.href='/admin/cs/notices';">목록</button>
             </div>

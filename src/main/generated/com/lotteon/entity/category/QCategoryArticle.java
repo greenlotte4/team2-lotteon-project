@@ -36,6 +36,8 @@ public class QCategoryArticle extends EntityPathBase<CategoryArticle> {
 
     public final ListPath<CategoryArticle, QCategoryArticle> children = this.<CategoryArticle, QCategoryArticle>createList("children", CategoryArticle.class, QCategoryArticle.class, PathInits.DIRECT2);
 
+    public final DateTimePath<java.time.LocalDateTime> noticeDate = createDateTime("noticeDate", java.time.LocalDateTime.class);
+
     public final QCategoryArticle parent;
 
     public QCategoryArticle(String variable) {
