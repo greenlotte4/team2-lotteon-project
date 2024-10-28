@@ -173,3 +173,10 @@ button {
 
 /* 상품옵션 */
 .prodOptions{ width: 180px; height: 30px; border: 1px solid #c7c7c7;}
+
+/* 모든 브라우저의 기본 스피너 제거 */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

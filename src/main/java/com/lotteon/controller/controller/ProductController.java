@@ -1,9 +1,11 @@
 package com.lotteon.controller.controller;
 
 import com.lotteon.dto.requestDto.PostProductDTO;
+import com.lotteon.dto.requestDto.PostProductOptionDTO;
 import com.lotteon.dto.requestDto.ProductPageRequestDTO;
 import com.lotteon.dto.responseDto.GetCategoryDto;
 import com.lotteon.dto.responseDto.ProductPageResponseDTO;
+import com.lotteon.entity.product.ProductOption;
 import com.lotteon.service.category.CategoryProductService;
 import com.lotteon.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +16,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/prod")
@@ -40,11 +44,15 @@ public class ProductController {
     @GetMapping("/product")
     public String product(Model model, @RequestParam(value = "prodId",required = false) long prodId) {
 
-        log.info("1111111111"+prodId);
-
         PostProductDTO postProductDTO = productService.selectProduct(prodId);
-        log.info("222222"+postProductDTO);
+        List<PostProductOptionDTO> options = productService.findOption(prodId);
         List<GetCategoryDto> category1 = categoryProductService.findCategory();
+
+        Set<String> addedOptions = new HashSet<>();
+
+        model.addAttribute("addedOptions", addedOptions);
+
+        model.addAttribute("options", options);
         model.addAttribute("product", postProductDTO);
         model.addAttribute("category1", category1);
         return "pages/product/view";

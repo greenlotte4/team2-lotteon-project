@@ -117,8 +117,8 @@
                 </td>
                 <td class="td-prodId">[[${product.getId}]]</td>
                 <td class="td-name">[[${product.getProdName}]]</td>
-                <td class="td-price">[[${product.getProdPrice}]]</td>
-                <td class="td-discount">[[${product.getProdDiscount}]]%</td>
+                <td class="td-price">[[${#numbers.formatInteger(product.getProdPrice(), 1)}]]</td>
+                <td class="td-discount">[[${#numbers.formatInteger(product.getProdDiscount(), 1)}]]%</td>
                 <td class="td-point">[[${product.getProdPoint}]]p</td>
                 <td class="td-stock">[[${product.getProdStock}]]</td>
                 <td class="td-seller">[[${product.getSellCompany}]]</td>

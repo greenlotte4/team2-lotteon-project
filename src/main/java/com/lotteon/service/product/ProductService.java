@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Service
@@ -175,17 +176,41 @@ public class ProductService {
     }
 
     public PostProductDTO selectProduct(long id) {
-       Optional<Product> opt = productRepository.findById(id);
+        Optional<Product> opt = productRepository.findById(id);
         PostProductDTO postProductDTO = null;
-       if (opt.isPresent()) {
-           Product product = opt.get();
-           postProductDTO = modelMapper.map(product, PostProductDTO.class);
-       }
-       return postProductDTO;
+        if (opt.isPresent()) {
+            Product product = opt.get();
+            postProductDTO = modelMapper.map(product, PostProductDTO.class);
+        }
+
+        Optional<Seller> opt2 = sellerRepository.findById(postProductDTO.getSellId());
+
+        if(opt2.isPresent()) {
+            Seller seller = opt2.get();
+            postProductDTO.setSellCompany(seller.getSellCompany());
+            postProductDTO.setSellGrade(seller.getSellGrade());
+        }
+
+        double total = postProductDTO.getProdPrice() - postProductDTO.getProdPrice() * (postProductDTO.getProdDiscount()/100);
+        log.info("123432114455" + total);
+        postProductDTO.setTotalPrice(total);
+
+        return postProductDTO;
     }
 
     public void deleteProduct(long id){
         productRepository.deleteById(id);
+    }
+
+    public List<PostProductOptionDTO> findOption(long id) {
+
+        List<ProductOption> options = productOptionRepository.findByProductId(id);
+
+        List<PostProductOptionDTO> optionDTOs = options.stream()
+                .map(option -> modelMapper.map(option, PostProductOptionDTO.class))
+                .toList();
+
+        return optionDTOs;
     }
 
 }

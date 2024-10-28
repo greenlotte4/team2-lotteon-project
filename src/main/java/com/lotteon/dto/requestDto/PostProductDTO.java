@@ -47,5 +47,5 @@ public class PostProductDTO {
 
     private String sellCompany;
     private Integer sellGrade;
-
+    private double totalPrice;
 }

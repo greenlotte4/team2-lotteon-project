@@ -22,8 +22,8 @@
                         <table class="tb1">
                             <tr>
                                 <td class="td_company">
-                                    <span>상호명</span>
-                                    <span>상품번호 : 111111</span>
+                                    <span>[[${product.getSellCompany}]]</span>
+                                    <span>상품번호 : [[${product.getId}]]</span>
                                     <input type="hidden" value="2" name="prodId">
                                     <span style="
                                         cursor: pointer;
@@ -35,31 +35,27 @@
                             </tr>
                             <tr>
                                 <td class="prod_name">
-                                    <span>상품명</span> <br>
+                                    <span>[[${product.getProdName}]]</span> <br>
                                     <img src="https://via.placeholder.com/56x17" alt="별점">
                                     <a href="#">상품평보기</a>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="price">
-                                    <del>30,000원&nbsp;</del>
-                                    <span>10%&#8595;</span> <br>
-                                    <span>27,000원</span>
+                                    <del>[[${#numbers.formatInteger(product.getProdPrice(), 1)}]]원&nbsp;</del>
+                                    <span>[[${#numbers.formatInteger(product.getProdDiscount(), 1)}]]%&#8595;</span>
+                                    <img src="https://via.placeholder.com/33x17" alt="별점">
+                                    <span>무이자 할부 </span>
+                                    <img src="https://via.placeholder.com/33x17" alt="별점">
+                                    <span>카드 추가 혜택</span> <br>
+                                    <span id="finalPrice">[[${#numbers.formatInteger(product.getTotalPrice(), 1)}]]원</span>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="delivery">
                                     <span>무료배송 </span>
-                                    <span>모레 (금) 7/8 도착예정</span> <br>
+                                    <span id="delivery-date"></span> <br>
                                     <span>본상품은 국내배송만 가능합니다.</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <img src="https://via.placeholder.com/33x17" alt="별점">
-                                    <span>무이자 할부 </span>
-                                    <img src="https://via.placeholder.com/33x17" alt="별점">
-                                    <span>카드 추가 혜택</span> <br>
                                 </td>
                             </tr>
                             <tr>
@@ -70,9 +66,12 @@
                             <tr>
                                 <td>
                                     <select name="options" class="prodOptions">
-                                        <option value="1">S</option>
-                                        <option value="2">M</option>
-                                        <option value="3">L</option>
+                                        <th:block th:each="option, i : ${options}">
+                                            <th:block th:if="${!addedOptions.contains(option.optionValue)}">
+                                                <option th:value="${i}">[[${option.optionValue}]]</option>
+                                                <th:block th:with="addedOptions = ${addedOptions.add(option.optionValue)}"/>
+                                            </th:block>
+                                        </th:block>
                                     </select>
                                 </td>
                             </tr>
@@ -97,13 +96,15 @@
                             <tr class="count_qty">
                                 <td style="float: right">
                                     <span class="qty">수량 </span>
-                                    <input name="quantity" type="number" class="count" value="1"/>
+                                    <button type="button" class="decrement">-</button> <!-- 감소 버튼 -->
+                                    <input name="quantity" type="number" class="count" value="1" min="1"/>
+                                    <button type="button" class="increment">+</button> <!-- 증가 버튼 -->
                                 </td>
                             </tr>
                             <tr>
                                 <td class="total">
                                     <span>총 상품 금액 </span>
-                                    <span>27,000원</span>
+                                    <span id="totalPrice">[[${#numbers.formatInteger(product.getTotalPrice(), 1)}]]원</span>
                                 </td>
                             </tr>
                         </table> <!-- .tb1-->
@@ -252,5 +253,64 @@
             alert("로그인이 필요합니다.")
             window.location.href = "/auth/login/view"
         }
+    }
+
+    // 요일명을 저장한 배열
+    const days = ["일", "월", "화", "수", "목", "금", "토"];
+
+    // 오늘을 기준으로 3일 뒤의 날짜를 계산하는 함수
+    function getDeliveryDate() {
+        const today = new Date();
+        const deliveryDate = new Date(today);
+
+        // 3일 뒤로 설정
+        deliveryDate.setDate(today.getDate() + 3);
+
+        // 요일 구하기
+        const dayOfWeek = days[deliveryDate.getDay()];
+
+        // 날짜 형식 만들기 (예: "7/8")
+        const month = deliveryDate.getMonth() + 1; // getMonth()는 0부터 시작하므로 +1 필요
+        const date = deliveryDate.getDate();
+
+        return `(${dayOfWeek}) ${month}/${date} 도착예정`;
+    }
+
+    // HTML에 날짜 값 삽입
+    document.getElementById("delivery-date").innerText = getDeliveryDate();
+
+    // 수량 증감 버튼 구현하기
+    const decrementButton = document.querySelector('.decrement');
+    const incrementButton = document.querySelector('.increment');
+    const countInput = document.querySelector('.count');
+
+    // 감소 버튼 클릭 시 수량 감소
+    decrementButton.addEventListener('click', () => {
+        let currentValue = parseInt(countInput.value);
+        if (currentValue > parseInt(countInput.min)) {
+            countInput.value = currentValue - 1;
+            countInput.dispatchEvent(new Event('change')); // change 이벤트 발생
+        }
+    });
+
+    // 증가 버튼 클릭 시 수량 증가
+    incrementButton.addEventListener('click', () => {
+        let currentValue = parseInt(countInput.value);
+        let maxValue = parseInt(countInput.max); // max 값을 사용하지 않으므로 따로 처리하지 않음
+
+        // max 값이 없거나 현재 값이 max 보다 작다면 증가
+        if (!maxValue || currentValue < maxValue) {
+            countInput.value = currentValue + 1;
+            countInput.dispatchEvent(new Event('change')); // change 이벤트 발생
+        }
+    });
+
+    window.onload = function () {
+        let totalPrice = document.getElementById('totalPrice');
+
+        countInput.addEventListener('change', function (){
+            let inNum = countInput.value;
+            totalPrice.innerText = inNum * [[${#numbers.formatInteger(product.getTotalPrice(), 1)}]] + "원";
+        });
     }
 </script>
