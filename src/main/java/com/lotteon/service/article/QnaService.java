@@ -1,6 +1,7 @@
 package com.lotteon.service.article;
 
 import com.lotteon.dto.ArticleDto;
+import com.lotteon.entity.article.Faq;
 import com.lotteon.entity.article.Qna;
 import com.lotteon.entity.category.CategoryArticle;
 import com.lotteon.entity.member.Member;
@@ -11,6 +12,8 @@ import com.lotteon.service.category.CategoryArticleService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,4 +76,11 @@ public class QnaService {
     }
 
 
+    // FAQ 목록 조회 (카테고리별)
+    public Page<ArticleDto> getQnas(CategoryArticle cate1, CategoryArticle cate2, int limit, Pageable pageable) {
+        // Page<Faq>를 사용하여 페이징 처리된 결과를 받아옴
+        Page<Qna> faqPage = qnaRepository.findByCate1AndCate2(cate1, cate2, pageable);
+        // Page<ArticleDto>로 변환하여 반환
+        return faqPage.map(faq -> modelMapper.map(faq, ArticleDto.class));
+    }
 }

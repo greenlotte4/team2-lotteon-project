@@ -32,9 +32,9 @@
       </table>
       <div class="button-group">
         <button
+                th:data-id="${faq.id}"
                 class="button--delete"
-                onclick="deletefaq(event);"
-                href="/admin/cs/faq/delete?faqNo=1"
+                onclick="deleteFaq1(event);"
         >
           삭제
         </button>
@@ -47,11 +47,14 @@
 </main>
 <footer th:replace="layout/admin/footer.html"></footer>
 <script>
-  function deletefaq(event) {
+  function deleteFaq1(event) {
     const chk = confirm("정말 삭제하시겠습니까?");
     if (!chk) {
-      event.preventDefault();
+      return;
     }
+
+    console.log(event.target.dataset.id)
+    window.location.href = "/admin/cs/faq/delete/"+event.target.dataset.id;
   }
   function goBack() {
     window.history.back();

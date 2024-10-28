@@ -47,12 +47,10 @@
                     <th>관리</th>
                 </tr>
                 <!-- 번호를 1부터 오름차순으로 표시 -->
-                <tr th:each="faq, stat : ${faqs}">
+                <tr th:each="faq, stat : ${faqs}" th:data-id="${faq.id}">
                     <td><input type="checkbox"/></td>
-
                     <!-- 번호를 1부터 카운트하여 오름차순으로 표시 (stat.count 사용) -->
                     <td th:text="${faq.id}">1</td>
-
                     <!-- 한글 변환 후 출력 -->
                     <td class="cate1" th:data-value="${faq.cate1.categoryName}">회원</td>
                     <td class="cate2" th:data-value="${faq.cate2.categoryName}"
@@ -69,7 +67,7 @@
                     <td>
                         <div>
                             <div>
-                                <button class="button--delete" th:onclick="'deleteNotice(' + ${faq.id} + ')'">삭제
+                                <button class="button--delete" th:onclick="'deleteFaq(' + ${faq.id} + ')'">삭제
                                 </button>
                             </div>
                         </div>
@@ -90,7 +88,7 @@
         </article>
 
         <div class="button-group">
-            <button class="button--delete1">선택삭제</button>
+            <a class="button--delete" onclick="deleteSelected();">선택삭제</a>
             <button class="button--write" onclick="goToWrite();">작성하기</button>
         </div>
 
@@ -255,11 +253,30 @@
     }
 
     // 개별 삭제 기능
-    function deleteNotice(noticeId) {
+      function deleteFaq(faqId) {
+        console.log("Deleting FAQ with ID:", faqId); // ID 확인용 콘솔 로그
         if (confirm('정말로 이 자주묻는질문을 삭제하시겠습니까?')) {
-            fetchDeleteRequest(`/admin/cs/faq/delete/${faqId}`, '삭제가 완료되었습니다.');
+            fetch(`/admin/cs/faq/delete/${faqId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert('삭제가 완료되었습니다.');
+                        window.location.reload(); // 페이지 새로고침
+                    } else {
+                        alert('삭제에 실패했습니다.');
+                    }
+                })
+                .catch(error => {
+                    console.error('삭제 중 오류가 발생했습니다.', error);
+                    alert('삭제 중 오류가 발생했습니다.');
+                });
         }
     }
+
 
     // 선택 삭제 기능
     function deleteSelected() {
@@ -282,7 +299,7 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            window.location.href = '/admin/cs/notices';
+                            window.location.href = '/admin/cs/faqs';
                         } else {
                             alert('삭제 실패: ' + data.message);
                         }
@@ -295,6 +312,7 @@
             alert('삭제할 항목을 선택하세요.');
         }
     }
+
 
     // 전체 선택 / 해제 기능
     document.getElementById('selectAll').addEventListener('change', function () {

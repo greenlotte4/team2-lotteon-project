@@ -3,6 +3,7 @@ package com.lotteon.controller.controller;
 import com.lotteon.dto.ArticleDto;
 import com.lotteon.dto.requestDto.PostRecruitDto;
 import com.lotteon.service.article.FaqService;
+import com.lotteon.service.article.QnaService;
 import com.lotteon.service.article.RecruitService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -10,13 +11,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 import java.util.List;
+import java.util.Map;
 
 /*
  *  이름 : 이상훈
@@ -34,6 +39,11 @@ import java.util.List;
 @Log4j2
 public class AdminCsController {
 
+    private final QnaService qnaService;
+    private final FaqService faqService;
+    private final RecruitService recruitService;
+
+
     @ModelAttribute
     public void pageIndex(Model model) {
         model.addAttribute("config", getSideValue());
@@ -42,9 +52,6 @@ public class AdminCsController {
     private String getSideValue() {
         return "cs";  // 실제 config 값을 여기에 설정합니다.
     }
-
-    private final FaqService faqService;
-    private final RecruitService recruitService;
 
 
 /*    @GetMapping("/index")
@@ -61,6 +68,9 @@ public class AdminCsController {
      * @param pageable 페이지어블
      * @return 관리자 > cs > faq 리스트 페이지
      */
+
+    // FAQ 자주묻는질문
+    // 목록
     @GetMapping("/faqs")
     public String faqs(Model model, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         // 1. faq 서비스에서 페이징 처리된  faq를 반환
@@ -75,6 +85,8 @@ public class AdminCsController {
         return "pages/admin/cs/faq/list";
     }
 
+
+
     @GetMapping("/faq")
     public String faq(Model model) {
         model.addAttribute("active", "faqs");
@@ -86,6 +98,22 @@ public class AdminCsController {
     public String faqWrite(Model model) {
         return "pages/admin/cs/faq/write";
     }
+
+
+    // FAQ 작성
+    @PostMapping("/faq/write")
+    public String writeFaq(@RequestParam("faqCate") String category1,
+                           @RequestParam("faqType") String category2,
+                           @RequestParam("faqTitle") String title,
+                           @RequestParam("faqContent") String content) {
+        System.out.println("category1 = " + category1);
+        System.out.println("category2 = " + category2);
+        System.out.println("title = " + title);
+        System.out.println("content = " + content);
+        faqService.writeFaq(category1, category2, title, content);
+        return "redirect:/admin/cs/faqs";
+    }
+
 
 
     // FAQ 상세 보기
@@ -110,11 +138,77 @@ public class AdminCsController {
         return "redirect:/admin/cs/faqs";
     }
 
+    // FAQ 삭제 처리
+    @GetMapping("/faq/delete/{id}")
+    public String deleteFaq1(@PathVariable Long id) {
+        try {
+            faqService.deleteFaq(id);
+            return "redirect:/admin/cs/faqs"; // 성공 시 리다이렉트
+
+        } catch (Exception e) {
+            return "redirect:/admin/cs/faqs?error=true";
+        }
+    }
+
+
+    @DeleteMapping("/faq/delete/{id}")
+    public ResponseEntity<?> deleteFaq(@PathVariable Long id) {
+        try {
+            faqService.deleteFaq(id);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 실패");
+        }
+    }
+
+
+
+    // 선택 삭제
+    @PostMapping("/faq/deleteSelected")
+    @ResponseBody
+    public Map<String, Object> deleteSelectedFaqs(@RequestBody List<Long> ids) {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            faqService.deleteSelectedFaqs(ids);
+            result.put("success", true);
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("message", e.getMessage());
+        }
+        return result;
+    }
+
+
+
+
+
+
+
+
+
+
+
+    // QNA 문의하기
     @GetMapping("/qnas")
     public String qnas(Model model) {
         model.addAttribute("active", "qnas");
         return "pages/admin/cs/qna/list";
     }
+/*    @GetMapping("/qnas")
+    public String qnas(Model model, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        // 1. faq 서비스에서 페이징 처리된  faq를 반환
+        Page<ArticleDto> qnasPage = qnaService.getAllQnas(pageable);
+        // 2. faqsPage에서 데이터들을 뽑아옴
+        List<ArticleDto> faqs = qnasPage.getContent();
+        System.out.println("qnas = " + qnas);
+        // 3. model에 faqs 를 추가
+        model.addAttribute("faqs", faqs);
+
+        // 4. 웹 반환
+        return "pages/admin/cs/qna/list";
+
+    }*/
+
 
     @GetMapping("/qna/modify")
     public String qnaModify(Model model) {
@@ -156,20 +250,6 @@ public class AdminCsController {
         model.addAttribute("keyword", keyword);
 
         return "pages/admin/cs/recruit/list";
-    }
-
-    // FAQ 작성
-    @PostMapping("/faq/write")
-    public String writeFaq(@RequestParam("faqCate") String category1,
-                           @RequestParam("faqType") String category2,
-                           @RequestParam("faqTitle") String title,
-                           @RequestParam("faqContent") String content) {
-        System.out.println("category1 = " + category1);
-        System.out.println("category2 = " + category2);
-        System.out.println("title = " + title);
-        System.out.println("content = " + content);
-        faqService.writeFaq(category1, category2, title, content);
-        return "redirect:/admin/cs/faqs";
     }
 
 

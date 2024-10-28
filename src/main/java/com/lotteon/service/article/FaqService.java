@@ -98,9 +98,23 @@ public class FaqService {
     }
 
 
+    // FAQ 삭제
+    public void deleteFaq(Long id) {
+        Faq faq = faqRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 자주묻는질문을 찾을 수 없습니다. ID: " + id));
+        faqRepository.delete(faq);
+    }
 
+    // 선택 삭제
+    public void deleteSelectedFaqs(List<Long> ids) {
+        List<Faq> faqsToDelete = faqRepository.findAllById(ids);
 
+        if (faqsToDelete.isEmpty()) {
+            throw new IllegalArgumentException("삭제할 자주묻는질문이 없습니다.");
+        }
 
+        faqRepository.deleteAllById(ids);
+    }
 
 
 
