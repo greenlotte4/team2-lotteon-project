@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 /*
      날짜 : 2024/10/23 (수)
@@ -47,6 +48,10 @@ public class GetAdminUserDTO {
     private String custAddr2; // 주소
     private String custAddr3; // 상세주소
 
+    @CreationTimestamp
+    private LocalDateTime LastLoginDate; // 최근 로그인 날짜
+
+    private String memInfo; // 기타 (회원 정보입력)
 
 
 

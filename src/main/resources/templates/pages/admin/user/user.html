@@ -127,12 +127,81 @@
                 <a class="none" th:href="@{/admin/user/user(page=${totalPages - 1}, searchType=${searchType}, keyword=${keyword})}" >>></a>
             </div><!-- .page -->
 
-            <div class="popup"></div><!-- .popup -->
+            <!-- 회원수정 팝업 -->
+            <div class="popup">
+                <div class="header">
+                    <div class="title">회원수정</div>
+                    <div onclick="closePopup()" class="btn">X</div>
+                </div>
+                <div style="margin: 20px; margin-bottom: 30px;">
+                    <table class="tb4">
+                        <tr>
+                            <th>아이디</th>
+                            <td><input readonly name="memUid"></td>
+                        </tr>
+                        <tr>
+                            <th>이름</th>
+                            <td><input readonly name="custName"></td>
+                        </tr>
+                        <tr>
+                            <th>성별</th>
+                            <td>
+                                <label><input type="radio" name="custGender" value="true" ${data.custGender ? 'checked' : ''}>남</label>
+                                <label><input type="radio" name="custGender" value="false" ${!data.custGender ? 'checked' : ''}>여</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>등급</th>
+                            <td>${data.custGrade}</td>
+                        </tr>
+                        <tr>
+                            <th>상태</th>
+                            <td>${data.memState}</td>
+                        </tr>
+                        <tr>
+                            <th>이메일</th>
+                            <td><input readonly value="${data.custEmail}"></td>
+                        </tr>
+                        <tr>
+                            <th>휴대폰</th>
+                            <td><input readonly value="${data.custHp}"></td>
+                        </tr>
+                        <tr>
+                            <th>우편번호</th>
+                            <td><input readonly value="${data.custAddr1}"></td>
+                        </tr>
+                        <tr>
+                            <th>기본주소</th>
+                            <td><input readonly value="${data.custAddr2}"></td>
+                        </tr>
+                        <tr>
+                            <th>상세주소</th>
+                            <td><input readonly value="${data.custAddr3}"></td>
+                        </tr>
+                        <tr>
+                            <th>가입일</th>
+                            <td>${data.memRdate}</td>
+                        </tr>
+                        <tr>
+                            <th>최근 로그인 날짜</th>
+                            <td>${data.lastLoginDate}</td>
+                        </tr>
+                        <tr>
+                            <th>기타</th>
+                            <td><textarea name="memEtc" placeholder="회원에 대한 기타정보입력">${data.memEtc || ''}</textarea></td>
+                        </tr>
+                    </table>
+                </div>
+                <div style="margin-bottom:20px" class="btns">
+                    <button id="btnModify">수정하기</button>
+                </div>
+            </div>
             <div class="popupbg"></div><!-- .popupbg -->
         </div><!-- .container -->
     </div><!-- .wrap -->
-
 </main>
+
+
 <footer th:replace="layout/admin/footer.html"></footer>
 
 <script>
@@ -140,22 +209,29 @@
     const popup = document.querySelector(".popup");
     const bg = document.querySelector(".popupbg");
 
+    const inputMemUid = document.querySelector('input[name=memUid]');
+    const inputCustName = document.querySelector('input[name=custName]');
+    const inputcustGender = document.querySelector('input[name=custName]');
+    const inputcustGrade = document.querySelector('input[name=custName]');
+    const inputmemState = document.querySelector('input[name=custName]');
+    const inputCustName = document.querySelector('input[name=custName]');
+    const inputCustName = document.querySelector('input[name=custName]');
+    const inputCustName = document.querySelector('input[name=custName]');
+    const inputCustName = document.querySelector('input[name=custName]');
+
     document.getElementById("buttonId").addEventListener("click", openCustUpdatePopup);
 
 
+    // 모달 창 열기
     async function openCustUpdatePopup(event){
         const id = event.target.dataset.id;
         console.log(id);
 
-
-        fetch(`/admin/user/user/${id}`,{
-            method : 'GET',
-            headers : {
-                "Content-Type" : "application/json"
-            }
+        fetch(`/admin/user/user/${id}`, {
+            method: 'GET',
+            headers: { "Content-Type": "application/json" }
         })
             .then(resp => {
-                console.log(resp);
                 if (!resp.ok) {
                     return resp.json().then(err => {
                         console.error('Server responded with an error:', err);
@@ -166,88 +242,70 @@
             })
             .then(data => {
                 console.log('Response Data:', data);
-                if(data.id>0){
-                    popup.innerHTML = `
+                if(data.id > 0){
 
-            <div class="header">
-                <div class="title">회원수정</div>
-                <div onclick="closePopup()" class="btn">X</div>
-            </div>
+                    // 팝업 데이터 출력
+                    inputMemUid.value = data.memUid;
+                    inputCustName.value = data.custName;
 
-            <div style="margin: 20px; margin-bottom: 30px;">
-                <table class="tb4">
-                    <tr>
-                        <th>아이디</th>
-                        <td><input readonly value="${data.memUid}" ></td>
-                    </tr>
-                    <tr>
-                        <th>이름</th>
-                        <td><input readonly value="${data.custName}"></td>
-                    </tr>
-                    <tr>
-                        <th>성별</th>
-                        <td>
 
-                            <label for=""><input value="true" type="radio" name="custGender">남</label>
 
-                            <label for=""><input value="false" type="radio" name="custGender">여</label>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>등급</th>
-                        <td>${data.custGrade}</td>
 
-                    </tr>
-                    <tr>
-                        <th>상태</th>
-                        <td>${data.memState}</td>
-                    </tr>
-                    <tr>
-                        <th>이메일</th>
-                        <td><input readonly value="${data.custEmail}"></td>
-                    </tr>
-                    <tr>
-                        <th>휴대폰</th>
-                        <td><input readonly value="${data.custHp}"></td>
-                    </tr>
-                    <tr>
-                        <th>우편번호</th>
-                        <td><input readonly value="${data.custAddr1}"></td>
-                    </tr>
-                    <tr>
-                        <th>기본주소</th>
-                        <td><input readonly value="${data.custAddr2}"></td>
-                    </tr>
-                    <tr>
-                        <th>상세주소</th>
-                        <td><input readonly value="${data.custAddr3}"></td>
-                    </tr>
-                    <tr>
-                        <th>가입일</th>
-                        <td>${data.memRdate}</td>
-                    </tr>
-                    <tr>
-                        <th>최근 로그인 날짜</th>
-                        <td>${data.custAddr}</td>
-                    </tr>
-                    <tr>
-                        <th>기타</th>
-                        <td><textarea readonly placeholder="회원에 대한 기타정보입력"></textarea></td>
-                    </tr>
-                </table>
-            </div>
-            <div style="margin-bottom:20px" class="btns">
-                <button onclick="closePopup(event)">수정하기
-            </button></div>
-            `
+                    //popup.innerHTML = ``;
+                    // 팝업 띄우기
                     popup.style.display = "block";
                     bg.style.display = "flex";
                 }
             })
             .catch(err => {
                 console.error('Error:', err);
-            })
+                alert(err.message);
+            });
     }
+
+    document.getElementById('btnModify').onclick = function (){
+
+
+        const data = {
+            custName: inputCustName.value,
+            custGender: document.querySelector('input[name="custGender"]:checked').value,
+            custEmail: document.querySelector('input[name="custEmail"]').value,
+            custHp: document.querySelector('input[name="custHp"]').value,
+            custAddr1: document.querySelector('input[name="custAddr1"]').value,
+            custAddr2: document.querySelector('input[name="custAddr2"]').value,
+            custAddr3: document.querySelector('input[name="custAddr3"]').value,
+            memEtc: document.querySelector('textarea[name="memEtc"]').value
+        };
+
+        fetch(`/admin/user/user/${inputMemUid.value}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("회원 정보를 수정하는 데 실패했습니다.");
+                }
+                return response.json();
+            })
+            .then(() => {
+                alert('회원 정보가 성공적으로 수정되었습니다.');
+                closePopup();
+            })
+            .catch(error => {
+                console.error('회원 정보 수정 오류:', error);
+                alert(error.message);
+            });
+
+    }
+
+    /*
+    // 모달 창에서 수정한 데이터 제출
+    function submitForm(id) {
+
+    }
+    */
+
 
     // 팝업 닫기
     function closePopup() {

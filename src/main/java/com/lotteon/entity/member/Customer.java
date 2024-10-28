@@ -69,11 +69,20 @@ public class Customer {
     }
 
     // 회원 정보 수정
+    // 이름, 성별, 이메일, 휴대폰, 우편, 기본, 상세주소, 기타
     public void updateUser(GetAdminUserDTO dto){
+        Member newMember = Member.builder()
+                .memRdate(dto.getMemRdate())
+                .memLastLoginDate(dto.getLastLoginDate())
+                .memEtc(dto.getMemInfo())
+                .build();
+
         this.custName = dto.getCustName();
         this.custGender = dto.getCustGender();
         this.custEmail = dto.getCustEmail();
         this.custHp = dto.getCustHp();
+        this.member = newMember;
+
     }
 
 }

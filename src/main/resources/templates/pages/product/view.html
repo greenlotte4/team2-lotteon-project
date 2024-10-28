@@ -16,7 +16,7 @@
                 </p>
             </nav> <!-- #navi-->
             <div class="product_info">
-                <img src="https://via.placeholder.com/353x211" alt="상품 이미지" />
+                <img th:src="@{'/file/'+${product.getProdBasicImg()}}" alt="">
                 <div class="product_details">
                     <form th:action="@{/prod/cart}" method="post">
                         <table class="tb1">
@@ -65,32 +65,22 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <select name="options" class="prodOptions">
-                                        <th:block th:each="option, i : ${options}">
-                                            <th:block th:if="${!addedOptions.contains(option.optionValue)}">
-                                                <option th:value="${i}">[[${option.optionValue}]]</option>
-                                                <th:block th:with="addedOptions = ${addedOptions.add(option.optionValue)}"/>
-                                            </th:block>
-                                        </th:block>
+                                    <select name="options" class="prodOptions" id="select1">
+                                        <option value="">Select an Option</option>
                                     </select>
                                 </td>
                             </tr>
                             <tr>
-                                <td>
-                                    <select name="options" class="prodOptions">
-                                        <option value="4">green</option>
-                                        <option value="5">blue</option>
-                                        <option value="6">red</option>
+                                <td style="display: none">
+                                    <select name="options" class="prodOptions" id="select2">
                                     </select>
                                 </td>
                             </tr>
                             <tr>
-                                <td>
-                                    <select name="options" class="prodOptions">
-                                        <option value="7">^-^</option>
-                                        <option value="8">ㅇㅅㅇ</option>
-                                        <option value="9">T-T</option>
+                                <td style="display: none">
+                                    <select name="options" class="prodOptions" id="select3">
                                     </select>
+                                    <input type="hidden" id="optionId" name="optionId" value="">
                                 </td>
                             </tr>
                             <tr class="count_qty">
@@ -204,24 +194,10 @@
                 <img src="https://via.placeholder.com/78x20"> <br>
                 <span>상품명</span>
                 <span>2024-10-13</span>
-                <span>nickname </span><br>
+                <span>nickn*ame </span><br>
                 <span>후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~</span>
             </div>
-            <div class="cmt">
-                <img src="https://via.placeholder.com/78x20"> <br>
-                <span>상품명</span>
-                <span>2024-10-13</span>
-                <span>nickname </span><br>
-                <span>후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~</span>
-            </div>
-            <div class="cmt">
-                <img src="https://via.placeholder.com/78x20"> <br>
-                <span>상품명</span>
-                <span>2024-10-13</span>
-                <span>nickname </span><br>
-                <span>후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~후기 남깁니다~</span>
-            </div>
-            <div class="page">
+            <div class="page" style="margin: 0 auto;">
                 <a href="#">&lt; 이전</a>
                 <button>1</button>
                 <button>2</button>
@@ -232,6 +208,7 @@
             </div> <!-- page -->
         </main> <!-- #main-->
     </div>
+    <input type="hidden" th:value="${options}" id="hiddenOption">
 </main>
 <footer th:replace="layout/main/footer.html"></footer>
 <!-- #wrap -->
@@ -308,9 +285,182 @@
     window.onload = function () {
         let totalPrice = document.getElementById('totalPrice');
 
-        countInput.addEventListener('change', function (){
+        countInput.addEventListener('change', function () {
             let inNum = countInput.value;
             totalPrice.innerText = inNum * [[${#numbers.formatInteger(product.getTotalPrice(), 1)}]] + "원";
         });
-    }
+
+        let option = document.getElementById('hiddenOption').value.trim(); // 데이터 가져오기 및 공백 제거
+        option = option.replace(/^\[|\PostProductOptionDTO|\]$/g, '').trim();
+        // 데이터 나누기 함수
+        function splitDataByParentheses(data) {
+            // '),'를 기준으로 문자열을 나누기
+            const splitData = data.split("),");
+
+            // 각 요소에 대해 ')'를 복구해주기 (마지막 요소는 ')'가 필요없음)
+            const cleanedData = splitData.map((item, index) => {
+                // 마지막 요소가 아닌 경우 ')' 추가
+                return index !== splitData.length - 1 ? item + ")" : item;
+            });
+
+            return cleanedData;
+        }
+
+        // 데이터 나누기 실행
+        const splitResult = splitDataByParentheses(option);
+
+        // 결과 출력 (콘솔에서 확인)
+        console.log(splitResult);
+
+        function extractOptionValue(dataArray, keyName) {
+            return dataArray.map(item => {
+                // key-value 쌍을 분리
+                const keyValuePairs =  item.replace('(', '').replace(')', '') // 괄호 제거
+                    .split(',')
+                    .map(pair => pair.trim().split('='));
+
+                console.log(keyValuePairs);
+
+                // key-value 배열에서 keyName에 해당하는 값 추출
+                const foundPair = keyValuePairs.find(pair => pair[0].trim() === keyName);
+                return foundPair ? foundPair[1] : null; // 해당 키의 값이 존재하면 반환, 없으면 null
+            }).filter(value => value !== null); // null 값 필터링
+        }
+
+        // optionValue 값 추출
+        const optionValues = Array.from(new Set(extractOptionValue(splitResult, 'optionValue')));
+
+        console.log("123"+optionValues);
+        // select 요소 가져오기
+        const selectElement1 = document.getElementById('select1');
+
+        // select에 option 추가하기
+        optionValues.forEach(value => {
+            const optionElement = document.createElement('option');
+            optionElement.textContent = value;
+            optionElement.value = value;
+            selectElement1.appendChild(optionElement);
+        });
+
+        // 결과 확인 (콘솔)
+        console.log('Extracted optionValue1:', optionValues);
+
+        selectElement1.addEventListener('change', function () {
+            const selectedValue1 = selectElement1.value;
+
+            // optionValue1과 선택된 값이 같은 데이터 필터링
+            const filteredData = splitResult.filter(item => {
+                const keyValuePairs = item.replace('(', '').replace(')', '') // 괄호 제거
+                    .split(',')
+                    .map(pair => pair.trim().split('='));
+                const foundPair = keyValuePairs.find(pair => pair[0].trim() === 'optionValue');
+                return foundPair && foundPair[1] === selectedValue1;
+            });
+
+            console.log("543"+filteredData);
+
+            // optionValue2 값 추출 및 중복 제거
+            const optionValues2 = Array.from(new Set(extractOptionValue(filteredData, 'optionValue2')));
+
+            console.log("321"+optionValues2);
+
+            // 두 번째 select 요소 가져오기
+            const selectElement2 = document.getElementById('select2');
+
+            // 기존 옵션 제거
+            selectElement2.innerHTML = '<option value="">Select an Option</option>';
+
+            // optionValue2를 두 번째 select에 추가
+            optionValues2.forEach(value => {
+                const optionElement = document.createElement('option');
+                optionElement.textContent = value;
+                optionElement.value = value;
+                selectElement2.appendChild(optionElement);
+            });
+            // 두 번째 select의 부모 td 요소 보이기
+            const parentTd = selectElement2.parentNode; // mySelect2의 부모 td를 가져옴
+            parentTd.style.display = 'table-cell'; // 또는 'block'으로 설정
+
+            // 두 번째 select 변경 이벤트 추가
+            selectElement2.addEventListener('change', function () {
+                const selectedValue2 = selectElement2.value;
+
+                const filteredDataForValue3 = filteredData.filter(item => {
+                    const keyValuePairs = item.replace('(', '').replace(')', '')
+                        .split(',')
+                        .map(pair => pair.trim().split('='));
+                    const foundPair = keyValuePairs.find(pair => pair[0].trim() === 'optionValue2');
+                    return foundPair && foundPair[1] === selectedValue2;
+                });
+
+                const optionValues3 = Array.from(new Set(extractKeyValue(filteredDataForValue3, 'optionValue3')));
+                const additionalPrices = extractKeyValue(filteredDataForValue3, 'additionalPrice');
+
+                const selectElement3 = document.getElementById('select3');
+                selectElement3.innerHTML = '<option value="">Select an Option</option>';
+
+                optionValues3.forEach((value, index) => {
+                    const additionalPriceFormatted = Math.floor(additionalPrices[index]); // 소수점 제거
+                    const optionElement = document.createElement('option');
+                    optionElement.textContent = `${value} (+${additionalPriceFormatted}원)`; // 가격 표시 추가
+                    optionElement.value = value;
+                    selectElement3.appendChild(optionElement);
+                });
+
+                const parentTdForSelect3 = selectElement3.parentNode;
+                parentTdForSelect3.style.display = 'table-cell';
+
+                calculateTotalPrice(filteredDataForValue3);
+            });
+        });
+
+        function extractKeyValue(dataArray, keyName) {
+            return dataArray.map(item => {
+                const keyValuePairs = item.replace('(', '').replace(')', '')
+                    .split(',')
+                    .map(pair => pair.trim().split('='));
+
+                const foundPair = keyValuePairs.find(pair => pair[0].trim() === keyName);
+                return foundPair ? foundPair[1] : null;
+            }).filter(value => value !== null);
+        }
+
+        // 가격 계산 함수
+        function calculateTotalPrice(filteredData) {
+            let additionalPriceSum = 0;
+
+            countInput.addEventListener('change', function () {
+                let inNum = countInput.value;
+
+                // 추가 가격 합계 계산
+                additionalPriceSum = filteredData.reduce((sum, item) => {
+                    const keyValuePairs = item.replace('(', '').replace(')', '')
+                        .split(',')
+                        .map(pair => pair.trim().split('='));
+                    const foundPair = keyValuePairs.find(pair => pair[0].trim() === 'additionalPrice');
+                    return sum + (foundPair ? parseFloat(foundPair[1]) : 0);
+                }, 0);
+
+                // 총 가격 계산
+                let totalPrice1 = inNum * (parseFloat([[${#numbers.formatInteger(product.getTotalPrice(), 1)}]]) + additionalPriceSum);
+                totalPrice.innerText = totalPrice1 + "원";
+            });
+
+            const ids = filteredData.map(item => {
+                const keyValuePairs = item.replace('(', '').replace(')', '')
+                    .split(',')
+                    .map(pair => pair.trim().split('='));
+                const foundPair = keyValuePairs.find(pair => pair[0].trim() === 'id');
+                return foundPair ? foundPair[1] : null;
+            }).filter(value => value !== null);
+
+            const selectElement3 = document.getElementById('select3');
+            selectElement3.addEventListener('change', function () {
+                let optionId = document.getElementById('optionId');
+                optionId.value = ids;
+                console.log("Selected IDs:", optionId); // 선택된 ID 값 출력
+                calculateTotalPrice(filteredData);
+            });
+        }
+    };
 </script>
