@@ -45,9 +45,16 @@ public class ApiAdminUserController {
 
     // 2. 관리자 회원 수정
     @PutMapping("/user/{id}")
-    public ResponseEntity<GetAdminUserDTO> updateCust(@PathVariable("id") Long id, @RequestBody GetAdminUserDTO getAdminUserDTO) {
-       GetAdminUserDTO updatedCust = authService.updateCust(id,getAdminUserDTO);
-       return null;
+    public ResponseEntity<GetAdminUserDTO> updateCust(
+                                @PathVariable("id") Long id,
+                                @RequestBody GetAdminUserDTO getAdminUserDTO) {
+
+
+
+        GetAdminUserDTO updatedCust = authService.updateCust(id,getAdminUserDTO);
+        log.info("minhee : "+id);
+        log.info("getAdminUserDTO : "+ getAdminUserDTO);
+        return new ResponseEntity<>(updatedCust, HttpStatus.OK);
     }
 
 

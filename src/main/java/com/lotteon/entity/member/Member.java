@@ -36,10 +36,10 @@ public class Member {
     private String memState; // 계정 상태 (활성, 비활성) [로그인, 로그아웃]
 
     @Column(name = "mem_last_login_date")
-    private LocalDateTime memLastLoginDate;
+    private LocalDateTime memLastLoginDate; // 최근 로그인 날짜
 
     @Column(name = "mem_etc")
-    private String memEtc;
+    private String memEtc; // 기타 (회원 기타 정보입력)
 
     @Column(name = "mem_edate")
     private Timestamp memSignout; // 탈퇴일자
