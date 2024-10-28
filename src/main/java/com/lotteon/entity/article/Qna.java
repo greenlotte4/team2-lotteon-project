@@ -4,8 +4,10 @@ import com.lotteon.entity.category.CategoryArticle;
 import com.lotteon.entity.member.Member;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @ToString
@@ -35,7 +37,8 @@ public class Qna {
     private String qnaTitle;
 
     @Column(name = "qna_rdate")
-    private Timestamp qnaRdate;
+    @CreationTimestamp
+    private LocalDateTime qnaRdate;
 
     @Column(name = "qna_content", columnDefinition = "TEXT")
     private String qnaContent;
@@ -51,4 +54,6 @@ public class Qna {
 
     @Column(name = "qna_views")
     private int qnaViews;
+
+
 }

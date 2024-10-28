@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
-
-import java.util.List;
 import java.util.Map;
 
 /*
@@ -31,6 +29,9 @@ import java.util.Map;
  *
  * 수정이력
       - 2025/10/26 박경림 - /faqs pageable default로 sort 설정
+      - 2025/10/26 박경림 - faq 개별 삭제&선택 삭제 기능, /qnas 문의하기 목록 추가
+
+
  * */
 
 @Controller
@@ -190,25 +191,26 @@ public class AdminCsController {
 
     // QNA 문의하기
     @GetMapping("/qnas")
-    public String qnas(Model model) {
-        model.addAttribute("active", "qnas");
-        return "pages/admin/cs/qna/list";
-    }
-/*    @GetMapping("/qnas")
     public String qnas(Model model, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        // 1. faq 서비스에서 페이징 처리된  faq를 반환
-        Page<ArticleDto> qnasPage = qnaService.getAllQnas(pageable);
-        // 2. faqsPage에서 데이터들을 뽑아옴
-        List<ArticleDto> faqs = qnasPage.getContent();
-        System.out.println("qnas = " + qnas);
-        // 3. model에 faqs 를 추가
-        model.addAttribute("faqs", faqs);
+        // 1. qna 서비스에서 페이징 처리된  qna를 반환
+        Page<ArticleDto>qnasPage = qnaService.getAllQnas(pageable);
+        // 2. qnasPage에서 데이터들을 뽑아옴
+        List<ArticleDto> qnas = qnasPage.getContent();
+        // 3. model에 qnas 를 추가
+        model.addAttribute("qnas", qnas); // 모델 이름을 qnas로 변경
 
         // 4. 웹 반환
         return "pages/admin/cs/qna/list";
 
-    }*/
+    }
 
+    // QNA 상세 보기 1028 코드 미완성
+    @GetMapping("/qna/view/{id}")
+    public String qnaView(@PathVariable Long id, Model model) {
+        ArticleDto qna = qnaService.getQnaById(id); // 서비스에서 QNA 가져오기
+        model.addAttribute("qna", qna); // 모델에 QNA 데이터 추가
+        return "pages/admin/cs/qna/view"; // 상세보기 페이지로 이동
+    }
 
     @GetMapping("/qna/modify")
     public String qnaModify(Model model) {

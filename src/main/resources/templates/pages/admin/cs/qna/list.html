@@ -10,12 +10,9 @@
         <h3>문의하기 목록</h3>
         <p>HOME > 고객센터 > <strong>문의하기</strong></p>
       </nav>
-      <form
-              action="@{'/article/' + ${cate.cateGroup} + '/' + ${cate.cateName}}"
-              class="search"
-      >
-        <input type="hidden" name="content" value="list" />
-        <input type="hidden" name="cateNo" value="${cate.cateNo}" />
+      <form action="@{'/article/' + ${cate.cateGroup} + '/' + ${cate.cateName}}" class="search">
+        <input type="hidden" name="content" value="list"/>
+        <input type="hidden" name="cateNo"/>
         <select class="qnaCate" name="qnaCate" onchange="firstOption()">
           <option>1차선택</option>
           <option value="user">회원</option>
@@ -48,76 +45,89 @@
           <th>상태</th>
         </tr>
 
-        <tr>
+        <tr th:each="qna, stat : ${qnas}" th:data-id="${qna.id}">
           <td><input type="checkbox" /></td>
-          <td>120</td>
-          <td>회원</td>
-          <td>가입</td>
-          <td style="text-align: left">개인회원과 법인회원에 차이가 있나요?</td>
-          <td>chh**</td>
-          <td>00.00.00</td>
-          <td>검토 중</td>
-        </tr>
-        <tr>
-          <td><input type="checkbox" /></td>
-          <td>119</td>
-          <td>회원</td>
-          <td>가입</td>
+          <td th:text="${stat.count}">1</td>
+          <td class="cate1" th:text="${qna.cate1.categoryName}">카테고리1</td>
+          <td class="cate2" th:text="${qna.cate2.categoryName}" th:data-parent="${qna.cate1.categoryName}">카테고리2</td>
           <td style="text-align: left">
-            본인 인증 시 이미 가입되어 있는 정보라고 나옵니다.
+            <a th:href="@{'/qna/view/' + ${qna.id}}" th:text="${qna.title}">문의 제목</a>
           </td>
-          <td>chh**</td>
-          <td>00.00.00</td>
-          <td>검토 중</td>
+
+          <!-- 작성자 표시 (작성자 열에 위치) -->
+          <td th:text="${qna.memId != null ? qna.memId.substring(0, 2) + '**' : 'N/A'}">작성자</td>
+
+          <!-- 작성일 표시 (작성일 열에 위치) -->
+          <td th:text="${qna.rdate}">작성일</td>
+
+          <!-- 상태 표시 (상태 열에 위치) -->
+          <td th:text="${qna.answer != null && !#strings.isEmpty(qna.answer) ? '답변완료' : '검토중'}">검토중</td>
         </tr>
-        <tr>
-          <td><input type="checkbox" /></td>
-          <td>1</td>
-          <td>회원</td>
-          <td>가입</td>
-          <td style="text-align: left">아이디를 여러 개 사용할 수 있나요?</td>
-          <td>chh**</td>
-          <td>00.00.00</td>
-          <td>검토 중</td>
-        </tr>
-        <tr>
-          <td><input type="checkbox" /></td>
-          <td>1</td>
-          <td>회원</td>
-          <td>가입</td>
-          <td style="text-align: left">회원 종류 및 혜택 안내</td>
-          <td>chh**</td>
-          <td>00.00.00</td>
-          <td>답변완료</td>
-        </tr>
-        <tr>
-          <td><input type="checkbox" /></td>
-          <td>1</td>
-          <td>회원</td>
-          <td>탈퇴</td>
-          <td style="text-align: left">회원탈퇴는 어떻게 하나요?</td>
-          <td>chh**</td>
-          <td>00.00.00</td>
-          <td>답변완료</td>
-        </tr>
-        <!-- 한번 반복할때마다 pageStartNum을 1씩 차감 -->
       </table>
     </article>
 
     <div class="button-group">
-      <button class="button--delete">선택삭제</button>
+      <a class="button--delete" onclick="deleteSelected();">선택삭제</a>
     </div>
-    <!-- 페이지 네비게이션 -->
     <div class="paging">
       <a href="#" class="prev">이전</a>
       <a href="#">1</a>
       <a href="#">2</a>
       <a href="#">3</a>
-      <!--페이지 이전 다음 글자 누를 수 있게-->
       <a href="#" class="next">다음</a>
     </div>
   </section>
 </main>
 <footer th:replace="layout/admin/footer.html"></footer>
 
+<script>
+  const firstCategoryMap = {
+    "user": "회원",
+    "coupon": "쿠폰/이벤트",
+    "order": "주문/결제",
+    "delivery": "배송",
+    "cancel": "취소/반품/환불",
+    "travel": "여행/숙박/항공",
+    "safe": "안전결제"
+  };
 
+  const secondCategoryMap = {
+    "user": { "regi": "가입", "leave": "탈퇴", "info": "회원정보", "login": "로그인" },
+    "coupon": { "lpoint": "L.POINT", "coupon": "쿠폰", "event": "이벤트/경품", "attendance": "출석체크", "gift": "사은품" },
+    "order": { "orderMethod": "주문방법", "orderChange": "주문변경", "paymentMethod": "결제방법", "easyPayment": "간편결제", "giftReceive": "선물받기" },
+    "delivery": { "delivery": "배송", "deliveryFee": "배송비", "deliveryMethod": "배송방법", "todayArrival": "오늘도착" },
+    "cancel": { "orderCancel": "주문취소", "refundMethod": "환불방법", "cardRefund": "카드환불", "refundSchedule": "환불일정" },
+    "travel": { "ecoupon": "e쿠폰", "flight": "항공", "accommodation": "숙박", "ticket": "티켓" },
+    "safe": { "policyViolation": "법령 및 정책위반 상품", "ipViolation": "지적재산권침해", "serviceViolation": "서비스 이용규칙 위반" }
+  };
+
+  document.querySelector(".qnaCate").addEventListener("change", function () {
+    const selectedValue = this.value;
+    const select2 = document.querySelector(".qnaType");
+    select2.innerHTML = '<option value="" selected disabled hidden>2차선택</option>';
+
+    if (secondCategoryMap[selectedValue]) {
+      Object.keys(secondCategoryMap[selectedValue]).forEach(key => {
+        const optionText = secondCategoryMap[selectedValue][key];
+        const newOption = document.createElement("option");
+        newOption.value = key;
+        newOption.text = optionText;
+        select2.appendChild(newOption);
+      });
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.cate1').forEach(function (item) {
+      const value = item.getAttribute('data-value');
+      item.textContent = firstCategoryMap[value] || value;
+    });
+
+    document.querySelectorAll('.cate2').forEach(function (item) {
+      const value = item.getAttribute('data-value');
+      const parentValue = item.getAttribute('data-parent');
+      item.textContent = secondCategoryMap[parentValue]?.[value] || value;
+    });
+  });
+</script>
+</body>

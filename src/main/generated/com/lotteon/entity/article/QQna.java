@@ -34,7 +34,7 @@ public class QQna extends EntityPathBase<Qna> {
 
     public final StringPath qnaContent = createString("qnaContent");
 
-    public final DateTimePath<java.sql.Timestamp> qnaRdate = createDateTime("qnaRdate", java.sql.Timestamp.class);
+    public final DateTimePath<java.time.LocalDateTime> qnaRdate = createDateTime("qnaRdate", java.time.LocalDateTime.class);
 
     public final NumberPath<Integer> qnaState = createNumber("qnaState", Integer.class);
 
