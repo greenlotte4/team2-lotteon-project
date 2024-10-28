@@ -251,6 +251,11 @@
     opacity: 1; !important;/* show 클래스가 추가되면 불투명하게 설정 */
 }
 
+#mainSlider{position: relative}
+#sliderPage{bottom: 20px;right: 60px;position: absolute; z-index: 3000;background: rgba(0,0,0,0.3);border-radius: 15px; padding: 5px 10px}
+#sliderPage>span{display: inline-block; font-size: 14px; color:#FFF;text-align: center}
+#sliderPage>.currentSlider{ font-weight: 700 }
+#sliderPage>.totalSlider{font-weight: 600}
 
 
 

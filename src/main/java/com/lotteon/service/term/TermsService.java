@@ -1,7 +1,6 @@
 package com.lotteon.service.term;
 
 import com.lotteon.dto.requestDto.PostTermsDTO;
-import com.lotteon.dto.responseDto.GetBannerDTO;
 import com.lotteon.dto.responseDto.GetTermsResponseDto;
 import com.lotteon.entity.term.Terms;
 import com.lotteon.repository.term.TermsRepository;
@@ -15,6 +14,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+/*
+     날짜 : 2024/10/25
+     이름 : 이상훈
+     내용 : 컨트롤러 생성
+
+     수정이력
+      - 2025/10/28 김주경 - selectAllTerms Redis 캐싱처리
+*/
+
 
 @Log4j2
 @Service
@@ -60,7 +69,7 @@ public class TermsService {
 //                .collect(Collectors.toList());
 //    }
 
-//    @CacheEvict(value = "termsCache", key = "'terms'")
+    @CacheEvict(value = "termsCache", key = "'terms'")
     public Terms modifyTerms(PostTermsDTO postTermsDTO) {
         Terms terms = termsRepository.findById(postTermsDTO.getId())
                 .orElseThrow(() -> new IllegalArgumentException("terms not found"));
@@ -70,12 +79,12 @@ public class TermsService {
         return termsRepository.save(terms);
     }
 
-//    @Cacheable(value = "termsCache", key = "'terms'", cacheManager = "cacheManager")
+    @Cacheable(value = "termsCache", key = "'terms'", cacheManager = "cacheManager")
     public List<GetTermsResponseDto> selectAllTerms() {
         List<Terms> terms = termsRepository.findAll();
         return terms.stream()
                 .map(Entity -> modelMapper.map(Entity, GetTermsResponseDto.class))
-                .toList();
+                .collect(Collectors.toList());
     }
 }
 

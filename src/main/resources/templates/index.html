@@ -6,6 +6,10 @@
     <script defer th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js}"></script>
     <link th:href="@{/js/jquery.bxslider.min.css}" rel="stylesheet" />
     <script defer th:src="@{/js/jquery.bxslider.min.js}"></script>
+    <style>
+        #prevBtn {left:10px;background:url(/images/icon_prev_arrow.png) no-repeat}
+        #nextBtn {right:10px;background:url(/images/icon_next_arrow.png) no-repeat}
+    </style>
 <header th:replace="layout/main/header.html"></header>
 <div id="wrap">
     <main id="main">
@@ -101,22 +105,12 @@
 
                 <div id="mainSlider">
                     <ul class="bxslider">
-                        <li>
-                            <a th:href="@{/event/attendance}">
-                                <img style="width: 970px; height: 290px;" th:src="@{/images/980x300.jpg}" alt="메인슬라이더1">
-                            </a>
-                        </li>
-                        <li>
-                            <a th:href="@{/event/coupon}">
-                                <img style="width: 970px; height: 290px;" th:src="@{/images/980x300-2.jpg}" alt="메인슬라이더2">
-                            </a>
-                        </li>
-                        <li>
-                            <a th:href="@{/event/coupon}">
-                                <img style="width: 970px; height: 290px;" th:src="@{/images/980x300-3.jpg}" alt="메인슬라이더3">
-                            </a>
+                        <li th:each="b:${sliderb}">
+                            <a th:href="@{'/'+${b.getBannerLink()}}"
+                               th:style="'background: url(' + @{'/file/' + ${b.bannerImg}} + ') ' + ${b.bannerBg} + ';'"></a>
                         </li>
                     </ul>
+                    <div id="sliderPage"><span class="currentSlider">1</span> <span class="totalSlider"> / 3</span></div>
                 </div>
 
                 <div class="cont1">
@@ -380,16 +374,25 @@
     }
 </script>
 <script>
-    $(document).ready(function(){
-        $('.bxslider').bxSlider({
-            auto: true, // 자동 슬라이드
-            pause: 3000, // 슬라이드 간의 대기 시간 (밀리초)
+    $(document).ready(function() {
+        var slider = $('.bxslider').bxSlider({
+            auto: true,               // 자동 슬라이드
+            pause: 5000, // 슬라이드 간의 대기 시간 (밀리초)
             pager: true, // 페이지 네비게이션 표시
             controls: true, // 이전/다음 버튼 표시
-            nextText: '다음', // 다음 버튼 텍스트
-            prevText: '이전', // 이전 버튼 텍스트
-            touchEnabled : (navigator.maxTouchPoints > 0)
+            nextText: '>', // 다음 버튼 텍스트
+            prevText: '<', // 이전 버튼 텍스트
+            touchEnabled : (navigator.maxTouchPoints > 0),
+            autoHover: true,
+            autoControls:true,
+            autoControlsCombine:true,
+            onSlideBefore: function($slideElement, oldIndex, newIndex) {
+                // 현재 슬라이드 페이지 업데이트
+                $('.currentSlider').text((newIndex + 1));
+            }
         });
+        // 초기 페이지 설정
+        $('.totalSlider').text(' / ' + slider.getSlideCount());
     });
 </script>
 

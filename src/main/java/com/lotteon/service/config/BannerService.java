@@ -9,11 +9,14 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Service
@@ -24,6 +27,7 @@ public class BannerService {
     private final ImageService imageService;
     private final ModelMapper modelMapper;
 
+    @CacheEvict(value = "bannerCache", allEntries = true)
     public Banner insert(PostBannerDTO bannerDTO) {
         log.info(bannerDTO.toString());
         // 이미지 업로드 및 경로 설정
@@ -38,7 +42,6 @@ public class BannerService {
         } else {
             log.warn("No image file provided for banner.");
         }
-
         Banner banner = modelMapper.map(bannerDTO, Banner.class);
         return bannerRepository.save(banner);
     }
@@ -55,6 +58,7 @@ public class BannerService {
 
         return bannerList;
     }
+
     public List<GetBannerDTO> findAll() {
         List<Banner> banners = bannerRepository.findAll();
         List<GetBannerDTO> bannerList =
@@ -64,6 +68,7 @@ public class BannerService {
         return bannerList;
     }
 
+    @CacheEvict(value = "bannerCache", allEntries = true)
     public boolean deleteBannersById(List<Long> bannerIds) {
         try {
             for(Long bannerId : bannerIds) {
@@ -76,6 +81,7 @@ public class BannerService {
         }
     }
 
+    @CacheEvict(value = "bannerCache", key = "#banner.cateId")
     public Banner updateBannerState(Long id, Integer state) {
         Banner banner = bannerRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Banner not found"));
@@ -85,12 +91,13 @@ public class BannerService {
         return banner;
     }
 
+    @Cacheable(value = "bannerCache", key = "#bannerLocation", cacheManager = "cacheManager")
     public List<GetBannerDTO> selectUsingBannerAt(int bannerLocation) {
         List<Banner> banners = bannerRepository.findAllByBannerLocationAndBannerState(bannerLocation,1);
         List<GetBannerDTO> bannerList =
                 banners.stream()
                         .map(Entity->modelMapper.map(Entity,GetBannerDTO.class))
-                        .toList();
+                        .collect(Collectors.toList());
 
         log.info(bannerList.toString());
 
