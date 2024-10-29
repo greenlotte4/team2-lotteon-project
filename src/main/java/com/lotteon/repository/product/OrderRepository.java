@@ -3,7 +3,6 @@ package com.lotteon.repository.product;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Seller;
 import com.lotteon.entity.product.Order;
-import com.lotteon.entity.product.OrderItem;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -15,5 +14,7 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<Order,Long> {
     Page<Order> findAllByCustomer(Customer customer, Pageable pageable);
 
-    Page<Order> findAllByOrderItems_seller(Seller seller, Pageable pageable);
+    Page<Order> findAllByOrderItems_Seller(Seller seller,Pageable pageable);
+
+    Page<Order> findAll(Pageable pageable);
 }

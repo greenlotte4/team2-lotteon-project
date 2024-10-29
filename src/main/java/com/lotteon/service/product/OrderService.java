@@ -3,11 +3,10 @@ package com.lotteon.service.product;
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostCartSaveDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderDto;
-import com.lotteon.dto.responseDto.GetCartDto;
 import com.lotteon.dto.responseDto.GetOrderDto;
 import com.lotteon.dto.responseDto.cartOrder.CartItemDto;
-import com.lotteon.dto.responseDto.cartOrder.CartItemOptionDto;
 import com.lotteon.dto.responseDto.cartOrder.ProductDto;
+import com.lotteon.dto.responseDto.cartOrder.ResponseAdminOrderDto;
 import com.lotteon.dto.responseDto.cartOrder.ResponseOrdersDto;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Seller;
@@ -20,7 +19,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Service
@@ -162,16 +161,89 @@ public class OrderService {
         return responseOrdersDtos;
     }
 
-    public Page<ResponseOrdersDto> selectedAdminOrders(int page) {
+    public Page<ResponseAdminOrderDto> selectedAdminOrdersBySeller(int page) {
 
         MyUserDetails auth =(MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Seller seller = auth.getUser().getSeller();
+        Seller seller  = auth.getUser().getSeller();
+
+
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "id"));
+        log.info("셀러 "+seller);
+        Page<Order> orders = orderRepository.findAllByOrderItems_Seller(seller,pageable);
+        Page<ResponseAdminOrderDto> orderDtos = orders.map(order -> {
+
+            String formattedDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(order.getOrderRdate());
+
+            // OrderItems에서 seller ID로 필터링
+            List<OrderItem> sellerOrderItems = order.getOrderItems().stream()
+                    .filter(item -> item.getSeller().getId().equals(seller.getId()))
+                    .collect(Collectors.toList());
+
+            log.info("셀러 아이템 필터링한 거 "+sellerOrderItems.toString());
+
+            // 필터링된 아이템의 개수
+            int sellerOrderItemCount = sellerOrderItems.size();
+
+            log.info("셀러 아이템 개수 "+sellerOrderItemCount);
+
+
+            // 필터링된 아이템의 총 가격 합산
+            int sellerOrderTotal = sellerOrderItems.stream()
+                    .mapToInt(OrderItem::getTotal) // OrderItem의 total 필드 사용
+                    .sum();
+
+            return ResponseAdminOrderDto.builder()
+                    .orderId(order.getId())
+                    .OrderRdate(formattedDate)
+                    .OrderState(order.getOrderItems().get(0).getState2())
+                    .OrderItemCount(sellerOrderItemCount)
+                    .OrderItemTotal(sellerOrderTotal)
+                    .memUid(order.getCustomer().getMember().getMemUid())
+                    .custName(order.getCustomer().getCustName())
+                    .ProdName(order.getOrderItems().get(0).getProduct().getProdName())
+                    .build();
+
+        });
+        log.info("오더 레포지토리 테스트 "+orders.getContent());
+
+        return orderDtos;
+    }
+
+    public Page<ResponseAdminOrderDto> selectedAdminOrdersByAdmin(int page) {
+
         Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "id"));
 
-        Page<Order> orders = orderRepository.findAllByOrderItems_seller(seller,pageable);
-        log.info("오더서비스 셀러로 오더 뽑기"+orders.toString());
+        Page<Order> orders = orderRepository.findAll(pageable);
+        log.info("셀러 아이템  "+orders.getContent());
 
 
-        return null;
+        Page<ResponseAdminOrderDto> orderDtos = orders.map(order -> {
+
+            String formattedDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(order.getOrderRdate());
+
+            // 필터링된 아이템의 개수
+            int sellerOrderItemCount = order.getOrderItems().size();
+
+            log.info("셀러 아이템 개수 "+sellerOrderItemCount);
+
+
+            // 필터링된 아이템의 총 가격 합산
+            int sellerOrderTotal = order.getOrderItems().stream()
+                    .mapToInt(OrderItem::getTotal) // OrderItem의 total 필드 사용
+                    .sum();
+
+            return ResponseAdminOrderDto.builder()
+                    .orderId(order.getId())
+                    .OrderRdate(formattedDate)
+                    .OrderState(order.getOrderItems().get(0).getState2())
+                    .OrderItemCount(sellerOrderItemCount)
+                    .OrderItemTotal(sellerOrderTotal)
+                    .memUid(order.getCustomer().getMember().getMemUid())
+                    .custName(order.getCustomer().getCustName())
+                    .ProdName(order.getOrderItems().get(0).getProduct().getProdName())
+                    .build();
+
+        });
+        return orderDtos;
     }
 }

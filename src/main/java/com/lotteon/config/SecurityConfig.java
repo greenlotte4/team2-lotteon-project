@@ -75,18 +75,6 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .build();
     }
 
-
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        UserDetails userDetails = User.builder()
-//                .username("admin")
-//                .password(passwordEncoder().encode("1234"))
-//                .roles("admin")
-//                .build();
-//
-//        return new InMemoryUserDetailsManager(userDetails);
-//    }
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

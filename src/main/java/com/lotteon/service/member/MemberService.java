@@ -9,11 +9,13 @@ import com.lotteon.repository.term.TermsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Log4j2
@@ -27,26 +29,6 @@ public class MemberService {
     private final ModelMapper modelMapper;
     private final MemberRepository memberRepository;
 
-
-    public void insertMember(PostCustSignupDTO dto) {
-//        Member member = Member.builder()
-//                .memUid(dto.getMemId())
-//                .memPwd(dto.getMemPwd())
-//                .memRole("customer")
-//                .build();
-//
-//        memberRepository.save(member);
-//
-//        Customer customer = Customer.builder()
-//                .custName(dto.getCustName())
-//                .custEmail(dto.getCustEmail())
-//
-//                .build();
-//
-//
-
-    }
-
     public void updateLastLoginDate(MyUserDetails user) {
         Optional<Member> member = memberRepository.findById(user.getUser().getId());
         if(member.isEmpty()){
@@ -54,5 +36,21 @@ public class MemberService {
         }
         LocalDateTime today = LocalDateTime.now();
         member.get().updateLastLogin(today);
+    }
+
+    @Scheduled(cron = "30 0 0 * * ?")
+    public void updateMemberStateToSleep(){
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime standardDate = today.minusMonths(6);
+        List<Member> members = memberRepository.findAllByMemLastLoginDateBefore(standardDate);
+        for(Member member : members){
+            member.updateMemberStateToSleep();
+        }
+        memberRepository.saveAll(members);
+    }
+
+    public void updatePwd(String pwd, String uid) {
+        Optional<Member> member = memberRepository.findByMemUid(uid);
+        member.get().updatePassword(passwordEncoder.encode(pwd));
     }
 }

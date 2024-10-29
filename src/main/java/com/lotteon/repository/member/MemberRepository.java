@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,4 +19,7 @@ public interface  MemberRepository extends JpaRepository<Member, Long> {
     Page<Member> findAllByMemRole(String customer, Pageable pageable);
 
     Page<Member> findAllByMemRoleOrderByIdDesc(String customer, Pageable pageable);
+
+    List<Member> findAllByMemLastLoginDateBefore(LocalDateTime standardDate);
+
 }

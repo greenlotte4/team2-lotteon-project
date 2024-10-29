@@ -2,6 +2,7 @@ package com.lotteon.service.member;
 
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostCustSignupDTO;
+import com.lotteon.dto.requestDto.PostFindIdDto;
 import com.lotteon.dto.responseDto.cartOrder.UserOrderDto;
 import com.lotteon.entity.member.AttendanceEvent;
 import com.lotteon.entity.member.Customer;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Log4j2
 @Service
@@ -159,4 +161,11 @@ public class CustomerService {
         return user;
     }
 
+    public String findByNameAndEmail(PostFindIdDto dto) {
+        Optional<Customer> customer = customerRepository.findByCustEmailAndCustName(dto.getEmail(),dto.getName());
+        if(customer.isEmpty()){
+            return "NF";
+        }
+        return customer.get().getMember().getMemUid();
+    }
 }

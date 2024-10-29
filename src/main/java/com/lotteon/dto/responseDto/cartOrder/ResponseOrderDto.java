@@ -29,6 +29,4 @@ public class ResponseOrderDto {
     private int OrderTotal;
     private List<ResponseOrderItemDto> orderItemDtos;
 
-//    추가 필드
-    private String memUid;
 }

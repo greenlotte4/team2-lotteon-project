@@ -41,52 +41,28 @@
                     <th>주문일</th>
                     <th>배송</th>
                 </tr>
-<!--                <tr th:each="order:${orders}">-->
-<!--                    <td onclick="openOrderPopup(1)" style="text-decoration: underline; cursor:pointer;" th:text="${order.orderId}">10121111</td>-->
-<!--                    <td>abc1</td>-->
-<!--                    <td>김유신</td>-->
-<!--                    <td>OOO</td>-->
-<!--                    <td>2</td>-->
-<!--                    <td>102,999</td>-->
-<!--                    <td>신용카드</td>-->
-<!--                    <td style="color: #00B050;">결제완료</td>-->
-<!--                    <td>2024.10.16<br>00:00:00</td>-->
-<!--                    <td onclick="openOrderPopup(2)" style="cursor:pointer">배송하기</td>-->
-<!--                </tr>-->
-                <tr>
-                    <td onclick="openOrderPopup(1)" style="text-decoration: underline; cursor:pointer;">10121111</td>
-                    <td>abc1</td>
-                    <td>김유신</td>
-                    <td>OOO</td>
-                    <td>2</td>
-                    <td>102,999</td>
-                    <td>신용카드</td>
-                    <td style="color: #00B050;">결제완료</td>
-                    <td>2024.10.16<br>00:00:00</td>
-                    <td onclick="openOrderPopup(2)" style="cursor:pointer">배송하기</td>
-                </tr>
-                <tr>
-                    <td onclick="openOrderPopup(1)" style="text-decoration: underline; cursor:pointer;">10121111</td>
-                    <td>abc1</td>
-                    <td>김유신</td>
-                    <td>OOO</td>
-                    <td>2</td>
-                    <td>102,999</td>
-                    <td>신용카드</td>
-                    <td style="color: #00B050;">결제완료</td>
-                    <td>2024.10.16<br>00:00:00</td>
+                <tr th:each="order:${orders}">
+                    <td onclick="openOrderPopup(1)" style="text-decoration: underline; cursor:pointer;" th:text="${order.orderId}">10121111</td>
+                    <td th:text="${order.memUid}">abc1</td>
+                    <td th:text="${order.custName}">김유신</td>
+                    <td th:text="${order.prodName}">OOO</td>
+                    <td th:text="${order.orderItemCount}">2</td>
+                    <td th:text="${order.orderItemTotal}">102,999</td>
+                    <td th:text="${order.memUid}">신용카드</td>
+                    <td style="color: #00B050;"  th:text="${order.orderState}">결제완료</td>
+                    <td th:text="${order.orderRdate}">2024.10.16<br>00:00:00</td>
                     <td onclick="openOrderPopup(2)" style="cursor:pointer">배송하기</td>
                 </tr>
             </table>
-<!--            <div class="page">-->
-<!--                <a class="none" th:href="@{/my/orders(page=0)}"><<</a>-->
-<!--                <a class="none" th:href="@{/my/orders(page=${page - 2})}" th:if="${page>=2}" th:text="${page}-1"></a>-->
-<!--                <a class="none" th:href="@{/my/orders(page=${page - 1})}" th:if="${page>=1}" th:text="${page}"></a>-->
-<!--                <a class="active" style="font-weight: 600; text-decoration: underline;" th:text="${page}+1"></a>-->
-<!--                <a class="none" th:href="@{/my/orders(page=${page + 1})}" th:if="${(totalPages - page)>=2}" th:text="${page}+2"></a>-->
-<!--                <a class="none" th:href="@{/my/orders(page=${page + 2})}" th:if="${(totalPages - page)>=3}" th:text="${page}+3"></a>-->
-<!--                <a class="none" th:href="@{/my/orders(page=${totalPages - 1})}" >>></a>-->
-<!--            </div>-->
+            <div class="page">
+                <a class="none" th:href="@{/admin/order/orders(page=0)}"><<</a>
+                <a class="none" th:href="@{/admin/order/orders(page=${page - 2})}" th:if="${page>=2}" th:text="${page}-1"></a>
+                <a class="none" th:href="@{/admin/order/orders(page=${page - 1})}" th:if="${page>=1}" th:text="${page}"></a>
+                <a class="active" style="font-weight: 600; text-decoration: underline;" th:text="${page}+1"></a>
+                <a class="none" th:href="@{/admin/order/orders(page=${page + 1})}" th:if="${(totalPages - page)>=2}" th:text="${page}+2"></a>
+                <a class="none" th:href="@{/admin/order/orders(page=${page + 2})}" th:if="${(totalPages - page)>=3}" th:text="${page}+3"></a>
+                <a class="none" th:href="@{/admin/order/orders(page=${totalPages - 1})}" >>></a>
+            </div>
         </section>
         <div class="popup"></div>
         <div class="popupbg"></div>

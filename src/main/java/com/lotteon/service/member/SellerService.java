@@ -2,6 +2,7 @@ package com.lotteon.service.member;
 
 import com.lotteon.dto.requestDto.PostAdminSellerDto;
 import com.lotteon.dto.requestDto.PostCustSignupDTO;
+import com.lotteon.dto.requestDto.PostFindIdDto;
 import com.lotteon.dto.requestDto.PostSellerSignupDTO;
 import com.lotteon.entity.member.Member;
 import com.lotteon.entity.member.Seller;
@@ -14,6 +15,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Log4j2
 @Service
@@ -92,8 +95,12 @@ public class SellerService {
     }
 
 
+    public String findByCodeAndEmail(PostFindIdDto dto) {
+        Optional<Seller> seller = sellerRepository.findBySellBusinessCodeAndSellEmail(dto.getName(),dto.getEmail());
+        if(seller.isEmpty()){
+            return "NF";
+        }
 
-
-
-
+        return seller.get().getMember().getMemUid();
+    }
 }

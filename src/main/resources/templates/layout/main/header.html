@@ -21,7 +21,7 @@
         <div id="headerIn">
             <h1 class="logo">
                 <a style="z-index: 2; position: relative; top: 13px;" th:href="@{/}"><img th:src="@{'/file/'+${site.configHeaderLogo}}" alt="LotteON logo"></a>
-            </h1><!--.logo-->
+            </h1>
             <div class="utill">
                 <ul>
                     <li sec:authorize="!isAuthenticated()">
@@ -46,14 +46,6 @@
                 </ul>
             </div><!--.utill-->
             <nav class="gnb">
-                <!-- <ul>
-                    <li><a href="#">회원</a></li>
-                    <li><a href="#">상품</a></li>
-                    <li><a href="#">고객센터</a></li>
-                    <li><a href="#">마이페이지</a></li>
-                    <li><a href="#">정책</a></li>
-                    <li><a href="#">회사</a></li>
-                </ul> -->
             </nav><!--.gnb-->
             <div style="z-index: 2;" class="search">
                 <input type="text" id="search" name="search" placeholder="어떤 상품을 찾으세요?">
@@ -68,9 +60,15 @@
                 position: relative;
                 top: -18px;"
         >
+
             <a sec:authorize="!hasRole('admin')" th:href="@{/my/index}"><img class="img-header-link" th:src="@{/images/header-my.png}" style="width: 50px; height: 50px;"></a>
             <a sec:authorize="!hasRole('admin')" th:href="@{/prod/cart}"><img class="img-header-link" th:src="@{/images/header-cart.png}" style="width: 50px; height: 50px;"></a>
             <a sec:authorize="!hasRole('admin')"><img class="img-header-link" th:src="@{/images/header-zzim.png}" style="width: 50px; height: 50px;"></a>
         </div>
+
     </header><!--#header-->
 </body>
+
+<script>
+    
+</script>

@@ -178,6 +178,22 @@ public class AuthService implements UserDetailsService {
         }
         return "NF";
     }
+
+    public String matchingCheckByUidAndEmail(String name, String email) {
+        Optional<Customer> customer = customerRepository.findByMember_MemUidAndCustEmail(name,email);
+        if(customer.isPresent()){
+            return "SU";
+        }
+        return "NF";
+    }
+
+    public String matchingCheckByBusinessAndEmailAndUid(String name, String email, String uid) {
+        Optional<Seller> seller = sellerRepository.findBySellBusinessCodeAndSellEmailAndMember_MemUid(name,email,uid);
+        if(seller.isPresent()){
+            return seller.get().getSellRepresentative();
+        }
+        return "NF";
+    }
 }
 
 

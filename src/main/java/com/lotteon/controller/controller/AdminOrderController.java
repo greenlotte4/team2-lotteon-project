@@ -1,6 +1,7 @@
 package com.lotteon.controller.controller;
 
 import com.lotteon.config.MyUserDetails;
+import com.lotteon.dto.responseDto.cartOrder.ResponseAdminOrderDto;
 import com.lotteon.dto.responseDto.cartOrder.ResponseOrdersDto;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.service.product.OrderItemService;
@@ -36,13 +37,28 @@ public class AdminOrderController {
     }
 
     @GetMapping("/orders")
-    public String orders(Model model,
-                         @RequestParam(name = "page",defaultValue = "0") int page) {
-        orderService.selectedAdminOrders(page);
+    public String orders(Model model,Authentication authentication,
+                         @RequestParam(name = "page",defaultValue = "0") int page
+    ) {
+        MyUserDetails auth =(MyUserDetails) authentication.getPrincipal();
+        String role = auth.getUser().getMemRole();
+        log.info("auth 롤 체크 "+role);
 
-//        model.addAttribute("orders", orders);
-//        model.addAttribute("page", page);
-//        model.addAttribute("totalPages", orders.getTotalPages());
+
+        Page<ResponseAdminOrderDto> orders;
+
+        if(role.equals("admin")){
+            orders = orderService.selectedAdminOrdersByAdmin(0);
+        }else{
+            orders = orderService.selectedAdminOrdersBySeller(0);
+        }
+
+
+        log.info("컨트롤러 페이지 오더 데이터 확인 "+orders.getContent());
+
+        model.addAttribute("orders", orders);
+        model.addAttribute("page", page);
+        model.addAttribute("totalPages", orders.getTotalPages());
         model.addAttribute("active","orders");
         return "pages/admin/order/list";
     }

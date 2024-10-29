@@ -141,7 +141,6 @@
 #mainSlider .pager ul li a{text-indent: -9999px;display: inline-block;width: 10px; height: 10px;background: #000; border-radius: 50%;}
 
 
-/* 컨테이너 본문 공통영역 */
 /* cont1 */
 .cont1{margin-top: 60px;}
 .cont1 .tit{font-size:26px; font-weight: 900; letter-spacing:-0.5px; margin-bottom: 20px;}
@@ -251,6 +250,11 @@
     opacity: 1; !important;/* show 클래스가 추가되면 불투명하게 설정 */
 }
 
+#mainSlider{position: relative}
+#sliderPage{bottom: 20px;right: 60px;position: absolute; z-index: 3000;background: rgba(0,0,0,0.3);border-radius: 15px; padding: 5px 10px}
+#sliderPage>span{display: inline-block; font-size: 14px; color:#FFF;text-align: center}
+#sliderPage>.currentSlider{ font-weight: 700 }
+#sliderPage>.totalSlider{font-weight: 600}
 
 
 

@@ -13,4 +13,8 @@ public class PostFindIdDto {
     private String name;
 
     private String email;
+
+    private String uid;
+
+    private String pwd;
 }

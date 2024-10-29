@@ -1,0 +1,78 @@
+<link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+<link rel="stylesheet" th:href="@{/css/auth/find.css}">
+<link rel="stylesheet" th:href="@{/css/basic.css}">
+<header th:replace="layout/main/header.html"></header>
+<main id="find">
+    <section class="top-sec">
+        <article class="findinfo">
+            <h2>비밀번호 변경하기</h2>
+        </article>
+    </section>
+    <section class="find-sec" style="display: block;">
+        <div class="id-div">
+            <span style="display: block; color: black;">새 비밀번호</span>
+            <input id="password" type="password" class="long inp"><br>
+        </div>
+        <div>
+            <span style="display: block; color: black;">비밀번호 확인</span>
+            <input id="confirm" type="password" class="long inp">
+        </div>
+
+    </section>
+    <section class="find-sec" style="display: block; width: 47%">
+        <div style="display: flex; width: 100%; justify-content:end;" class="authcode-div">
+            <button onclick="changePassword()" class="btn submit">변경하기</button>
+        </div>
+    </section>
+</main>
+<footer th:replace="layout/main/footer.html"></footer>
+
+<script>
+    let uid = `[[${uid}]]` ;
+    function changePassword(){
+        const password = document.getElementById('password').value;
+        const confirm2 = document.getElementById('confirm').value;
+        const submitData = {
+            'uid' : uid,
+            'pwd' : password
+        }
+        let result = validate(submitData,confirm2)
+        if (result) {
+            let submitConfirm = confirm("변경하시겠습니까?")
+            if(!submitConfirm){
+                return;
+            }
+            putPassword(submitData);
+        }
+    }
+
+    function validate(submitData,confirm2){
+        const password = submitData.pwd;
+        const passwordPattern = /^(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+
+        if (!passwordPattern.test(password)) {
+            alert("비밀번호는 8자리 이상이며 하나 이상의 특수 문자가 포함되어야 합니다.");
+            return false;
+        }
+
+        if (password !== confirm2) {
+            alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+            return false;
+        }
+
+        return true;
+    }
+
+    async function putPassword(submitData){
+        try {
+            const resp = await axios.put("/auth/password",submitData,{
+                headers : {
+                    "Content-Type" : "application/json"
+                }
+            })
+            
+        } catch (e) {
+            alert("에러발생")
+        }
+    }
+</script>

@@ -49,7 +49,6 @@
         </div>
     </section>
 
-
 </main>
 
 <footer th:replace="layout/main/footer.html"></footer>
@@ -58,6 +57,7 @@
     const nameDiv = document.getElementsByClassName('name-div')[0];
     const bizDiv = document.getElementsByClassName('bizcode-div')[0];
     const sendBtn = document.getElementsByClassName('send')[0];
+    const submitBtn = document.getElementsByClassName('submit')[0];
 
     const nameInput = document.getElementsByName('name')[0];
     const bizInput = document.getElementsByName('bizcode')[0];
@@ -66,6 +66,7 @@
 
     const inputs = [nameInput, bizInput, emailInput, authInput];
     let saveCode ;
+    let result;
     function view(div){
         div.querySelector('span').style.color = '#000';
         div.getElementsByClassName('del-btn')[0].style.opacity = 1;
@@ -87,12 +88,14 @@
             bizDiv.style.display='none';
             unview(bizDiv);
             sendBtn.dataset.type = 'cust';
+            submitBtn.dataset.type = 'cust';
         }else if(type==='seller'){
             nameInput.value='';
             bizDiv.style.display='block';
             nameDiv.style.display='none';
             unview(nameDiv);
             sendBtn.dataset.type = 'seller';
+            submitBtn.dataset.type = 'seller';
         }
         window.scrollTo({
             top: 200,
@@ -126,8 +129,7 @@
             const where = e.target.dataset.type;
 
             if(where==='cust') {
-                // 개인 회원
-                let result = validateData(1);
+                result = validateData(1);
                 if(result==='false'){
                     return;
                 } else {
@@ -149,7 +151,7 @@
                     });
                 }
             }else{
-                let result = validateData(2);
+                result = validateData(2);
                 if(result==='false'){
                     return;
                 } else {
@@ -171,9 +173,6 @@
                     });
                 }
             }
-            // 여기에 코드 전송 쿼리 작성
-
-
         }
         if(e.target.classList.contains('submit')){
             e.preventDefault();
@@ -185,12 +184,20 @@
 
             // 여기에 AuthCode 비교 쿼리 작성
             const authcode = authInput.value;
+            const where = e.target.dataset.type;
             if(Number(authcode)===Number(saveCode)){
                 alert('인증되었습니다.');
                 button.style.background='#3b9a28';
                 button.style.cursor='default';
                 button.innerText='인증완료';
                 button.dataset.auth = 1;
+                if(where === 'cust'){
+                    getEmail(1)
+                } else {
+                    getEmail(2)
+                }
+
+
             } else {
                 alert('인증실패하였습니다.')
             }
@@ -286,6 +293,51 @@
                 alert(e)
             }
         }
+    }
+
+    async function getEmail(a){
+        if(a===1){
+            try {
+                const resp = await axios.post("/auth/email/customer",result,{
+                    headers : {
+                        "Content-Type" : "application/json"
+                    }
+                })
+                document.querySelector('.find-sec').style.display='none';
+                const mainSection = document.getElementById('find')
+                const newSection = document.createElement('section')
+                newSection.innerHTML = `
+                        <div style="display: flex; justify-content: space-around;">
+                            <span style="display: inline; font-size: 20px;">아이디 :</span><span style="display: inline; font-size: 20px;">${resp.data}</span>
+                        </div>
+                `
+                mainSection.appendChild(newSection);
+
+            } catch (e) {
+                alert('에러발생')
+            }
+        } else {
+            try {
+                const resp = await axios.post("/auth/email/seller",result,{
+                    headers : {
+                        "Content-Type" : "application/json"
+                    }
+                })
+                document.querySelector('.find-sec').style.display='none';
+                const mainSection = document.getElementById('find')
+                const newSection = document.createElement('section')
+                newSection.innerHTML = `
+                        <div style="display: flex; justify-content: space-around;">
+                            <span style="display: inline; font-size: 20px;">아이디 :</span><span style="display: inline; font-size: 20px;">${resp.data}</span>
+                        </div>
+                `
+                mainSection.appendChild(newSection);
+
+            } catch (e) {
+                alert('에러발생')
+            }
+        }
+
     }
 
 

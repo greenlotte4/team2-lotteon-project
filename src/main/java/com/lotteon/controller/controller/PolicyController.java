@@ -24,7 +24,6 @@ public class PolicyController {
     public String customer(@PathVariable("type") String type, Model model) {
         log.info(type);
         List<GetTermsResponseDto> list = termsService.selectAllTerms();
-        log.info(list);
         int i = 0;
         switch (type) {
             case "seller" -> i=1;

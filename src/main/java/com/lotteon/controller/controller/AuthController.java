@@ -4,14 +4,12 @@ package com.lotteon.controller.controller;
 import com.lotteon.dto.requestDto.PostCustSignupDTO;
 import com.lotteon.dto.responseDto.GetBannerDTO;
 import com.lotteon.dto.responseDto.GetTermsResponseDto;
-import com.lotteon.entity.term.Terms;
 import com.lotteon.service.config.BannerService;
 import com.lotteon.service.member.CustomerService;
 import com.lotteon.service.member.MemberService;
 import com.lotteon.service.member.SellerService;
 import com.lotteon.service.term.TermsService;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
 
 import lombok.RequiredArgsConstructor;
@@ -20,7 +18,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Log4j2
 @Controller
@@ -102,6 +99,15 @@ public class AuthController {
 
         return "pages/auth/findpwd";
     }
+
+    @GetMapping("/findpwd/{type}/result")
+    public String findPwdCustomer(Model model, @PathVariable String type, @RequestParam String uid) {
+        model.addAttribute("uid",uid);
+        model.addAttribute("type",type);
+        return "pages/auth/result";
+    }
+
+
 }
 
 

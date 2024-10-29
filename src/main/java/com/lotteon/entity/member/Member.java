@@ -70,4 +70,12 @@ public class Member {
     public void updateLastLogin(LocalDateTime today) {
         memLastLoginDate = today;
     }
+
+    public void updateMemberStateToSleep() {
+        this.memState = "sleep";
+    }
+
+    public void updatePassword(String encode) {
+        this.memPwd = encode;
+    }
 }

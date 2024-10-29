@@ -13,4 +13,6 @@ public interface SellerRepository extends JpaRepository<Seller, Long> {
 
 
     Optional<Seller> findBySellBusinessCodeAndSellEmail(String name, String email);
+
+    Optional<Seller> findBySellBusinessCodeAndSellEmailAndMember_MemUid(String name, String email, String uid);
 }
