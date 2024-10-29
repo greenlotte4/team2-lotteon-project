@@ -53,7 +53,7 @@ public class Member {
     // Entity -> DTO 변환
     public GetAdminUserDTO toGetAdminUserDTO() {
         return GetAdminUserDTO.builder()
-                .id(customer.getId()) // 번호
+                .custId(customer.getId()) // 번호
                 .memUid(String.valueOf(customer.getMember().getMemUid())) // 아이디
                 .custName(customer.getCustName()) // 이름
                 .custGender(customer.getCustGender()) // 성별
@@ -65,6 +65,10 @@ public class Member {
                 .memState(String.valueOf(memState)) // 계정 상태 (4가지 - 정산, 중지, 휴면, 탈퇴)
                 .build();
 
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     public void updateLastLogin(LocalDateTime today) {

@@ -50,11 +50,13 @@ public class ApiAdminUserController {
                                 @RequestBody GetAdminUserDTO getAdminUserDTO) {
 
 
-
-        GetAdminUserDTO updatedCust = authService.updateCust(id,getAdminUserDTO);
         log.info("minhee : "+id);
         log.info("getAdminUserDTO : "+ getAdminUserDTO);
-        return new ResponseEntity<>(updatedCust, HttpStatus.OK);
+
+        GetAdminUserDTO updatedCust = authService.updateCust(id,getAdminUserDTO);
+
+        log.info(updatedCust);
+        return ResponseEntity.ok().body(updatedCust);
     }
 
 

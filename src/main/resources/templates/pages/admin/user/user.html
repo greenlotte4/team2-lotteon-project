@@ -76,7 +76,7 @@
                     <th class="checkbox">
                         <input type="checkbox" id="allCheckbox2">
                     </th>
-                    <td th:text="${cust.id}">번호</td>
+                    <td th:text="${cust.custId}">번호</td>
 
                     <td th:text="${cust.memUid}">아이디</td>
                     <td th:text="${cust.custName}">이름</td>
@@ -104,12 +104,11 @@
                     <td th:if="${cust.memState == 'reave'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="condition reave">탈퇴</td>
 
                     <td class="td-admin">
-                        <input type="button" value="[ 수정 ]" onclick="openCustUpdatePopup(event)" id="buttonId" th:data-id="${cust.id}">
+                        <input type="button" value="[ 수정 ]" th:data-id="${cust.custId}" onclick="openCustUpdatePopup(event)">
                         <input type="button" value="[ 중지 ]">
                     </td>
                 </tr>
                 </tbody>
-
             </table><!-- .tb1 .user-->
 
             <div class="btns">
@@ -127,56 +126,88 @@
                 <a class="none" th:href="@{/admin/user/user(page=${totalPages - 1}, searchType=${searchType}, keyword=${keyword})}" >>></a>
             </div><!-- .page -->
 
-            <!-- 회원수정 팝업 -->
-            <div class="popup">
+            <div class="popup"></div><!-- .popup -->
+            <div class="popupbg"></div><!-- .popupbg -->
+        </div><!-- .container -->
+    </div><!-- .wrap -->
+</main>
+
+
+<footer th:replace="layout/admin/footer.html"></footer>
+
+<script>
+    const popup = document.querySelector(".popup");
+    const bg = document.querySelector(".popupbg");
+
+
+    async function openCustUpdatePopup(event) {
+        const id = event.target.dataset.id;
+
+        try {
+            const resp = await fetch(`/admin/user/user/${id}`, {
+                method: 'GET',
+                headers: { "Content-Type": "application/json" }
+            });
+
+            if (!resp.ok) {
+                const errorData = await resp.json();
+                console.error('서버 에러 응답:', errorData);
+                throw new Error(`Error ${resp.status}: ${errorData.message || JSON.stringify(errorData)}`);
+            }
+
+            const data = await resp.json();
+            if (data.id > 0) {
+                // 팝업 내용 설정
+                popup.innerHTML = `
                 <div class="header">
                     <div class="title">회원수정</div>
                     <div onclick="closePopup()" class="btn">X</div>
                 </div>
+
                 <div style="margin: 20px; margin-bottom: 30px;">
                     <table class="tb4">
                         <tr>
                             <th>아이디</th>
-                            <td><input readonly name="memUid"></td>
+                            <td><input name="memUid" value="${data.memUid}" readonly></td>
                         </tr>
                         <tr>
                             <th>이름</th>
-                            <td><input readonly name="custName"></td>
+                            <td><input name="custName" value="${data.custName}"></td>
                         </tr>
                         <tr>
                             <th>성별</th>
                             <td>
-                                <label><input type="radio" name="custGender" value="true" ${data.custGender ? 'checked' : ''}>남</label>
-                                <label><input type="radio" name="custGender" value="false" ${!data.custGender ? 'checked' : ''}>여</label>
+                                <label><input type="radio" name="custGender" value="true" ${+data.custGender === 0 ? "checked" : ""}>남</label>
+                                <label><input type="radio" name="custGender" value="false" ${+data.custGender === 1 ? "checked" : ""}>여</label>
                             </td>
                         </tr>
                         <tr>
                             <th>등급</th>
-                            <td>${data.custGrade}</td>
+                            <td><input name="custGrade" value="${data.custGrade}" readonly></td>
                         </tr>
                         <tr>
                             <th>상태</th>
-                            <td>${data.memState}</td>
+                            <td><input name="memState" value="${data.memState}" readonly></td>
                         </tr>
                         <tr>
                             <th>이메일</th>
-                            <td><input readonly value="${data.custEmail}"></td>
+                            <td><input name="custEmail" value="${data.custEmail}"></td>
                         </tr>
                         <tr>
                             <th>휴대폰</th>
-                            <td><input readonly value="${data.custHp}"></td>
+                            <td><input name="custHp" value="${data.custHp}"></td>
                         </tr>
                         <tr>
                             <th>우편번호</th>
-                            <td><input readonly value="${data.custAddr1}"></td>
+                            <td><input name="custAddr1" value="${data.custAddr1}"></td>
                         </tr>
                         <tr>
                             <th>기본주소</th>
-                            <td><input readonly value="${data.custAddr2}"></td>
+                            <td><input name="custAddr2" value="${data.custAddr2}"></td>
                         </tr>
                         <tr>
                             <th>상세주소</th>
-                            <td><input readonly value="${data.custAddr3}"></td>
+                            <td><input name="custAddr3" value="${data.custAddr3}"></td>
                         </tr>
                         <tr>
                             <th>가입일</th>
@@ -188,87 +219,31 @@
                         </tr>
                         <tr>
                             <th>기타</th>
-                            <td><textarea name="memEtc" placeholder="회원에 대한 기타정보입력">${data.memEtc || ''}</textarea></td>
+                            <td><textarea name="memEtc">${data.memEtc || ''}</textarea></td>
                         </tr>
                     </table>
                 </div>
                 <div style="margin-bottom:20px" class="btns">
-                    <button id="btnModify">수정하기</button>
+                    <button onclick="submitForm(${data.id})">수정하기</button>
                 </div>
-            </div>
-            <div class="popupbg"></div><!-- .popupbg -->
-        </div><!-- .container -->
-    </div><!-- .wrap -->
-</main>
+            `;
 
-
-<footer th:replace="layout/admin/footer.html"></footer>
-
-<script>
-    // [ 수정 ] 버튼 클릭 시 팝업 호출
-    const popup = document.querySelector(".popup");
-    const bg = document.querySelector(".popupbg");
-
-    const inputMemUid = document.querySelector('input[name=memUid]');
-    const inputCustName = document.querySelector('input[name=custName]');
-    const inputcustGender = document.querySelector('input[name=custName]');
-    const inputcustGrade = document.querySelector('input[name=custName]');
-    const inputmemState = document.querySelector('input[name=custName]');
-    const inputCustName = document.querySelector('input[name=custName]');
-    const inputCustName = document.querySelector('input[name=custName]');
-    const inputCustName = document.querySelector('input[name=custName]');
-    const inputCustName = document.querySelector('input[name=custName]');
-
-    document.getElementById("buttonId").addEventListener("click", openCustUpdatePopup);
-
-
-    // 모달 창 열기
-    async function openCustUpdatePopup(event){
-        const id = event.target.dataset.id;
-        console.log(id);
-
-        fetch(`/admin/user/user/${id}`, {
-            method: 'GET',
-            headers: { "Content-Type": "application/json" }
-        })
-            .then(resp => {
-                if (!resp.ok) {
-                    return resp.json().then(err => {
-                        console.error('Server responded with an error:', err);
-                        throw new Error(`Error ${resp.status}: ${err.message || JSON.stringify(err)}`);
-                    });
-                }
-                return resp.json();
-            })
-            .then(data => {
-                console.log('Response Data:', data);
-                if(data.id > 0){
-
-                    // 팝업 데이터 출력
-                    inputMemUid.value = data.memUid;
-                    inputCustName.value = data.custName;
-
-
-
-
-                    //popup.innerHTML = ``;
-                    // 팝업 띄우기
-                    popup.style.display = "block";
-                    bg.style.display = "flex";
-                }
-            })
-            .catch(err => {
-                console.error('Error:', err);
-                alert(err.message);
-            });
+                popup.style.display = "block";
+                bg.style.display = "flex";
+            }
+        } catch (err) {
+            console.error('Error:', err);
+            alert(err.message);
+        }
     }
 
-    document.getElementById('btnModify').onclick = function (){
-
-
+    // 폼 제출 및 데이터 전송
+    function submitForm(id) {
         const data = {
-            custName: inputCustName.value,
+            custName: document.querySelector('input[name="custName"]').value,
             custGender: document.querySelector('input[name="custGender"]:checked').value,
+            custGrade: document.querySelector('input[name="custGrade"]').value,
+            memState: document.querySelector('input[name="memState"]').value,
             custEmail: document.querySelector('input[name="custEmail"]').value,
             custHp: document.querySelector('input[name="custHp"]').value,
             custAddr1: document.querySelector('input[name="custAddr1"]').value,
@@ -277,7 +252,7 @@
             memEtc: document.querySelector('textarea[name="memEtc"]').value
         };
 
-        fetch(`/admin/user/user/${inputMemUid.value}`, {
+        fetch(`/admin/user/user/${id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
@@ -296,22 +271,15 @@
                 console.error('회원 정보 수정 오류:', error);
                 alert(error.message);
             });
-
+        return false;
     }
-
-    /*
-    // 모달 창에서 수정한 데이터 제출
-    function submitForm(id) {
-
-    }
-    */
-
 
     // 팝업 닫기
     function closePopup() {
         popup.style.display = "none";
         bg.style.display = "none";
     }
+
 
     // 회원 상태 (4가지 - 정상, 중지, 휴면, 탈퇴) if문 스크립트
     async function stateChanger(event){

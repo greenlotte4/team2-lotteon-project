@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 public class GetAdminUserDTO {
     // 번호, 아이디, 이름, 성별, 등급, 포인트, 이메일, 휴대폰, 가입일, 상태, 관리
     // 관리자 회원목록
-    private Long id;                // 번호
+    private Long    custId;         // 사용자 번호
     private String  memUid;         // 아이디
     private String  custName;       // 이름
 

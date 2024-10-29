@@ -77,7 +77,7 @@ public class AuthService implements UserDetailsService {
             // 번호, 아이디, 이름, 성별, 등급, 포인트, 이메일, 휴대폰, 가입일, 상태, 관리
             if (customer.getCustomer() != null) {
                 GetAdminUserDTO dto = GetAdminUserDTO.builder()
-                        .id(customer.getId()) // 번호
+                        .custId(customer.getId()) // 번호
                         .memUid(String.valueOf(customer.getMemUid())) // 아이디
                         .custName(customer.getCustomer().getCustName()) // 이름
                         .custGender(customer.getCustomer().getCustGender()) // 성별
@@ -104,11 +104,13 @@ public class AuthService implements UserDetailsService {
     // 2. 관리자 회원수정 정보조회 (+팝업호출 = select)
     public GetAdminUserDTO popCust(Long id) {
         Optional<Member> optMember = memberRepository.findById(id);
+        log.info(optMember.get().toString());
+
         if(optMember.isPresent()) {
             Member member = optMember.get();
             String[] addr = member.getCustomer().getCustAddr().split("/");
             return GetAdminUserDTO.builder()
-                    .id(member.getId())
+                    .custId(member.getCustomer().getId())
                     .memUid(member.getMemUid())
                     .custName(member.getCustomer().getCustName())
                     .custGrade(member.getCustomer().getCustGrade())
@@ -135,14 +137,17 @@ public class AuthService implements UserDetailsService {
         // 2. Customer 엔티티의 updateUser 메서드를 통해 정보 업데이트
         Customer customer = member.getCustomer();
         if (customer != null) {
+
             customer.updateUser(getAdminUserDTO);
+            member.setCustomer(customer);
+            log.info(customer.toString());
         } else {
             throw new IllegalArgumentException("해당 ID의 회원 정보가 존재하지 않습니다.");
         }
 
         // 3. 저장 및 반환
-        memberRepository.save(member);  // 연관된 Customer 객체가 자동으로 저장됨
-        return modelMapper.map(member, GetAdminUserDTO.class);
+        //memberRepository.save(member);  // 연관된 Customer 객체가 자동으로 저장됨
+        return modelMapper.map(customer, GetAdminUserDTO.class);
 
     }
 
