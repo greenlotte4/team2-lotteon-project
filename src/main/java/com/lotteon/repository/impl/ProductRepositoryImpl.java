@@ -3,10 +3,15 @@ package com.lotteon.repository.impl;
 import com.lotteon.dto.requestDto.ProductPageRequestDTO;
 import com.lotteon.entity.member.QSeller;
 import com.lotteon.entity.product.QProduct;
+import com.lotteon.entity.product.QReview;
 import com.lotteon.repository.custom.ProductRepositoryCustom;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -30,6 +35,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     private final JPAQueryFactory queryFactory;
     private final QProduct qProduct = QProduct.product;
     private final QSeller qSeller = QSeller.seller;
+    private final QReview qReview = QReview.review;
 
 
     @Override
@@ -179,6 +185,34 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
     @Override
     public Page<Tuple> findProductsWithSellerInfoByIds(ProductPageRequestDTO pageRequestDTO, Pageable pageable, List<Long> productIds) {
+
+        String sort = pageRequestDTO.getSort();
+        OrderSpecifier<?> orderSpecifier = null;
+
+        if (sort != null && sort.startsWith("prodSold")){
+            orderSpecifier = qProduct.prodOrderCnt.desc();
+        }else if (sort != null && sort.startsWith("prodLowPrice")) {
+            orderSpecifier = qProduct.prodPrice.asc();
+        }else if (sort != null && sort.startsWith("prodHighPrice")) {
+            orderSpecifier = qProduct.prodPrice.desc();
+        }else if (sort != null && sort.startsWith("prodScore")) {
+            orderSpecifier = qProduct.prodRating.desc();
+        }else if (sort != null && sort.startsWith("prodReview")) {
+            orderSpecifier = new OrderSpecifier<>(
+                    Order.DESC,
+                    JPAExpressions
+                            .select(qReview.count()) // 카운트 서브쿼리
+                            .from(qReview)
+                            .where(qReview.product.id.eq(qProduct.id))
+            );
+        }else if (sort != null && sort.startsWith("prodRdate")) {
+            orderSpecifier = qProduct.prodRdate.desc();
+        }else if (sort != null && sort.startsWith("prodDiscount")){
+            orderSpecifier = qProduct.prodDiscount.desc();
+        }else {
+            orderSpecifier = qProduct.id.desc();
+        }
+
         // productIds 리스트를 사용하여 Product와 Seller 정보 가져오기
         List<Tuple> content = queryFactory
                 .select(qProduct, qSeller.sellCompany, qSeller.sellGrade) // 필요한 컬럼 선택
@@ -188,6 +222,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .where(qProduct.id.in(productIds)) // productIds 리스트를 사용하여 필터링
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
+                .orderBy(orderSpecifier)
                 .fetch(); // 쿼리 실행
 
         long total = queryFactory.select(qProduct.count())

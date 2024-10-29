@@ -236,6 +236,10 @@ public class CategoryProductService {
             productList.get(i).setSellGrade(grade.get(i));
         }
 
+        for (PostProductDTO productDTO : productList) {
+            productDTO.setTotalPrice(productDTO.getProdPrice() - productDTO.getProdPrice() * productDTO.getProdDiscount() / 100);
+        }
+
         int total = (int)pageProduct.getTotalElements();
 
         log.info("11111111111111111111" + productList);

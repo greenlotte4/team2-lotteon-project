@@ -38,6 +38,10 @@ public class ProductController {
         model.addAttribute("products", products);
         model.addAttribute("category1", category1);
         model.addAttribute("cate", cate);
+
+        String setSortType = productPageRequestDTO.getSort();
+        model.addAttribute("setSortType", setSortType);
+
         return "pages/product/list";
     }
 

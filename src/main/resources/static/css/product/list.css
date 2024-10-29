@@ -50,7 +50,7 @@
 .location > span:last-of-type:after{content:none;}
 
 /* tab menu | 텝메뉴 */
-.array {
+.sort {
     display: flex;
     flex-direction: row;
     gap: 3px;
@@ -59,17 +59,17 @@
     color: #595959;
 }
 
-.array > li:nth-child(1) {
+.sort > li:nth-child(1) {
     margin-left: 30px;
 }
-.array > li > a {
+.sort > li > a {
     display: inline-block;
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
-.array > li::after{content: "ㅣ"; }
-.array > li:last-of-type:after{content:none;}
+.sort > li::after{content: "ㅣ"; }
+.sort > li:last-of-type:after{content:none;}
 
 /* .tb1 부분 */
 .tb1 {

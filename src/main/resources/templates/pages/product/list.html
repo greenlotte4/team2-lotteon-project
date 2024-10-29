@@ -2,6 +2,59 @@
 <link rel="stylesheet" th:href="@{/css/product/list.css}">
 <link rel="stylesheet" th:href="@{/css/basic.css}">
 <script th:src="@{/js/main.js}"></script>
+<script>
+
+    window.onload = function () {
+        let currentURL = window.location.href;
+        let splitURL = currentURL.split('?')[1];
+        let sortCode = ""
+        let sortText = '';
+        if (splitURL !== undefined){
+            let params = new URLSearchParams(window.location.search);
+            sortCode = params.get('sort');
+        }
+        const sortNav = document.getElementsByClassName('sort')[0];
+        const aTag = sortNav.querySelectorAll('a');
+
+        switch (sortCode) {
+            case 'prodSold':
+                aTag[0].classList.add('navOn');
+                sortText = '  판매많은순';
+                break;
+            case 'prodLowPrice':
+                aTag[1].classList.add('navOn');
+                sortText = '  낮은가격순';
+                break;
+            case 'prodHighPrice':
+                aTag[2].classList.add('navOn');
+                sortText = '  높은가격순';
+                break;
+            case 'prodScore':
+                aTag[3].classList.add('navOn');
+                sortText = '  평점높은순';
+                break;
+            case 'prodReview':
+                aTag[4].classList.add('navOn');
+                sortText = '  후기많은순';
+                break;
+            case 'prodRdate':
+                aTag[5].classList.add('navOn');
+                sortText = '  최근등록순';
+                break;
+            default:
+                sortText = '';
+        }
+
+        document.getElementById('sortText').innerText = sortText;
+
+    }
+
+    function sort(sortType){
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('sort', sortType);
+        window.location.href = currentUrl.toString();
+    }
+</script>
 <main style="margin-top: 140px; gap: 0">
     <aside th:replace="layout/main/aside.html" style="margin: 0; margin-right: 30px"></aside>
     <div id="wrap">
@@ -13,16 +66,17 @@
                     <span>HOME</span>
                     <span>패션·의류·뷰티</span>
                     <span>남성의류</span>
+                    <span th:if="${param.sort != null}" id="sortText"></span>
                 </p>
             </nav> <!-- .navi-->
             <div class="tab">
-                <ul class="array">
-                    <li><a href="#">판매많은순</a></li>
-                    <li><a href="#">낮은가격순</a></li>
-                    <li><a href="#">높은가격순</a></li>
-                    <li><a href="#">평점높은순</a></li>
-                    <li><a href="#">후기많은순</a></li>
-                    <li><a href="#">최근등록순</a></li>
+                <ul class="sort">
+                    <li><a href="#" onclick="sort('prodSold')" > 판매많은순</a></li>
+                    <li><a href="#" onclick="sort('prodLowPrice')" > 낮은가격순</a></li>
+                    <li><a href="#" onclick="sort('prodHighPrice')" > 높은가격순</a></li>
+                    <li><a href="#" onclick="sort('prodScore')"> 평점높은순</a></li>
+                    <li><a href="#" onclick="sort('prodReview')" > 후기많은순</a></li>
+                    <li><a href="#" onclick="sort('prodRdate')" > 최근등록순</a></li>
                 </ul><!-- .array -->
             </div><!-- .tab -->
             <table class="tb1">
@@ -41,9 +95,9 @@
                         </a>
                     </td>
                     <td>
-                        <span>27,000원</span> <br>
-                        <del>[[${product.getProdPrice}]]원</del>
-                        <span>[[${product.getProdDiscount}]]%&#8595;</span> <br>
+                        <span>[[${#numbers.formatInteger(product.getTotalPrice(), 1)}]]원</span> <br>
+                        <del>[[${#numbers.formatInteger(product.getProdPrice(), 1)}]]원</del>
+                        <span>[[${#numbers.formatInteger(product.getProdDiscount(), 1)}]]%&#8595;</span> <br>
                         <span>배송비 [[${product.getProdDeliver}]]</span>
                         <img src="https://via.placeholder.com/89x19" alt="">
                     </td>

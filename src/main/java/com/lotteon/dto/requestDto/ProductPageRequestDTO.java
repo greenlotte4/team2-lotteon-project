@@ -14,6 +14,9 @@ import org.springframework.data.domain.Sort;
 public class ProductPageRequestDTO {
 
     @Builder.Default
+    private String sort = null;
+
+    @Builder.Default
     private int no = 1;
 
     @Builder.Default
