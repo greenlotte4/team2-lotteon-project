@@ -315,7 +315,7 @@
 
         const optionValues = Array.from(new Set(extractOptionValue(splitResult, 'optionValue')));
         const optionNames = Array.from(new Set(extractOptionValue(splitResult, 'optionName'))); // optionName2 추출
-
+        const optionIds = extractKeyValue(splitResult, 'id');
         const selectElement1 = document.getElementById('select1');
         selectElement1.innerHTML = `<option value="">${optionNames[0] || "Select an Option"}</option>`;
 
@@ -339,17 +339,20 @@
                 const keyValuePairs = item.replace('(', '').replace(')', '').split(',').map(pair => pair.trim().split('='));
                 const optionValue2Pair = keyValuePairs.find(pair => pair[0].trim() === 'optionValue2');
                 const additionalPricePair = keyValuePairs.find(pair => pair[0].trim() === 'additionalPrice');
+                const optionId = keyValuePairs.find(pair => pair[0].trim() === 'id');
 
                 // optionValue2가 null인 경우 추가 요금 포함
                 if (optionValue2Pair && optionValue2Pair[1] === 'null' && additionalPricePair) {
                     const additionalPrice = parseFloat(additionalPricePair[1]) || 0;
                     const additionalPriceFormatted = additionalPrice.toLocaleString(); // 포맷팅
-                    selectedAdditionalPrice = additionalPriceFormatted;
+                    selectedAdditionalPrice = additionalPriceFormatted.replace(',', '');
+                    console.log(selectedAdditionalPrice);
                     calculateTotalPrice();
                     // 선택된 옵션의 텍스트를 업데이트
                     const selectedOption = selectElement1.querySelector(`option[value="${selectedValue1}"]`);
                     if (selectedOption) {
                         selectedOption.textContent = `${selectedOption.value} (+${additionalPriceFormatted}원)`;
+                        document.getElementById('optionId').value = optionId;
                     }
                     const parentTd = document.getElementById('select2').parentNode;
                     parentTd.style.display = 'none';
@@ -358,18 +361,21 @@
 
             const optionValues2 = Array.from(new Set(extractOptionValue(filteredData, 'optionValue2')));
             const optionNames2 = Array.from(new Set(extractOptionValue(filteredData, 'optionName2'))); // optionName2 추출
+            const optionIds = extractKeyValue(filteredData, 'id');
 
             const selectElement2 = document.getElementById('select2');
             selectElement2.innerHTML = `<option value="">${optionNames2[0] || "Select an Option"}</option>`;
 
-            optionValues2.forEach(value => {
+            optionValues2.forEach((value, index) => {
                 const optionElement = document.createElement('option');
                 optionElement.textContent = value;
                 optionElement.value = value;
                 selectElement2.appendChild(optionElement);
                 const parentTd = selectElement2.parentNode;
                 if (optionElement.value !== "null") {
+                    optionElement.dataset.id = optionIds[index];
                     parentTd.style.display = 'table-cell';
+                    console.log(optionIds[index])
                 }
             });
 
@@ -393,7 +399,7 @@
                     if (optionValue3Pair && optionValue3Pair[1] === 'null' && additionalPricePair) {
                         const additionalPrice = parseFloat(additionalPricePair[1]) || 0;
                         const additionalPriceFormatted = additionalPrice.toLocaleString(); // 포맷팅
-                        selectedAdditionalPrice = additionalPriceFormatted;
+                        selectedAdditionalPrice = additionalPriceFormatted.replace(',', '');
                         calculateTotalPrice();
                         // 선택된 옵션의 텍스트를 업데이트
                         const selectedOption = selectElement2.querySelector(`option[value="${selectedValue2}"]`);
@@ -407,22 +413,32 @@
 
                 const optionValues3 = Array.from(new Set(extractOptionValue(filteredData2, 'optionValue3')));
                 const optionNames3 = Array.from(new Set(extractOptionValue(filteredData2, 'optionName3'))); // optionName2 추출
+                const additionalPrices = extractKeyValue(filteredData2, 'additionalPrice');
+                const optionIds = extractKeyValue(filteredData2, 'id');
 
                 const selectElement3 = document.getElementById('select3');
                 selectElement3.innerHTML = `<option value="">${optionNames3[0] || "Select an Option"}</option>`;
 
-                optionValues3.forEach(value => {
+                optionValues3.forEach((value, index) => {
+                    const additionalPriceFormatted = Math.floor(additionalPrices[index]);
                     const optionElement = document.createElement('option');
                     optionElement.textContent = value;
                     optionElement.value = value;
-                    selectElement3.appendChild(optionElement);
                     const parentTd = selectElement3.parentNode;
                     if (optionElement.value !== "null") {
                         parentTd.style.display = 'table-cell';
-                        console.log("123");
-                        console.log(optionElement.textContent);
-                        console.log(optionElement.value);
+                        optionElement.textContent = `${value} (+${additionalPriceFormatted}원)`;
+                        optionElement.value = additionalPrices[index];
+                        document.getElementById('optionId').value = optionIds[index];
+                        selectElement3.appendChild(optionElement);
                     }
+                });
+                selectElement3.addEventListener('change', function () {
+                    selectedAdditionalPrice = parseFloat(selectElement3.value); // 선택된 추가 가격
+                    selectedOptionId = selectElement3.options[selectElement3.selectedIndex].dataset.id; // 선택된 옵션의 ID 가져오기
+                    document.getElementById('optionId').value = selectedOptionId;
+                    console.log(document.getElementById('optionId').value)
+                    calculateTotalPrice(); // 총 가격 계산
                 });
             });
         });

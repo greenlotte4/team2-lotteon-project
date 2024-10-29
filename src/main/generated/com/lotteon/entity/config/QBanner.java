@@ -21,9 +21,9 @@ public class QBanner extends EntityPathBase<Banner> {
 
     public final StringPath bannerBg = createString("bannerBg");
 
-    public final DateTimePath<java.sql.Timestamp> bannerEdate = createDateTime("bannerEdate", java.sql.Timestamp.class);
+    public final DatePath<java.sql.Date> bannerEdate = createDate("bannerEdate", java.sql.Date.class);
 
-    public final DateTimePath<java.sql.Timestamp> bannerEtime = createDateTime("bannerEtime", java.sql.Timestamp.class);
+    public final TimePath<java.sql.Time> bannerEtime = createTime("bannerEtime", java.sql.Time.class);
 
     public final StringPath bannerImg = createString("bannerImg");
 
@@ -33,13 +33,13 @@ public class QBanner extends EntityPathBase<Banner> {
 
     public final StringPath bannerName = createString("bannerName");
 
-    public final DateTimePath<java.sql.Timestamp> bannerSdate = createDateTime("bannerSdate", java.sql.Timestamp.class);
+    public final DatePath<java.sql.Date> bannerSdate = createDate("bannerSdate", java.sql.Date.class);
 
     public final StringPath bannerSize = createString("bannerSize");
 
     public final NumberPath<Integer> bannerState = createNumber("bannerState", Integer.class);
 
-    public final DateTimePath<java.sql.Timestamp> bannerStime = createDateTime("bannerStime", java.sql.Timestamp.class);
+    public final TimePath<java.sql.Time> bannerStime = createTime("bannerStime", java.sql.Time.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 

@@ -32,6 +32,8 @@ public class ProductController {
     public String products(Model model, @RequestParam(value = "cate",required = false) String cate, ProductPageRequestDTO productPageRequestDTO) {
         log.info("123123123"+cate);
 
+        List<GetCategoryDto> navigation = null;
+
         ProductPageResponseDTO<PostProductDTO> products = categoryProductService.findProductCategory(cate, productPageRequestDTO);
 
         List<GetCategoryDto> category1 = categoryProductService.findCategory();

@@ -49,7 +49,7 @@
 
     }
 
-    function sort(sortType){
+    function sort(sortType) {
         const currentUrl = new URL(window.location.href);
         currentUrl.searchParams.set('sort', sortType);
         window.location.href = currentUrl.toString();
@@ -71,12 +71,12 @@
             </nav> <!-- .navi-->
             <div class="tab">
                 <ul class="sort">
-                    <li><a href="#" onclick="sort('prodSold')" > 판매많은순</a></li>
-                    <li><a href="#" onclick="sort('prodLowPrice')" > 낮은가격순</a></li>
-                    <li><a href="#" onclick="sort('prodHighPrice')" > 높은가격순</a></li>
+                    <li><a href="#" onclick="sort('prodSold')"> 판매많은순</a></li>
+                    <li><a href="#" onclick="sort('prodLowPrice')"> 낮은가격순</a></li>
+                    <li><a href="#" onclick="sort('prodHighPrice')"> 높은가격순</a></li>
                     <li><a href="#" onclick="sort('prodScore')"> 평점높은순</a></li>
-                    <li><a href="#" onclick="sort('prodReview')" > 후기많은순</a></li>
-                    <li><a href="#" onclick="sort('prodRdate')" > 최근등록순</a></li>
+                    <li><a href="#" onclick="sort('prodReview')"> 후기많은순</a></li>
+                    <li><a href="#" onclick="sort('prodRdate')"> 최근등록순</a></li>
                 </ul><!-- .array -->
             </div><!-- .tab -->
             <table class="tb1">
@@ -87,7 +87,8 @@
                     <col style="width: 20%;">
                 </colgroup>
                 <tr th:each="product, i:${products.getDtoList()}">
-                    <td><img style="width: 138px; height: 110px;" th:src="@{'/file/'+${product.getProdListImg()}}" alt="상품 이미지"></td>
+                    <td><img style="width: 138px; height: 110px;" th:src="@{'/file/'+${product.getProdListImg()}}"
+                             alt="상품 이미지"></td>
                     <td>
                         <a th:href="@{/prod/product(prodId=${product.getId()})}">
                             <span>[[${product.getProdName}]]</span> <br>
@@ -98,8 +99,12 @@
                         <span>[[${#numbers.formatInteger(product.getTotalPrice(), 1)}]]원</span> <br>
                         <del>[[${#numbers.formatInteger(product.getProdPrice(), 1)}]]원</del>
                         <span>[[${#numbers.formatInteger(product.getProdDiscount(), 1)}]]%&#8595;</span> <br>
-                        <span>배송비 [[${product.getProdDeliver}]]</span>
-                        <img src="https://via.placeholder.com/89x19" alt="">
+                        <th:block th:if="${product.getProdDeliver() > 0}">
+                            <span>배송비 : [[${product.getProdDeliver}]]원</span>
+                        </th:block>
+                        <th:block th:if="${product.getProdDeliver() <= 0}">
+                            <img src="https://via.placeholder.com/89x19" alt="">
+                        </th:block>
                     </td>
                     <td>
                         <img src="https://via.placeholder.com/19x19">
@@ -113,13 +118,16 @@
             <div class="page" th:if="${not #lists.isEmpty(products.dtoList)}">
 
                 <th:block th:if="${products.prev}">
-                    <a th:href="@{/prod/products/(pg=${products.start - 1}, cate=${cate})}" class="first"><<</a>
+                    <a th:href="@{/prod/products/(pg=${products.start - 1}, cate=${cate}, sort=${setSortType})}"
+                       class="first"><<</a>
                 </th:block>
                 <th:block th:each="num:${#numbers.sequence(products.start, products.end)}">
-                    <a th:href="@{/prod/products(pg=${num}, cate=${cate})}" th:class="${num == products.pg} ? 'on' : 'num'">[[${num}]]</a>
+                    <a th:href="@{/prod/products(pg=${num}, cate=${cate}, sort=${setSortType})}"
+                       th:class="${num == products.pg} ? 'on' : 'num'">[[${num}]]</a>
                 </th:block>
                 <th:block th:if="${products.next}">
-                    <a th:href="@{/prod/products/(pg=${products.end + 1}, cate=${cate})}" class="first"><<</a>
+                    <a th:href="@{/prod/products/(pg=${products.end + 1}, cate=${cate}, sort=${setSortType})}"
+                       class="first"><<</a>
                 </th:block>
 
             </div>
