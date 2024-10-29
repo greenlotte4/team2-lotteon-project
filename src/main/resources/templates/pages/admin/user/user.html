@@ -104,7 +104,7 @@
                     <td th:if="${cust.memState == 'reave'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="condition reave">탈퇴</td>
 
                     <td class="td-admin">
-                        <input type="button" value="[ 수정 ]" th:data-id="${cust.custId}" onclick="openCustUpdatePopup(event)">
+                        <input type="button" value="[ 수정 ]" th:data-id="${cust.custId}" onclick="openCustUpdatePopup(event,1)">
                         <input type="button" value="[ 중지 ]">
                     </td>
                 </tr>
@@ -140,9 +140,9 @@
     const bg = document.querySelector(".popupbg");
 
 
-    async function openCustUpdatePopup(event) {
+    async function openCustUpdatePopup(event,type) {
         const id = event.target.dataset.id;
-
+        console.log(id);
         try {
             const resp = await fetch(`/admin/user/user/${id}`, {
                 method: 'GET',
@@ -156,7 +156,8 @@
             }
 
             const data = await resp.json();
-            if (data.id > 0) {
+            console.log("패치 "+data.custId)
+            if (data!=null) {
                 // 팝업 내용 설정
                 popup.innerHTML = `
                 <div class="header">
@@ -221,12 +222,13 @@
                             <th>기타</th>
                             <td><textarea name="memEtc">${data.memEtc || ''}</textarea></td>
                         </tr>
+                        <input type="hidden" name="custId" value="${data.custId}">
                     </table>
                 </div>
                 <div style="margin-bottom:20px" class="btns">
                     <button onclick="submitForm(${data.id})">수정하기</button>
                 </div>
-            `;
+                `;
 
                 popup.style.display = "block";
                 bg.style.display = "flex";
@@ -240,6 +242,8 @@
     // 폼 제출 및 데이터 전송
     function submitForm(id) {
         const data = {
+            memUid: document.querySelector('input[name="memUid"]').value,
+            custId: document.querySelector('input[name="custId"]').value,
             custName: document.querySelector('input[name="custName"]').value,
             custGender: document.querySelector('input[name="custGender"]:checked').value,
             custGrade: document.querySelector('input[name="custGrade"]').value,
@@ -252,7 +256,8 @@
             memEtc: document.querySelector('textarea[name="memEtc"]').value
         };
 
-        fetch(`/admin/user/user/${id}`, {
+
+        fetch(`/admin/user/user/${data.custId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)

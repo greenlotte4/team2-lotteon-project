@@ -39,6 +39,7 @@ public class ApiAdminUserController {
     public ResponseEntity<?> popCust(@PathVariable("id") Long id) {
         log.info("id: "+id+"에 해당하는 회원 정보");
         GetAdminUserDTO custPop = authService.popCust(id);
+        log.info("api 컨트롤러 업데이트 커스트 "+custPop);
 
         return ResponseEntity.ok().body(custPop);
     }
@@ -55,7 +56,7 @@ public class ApiAdminUserController {
 
         GetAdminUserDTO updatedCust = authService.updateCust(id,getAdminUserDTO);
 
-        log.info(updatedCust);
+
         return ResponseEntity.ok().body(updatedCust);
     }
 

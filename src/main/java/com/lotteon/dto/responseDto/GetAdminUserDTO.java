@@ -49,9 +49,9 @@ public class GetAdminUserDTO {
     private String custAddr3; // 상세주소
 
     @CreationTimestamp
-    private LocalDateTime LastLoginDate; // 최근 로그인 날짜
+    private LocalDateTime memLastLoginDate; // 최근 로그인 날짜
 
-    private String memInfo; // 기타 (회원 정보입력)
+    private String  memEtc; // 기타 (회원 기타 정보입력)
 
 
 

@@ -22,4 +22,5 @@ public interface  MemberRepository extends JpaRepository<Member, Long> {
 
     List<Member> findAllByMemLastLoginDateBefore(LocalDateTime standardDate);
 
+    Optional<Member> findByCustomer_id(Long id);
 }

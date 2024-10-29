@@ -103,26 +103,34 @@ public class AuthService implements UserDetailsService {
 
     // 2. 관리자 회원수정 정보조회 (+팝업호출 = select)
     public GetAdminUserDTO popCust(Long id) {
-        Optional<Member> optMember = memberRepository.findById(id);
-        log.info(optMember.get().toString());
+        Optional<Member> optMember = memberRepository.findByCustomer_id(id);
+        log.info("opt 멤버 확인 "+optMember.get().toString());
 
         if(optMember.isPresent()) {
             Member member = optMember.get();
+            log.info("여기까지는 들어오나? ");
+
             String[] addr = member.getCustomer().getCustAddr().split("/");
-            return GetAdminUserDTO.builder()
-                    .custId(member.getCustomer().getId())
-                    .memUid(member.getMemUid())
-                    .custName(member.getCustomer().getCustName())
-                    .custGrade(member.getCustomer().getCustGrade())
-                    .custGender(member.getCustomer().getCustGender())
-                    .custEmail(member.getCustomer().getCustEmail())
-                    .custHp(member.getCustomer().getCustHp())
-                    .memRdate(member.getMemRdate())
-                    .memState(member.getMemState())
-                    .custAddr1(addr[0])
-                    .custAddr2(addr[1])
-                    .custAddr3(addr[2])
-                    .build();
+            log.info("배열에 들어가는지 확인 "+addr);
+            GetAdminUserDTO dto = GetAdminUserDTO.builder()
+                                            .custId(member.getCustomer().getId())
+                                            .memUid(member.getMemUid())
+                                            .custName(member.getCustomer().getCustName())
+                                            .custGrade(member.getCustomer().getCustGrade())
+                                            .custGender(member.getCustomer().getCustGender())
+                                            .custEmail(member.getCustomer().getCustEmail())
+                                            .custHp(member.getCustomer().getCustHp())
+                                            .memRdate(member.getMemRdate())
+                                            .memState(member.getMemState())
+                                            .custAddr1(addr[0])
+                                            .custAddr2(addr[1])
+                                            .custAddr3(addr[2])
+                                            .memEtc(member.getMemEtc())
+                                            .memLastLoginDate(member.getMemLastLoginDate())
+                                            .build();
+
+            log.info("여기까지 들어오나 2 "+dto);
+            return dto;
         }
        //Optional<Member> custPop = memberRepository.findByMemUid(selectCustDto.getMemUid());
         return null;
@@ -131,7 +139,13 @@ public class AuthService implements UserDetailsService {
     // 3. 관리자 회원 수정
     public GetAdminUserDTO updateCust(Long id, GetAdminUserDTO getAdminUserDTO) {
         // 1. Member 조회
-        Member member = memberRepository.findById(id)
+        Optional<Customer> opt = customerRepository.findById(id);
+
+        Customer cust = null;
+        if(opt.isPresent()) {
+            cust = opt.get();
+        }
+        Member member = memberRepository.findById(cust.getMember().getId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 회원이 없습니다: " + id));
 
         // 2. Customer 엔티티의 updateUser 메서드를 통해 정보 업데이트
@@ -140,13 +154,15 @@ public class AuthService implements UserDetailsService {
 
             customer.updateUser(getAdminUserDTO);
             member.setCustomer(customer);
-            log.info(customer.toString());
+            log.info("customer save :::::"+customer.toString());
         } else {
             throw new IllegalArgumentException("해당 ID의 회원 정보가 존재하지 않습니다.");
         }
 
         // 3. 저장 및 반환
-        //memberRepository.save(member);  // 연관된 Customer 객체가 자동으로 저장됨
+            log.info("member save :::::::"+member);
+        memberRepository.save(member);  // 연관된 Customer 객체가 자동으로 저장됨
+        customerRepository.save(customer);
         return modelMapper.map(customer, GetAdminUserDTO.class);
 
     }
@@ -157,7 +173,7 @@ public class AuthService implements UserDetailsService {
         Pageable pageable = PageRequest.of(page, 10);
         Page<Member> members = memberRepository.findAllByMemRoleOrderByIdDesc("customer",pageable);
         Page<GetAdminUserDTO> dtos = members.map(v->v.toGetAdminUserDTO());
-
+        log.info("서비스 디티오 변환한 거 "+dtos.getContent());
         return dtos;
     }
 

@@ -44,10 +44,10 @@ public class Member {
     @Column(name = "mem_edate")
     private Timestamp memSignout; // 탈퇴일자
 
-    @OneToOne(mappedBy = "member")
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private Customer customer;
 
-    @OneToOne(mappedBy = "member")
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private Seller seller;
 
     // Entity -> DTO 변환

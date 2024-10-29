@@ -16,7 +16,7 @@ public class Seller {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 번호
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "mem_id")
     @ToString.Exclude
     private Member member;
