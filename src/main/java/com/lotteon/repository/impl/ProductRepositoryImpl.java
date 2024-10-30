@@ -10,6 +10,7 @@ import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -65,6 +66,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                     .on(qProduct.seller.id.eq(qSeller.member.id))
                     .offset(pageable.getOffset())
                     .limit(pageable.getPageSize())
+                    .orderBy(qProduct.id.desc())
                     .fetch();
 
             log.info("content : "+content);
@@ -83,6 +85,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .where(qProduct.seller.id.eq(sellId))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
+                .orderBy(qProduct.id.desc())
                 .fetch();
 
         log.info("content : "+content);
@@ -149,6 +152,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                     .where(expression)
                     .offset(pageable.getOffset())
                     .limit(pageable.getPageSize())
+                    .orderBy(qProduct.id.desc())
                     .fetch();
 
             BooleanBuilder builder2 = new BooleanBuilder();
@@ -171,6 +175,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                     .where(builder)
                     .offset(pageable.getOffset())
                     .limit(pageable.getPageSize())
+                    .orderBy(qProduct.id.desc())
                     .fetch();
 
             long total = queryFactory.select(qProduct.count())
@@ -192,9 +197,15 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         if (sort != null && sort.startsWith("prodSold")){
             orderSpecifier = qProduct.prodOrderCnt.desc();
         }else if (sort != null && sort.startsWith("prodLowPrice")) {
-            orderSpecifier = qProduct.prodPrice.asc();
+            orderSpecifier =  Expressions.numberTemplate(Double.class,
+                    "{0} - ({0} * ({1} / 100.0))",
+                    qProduct.prodPrice, qProduct.prodDiscount
+            ).asc();
         }else if (sort != null && sort.startsWith("prodHighPrice")) {
-            orderSpecifier = qProduct.prodPrice.desc();
+            orderSpecifier = Expressions.numberTemplate(Double.class,
+                    "{0} - ({0} * ({1} / 100.0))",
+                    qProduct.prodPrice, qProduct.prodDiscount
+            ).desc();
         }else if (sort != null && sort.startsWith("prodScore")) {
             orderSpecifier = qProduct.prodRating.desc();
         }else if (sort != null && sort.startsWith("prodReview")) {

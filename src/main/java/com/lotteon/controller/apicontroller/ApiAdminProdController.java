@@ -39,9 +39,11 @@ public class ApiAdminProdController {
         log.info("124443" + postProdAllDTO.getPostProdDetailDTO());
         log.info("134443" + postProdAllDTO.getPostProductDTO());
 
-        Product result = productService.insertProduct(postProdAllDTO.getPostProductDTO());
+        Product result = productService.insertProduct(postProdAllDTO.getPostProductDTO(), postProdAllDTO.getPostProdDetailDTO());
         postProdAllDTO.getPostProdCateMapperDTO().setProductId(result.getId());
-
+        postProdAllDTO.getPostProdDetailDTO().setProductId(result.getId());
+        log.info("323232323232323"+postProdAllDTO.getPostProdDetailDTO().getDescription());
+        productService.insertProdDetail(postProdAllDTO.getPostProdDetailDTO());
         categoryProductService.insertCateMapper(postProdAllDTO.getPostProdCateMapperDTO());
 
         Map<String, Object> response = new HashMap<>();

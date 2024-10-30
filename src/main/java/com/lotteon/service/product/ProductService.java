@@ -1,16 +1,15 @@
 package com.lotteon.service.product;
 
 import com.lotteon.config.MyUserDetails;
-import com.lotteon.dto.requestDto.GetProductDto;
-import com.lotteon.dto.requestDto.PostProductDTO;
-import com.lotteon.dto.requestDto.PostProductOptionDTO;
-import com.lotteon.dto.requestDto.ProductPageRequestDTO;
+import com.lotteon.dto.requestDto.*;
 import com.lotteon.dto.responseDto.ProductPageResponseDTO;
 import com.lotteon.entity.member.Seller;
 import com.lotteon.entity.product.Product;
+import com.lotteon.entity.product.ProductDetail;
 import com.lotteon.entity.product.ProductOption;
 import com.lotteon.entity.product.QProduct;
 import com.lotteon.repository.member.SellerRepository;
+import com.lotteon.repository.product.ProductDetailRepository;
 import com.lotteon.repository.product.ProductOptionRepository;
 import com.lotteon.repository.product.ProductRepository;
 import com.querydsl.core.BooleanBuilder;
@@ -41,6 +40,7 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductDetailRepository productDetailRepository;
     private final ProductOptionRepository productOptionRepository;
     private final ModelMapper modelMapper;
     private final SellerRepository sellerRepository;
@@ -48,7 +48,7 @@ public class ProductService {
     @Value("${file.upload-dir}")
     private String uploadPath;
 
-    public Product insertProduct(PostProductDTO productDTO) {
+    public Product insertProduct(PostProductDTO productDTO, PostProdDetailDTO prodDetailDTO) {
 
         File fileUploadPath = new File(uploadPath);
 
@@ -66,6 +66,7 @@ public class ProductService {
         prodFiles.add(productDTO.getListImage());
         prodFiles.add(productDTO.getBasicImage());
         prodFiles.add(productDTO.getDetailImage());
+        prodFiles.add(productDTO.getDescription());
 
         int i = 1;  // 이미지 번호를 매기기 위한 인덱스
         boolean isUploadSuccessful = true;
@@ -91,6 +92,9 @@ public class ProductService {
                         case 3:
                             productDTO.setProdDetailImg(sName);
                             break;
+                        case 4:
+                            prodDetailDTO.setDescription(sName);
+                            break;
                     }
                 } catch (IOException e) {
                     log.error(e);
@@ -100,6 +104,10 @@ public class ProductService {
             i++;
         }
         if (isUploadSuccessful) {
+
+            Seller seller = sellerRepository.findById(productDTO.getSellId()).orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 판매자가 없습니다: "));
+
+            productDTO.setSeller(seller);
             Product product = modelMapper.map(productDTO, Product.class);
             log.info("123123123123" + product);
             Product result = productRepository.save(product);
@@ -110,6 +118,12 @@ public class ProductService {
         }
     }
 
+
+    public void insertProdDetail(PostProdDetailDTO postProdDetailDTO){
+
+        ProductDetail prodDetail = modelMapper.map(postProdDetailDTO, ProductDetail.class);
+        productDetailRepository.save(prodDetail);
+    }
     public int insertProdOption(PostProductOptionDTO optionDTO) {
 
         Optional<Product> opt = productRepository.findById(optionDTO.getProductId());

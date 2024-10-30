@@ -1,6 +1,7 @@
 package com.lotteon.dto.requestDto;
 
 import com.lotteon.entity.category.CategoryProductMapper;
+import com.lotteon.entity.member.Seller;
 import com.lotteon.entity.product.ProductOption;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -32,6 +33,7 @@ public class PostProductDTO {
     private String prodListImg;
     private String prodBasicImg;
     private String prodDetailImg;
+    private String descriptionName;
     private int prodStock;
     private int prodOrderCnt;
     private int prodViews;
@@ -44,8 +46,11 @@ public class PostProductDTO {
     private MultipartFile listImage;
     private MultipartFile basicImage;
     private MultipartFile detailImage;
+    private MultipartFile description;
 
     private String sellCompany;
     private Integer sellGrade;
     private double totalPrice;
+
+    private Seller seller;
 }

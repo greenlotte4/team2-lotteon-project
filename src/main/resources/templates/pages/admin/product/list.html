@@ -3,6 +3,19 @@
 <link rel="stylesheet" th:href="@{/css/basic.css}">
 <body>
 <script>
+    window.onload = function (){
+
+        document.getElementById('allCheckbox').addEventListener('change', function() {
+            // 모든 개별 체크박스를 선택 (class="checkbox"를 가진)
+            const checkboxes = document.querySelectorAll('input[type="checkbox"].checkbox');
+            const isChecked = this.checked;
+
+            checkboxes.forEach(function(checkbox) {
+                checkbox.checked = isChecked;
+            });
+        });
+    }
+
     function deleteEvent (){
 
         let checkboxes = document.querySelectorAll(".checkbox:checked");

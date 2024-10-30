@@ -8,6 +8,12 @@
         const productInfo = new FormData(document.getElementById('productInfo'));
         const detail = new FormData(document.getElementById('detail'));
 
+        let prodDis = document.getElementsByClassName('productDiscount')[0];
+
+        if(prodDis.value > 100){
+            alert('100%보다 더 할인할 수 없습니다!')
+            return;
+        }
 
         e.preventDefault();
         for (const [key, value] of prodCate.entries()) {
