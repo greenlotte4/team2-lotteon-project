@@ -3,10 +3,7 @@ package com.lotteon.service.category;
 import com.lotteon.dto.requestDto.PostProdCateMapperDTO;
 import com.lotteon.dto.requestDto.PostProductDTO;
 import com.lotteon.dto.requestDto.ProductPageRequestDTO;
-import com.lotteon.dto.responseDto.GetCategoryDto;
-import com.lotteon.dto.responseDto.GetProdCateDTO;
-import com.lotteon.dto.responseDto.ProductPageResponseDTO;
-import com.lotteon.dto.responseDto.TestResponseDto;
+import com.lotteon.dto.responseDto.*;
 import com.lotteon.entity.category.CategoryProduct;
 import com.lotteon.entity.category.CategoryProductMapper;
 import com.lotteon.entity.product.Product;
@@ -252,4 +249,27 @@ public class CategoryProductService {
 
     }
 
+    public GetCateLocationDTO cateLocation(long id){
+        CategoryProduct cateLevel1 = categoryProductRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 카테고리가 없습니다."));
+        CategoryProduct cateLevel2 = categoryProductRepository.findById(cateLevel1.getParent().getCategoryId()).orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 카테고리가 없습니다."));
+        CategoryProduct cateLevel3 = categoryProductRepository.findById(cateLevel2.getParent().getCategoryId()).orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 카테고리가 없습니다."));
+
+        return GetCateLocationDTO.builder()
+                .level1Name(cateLevel1.getCategoryName())
+                .level2Name(cateLevel2.getCategoryName())
+                .level3Name(cateLevel3.getCategoryName())
+                .build();
+
+    }
+    public GetCateLocationDTO cateLocation2(long id){
+        Product product = productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 카테고리가 없습니다."));
+        CategoryProductMapper categoryProductMapper = categoryProdMapperRepository.findByProduct(product);
+        log.info("432123432123"+categoryProductMapper.getCategory().getParent().getParent().getCategoryId());
+
+        return  GetCateLocationDTO.builder()
+                .level1Name(categoryProductMapper.getCategory().getParent().getParent().getCategoryName())
+                .level2Name(categoryProductMapper.getCategory().getParent().getCategoryName())
+                .level3Name(categoryProductMapper.getCategory().getCategoryName())
+                .build();
+    }
 }

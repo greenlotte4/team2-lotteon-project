@@ -1,6 +1,7 @@
 package com.lotteon.controller.controller;
 
 import com.lotteon.dto.requestDto.*;
+import com.lotteon.dto.responseDto.GetCateLocationDTO;
 import com.lotteon.dto.responseDto.GetCategoryDto;
 import com.lotteon.dto.responseDto.ProductPageResponseDTO;
 import com.lotteon.entity.product.ProductOption;
@@ -39,12 +40,12 @@ public class ProductController {
     public String products(Model model, @RequestParam(value = "cate",required = false) String cate, ProductPageRequestDTO productPageRequestDTO) {
         log.info("123123123"+cate);
 
-        List<GetCategoryDto> navigation = null;
 
         ProductPageResponseDTO<PostProductDTO> products = categoryProductService.findProductCategory(cate, productPageRequestDTO);
-
+        GetCateLocationDTO location = categoryProductService.cateLocation(Long.parseLong(cate));
         List<GetCategoryDto> category1 = categoryProductService.findCategory();
         model.addAttribute("products", products);
+        model.addAttribute("location", location);
         model.addAttribute("category1", category1);
         model.addAttribute("cate", cate);
 
@@ -63,11 +64,13 @@ public class ProductController {
         PostProdDetailDTO prodDetail = productDetailService.selectProdDetail(prodId);
         Set<String> addedOptions = new HashSet<>();
 
+        GetCateLocationDTO location = categoryProductService.cateLocation2(prodId);
+
         model.addAttribute("addedOptions", addedOptions);
         model.addAttribute("prodDetail", prodDetail);
         model.addAttribute("options", options);
+        model.addAttribute("location", location);
         model.addAttribute("product", postProductDTO);
-        log.info("4444"+postProductDTO);
         model.addAttribute("category1", category1);
         return "pages/product/view";
     }

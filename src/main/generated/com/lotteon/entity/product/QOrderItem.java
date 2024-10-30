@@ -32,6 +32,8 @@ public class QOrderItem extends EntityPathBase<OrderItem> {
 
     public final QOrder order;
 
+    public final StringPath orderDeliId = createString("orderDeliId");
+
     public final QProduct product;
 
     public final NumberPath<Integer> quantity = createNumber("quantity", Integer.class);

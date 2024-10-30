@@ -10,9 +10,9 @@
             <nav id="navi" style="width: 810px">
                 <h2 class="sub_tit">상품보기</h2>
                 <p class="location">
-                    <span>HOME</span>
-                    <span>패션·의류·뷰티</span>
-                    <span>남성의류</span>
+                    <span>[[${location.level1Name}]]</span>
+                    <span>[[${location.level2Name}]]</span>
+                    <span>[[${location.level3Name}]]</span>
                 </p>
             </nav> <!-- #navi-->
             <div class="product_info">
@@ -261,7 +261,7 @@
         if([[${prodDetail.deliable}]]){
             return `(${dayOfWeek}) ${month}/${date} 도착예정 (해외배송은 +3~5일)`;
         }else{
-        return `(${dayOfWeek}) ${month}/${date} 도착예정`;
+            return `(${dayOfWeek}) ${month}/${date} 도착예정`;
         }
     }
 
@@ -449,26 +449,36 @@
                 selectElement3.innerHTML = `<option value="">${optionNames3[0] || "Select an Option"}</option>`;
 
                 optionValues3.forEach((value, index) => {
-                    addPriceFinal = Math.floor(additionalPrices[index]);
+                    const addPrice = Math.floor(additionalPrices[index]); // 해당 인덱스의 추가 가격
                     const optionElement = document.createElement('option');
-                    optionElement.textContent = value;
-                    optionElement.value = value;
+                    optionElement.textContent = `${value} (+${addPrice}원)`;
+                    optionElement.value = String(index); // 인덱스를 값으로 사용하여 선택 시 해당 인덱스를 가져올 수 있도록 함
+
                     const parentTd = selectElement3.parentNode;
-                    if (optionElement.value !== "null") {
+                    if (value !== "null") {
                         parentTd.style.display = 'table-cell';
-                        optionElement.textContent = `${value} (+${addPriceFinal}원)`;
                         selectElement3.appendChild(optionElement);
                     }
                 });
                 selectElement3.addEventListener('change', function () {
-                    selectedAdditionalPrice = addPriceFinal; // 선택된 추가 가격
-                    console.log("addprice"+addPriceFinal);
-                    const optionId = extractKeyValue(filteredData2, 'id');
-                    const optionStock = extractKeyValue(filteredData2, 'stock');
-                    document.getElementById('optionId').value = optionId;
-                    console.log("id"+document.getElementById('optionId').value);
-                    document.getElementById('optionStock').value = optionStock;
-                    console.log("stock"+document.getElementById('optionStock').value);
+                    const selectedIndex = selectElement3.value;
+                    if (selectedIndex === "") {
+                        // 선택된 값이 없을 때 처리
+                        document.getElementById('optionId').value = "";
+                        document.getElementById('optionStock').value = "";
+                        selectedAdditionalPrice = 0;
+                        return;
+                    }
+                    // 선택된 인덱스를 기반으로 각 값 설정
+                    selectedAdditionalPrice = Math.floor(additionalPrices[selectedIndex]);
+                    const selectedId = extractKeyValue(filteredData2, 'id')[selectedIndex];
+                    const selectedStock = extractKeyValue(filteredData2, 'stock')[selectedIndex];
+                    document.getElementById('optionId').value = selectedId;
+                    document.getElementById('optionStock').value = selectedStock;
+                    console.log("id: " + selectedId);
+                    console.log("stock: " + selectedStock);
+                    console.log("addPrice: " + selectedAdditionalPrice);
+
                     qty.style.display = 'table-cell';
                     calculateTotalPrice(); // 총 가격 계산
                 });
