@@ -182,6 +182,10 @@ public class ProductService {
         if (opt.isPresent()) {
             Product product = opt.get();
             postProductDTO = modelMapper.map(product, PostProductDTO.class);
+            PostProductDTO dto = PostProductDTO.builder()
+                    .sellId(product.getSeller().getId())
+                    .build();
+            postProductDTO.setSellId(dto.getSellId());
         }
 
         Optional<Seller> opt2 = sellerRepository.findById(postProductDTO.getSellId());
