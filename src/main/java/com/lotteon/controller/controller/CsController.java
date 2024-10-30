@@ -56,16 +56,22 @@ public class CsController {
     }
 
     @GetMapping("/notices")
-    public String notices(Model model, Pageable pageable) {
-        // 최신순으로 정렬된 pageable 객체 생성
+    public String notices(@RequestParam(required = false) String category, Model model, Pageable pageable) {
         Pageable sortedPageable = PageRequest.of(
                 pageable.getPageNumber(),
                 pageable.getPageSize(),
                 Sort.by(Sort.Direction.DESC, "noticeRdate") // 공지사항 등록일 기준으로 정렬
         );
 
-        Page<NoticeResponseDto> noticeList = noticeService.getNotices(null, sortedPageable);
+        Page<NoticeResponseDto> noticeList;
+        if (category != null && !category.isEmpty()) {
+            noticeList = noticeService.getNoticesByCate1(category, sortedPageable); // cate1으로 조회
+        } else {
+            noticeList = noticeService.getNotices(null, sortedPageable); // 전체 조회
+        }
+
         model.addAttribute("notices", noticeList);
+        model.addAttribute("selectedCate1", category); // 선택된 cate1 전달
         return "pages/cs/notice/list"; // list.html 파일로 이동
     }
 
