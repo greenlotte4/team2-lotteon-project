@@ -1,13 +1,11 @@
 package com.lotteon.controller.controller;
 
-import com.lotteon.dto.requestDto.GetProductDto;
-import com.lotteon.dto.requestDto.PostProductDTO;
-import com.lotteon.dto.requestDto.PostProductOptionDTO;
-import com.lotteon.dto.requestDto.ProductPageRequestDTO;
+import com.lotteon.dto.requestDto.*;
 import com.lotteon.dto.responseDto.GetCategoryDto;
 import com.lotteon.dto.responseDto.ProductPageResponseDTO;
 import com.lotteon.entity.product.ProductOption;
 import com.lotteon.service.category.CategoryProductService;
+import com.lotteon.service.product.ProductDetailService;
 import com.lotteon.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -35,6 +33,7 @@ public class ProductController {
     private final CategoryProductService categoryProductService;
     private final ProductService productService;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final ProductDetailService productDetailService;
 
     @GetMapping("/products")
     public String products(Model model, @RequestParam(value = "cate",required = false) String cate, ProductPageRequestDTO productPageRequestDTO) {
@@ -61,11 +60,11 @@ public class ProductController {
         PostProductDTO postProductDTO = productService.selectProduct(prodId);
         List<PostProductOptionDTO> options = productService.findOption(prodId);
         List<GetCategoryDto> category1 = categoryProductService.findCategory();
-
+        PostProdDetailDTO prodDetail = productDetailService.selectProdDetail(prodId);
         Set<String> addedOptions = new HashSet<>();
 
         model.addAttribute("addedOptions", addedOptions);
-
+        model.addAttribute("prodDetail", prodDetail);
         model.addAttribute("options", options);
         model.addAttribute("product", postProductDTO);
         log.info("4444"+postProductDTO);

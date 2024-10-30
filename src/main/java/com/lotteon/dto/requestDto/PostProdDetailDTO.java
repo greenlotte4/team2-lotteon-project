@@ -8,6 +8,8 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @Builder
@@ -34,4 +36,6 @@ public class PostProdDetailDTO {
     private int deliDate;
     @CreationTimestamp
     private Timestamp mdate;
+
+    private LocalDate mDate1;
 }

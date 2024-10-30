@@ -37,7 +37,7 @@
                                 <td class="prod_name">
                                     <span>[[${product.getProdName}]]</span> <br>
                                     <img src="https://via.placeholder.com/56x17" alt="별점">
-                                    <a href="#">상품평보기</a>
+                                    <a href="#prodReview">상품평보기</a>
                                 </td>
                             </tr>
                             <tr>
@@ -45,7 +45,8 @@
                                     <del>[[${#numbers.formatInteger(product.getProdPrice(), 1)}]]원&nbsp;</del>
                                     <span>[[${#numbers.formatInteger(product.getProdDiscount(), 1)}]]%&#8595;</span>
                                     <img src="https://via.placeholder.com/33x17" alt="별점">
-                                    <span>무이자 할부 </span>
+                                    <span th:if="${prodDetail.installmentable}">무이자할부</span>
+                                    <span th:unless="${prodDetail.installmentable}">할부(무이자X)</span>
                                     <img src="https://via.placeholder.com/33x17" alt="별점">
                                     <span>카드 추가 혜택</span> <br>
                                     <span id="finalPrice">[[${#numbers.formatInteger(product.getTotalPrice(), 1)}]]원</span>
@@ -55,12 +56,13 @@
                                 <td class="delivery">
                                     <span th:text="'배송비 : ' + ${product.prodDeliver > 0 ? product.prodDeliver + '원' : '무료배송'}"></span>
                                     <span id="delivery-date"></span> <br>
-                                    <span>본상품은 국내배송만 가능합니다.</span>
+                                    <span th:if="${prodDetail.deliable}">본상품은 해외배송이 가능합니다.</span>
+                                    <span th:unless="${prodDetail.deliable}">본상품은 국내배송만 가능합니다</span>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <span class="des">원산지 - 상세설명 참조</span>
+                                    <span class="des">원산지 - [[${prodDetail.origin}]]</span>
                                 </td>
                             </tr>
                             <tr>
@@ -81,10 +83,11 @@
                                     <select name="options" class="prodOptions" id="select3">
                                     </select>
                                     <input type="hidden" id="optionId" name="optionId" value="">
+                                    <input type="hidden" id="optionStock" value="">
                                 </td>
                             </tr>
                             <tr class="count_qty">
-                                <td style="float: right">
+                                <td style="float: right; display: none;" id="qty">
                                     <span class="qty">수량 </span>
                                     <button type="button" class="decrement">-</button> <!-- 감소 버튼 -->
                                     <input name="quantity" type="number" class="count" value="1" min="1"/>
@@ -99,12 +102,15 @@
                             </tr>
                         </table> <!-- .tb1-->
                         <div class="buttons">
-                            <button type="submit" class="cart">장바구니</button>
-                            <button  type="button" class="btnorder"><a th:href="@{/prod/cart/direct}"> 구매하기</a></button>
+                            <button type="submit" class="cart" onclick="cartBtn()">장바구니</button>
+                            <button type="button" class="btnorder"><a th:href="@{/prod/cart/direct}"> 구매하기</a></button>
                         </div> <!-- .buttons -->
                     </form>
                 </div> <!-- .product_details -->
             </div> <!-- .product_info -->
+            <div class="view_banner">
+                <img src="https://via.placeholder.com/550x64" alt="상품 상세보기 배너">
+            </div>
             <h2 class="sub_tit2">상품보기</h2>
             <div class="detail_image">
                 <img src="https://via.placeholder.com/784x111" alt="상품 상세 이미지">
@@ -120,15 +126,16 @@
                 </colgroup>
                 <tr>
                     <th>상품번호</th>
-                    <td>10010118412</td>
+                    <td>[[${prodDetail.productId}]]</td>
                 </tr>
                 <tr>
                     <th>상품상태</th>
-                    <td>새상품</td>
+                    <td>[[${prodDetail.stat}]]</td>
                 </tr>
                 <tr>
                     <th>부가세면세여부</th>
-                    <td>과세상품</td>
+                    <td th:if="${prodDetail.tax}">과세상품</td>
+                    <td th:unless="${prodDetail.tax}">비과세상품</td>
                 </tr>
                 <tr>
                     <th>영수증 발행</th>
@@ -140,11 +147,11 @@
                 </tr>
                 <tr>
                     <th>브랜드</th>
-                    <td>블루포스</td>
+                    <td>[[${product.seller.sellCompany}]]</td>
                 </tr>
                 <tr>
                     <th>원산지</th>
-                    <td>국내 생산</td>
+                    <td>[[${prodDetail.origin}]]</td>
                 </tr>
             </table> <!-- tb2 -->
             <table class="tb3">
@@ -154,31 +161,31 @@
                 </colgroup>
                 <tr>
                     <th>제조사/수입국</th>
-                    <td>상세정보 집적입력</td>
+                    <td>[[${prodDetail.manufacture}]]</td>
                 </tr>
                 <tr>
                     <th>제조국</th>
-                    <td>상세정보 집적입력</td>
+                    <td>[[${prodDetail.madein}]]</td>
                 </tr>
                 <tr>
                     <th>취급시 주의사항</th>
-                    <td>상세정보 집적입력</td>
+                    <td>[[${prodDetail.caution}]]</td>
                 </tr>
                 <tr>
                     <th>제조연월</th>
-                    <td>상세정보 집적입력</td>
+                    <td th:text="${#dates.format(prodDetail.mdate, 'yyyy-MM-dd')}"></td>
                 </tr>
                 <tr>
-                    <th>품질보증기준</th>
-                    <td>상세정보 집적입력</td>
+                    <th>품질보증기간</th>
+                    <td>[[${prodDetail.warranty}]]</td>
                 </tr>
                 <tr>
                     <th>A/S 책임자</th>
-                    <td>상세정보 집적입력</td>
+                    <td>[[${product.seller.sellRepresentative}]]</td>
                 </tr>
                 <tr>
                     <th>전화번호</th>
-                    <td>상세정보 집적입력</td>
+                    <td>[[${product.seller.sellHp}]]</td>
                 </tr>
             </table> <!-- tb3 -->
             <div class="refund">
@@ -190,7 +197,7 @@
                 개별 판매자에게 연락하여 주시기 바랍니다.</span>
             </div> <!-- .refund-->
             <h2 class="sub_tit4">상품리뷰</h2>
-            <div class="cmt">
+            <div class="cmt" id="prodReview">
                 <img src="https://via.placeholder.com/78x20"> <br>
                 <span>상품명</span>
                 <span>2024-10-13</span>
@@ -239,8 +246,10 @@
     function getDeliveryDate() {
         const today = new Date();
         const deliveryDate = new Date(today);
+        const deliveryDate2 = new Date(today);
 
         // 3일 뒤로 설정
+
         deliveryDate.setDate(today.getDate() + 3);
 
         // 요일 구하기
@@ -249,8 +258,11 @@
         // 날짜 형식 만들기 (예: "7/8")
         const month = deliveryDate.getMonth() + 1; // getMonth()는 0부터 시작하므로 +1 필요
         const date = deliveryDate.getDate();
-
+        if([[${prodDetail.deliable}]]){
+            return `(${dayOfWeek}) ${month}/${date} 도착예정 (해외배송은 +3~5일)`;
+        }else{
         return `(${dayOfWeek}) ${month}/${date} 도착예정`;
+        }
     }
 
     // HTML에 날짜 값 삽입
@@ -287,6 +299,7 @@
         let basePrice = parseFloat([[${#numbers.formatInteger(product.getTotalPrice(), 1)}]]); // 기본 가격
         let selectedAdditionalPrice = 0; // 선택된 추가 가격 초기화
         let selectedOptionId = null; // 선택된 옵션 ID 초기화
+        const qty = document.getElementById('qty');
 
         countInput.addEventListener('change', function () {
             calculateTotalPrice();
@@ -294,6 +307,10 @@
 
         let option = document.getElementById('hiddenOption').value.trim();
         option = option.replace(/^\[|\PostProductOptionDTO|\]$/g, '').trim();
+        console.log(option);
+        if(option === ''){
+            qty.style.display = 'table-cell';
+        }
 
         function splitDataByParentheses(data) {
             const splitData = data.split("),");
@@ -304,7 +321,6 @@
         }
 
         const splitResult = splitDataByParentheses(option);
-
         function extractOptionValue(dataArray, keyName) {
             return dataArray.map(item => {
                 const keyValuePairs = item.replace('(', '').replace(')', '').split(',').map(pair => pair.trim().split('='));
@@ -315,7 +331,6 @@
 
         const optionValues = Array.from(new Set(extractOptionValue(splitResult, 'optionValue')));
         const optionNames = Array.from(new Set(extractOptionValue(splitResult, 'optionName'))); // optionName2 추출
-        const optionIds = extractKeyValue(splitResult, 'id');
         const selectElement1 = document.getElementById('select1');
         selectElement1.innerHTML = `<option value="">${optionNames[0] || "Select an Option"}</option>`;
 
@@ -328,7 +343,10 @@
 
         selectElement1.addEventListener('change', function () {
             const selectedValue1 = selectElement1.value;
-
+            const parentTd = document.getElementById('select2').parentNode;
+            parentTd.style.display = 'none';
+            const parentTd2 = document.getElementById('select3').parentNode;
+            parentTd2.style.display = 'none';
             const filteredData = splitResult.filter(item => {
                 const keyValuePairs = item.replace('(', '').replace(')', '').split(',').map(pair => pair.trim().split('='));
                 const foundPair = keyValuePairs.find(pair => pair[0].trim() === 'optionValue');
@@ -339,8 +357,10 @@
                 const keyValuePairs = item.replace('(', '').replace(')', '').split(',').map(pair => pair.trim().split('='));
                 const optionValue2Pair = keyValuePairs.find(pair => pair[0].trim() === 'optionValue2');
                 const additionalPricePair = keyValuePairs.find(pair => pair[0].trim() === 'additionalPrice');
-                const optionId = keyValuePairs.find(pair => pair[0].trim() === 'id');
-
+                const optionIdPair = keyValuePairs.find(pair => pair[0].trim() === 'id');
+                const optionId = optionIdPair ? optionIdPair[1] : null;
+                const optionStockPair =keyValuePairs.find(pair => pair[0].trim() === 'stock');
+                const optionStock = optionStockPair ? optionStockPair[1] : null;
                 // optionValue2가 null인 경우 추가 요금 포함
                 if (optionValue2Pair && optionValue2Pair[1] === 'null' && additionalPricePair) {
                     const additionalPrice = parseFloat(additionalPricePair[1]) || 0;
@@ -353,15 +373,20 @@
                     if (selectedOption) {
                         selectedOption.textContent = `${selectedOption.value} (+${additionalPriceFormatted}원)`;
                         document.getElementById('optionId').value = optionId;
+                        console.log("id"+document.getElementById('optionId').value);
+                        document.getElementById('optionStock').value = optionStock;
+                        console.log("stock"+document.getElementById('optionStock').value);
                     }
                     const parentTd = document.getElementById('select2').parentNode;
                     parentTd.style.display = 'none';
+                    const parentTd2 = document.getElementById('select3').parentNode;
+                    parentTd2.style.display = 'none';
+                    qty.style.display = 'table-cell';
                 }
             });
 
             const optionValues2 = Array.from(new Set(extractOptionValue(filteredData, 'optionValue2')));
             const optionNames2 = Array.from(new Set(extractOptionValue(filteredData, 'optionName2'))); // optionName2 추출
-            const optionIds = extractKeyValue(filteredData, 'id');
 
             const selectElement2 = document.getElementById('select2');
             selectElement2.innerHTML = `<option value="">${optionNames2[0] || "Select an Option"}</option>`;
@@ -373,13 +398,10 @@
                 selectElement2.appendChild(optionElement);
                 const parentTd = selectElement2.parentNode;
                 if (optionElement.value !== "null") {
-                    optionElement.dataset.id = optionIds[index];
                     parentTd.style.display = 'table-cell';
-                    console.log(optionIds[index])
+                    qty.style.display = 'none';
                 }
             });
-
-
 
             selectElement2.addEventListener('change', function () {
                 const selectedValue2 = selectElement2.value;
@@ -394,7 +416,10 @@
                     const keyValuePairs = item.replace('(', '').replace(')', '').split(',').map(pair => pair.trim().split('='));
                     const optionValue3Pair = keyValuePairs.find(pair => pair[0].trim() === 'optionValue3');
                     const additionalPricePair = keyValuePairs.find(pair => pair[0].trim() === 'additionalPrice');
-                    console.log("12332144444"+additionalPricePair);
+                    const optionIdPair = keyValuePairs.find(pair => pair[0].trim() === 'id');
+                    const optionId = optionIdPair ? optionIdPair[1] : null;
+                    const optionStockPair =keyValuePairs.find(pair => pair[0].trim() === 'stock');
+                    const optionStock = optionStockPair ? optionStockPair[1] : null;
                     // optionValue3가 null인 경우 추가 요금 포함
                     if (optionValue3Pair && optionValue3Pair[1] === 'null' && additionalPricePair) {
                         const additionalPrice = parseFloat(additionalPricePair[1]) || 0;
@@ -405,39 +430,46 @@
                         const selectedOption = selectElement2.querySelector(`option[value="${selectedValue2}"]`);
                         if (selectedOption) {
                             selectedOption.textContent = `${selectedOption.value} (+${additionalPriceFormatted}원)`;
+                            document.getElementById('optionId').value = optionId;
+                            console.log("id"+document.getElementById('optionId').value);
+                            document.getElementById('optionStock').value = optionStock;
+                            console.log("stock"+document.getElementById('optionStock').value);
                         }
                         const parentTd = document.getElementById('select3').parentNode;
                         parentTd.style.display = 'none';
+                        qty.style.display = 'table-cell';
                     }
                 });
 
                 const optionValues3 = Array.from(new Set(extractOptionValue(filteredData2, 'optionValue3')));
                 const optionNames3 = Array.from(new Set(extractOptionValue(filteredData2, 'optionName3'))); // optionName2 추출
                 const additionalPrices = extractKeyValue(filteredData2, 'additionalPrice');
-                const optionIds = extractKeyValue(filteredData2, 'id');
-
+                let addPriceFinal = null;
                 const selectElement3 = document.getElementById('select3');
                 selectElement3.innerHTML = `<option value="">${optionNames3[0] || "Select an Option"}</option>`;
 
                 optionValues3.forEach((value, index) => {
-                    const additionalPriceFormatted = Math.floor(additionalPrices[index]);
+                    addPriceFinal = Math.floor(additionalPrices[index]);
                     const optionElement = document.createElement('option');
                     optionElement.textContent = value;
                     optionElement.value = value;
                     const parentTd = selectElement3.parentNode;
                     if (optionElement.value !== "null") {
                         parentTd.style.display = 'table-cell';
-                        optionElement.textContent = `${value} (+${additionalPriceFormatted}원)`;
-                        optionElement.value = additionalPrices[index];
-                        document.getElementById('optionId').value = optionIds[index];
+                        optionElement.textContent = `${value} (+${addPriceFinal}원)`;
                         selectElement3.appendChild(optionElement);
                     }
                 });
                 selectElement3.addEventListener('change', function () {
-                    selectedAdditionalPrice = parseFloat(selectElement3.value); // 선택된 추가 가격
-                    selectedOptionId = selectElement3.options[selectElement3.selectedIndex].dataset.id; // 선택된 옵션의 ID 가져오기
-                    document.getElementById('optionId').value = selectedOptionId;
-                    console.log(document.getElementById('optionId').value)
+                    selectedAdditionalPrice = addPriceFinal; // 선택된 추가 가격
+                    console.log("addprice"+addPriceFinal);
+                    const optionId = extractKeyValue(filteredData2, 'id');
+                    const optionStock = extractKeyValue(filteredData2, 'stock');
+                    document.getElementById('optionId').value = optionId;
+                    console.log("id"+document.getElementById('optionId').value);
+                    document.getElementById('optionStock').value = optionStock;
+                    console.log("stock"+document.getElementById('optionStock').value);
+                    qty.style.display = 'table-cell';
                     calculateTotalPrice(); // 총 가격 계산
                 });
             });
@@ -459,4 +491,5 @@
             totalPrice.innerText = totalPriceValue + "원"; // 화면에 표시
         }
     };
+
 </script>

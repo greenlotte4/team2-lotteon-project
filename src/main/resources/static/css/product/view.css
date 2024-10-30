@@ -125,6 +125,8 @@ input:focus{outline: none;}
 #wrap .cart {background-color: #bfbfbf;}
 #wrap .btnorder > a{ display: inline-block; font-size: 16px; background-color: #558ed5; width: 184px; height: 35px; margin-right: 12px; border: none; color: #ffffff; line-height: 35px;}
 
+.view_banner { width: auto; height: auto; margin: 0 auto;}
+
 /* 상품 디테일 이미지 */
 #wrap .sub_tit2, .sub_tit3, .sub_tit4{
     font-size: 16px;

@@ -18,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,9 +38,11 @@ public class ApiAdminProdController {
     @PostMapping("/info")
     public ResponseEntity<Map<String, Object>> info(@ModelAttribute PostProdAllDTO postProdAllDTO) {
 
-        log.info("124443" + postProdAllDTO.getPostProdDetailDTO());
         log.info("134443" + postProdAllDTO.getPostProductDTO());
-
+        LocalDateTime localDateTime = postProdAllDTO.getPostProdDetailDTO().getMDate1().atStartOfDay();
+        Timestamp timestamp = Timestamp.valueOf(localDateTime);
+        postProdAllDTO.getPostProdDetailDTO().setMdate(timestamp);
+        log.info("124443" + postProdAllDTO.getPostProdDetailDTO());
         Product result = productService.insertProduct(postProdAllDTO.getPostProductDTO(), postProdAllDTO.getPostProdDetailDTO());
         postProdAllDTO.getPostProdCateMapperDTO().setProductId(result.getId());
         postProdAllDTO.getPostProdDetailDTO().setProductId(result.getId());
