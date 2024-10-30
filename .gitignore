@@ -37,9 +37,13 @@ out/
 ### VS Code ###
 .vscode/
 
-
-
 src/main/resources/application-local.yml
+
+### mac DS ###
+.DS_Store
+._.DS_Store
+**/.DS_Store
+**/._.DS_Store
 
 
 
