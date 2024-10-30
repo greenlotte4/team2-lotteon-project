@@ -18,13 +18,13 @@
             <div class="product_info">
                 <img th:src="@{'/file/'+${product.getProdBasicImg()}}" alt="">
                 <div class="product_details">
-                    <form th:action="@{/prod/cart}" method="post">
+                    <form th:action="@{/prod/cart}" method="POST">
                         <table class="tb1">
                             <tr>
                                 <td class="td_company">
                                     <span>[[${product.getSellCompany}]]</span>
                                     <span>상품번호 : [[${product.getId}]]</span>
-                                    <input type="hidden" value="2" name="prodId">
+                                    <input type="hidden" th:value="${product.getId}" name="prodId">
                                     <span style="
                                         cursor: pointer;
                                         color: red;

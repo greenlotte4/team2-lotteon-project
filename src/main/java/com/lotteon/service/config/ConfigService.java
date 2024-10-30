@@ -8,6 +8,7 @@ import com.lotteon.dto.responseDto.GetConfigListDTO;
 import com.lotteon.entity.config.Config;
 import com.lotteon.repository.config.ConfigRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -30,19 +32,14 @@ public class ConfigService {
 
     @Cacheable(value = "configCache", key = "'config'", cacheManager = "cacheManager")
     public GetConfigDTO getUsedConfig() {
-        Optional<Config> opt = configRepository.findByConfigIsUsed(true);
-        if (opt.isPresent()) {
-            Config config = opt.get();
-            GetConfigDTO dto = modelMapper.map(config, GetConfigDTO.class);
-            dto.setCreatedStr(); // 생성 후 설정 메서드 호출
-            return dto;
-        }
-        return null;
+        Config config = configRepository.findByConfigIsUsed(true);
+        GetConfigDTO dto = modelMapper.map(config, GetConfigDTO.class);
+        dto.setCreatedStr(); // 생성 후 설정 메서드 호출
+        return dto;
     }
 
     @Caching(evict = {  @CacheEvict(value = "configCache", key = "'configList'"),
                         @CacheEvict(value = "configCache", key = "'config'")})
-
     public Config updateInfo(PatchConfigDTO configDTO){
         Config existingConfig = configRepository.findById(configDTO.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Config not found"));
@@ -56,7 +53,6 @@ public class ConfigService {
 
     @Caching(evict = {  @CacheEvict(value = "configCache", key = "'configList'"),
                         @CacheEvict(value = "configCache", key = "'config'")})
-
     public Config updateLogo(PatchLogoDTO logoDTO) {
         Config existingConfig = configRepository.findById(logoDTO.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Config not found"));
@@ -88,15 +84,28 @@ public class ConfigService {
                 .collect(Collectors.toList());
     }
 
-    @Cacheable(value = "configCache", key = "#id", cacheManager = "cacheManager")
-    public GetConfigDTO getConfigById(Long id) {
-        Optional<Config> opt = configRepository.findById(id);
-        if (opt.isPresent()) {
-            Config config = opt.get();
-            GetConfigDTO dto = modelMapper.map(config, GetConfigDTO.class);
-            dto.setCreatedStrDetail();
-            return dto;
+    @Cacheable(value = "configCache", key = "#no", cacheManager = "cacheManager")
+    public GetConfigDTO getConfigByIndex(int no) {
+        List<Config> configs = configRepository.findTop10ByOrderByConfigCreatedAtDesc();
+        Config config = configs.get(no);
+        GetConfigDTO dto = modelMapper.map(config, GetConfigDTO.class);
+        dto.setCreatedStrDetail();
+        return dto;
+    }
+
+    @CacheEvict(value = "configCache", allEntries = true)
+    public boolean changeUsingConfig(Long id, int no){
+        Config config = configRepository.findByConfigIsUsed(true);
+        config.toggleStatus();
+        Optional<Config> optConfig = configRepository.findById(id);
+        if (optConfig.isPresent()) {
+            Config newConfig = optConfig.get();
+            newConfig.toggleStatus();
+            log.info("from : "+config);
+            log.info("to : "+newConfig);
+            configRepository.save(newConfig);
+            return newConfig.isConfigIsUsed();
         }
-        return null;
+        return false;
     }
 }

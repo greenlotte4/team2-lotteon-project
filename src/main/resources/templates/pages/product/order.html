@@ -63,9 +63,10 @@
 
     // 주문하기
     const btnOrder = document.querySelector('#btnOrder');
-    const form = document.querySelector('form');
+    const form = document.querySelector('.order-form');
 
     btnOrder.addEventListener('click', function (e){
+      console.log(e.target)
       e.preventDefault();
 
       const payment = form.payment.value;
@@ -125,7 +126,6 @@
       }
 
       console.log(jsonData);
-      console.log(submitData)
 
       fetch('/prod/order',{
         method:'POST',
@@ -138,9 +138,10 @@
               .then(data => {
                 console.log(data);
                 if(data){
+                  alert('주문이 완료되었습니다.');
                   location.replace('/prod/order/complete');
                 }else{
-                  alert('주문 처리 중 오류가 발생했습니다. 다시 시도해 주세요.')
+                  alert('주문 처리 중 오류가 발생했습니다. 다시 시도해 주세요.');
                 }
               })
               .catch(err => {
@@ -463,7 +464,7 @@
         </p>
       </nav>
       <!-- .navi-->
-      <form>
+      <form class="order-form">
         <table class="tb1">
           <colgroup>
             <col style="width: 10%" />
@@ -628,7 +629,7 @@
               </tr>
             </table>
             <!-- .tb5-->
-            <button class="btn_order"><a id="btnOrder" th:href="@{/prod/order/complete}">결제하기</a></button>
+            <button id="btnOrder" class="btn_order">결제하기</button>
           </div>
           <!-- .total-->
         </div>

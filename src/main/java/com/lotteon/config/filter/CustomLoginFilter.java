@@ -59,7 +59,7 @@ public class CustomLoginFilter implements AuthenticationSuccessHandler {
             return;
         }
         if(customer == null) {
-            redirectStrategy.sendRedirect(request, response, "/");
+            defaultSuccessHandler.onAuthenticationSuccess(request, response, authentication);
             return;
         }
         if(!user.getUser().getMemState().equals("sleep")){

@@ -43,6 +43,24 @@ public class NoticeService {
         return notices.map(this::mapNoticeToResponseDto);
     }
 
+    // cate1을 기준으로 공지사항 목록 조회
+    public Page<NoticeResponseDto> getNoticesByCate1(String cate1Name, Pageable pageable) {
+        CategoryArticle cate1 = categoryArticleRepository.findByCategoryName(cate1Name)
+                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리를 찾을 수 없습니다. 이름: " + cate1Name));
+
+        Page<Notice> notices = noticeRepository.findByCate1(cate1, pageable);
+        return notices.map(this::mapNoticeToResponseDto);
+    }
+
+    // cate2을 기준으로 공지사항 목록 조회 (필요한 경우)
+    public Page<NoticeResponseDto> getNoticesByCate2(String cate2Name, Pageable pageable) {
+        CategoryArticle cate2 = categoryArticleRepository.findByCategoryName(cate2Name)
+                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리를 찾을 수 없습니다. 이름: " + cate2Name));
+
+        Page<Notice> notices = noticeRepository.findByCate2(cate2, pageable);
+        return notices.map(this::mapNoticeToResponseDto);
+    }
+
     // 조회수 증가 후 공지사항 단일 조회
     public NoticeResponseDto incrementViewsAndGetNotice(Long id) {
         Notice notice = noticeRepository.findById(id)
@@ -141,4 +159,8 @@ public class NoticeService {
         return noticeRepository.findAllByOrderByIdDesc(pageable);
     }
 
+    public Page<NoticeResponseDto> findByCategory(String category, Pageable pageable) {
+        return noticeRepository.findByCate1_CategoryName(category, pageable)
+                .map(this::mapNoticeToResponseDto);
+    }
 }

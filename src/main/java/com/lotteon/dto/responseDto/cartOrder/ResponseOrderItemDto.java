@@ -16,6 +16,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResponseOrderItemDto{
+    private Long orderItemId;
     private String prodListImg;
     private String prodName;
     private String prodSummary;
@@ -28,4 +29,5 @@ public class ResponseOrderItemDto{
     private Long prodId;
     private int delivery;
     private String sellerName;
+    private String orderDeliId;
 }

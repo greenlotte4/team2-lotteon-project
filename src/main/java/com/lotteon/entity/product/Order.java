@@ -41,12 +41,14 @@ public class Order {
     @Column(name = "order_total")
     private int orderTotal;
 
+    @Setter
     @Column(name = "order_deli")
     private int orderDeli;
 
     @Column(name = "order_quantity")
     private int orderQuantity;
 
+    @Setter
     @Column(name = "order_state")
     @ColumnDefault("0")
     private int orderState;
@@ -66,6 +68,5 @@ public class Order {
     @Builder.Default
     @ToString.Exclude
     private List<OrderItem> orderItems = new ArrayList<>();
-
 
 }

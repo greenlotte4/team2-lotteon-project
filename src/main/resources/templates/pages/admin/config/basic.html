@@ -192,6 +192,8 @@
 </body>
 <script>
 
+    const configId = document.getElementById('configId').value;
+    const updater = document.getElementById('updater').value;
     const popup = document.querySelector(".popup");
     const bg = document.querySelector(".popupbg");
 
@@ -209,9 +211,10 @@
     }
 
 
-    function openPopup(e) {
-        const configId = e.target.dataset.id;
-        fetch(`/admin/config/pop/${configId}`)
+    function openPopup(event) {
+        event.preventDefault();
+        const configIndex = event.target.dataset.no;
+        fetch(`/admin/config/pop/${configIndex}`)
             .then(resp=>resp.json())
             .then(data=>{
                 console.log(data);
@@ -221,41 +224,49 @@
                 <div onclick="closePopup()" class="btn">X</div>
             </div>
             <div class="body">
-            <div style="text-align: center;height: 40px; display: flex;justify-content: space-between">
-                    <span style="font-size: 17px">${getText(data.configUpdateLocation)} 수정됨</span> <span>${data.createdStr} by ${data.configUpdatedAdmin}</span>
-             </div>
-            <table class="tb2">
-                <tr class="${+data.configUpdateLocation===1?'modified':''}">
-                    <th>사이트 버전</th>
-                    <td>${data.configVersion}</td>
-                </tr>
+                <div style="text-align: center;height: 40px; display: flex;justify-content: space-between">
+                        <span style="font-size: 17px">${getText(data.configUpdateLocation)} 수정됨</span> <span>${data.createdStr} - ${data.configUpdatedAdmin}</span>
+                 </div>
+                <table class="tb2">
+                    <tr class="${+data.configUpdateLocation===1?'modified':''}">
+                        <th>사이트 버전</th>
+                        <td>${data.configVersion}</td>
+                    </tr>
 
-                <tr class="${+data.configUpdateLocation===2?'modified':''}">
-                    <th>제목</th>
-                    <td>${data.configTitle}</td>
-                </tr>
-                <tr class="${+data.configUpdateLocation===2?'modified':''}">
-                    <th>부제</th>
-                    <td>${data.configSub}</td>
-                </tr>
+                    <tr class="${+data.configUpdateLocation===2?'modified':''}">
+                        <th>제목</th>
+                        <td>${data.configTitle}</td>
+                    </tr>
+                    <tr class="${+data.configUpdateLocation===2?'modified':''}">
+                        <th>부제</th>
+                        <td>${data.configSub}</td>
+                    </tr>
 
-                <tr class="${+data.configUpdateLocation===3?'modified':''}">
-                    <th>헤더 로고</th>
-                    <td>${data.configHeaderLogo}</td>
-                </tr>
-                <tr class="${+data.configUpdateLocation===3?'modified':''}">
-                    <th>푸터 로고</th>
-                    <td>${data.configFooterLogo}</td>
-                </tr>
-                <tr class="${+data.configUpdateLocation===3?'modified':''}">
-                    <th>파비콘</th>
-                    <td>${data.configFabicon}</td>
-                </tr>
-            </table>
-            <div class="btns">
-                ${data.configIsUsed?"현재 사용중인 설정입니다.":"<button class='submit-btn' onclick='changeVersion()'>사용하기</button>"}
-            </div>
-</div>`;
+                    <tr class="${+data.configUpdateLocation===3?'modified':''}">
+                        <th>헤더 로고</th>
+                        <td>${data.configHeaderLogo}</td>
+                    </tr>
+                    <tr class="${+data.configUpdateLocation===3?'modified':''}">
+                        <th>푸터 로고</th>
+                        <td>${data.configFooterLogo}</td>
+                    </tr>
+                    <tr class="${+data.configUpdateLocation===3?'modified':''}">
+                        <th>파비콘</th>
+                        <td>${data.configFabicon}</td>
+                    </tr>
+                </table>
+                <div class="indicator">
+                    ${+configIndex !== 9 ?
+                        `<a class='prev' data-no='${+configIndex + 1}' onclick='openPopup(event)'>이전</a>` : ''}
+                    ${+configIndex !== 0 ?
+                        `<a class='next' data-no='${+configIndex - 1}' onclick='openPopup(event)'>다음</a>` : ''}
+                </div>
+                <div class="btns">
+                    ${data.configIsUsed ?
+                        "현재 사용중인 설정입니다.":
+                        `<button class='submit-btn' onclick='changeVersion(event)' data-id='${data.id}' data-no='${configIndex}'>사용하기</button>`}
+                </div>
+            </div>`;
                 popup.style.display = "block";
                 bg.style.display = "block";
             })
@@ -266,11 +277,26 @@
         popup.style.display = "none";
         bg.style.display = "none";
     }
-    function submit() {
+    function changeVersion(event) {
         if (!confirm("정말 이 버전으로 변경하시겠습니까?")) {
             return;
         }
+        const changeId = event.target.dataset.id;
+        const changeNo = event.target.dataset.no;
 
+
+        fetch(`/admin/config/use/${changeId}/${changeNo}`,{
+            method:'PATCH'
+        })
+            .then(resp=>resp.json())
+            .then(data=>{
+                console.log(data);
+                if(data.success){
+                    const popBtns = popup.querySelector('.btns');
+                    popBtns.innerHTML=`현재 사용중인 설정입니다.`;
+                }
+            })
+            .catch(err=>{console.log(err)});
     }
 
 
@@ -332,11 +358,9 @@
                 .then(data=>{
                     list.innerHTML = ``;
                     data.forEach((config, i) => {
-                        // 각 banner 데이터를 반복하면서 HTML을 생성합니다.
-
                         const li = `
                             <li onclick="openPopup(event)"
-                                data-id="${config.id}">
+                                data-no="${i}">
                                 ${config.createdStr} 저장됨 ${config.configIsUsed?'(사용중)':''}
                             </li>`;
 
@@ -401,9 +425,6 @@
 
     async function patch(type){
         if(!confirm("정말 변경하시겠습니까?")){return;}
-
-        const configId = document.getElementById('configId').value;
-        const updater = document.getElementById('updater').value;
         const formData = new FormData();
 
         if(type==="siteInfo"){

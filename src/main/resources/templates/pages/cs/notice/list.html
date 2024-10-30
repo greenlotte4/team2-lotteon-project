@@ -9,12 +9,13 @@
     <aside class="cs_aside">
         <h3 class="aside_title">공지사항</h3>
         <ul class="aside_cate">
-            <li class="cate_list"><a th:href="@{/cs/notices}">전체</a></li>
-            <li class="cate_list"><a href="#">고객서비스</a></li>
-            <li class="cate_list"><a href="#">안전거래</a></li>
-            <li class="cate_list"><a href="#">위해상품</a></li>
-            <li class="cate_list"><a href="#">이벤트당첨</a></li>
+            <li class="cate_list"><a th:href="@{/cs/notices(category='')}">전체</a></li>
+            <li class="cate_list"><a th:href="@{/cs/notices(category='고객서비스')}">고객서비스</a></li>
+            <li class="cate_list"><a th:href="@{/cs/notices(category='안전거래')}">안전거래</a></li>
+            <li class="cate_list"><a th:href="@{/cs/notices(category='위해상품')}">위해상품</a></li>
+            <li class="cate_list"><a th:href="@{/cs/notices(category='이벤트당첨')}">이벤트당첨</a></li>
         </ul>
+
     </aside>
 
     <div id="main" style="height: auto">
@@ -49,36 +50,5 @@
         </div>
     </div>
 </main>
- <script>
-     document.addEventListener("DOMContentLoaded", function() {
-         const noticeBox = document.querySelector(".notice_box");
-
-         function fetchNotices() {
-             fetch("/api/cs/notices/json")
-                 .then(response => response.json())
-                 .then(data => {
-                     noticeBox.innerHTML = ''; // 기존 공지사항 삭제
-                     data.content.forEach(notice => {
-                         const noticeItem = document.createElement("li");
-                         noticeItem.className = "notice";
-                         noticeItem.innerHTML = `
-                            <a href="/cs/notice/view/${notice.id}">
-                                <p class="cate">${notice.category1Name}</p>
-                                <p class="content">${notice.noticeTitle}</p>
-                                <span class="date">${new Date(notice.noticeRdate).toLocaleDateString()}</span>
-                            </a>`;
-                         noticeBox.appendChild(noticeItem);
-                     });
-                 })
-                 .catch(error => console.error('Error fetching notices:', error));
-         }
-
-         // 페이지 로드 시 처음 한 번 호출
-         fetchNotices();
-
-         // 1분마다 공지사항을 새로고침
-         setInterval(fetchNotices, 60000); // 60000ms = 1분
-     });
- </script>
 
 <footer th:replace="layout/main/footer.html"></footer>

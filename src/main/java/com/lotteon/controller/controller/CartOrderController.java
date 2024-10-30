@@ -1,5 +1,6 @@
 package com.lotteon.controller.controller;
 
+import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostCartDto;
 import com.lotteon.dto.requestDto.PostCartSaveDto;
 import com.lotteon.dto.responseDto.GetCartDto;
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,13 +59,18 @@ public class CartOrderController {
     }
 
     @PostMapping("/cart")
-    public String cart(PostCartDto postCartDto, Model model, HttpSession session) {
+    public String cart(PostCartDto postCartDto, Model model, HttpSession session, Authentication authentication) {
+        log.info("카트 컨트롤러 접속 "+postCartDto.toString());
 
+        MyUserDetails auth = (MyUserDetails) authentication.getPrincipal();
         ResponseEntity result = cartService.insertCart(postCartDto, session);
         log.info(result.getBody());
 
         if(result.getStatusCode() == HttpStatus.UNAUTHORIZED){
             return "redirect:/prod/cart";
+        }
+        if(result.getStatusCode() == HttpStatus.CONTINUE){
+            return "redirect:/prod/product";
         }
 
 

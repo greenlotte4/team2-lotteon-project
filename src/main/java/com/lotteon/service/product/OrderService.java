@@ -3,6 +3,7 @@ package com.lotteon.service.product;
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostCartSaveDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderDto;
+import com.lotteon.dto.requestDto.cartOrder.PostOrderDeliDto;
 import com.lotteon.dto.responseDto.GetOrderDto;
 import com.lotteon.dto.responseDto.cartOrder.*;
 import com.lotteon.entity.member.Customer;
@@ -239,5 +240,22 @@ public class OrderService {
 
         });
         return orderDtos;
+    }
+
+    public Boolean updateOrderDeli(PostOrderDeliDto postOrderDeliDto) {
+        log.info("서비스 배송정보 업데이트 "+postOrderDeliDto.toString());
+
+        Optional<Order> optOrder= orderRepository.findById(postOrderDeliDto.getOrderId());
+
+        log.info("서비스 오더아이디로 오더 찾기 "+optOrder.toString());
+        if(optOrder.isPresent()) {
+            Order order = optOrder.get();
+            order.setOrderDeli(postOrderDeliDto.getOrderDeli());
+            order.setOrderState(postOrderDeliDto.getOrderState());
+
+            return true;
+        }else{
+            return false;
+        }
     }
 }

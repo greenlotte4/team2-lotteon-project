@@ -196,7 +196,14 @@
                         <table class="tb4">
                             <tr>
                                 <th>주문번호</th>
-                                <td><input value="${data.orderId}"></td>
+                                <td>${data.orderId}</td>
+                            </tr>
+
+                            <tr>
+                                <th>주문 상품</th>
+                                <td value="${data.orderItemDtos.map(item => `${item.orderItemId}`).join(', ')}">
+                                    <span>${data.orderItemDtos[0].prodName+' 외 '+(data.orderItemDtos.length-1)+'개'}</span>
+                                </td>
                             </tr>
                             <tr>
                                 <th>수령인</th>
@@ -218,25 +225,26 @@
                                 <th>택배사</th>
                                 <td>
                                     <select>
-                                        <option>로젠택배</option>
-                                        <option>한신택배</option>
-                                        <option>우체국택배</option>
-                                        <option>몰라택배</option>
+                                        <option value="1">로젠택배</option>
+                                        <option value="2">한신택배</option>
+                                        <option value="3">우체국택배</option>
+                                        <option value="4">대한통운</option>
                                     </select>
                                 </td>
                             </tr>
                             <tr>
                                 <th>운송장번호</th>
-                                <td><input placeholder="운송장번호를 입력하세요."></td>
+                                <td><input placeholder="운송장번호를 입력하세요." value="${data.orderItemDtos[0].orderDeliId}"></td>
                             </tr>
                             <tr>
                                 <th>기타</th>
                                 <td><textarea readonly>${data.orderReq}</textarea></td>
                             </tr>
                         </table>
-                        <div class="btns"><button onclick="updateShippingData()">등록하기</button></div>
+                        <div class="btns"><button>등록하기</button></div>
                     </div>
                     `
+                    document.querySelector('.btns button').addEventListener('click', updateShippingData);
                 }
             popup.style.display = "block";
             bg.style.display = "flex";
@@ -249,5 +257,57 @@
     function closeShopPopup() {
         popup.style.display = "none";
         bg.style.display = "none";
+    }
+
+     async function updateShippingData(e){
+        e.preventDefault();
+         const inputs = document.querySelectorAll('.tb4 input');
+         const deli = document.querySelector('.tb4 select').value;
+
+
+         console.log(inputs[0].value);
+        console.log(inputs[1].value);
+        console.log(inputs[2].value);
+        console.log(inputs[3].value);
+        console.log(inputs[4].value);
+        console.log(deli);
+        console.log(inputs[5].value);
+
+        if(!inputs[5].value.trim()){
+            alert('운송장 번호를 입력해 주세요.');
+            return;
+        }
+
+        const jsonData = {
+            "orderId":inputs[0].value,
+            "orderDeli":deli,
+            "orderState":1,
+            "orderDeliId":inputs[5].value
+        }
+
+        try {
+            const response = await fetch('/admin/prod/order/delivery',{
+                method:'POST',
+                headers:{
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(jsonData)
+            });
+
+            if (!response.ok) throw new Error('주문 상세 정보를 불러오지 못했습니다.');
+
+            data = await response.json();
+            console.log(data);
+
+            if(data){
+                alert('배송 정보를 등록했습니다.');
+            }else{
+                alert('배송 정보 등록에 실패했습니다. 다시 시도해 주세요.');
+            }
+
+        } catch (error) {
+            console.error(error);
+            alert("등록에 실패했습니다. 다시 시도해 주세요. 캐치");
+        }
     }
 </script>

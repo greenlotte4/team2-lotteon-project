@@ -58,6 +58,10 @@ public class CartService {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated. Cart saved to session.");
         }
 
+        if(auth.getUser().getMemRole()=="seller"){
+            return ResponseEntity.status(HttpStatus.CONTINUE).body("seller");
+        }
+
         Customer customer = auth.getUser().getCustomer();
         if (customer == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Customer not found");

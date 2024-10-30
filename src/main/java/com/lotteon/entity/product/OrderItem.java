@@ -61,5 +61,8 @@ public class OrderItem {
     @OneToMany(mappedBy = "orderItem")
     private List<OrderItemOption> selectedOptions;
 
-
+    //추가 필드
+    @Setter
+    @Column(name = "order_deli_id")
+    private String orderDeliId;
 }

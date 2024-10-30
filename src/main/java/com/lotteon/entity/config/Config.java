@@ -75,6 +75,9 @@ public class Config {
         this.configUpdatedAdmin = user;
         this.configUpdateVersion += 1;
     }
+    public void toggleStatus(){
+        this.configIsUsed = !this.configIsUsed;
+    }
     public Config copyConfig() {
         this.configIsUsed = false;
         return Config.builder()

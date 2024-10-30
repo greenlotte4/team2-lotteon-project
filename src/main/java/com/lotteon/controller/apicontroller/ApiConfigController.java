@@ -147,11 +147,18 @@ public class ApiConfigController {
         List<GetConfigListDTO> configList = configService.getRecentConfigs();
         return ResponseEntity.ok().body(configList);
     }
-    @GetMapping("/pop/{id}")
-    public ResponseEntity<?> viewList(@PathVariable Long id) {
-        GetConfigDTO config = configService.getConfigById(id);
+    @GetMapping("/pop/{no}")
+    public ResponseEntity<?> viewList(@PathVariable int no) {
+        GetConfigDTO config = configService.getConfigByIndex(no);
         log.info(config.toString());
         return ResponseEntity.ok().body(config);
+    }
+    @PatchMapping("/use/{id}/{no}")
+    public ResponseEntity<?> changeUsingConfig(@PathVariable Long id,@PathVariable int no){
+        Boolean success = configService.changeUsingConfig(id, no);
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", success);
+        return ResponseEntity.ok(response);
     }
 
 }

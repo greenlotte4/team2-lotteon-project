@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface ConfigRepository extends JpaRepository<Config, Long> {
-    Optional<Config> findByConfigIsUsed(boolean b);
+    Config findByConfigIsUsed(boolean b);
 
     List<Config> findTop10ByOrderByConfigCreatedAtDesc();
 }

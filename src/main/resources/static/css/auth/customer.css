@@ -127,3 +127,6 @@
     align-items: center;
     margin:  40px 0;
 }
+
+.customer .success-color {color: blue}
+.customer .error-color {color: red}
