@@ -22,11 +22,36 @@
 
             <section class="cs_qna">
                 <div class="cate_bar">
-                    <h3 class="cate_title">회원</h3>
-                    <p class="cate_des">회원관련 문의내용입니다.</p>
+                    <h3 class="cate_title" th:text="${qna.cate1.categoryName}">회원</h3> <!-- 1차 카테고리명 -->
+                    <p class="cate_des" th:text="${qna.cate2.categoryName} + ' 관련 문의내용입니다.'">회원관련 문의내용입니다.</p> <!-- 2차 카테고리명 -->
                 </div>
                 <div class="qna_view">
                     <div class="view_title">
+                        <div class="cate_title">
+                            <p class="cate" th:text="${qna.cate2.categoryName}">가입</p> <!-- 2차 카테고리명 -->
+                            <p class="title" th:text="${qna.title}">가입문의내용</p> <!-- QNA 제목 -->
+                        </div>
+                        <p><span class="nick" th:text="${qna.memId != null && qna.memId.toString().length() >= 2 ? qna.memId.toString().substring(0, 2) + '**' : 'N/A'}">chh**</span> <span class="date" th:text="${#temporals.format(qna.rdate, 'yyyy-MM-dd')}">2022-11-21</span></p> <!-- 작성자 닉네임과 작성일 -->
+                    </div>
+                    <div class="view_content">
+                        <p th:text="${qna.content}">회원가입하고 싶어요. 어떻게 해야 하나요?</p> <!-- QNA 내용 -->
+                    </div>
+
+                    <!-- 답변이 있을 때만 출력 -->
+                    <div class="view_answer" th:if="${qna.answer != null && !#strings.isEmpty(qna.answer)}">
+                        <div class="cate_title">
+                            <img src="/images/finger-icons.png" alt="답변 아이콘">
+                            <p class="cate">답변</p>
+                            <p class="title" th:text="${qna.title}">가입문의내용</p> <!-- 답변 제목 출력 -->
+                        </div>
+                        <div class="answer_content">
+                            <p th:text="${qna.answer}">안녕하세요. 회원님 회원가입하시면 됩니다.</p> <!-- 답변 내용 출력 -->
+                        </div>
+                    </div>
+                    <!-- 여기까지 답변 출력 조건 추가 -->
+                </div>
+
+             <!--   <div class="view_title">
                         <div class="cate_title">
                             <p class="cate">가입</p>
                             <p class="title">가입문의내용</p>
@@ -38,17 +63,20 @@
                             회원가입하고 싶어요. 어떻게 해야 하나요?
                         </p>
                     </div>
-                    <div class="view_answer">
+                    &lt;!&ndash; 답변이 있을 때만 출력 &ndash;&gt;
+                    <div class="view_answer" th:if="${hasAnswer}">
                         <div class="cate_title">
-                            <img src="/images/finger-icons.png" alt="">
+                            <img src="/images/finger-icons.png" alt="답변 아이콘">
                             <p class="cate">답변</p>
-                            <p class="title">가입문의내용</p>
+                            <p class="title" th:text="${qna.title}">가입문의내용</p> &lt;!&ndash; 답변 제목 출력 &ndash;&gt;
                         </div>
                         <div class="answer_content">
-                            <p>안녕하세요. 회원님 회원가입하시면 됩니다.</p>
+                            <p th:text="${qna.answer}">안녕하세요. 회원님 회원가입하시면 됩니다.</p> &lt;!&ndash; 답변 내용 출력 &ndash;&gt;
                         </div>
                     </div>
-                </div>
+                    &lt;!&ndash; 여기까지 답변 출력 조건 추가 &ndash;&gt;-->
+
+
                 <a th:href="@{/cs/qnas}" class="btn_gray btn_list">목록</a>
 
             </section>
@@ -56,3 +84,4 @@
     </div>
 </main>
 <footer th:replace="layout/main/footer.html"></footer>
+

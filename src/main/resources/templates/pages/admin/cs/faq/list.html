@@ -63,7 +63,7 @@
                     </td>
 
                     <td th:text="${faq.views}">120</td>
-                    <td th:text="${faq.rdate}">00.00.00</td>
+                    <td th:text="${#temporals.format(qna.rdate, 'yy.MM.dd')}">작성일</td>
                     <td>
                         <div>
                             <div>

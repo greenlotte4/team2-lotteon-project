@@ -81,3 +81,10 @@ td {
   appearance: none;
   width: 100px;
 }
+
+
+/* 답변 완료 상태를 파란색으로 표시 */
+.confirm.answer-complete {
+  color: #0070C0;
+}
+

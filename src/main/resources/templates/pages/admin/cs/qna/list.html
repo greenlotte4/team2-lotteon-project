@@ -60,10 +60,12 @@
             <span th:text="${qna.memId != null && qna.memId.toString().length() >= 2 ? qna.memId.toString().substring(0, 2) + '**' : 'N/A'}"></span>
           </td>
           <!-- 작성일 표시 (작성일 열에 위치) -->
-          <td th:text="${qna.rdate}">작성일</td>
+          <td th:text="${#temporals.format(qna.rdate, 'yy.MM.dd')}">작성일</td>
 
           <!-- 상태 표시 (상태 열에 위치) -->
-          <td th:text="${qna.answer != null && !#strings.isEmpty(qna.answer) ? '답변완료' : '검토중'}">검토중</td>
+          <!-- 상태 표시 (상태 열에 위치) -->
+          <td th:classappend="${qna.answer != null && !#strings.isEmpty(qna.answer) ? 'confirm answer-complete' : 'confirm'}"
+              th:text="${qna.answer != null && !#strings.isEmpty(qna.answer) ? '답변완료' : '검토 중'}">검토중</td>
         </tr>
       </table>
     </article>

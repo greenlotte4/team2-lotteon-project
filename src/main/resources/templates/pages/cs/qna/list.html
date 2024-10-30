@@ -25,51 +25,47 @@
                     <h3 class="cate_title">회원</h3>
                     <p class="cate_des">회원 관련 문의내용입니다.</p>
                 </div>
+                <!-- 문의 목록 리스트 -->
                 <ul class="qna_box">
-                    <li class="qna"><a href="#">
-                        <p class="cate q_cate">가입</p>
-                        <p class="content q_content">가입문의내용</p>
-                        <span class="status confirm">검토 중</span>
-                        <span class="q_nick">chh**</span>
-                        <span class="date q_date">22.10.31</span>
-                    </a></li>
-                    <li class="qna"><a href="#">
-                        <p class="cate q_cate">탈퇴</p>
-                        <p class="content q_content">탈퇴문의내용</p>
-                        <span class="status confirm">검토 중</span>
-                        <span class="q_nick">chh**</span>
-                        <span class="date q_date">22.10.31</span>
-                    </a></li>
-                    <li class="qna"><a href="#">
-                        <p class="cate q_cate">회원정보</p>
-                        <p class="content q_content">회원정보문의내용</p>
-                        <span class="status complete">답변완료</span>
-                        <span class="q_nick">chh**</span>
-                        <span class="date q_date">22.10.31</span>
-                    </a></li>
-                    <li class="qna"><a href="#">
-                        <p class="cate q_cate">로그인</p>
-                        <p class="content q_content">회원정보문의내용</p>
-                        <span class="status complete">답변완료</span>
-                        <span class="q_nick">chh**</span>
-                        <span class="date q_date">22.10.31</span>
-                    </a></li>
-                    <li class="qna"><a href="#">
-                        <p class="cate q_cate">로그인</p>
-                        <p class="content q_content">회원정보문의내용</p>
-                        <span class="status complete">답변완료</span>
-                        <span class="q_nick">chh**</span>
-                        <span class="date q_date">22.10.31</span>
-                    </a></li>
-                    <li class="qna"><a href="#">
-                        <p class="cate q_cate">로그인</p>
-                        <p class="content q_content">회원정보문의내용</p>
-                        <span class="status complete">답변완료</span>
-                        <span class="q_nick">chh**</span>
-                        <span class="date q_date">22.10.31</span>
-                    </a></li>
+                    <li class="qna" th:each="qna : ${qnas}">
+                        <a th:href="@{'/cs/qna/view/' + ${qna.id}}">
+                            <p class="cate q_cate" th:data-value="${qna.cate2.categoryName}" th:data-parent="${qna.cate1.categoryName}" th:text="${qna.cate2.categoryName}">카테고리2</p>
+                            <p class="content q_content" th:text="${qna.title}">문의 제목</p>                            <p class="content q_content" th:text="${qna.title}">문의 제목</p>
+                            <span class="status confirm" th:classappend="${qna.answer != null && !#strings.isEmpty(qna.answer) ? 'answer-complete' : ''}" th:text="${qna.answer != null && !#strings.isEmpty(qna.answer) ? '답변완료' : '검토 중'}">검토 중</span>
+                            <span class="q_nick" th:text="${qna.memId != null && qna.memId.toString().length() >= 2 ? qna.memId.toString().substring(0, 2) + '**' : 'N/A'}">chh**</span>
+                            <span class="date" th:text="${#temporals.format(qna.rdate, 'yy.MM.dd')}"></span>
+                        </a>
+                    </li>
                 </ul>
+
                 <div class="paging">
+                    <!-- 이전 페이지 링크 -->
+                    <a class="ico btn_prev"
+                       th:href="@{'/cs/qnas?page=' + (${page.number} - 1)}"
+                       th:if="${page.hasPrevious()}">
+                        <span>이전</span>
+                    </a>
+
+                    <!-- 페이지 번호 목록 -->
+                    <ol>
+                        <li th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}">
+                            <a th:href="@{'/cs/qnas?page=' + ${i}}"
+                               th:text="${i + 1}"
+                               th:classappend="${page.number == i} ? 'active'">
+                            </a>
+                        </li>
+                    </ol>
+
+                    <!-- 다음 페이지 링크 -->
+                    <a class="ico btn_next"
+                       th:href="@{'/cs/qnas?page=' + (${page.number} + 1)}"
+                       th:if="${page.hasNext()}">
+                        <span>다음</span>
+                    </a>
+                </div>
+
+                <a th:href="@{/cs/qna/write}" class="btn_blue btn_qna">문의하기</a>
+                <!--<div class="paging">
                     <a class="ico btn_prev" href="#"><span>이전</span></a>
                     <ol>
                         <li><a href="#">1</a></li>
@@ -79,10 +75,80 @@
                         <li><a href="#">5</a></li>
                     </ol>
                     <a class="ico btn_next" href="#"><span>다음</span></a>
-                </div>
-                <a th:href="@{/cs/qna/write}" class="btn_blue btn_qna">문의하기</a>
+                </div>-->
+                <!-- 문의하기 버튼을 아래로 이동 -->
             </section>
         </div>
     </div>
 </main>
 <footer th:replace="layout/main/footer.html"></footer>
+<script>
+    // 1차 및 2차 카테고리 변환 맵
+    const firstCategoryMap = {
+        "user": "회원",
+        "coupon": "쿠폰/이벤트",
+        "order": "주문/결제",
+        "delivery": "배송",
+        "cancel": "취소/반품/환불",
+        "travel": "여행/숙박/항공",
+        "safe": "안전결제"
+    };
+
+    const secondCategoryMap = {
+        "user": {
+            "regi": "가입",
+            "leave": "탈퇴",
+            "info": "회원정보",
+            "login": "로그인"
+        },
+        "coupon": {
+            "lpoint": "L.POINT",
+            "coupon": "쿠폰",
+            "event": "이벤트/경품",
+            "attendance": "출석체크",
+            "gift": "사은품"
+        },
+        "order": {
+            "orderMethod": "주문방법",
+            "orderChange": "주문변경",
+            "paymentMethod": "결제방법",
+            "easyPayment": "간편결제",
+            "giftReceive": "선물받기",
+            "mobileGift": "모바일상품권",
+            "phonePayment": "휴대폰결제",
+            "applePay": "애플페이"
+        },
+        "delivery": {
+            "delivery": "배송",
+            "deliveryFee": "배송비",
+            "deliveryMethod": "배송방법",
+            "todayArrival": "오늘도착"
+        },
+        "cancel": {
+            "orderCancel": "주문취소",
+            "refundMethod": "환불방법",
+            "cardRefund": "카드환불",
+            "refundSchedule": "환불일정"
+        },
+        "travel": {
+            "ecoupon": "e쿠폰",
+            "flight": "항공",
+            "accommodation": "숙박",
+            "ticket": "티켓"
+        },
+        "safe": {
+            "policyViolation": "법령 및 정책위반 상품",
+            "ipViolation": "지적재산권침해",
+            "serviceViolation": "서비스 이용규칙 위반"
+        }
+    };
+
+    // 카테고리명을 한글로 변환하여 표시
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.q_cate').forEach(function (item) {
+            const value = item.getAttribute('data-value');
+            const parentValue = item.getAttribute('data-parent');
+            item.textContent = secondCategoryMap[parentValue]?.[value] || value; // 한글로 변환
+        });
+    });
+</script>

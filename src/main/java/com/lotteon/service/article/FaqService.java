@@ -123,7 +123,7 @@ public class FaqService {
 
 
     /* 일반 cs 기능 */
-    /*    TODO: faq 1차 유형별 페이지 조회 */
+    /*    TODO: faq 1차 유형별 페이지 조회 (1031 예정) */
     // 더보기 기능 (처음부터 10개 가져오는걸로 수정하기)
     public List<ArticleDto> getFaqsCount10(CategoryArticle cate1, CategoryArticle cate2) {
         Limit limit = Limit.of(10);
