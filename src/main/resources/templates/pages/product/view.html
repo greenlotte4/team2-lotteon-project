@@ -330,9 +330,15 @@
         }
 
         const optionValues = Array.from(new Set(extractOptionValue(splitResult, 'optionValue')));
+        const optionIds = Array.from(new Set(extractOptionValue(splitResult, 'id')));
         const optionNames = Array.from(new Set(extractOptionValue(splitResult, 'optionName'))); // optionName2 추출
         const selectElement1 = document.getElementById('select1');
         selectElement1.innerHTML = `<option value="">${optionNames[0] || "Select an Option"}</option>`;
+
+        if (optionNames[0] === '옵션없음') {
+            qty.style.display = 'table-cell';
+            document.getElementById('optionId').value = optionIds[0];
+        }
 
         optionValues.forEach(value => {
             const optionElement = document.createElement('option');
@@ -512,7 +518,7 @@
             const optionId = document.getElementById('optionId').value
 
 
-            if(qty.style.display != 'table-cell'){
+            if(qty.style.display !== 'table-cell'){
                 alert('옵션을 선택해 주세요.');
                 return;
             }else{
