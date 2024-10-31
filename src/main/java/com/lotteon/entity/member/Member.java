@@ -82,4 +82,9 @@ public class Member {
     public void updatePassword(String encode) {
         this.memPwd = encode;
     }
+
+    public void updateUser(Customer customer, String memEtc) {
+        this.customer = customer;
+        this.memEtc = memEtc;
+    }
 }

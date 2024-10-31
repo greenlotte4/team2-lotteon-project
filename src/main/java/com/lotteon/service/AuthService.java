@@ -8,6 +8,7 @@ import com.lotteon.entity.member.Seller;
 import com.lotteon.repository.member.CustomerRepository;
 import com.lotteon.repository.member.MemberRepository;
 import com.lotteon.repository.member.SellerRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -31,11 +32,13 @@ import java.util.Optional;
      수정이력
       - 2025/10/27 (일) 김민희 - 회원정보조회 팝업호출 기능 메서드(popCust) 추가
       - 2025/10/28 (월) 김민희 - 회원수정 기능 메서드 추가
+      - 2025/10/31 (목) 김민희 - 회원수정 기능 메서드 추가
 */
 
 @Log4j2
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AuthService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
@@ -150,19 +153,23 @@ public class AuthService implements UserDetailsService {
 
         // 2. Customer 엔티티의 updateUser 메서드를 통해 정보 업데이트
         Customer customer = member.getCustomer();
-        if (customer != null) {
+        customer.updateUser(getAdminUserDTO);
 
-            customer.updateUser(getAdminUserDTO);
-            member.setCustomer(customer);
-            log.info("customer save :::::"+customer.toString());
-        } else {
-            throw new IllegalArgumentException("해당 ID의 회원 정보가 존재하지 않습니다.");
-        }
+        member.updateUser(customer,getAdminUserDTO.getMemEtc());
+        memberRepository.save(member);
+        customerRepository.save(customer);
+//        if (customer != null) {
+//
+//            customer.updateUser(getAdminUserDTO,member);
+////            member.setCustomer(customer);
+//            log.info("customer save :::::"+customer.toString());
+//        } else {
+//            throw new IllegalArgumentException("해당 ID의 회원 정보가 존재하지 않습니다.");
+//        }
 
         // 3. 저장 및 반환
-            log.info("member save :::::::"+member);
-        memberRepository.save(member);  // 연관된 Customer 객체가 자동으로 저장됨
-        customerRepository.save(customer);
+//        log.info("member save :::::::"+customer.toString());
+//        customerRepository.save(customer);  // 연관된 Customer 객체가 자동으로 저장됨
         return modelMapper.map(customer, GetAdminUserDTO.class);
 
     }

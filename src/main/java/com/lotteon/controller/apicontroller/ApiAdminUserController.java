@@ -24,6 +24,7 @@ import java.util.Optional;
      
      수정이력
       - 2025/10/27 (일) 김민희 - 회원수정 팝업호출 기능 메서드 추가
+
 */
 
 @RestController
