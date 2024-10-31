@@ -90,7 +90,7 @@
                         <th>배송비</th>
                         <td><input type="text" name="prodDeliver" placeholder="배송비 입력"> 원</td>
                     </tr>
-                        <input type="hidden" name="prodStock" id="prodStock">
+                    <input type="hidden" name="prodStock" id="prodStock">
                     <tr class="images">
                         <th>상품이미지</th>
                         <td class="td-images">
@@ -149,10 +149,56 @@
                 </div>
                 <button class="addoption" type="button" onclick="confirmOption(event)">옵션저장</button>
                 <button type="button" id="check" class="addoption" onclick="addParent(event)">옵션추가</button>
+                <button type="button" class="addoption" id="optionChange" onclick="setSingleOption()">단일옵션</button> <!-- 단일옵션 버튼 추가 -->
+                <button type="button" class="addoption" id="mix" onclick="showMix()">옵션 자동 조합</button> <!-- 단일옵션 버튼 추가 -->
                 <span class="limit3"></span>
             </div>
-        </form>
 
+            <div class="main3" id="mixOption" style="display: none;">
+                <div class="main-title">옵션 자동 조합</div>
+                <div class="main-description">옵션을 등록하면 자동으로 조합됩니다.</div>
+                <div class="main-options">
+                    <table class="tb2">
+                        <tr class="option0">
+                            <th>옵션명</th>
+                            <th>옵션값</th>
+                        </tr>
+                        <tr class="option1">
+                            <td>
+                                <input type="text" class="optionName" id="optionName1" placeholder="예: 색상">
+                            </td>
+                            <td>
+                                <input type="text" class="optionValue" id="optionValue1" placeholder="예: 레드, 블루">
+                            </td>
+                        </tr>
+                        <tr class="option2">
+                            <td>
+                                <input type="text" class="optionName" id="optionName2" placeholder="예: 사이즈">
+                            </td>
+                            <td>
+                                <input type="text" class="optionValue" id="optionValue2" placeholder="예: S, M, L">
+                            </td>
+                        </tr>
+                    </table>
+                    <button class="addoption" type="button" onclick="generateCombinations()">옵션 조합 생성</button>
+                </div>
+
+                <div class="options-table">
+                    <table class="tb2">
+                        <thead>
+                        <tr class="option0">
+                            <th>옵션 조합</th>
+                            <th>추가금액</th>
+                            <th>수량</th>
+                        </tr>
+                        </thead>
+                        <tbody id="optionMixed">
+                        <!-- 옵션 조합이 여기에 추가됩니다 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
         <form id="detail">
             <div class="main3">
                 <div class="main-title">상품정보 제공고시</div>

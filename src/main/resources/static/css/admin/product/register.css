@@ -225,3 +225,9 @@ select {outline: none;}
 }
 .btnDelete{height: 28.29px;border: none; padding: 0 5px; background-color:#ddd;}
 .addoption:hover{cursor: pointer}
+
+.option0 > th {text-align: center;}
+.option1 {border-bottom: none;}
+.option2 {border-top: none;}
+.option1 > td , .option2 > td {text-align: center; border: none;}
+.optionName , .optionValue {width: auto;height: 28.29px;border: 1px solid #BFBFBF;outline: none; text-indent: 5px;}
