@@ -13,7 +13,9 @@ import lombok.*;
 @ToString
 public class PostProdCateMapperDTO {
     private Long id;
-    private Long categoryId;
+    private Long categoryId1;
+    private Long categoryId2;
+    private Long categoryId3;
     private Long productId;
 }
 

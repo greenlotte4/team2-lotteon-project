@@ -190,15 +190,25 @@ public class CategoryProductService {
             product = opt.get();
         }
 
-        CategoryProductMapper categoryProductMapper = CategoryProductMapper.builder()
+        CategoryProductMapper categoryProductMapper1 = CategoryProductMapper.builder()
                 .id(postProdCateMapperDTO.getId())
-                .category(categoryProductRepository.findByCategoryId(postProdCateMapperDTO.getCategoryId()))
+                .category(categoryProductRepository.findByCategoryId(postProdCateMapperDTO.getCategoryId1()))
+                .product(product)
+                .build();
+        CategoryProductMapper categoryProductMapper2 = CategoryProductMapper.builder()
+                .id(postProdCateMapperDTO.getId())
+                .category(categoryProductRepository.findByCategoryId(postProdCateMapperDTO.getCategoryId2()))
+                .product(product)
+                .build();
+        CategoryProductMapper categoryProductMapper3 = CategoryProductMapper.builder()
+                .id(postProdCateMapperDTO.getId())
+                .category(categoryProductRepository.findByCategoryId(postProdCateMapperDTO.getCategoryId3()))
                 .product(product)
                 .build();
 
-        System.out.println("22222222222233333333"+categoryProductMapper);
-
-        categoryProdMapperRepository.save(categoryProductMapper);
+        categoryProdMapperRepository.save(categoryProductMapper1);
+        categoryProdMapperRepository.save(categoryProductMapper2);
+        categoryProdMapperRepository.save(categoryProductMapper3);
     }
 
     public ProductPageResponseDTO<PostProductDTO> findProductCategory(String cate, ProductPageRequestDTO pageRequestDTO) {
@@ -263,13 +273,21 @@ public class CategoryProductService {
     }
     public GetCateLocationDTO cateLocation2(long id){
         Product product = productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 카테고리가 없습니다."));
-        CategoryProductMapper categoryProductMapper = categoryProdMapperRepository.findByProduct(product);
-        log.info("432123432123"+categoryProductMapper.getCategory().getParent().getParent().getCategoryId());
+        List<CategoryProductMapper> categoryProductMapper = categoryProdMapperRepository.findAllByProduct(product);
+
+        log.info("CategoryMapper::::"+categoryProductMapper);
+
+        CategoryProductMapper cate1 = null;
+        for(CategoryProductMapper cate : categoryProductMapper){
+            cate1 = cate;
+        }
+
+        log.info("cateMaper::::"+cate1);
 
         return  GetCateLocationDTO.builder()
-                .level1Name(categoryProductMapper.getCategory().getParent().getParent().getCategoryName())
-                .level2Name(categoryProductMapper.getCategory().getParent().getCategoryName())
-                .level3Name(categoryProductMapper.getCategory().getCategoryName())
+                .level1Name(cate1.getCategory().getParent().getParent().getCategoryName())
+                .level2Name(cate1.getCategory().getParent().getCategoryName())
+                .level3Name(cate1.getCategory().getCategoryName())
                 .build();
     }
 }
