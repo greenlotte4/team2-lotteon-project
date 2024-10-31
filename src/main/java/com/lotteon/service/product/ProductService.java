@@ -105,8 +105,10 @@ public class ProductService {
         }
         if (isUploadSuccessful) {
 
-            Seller seller = sellerRepository.findById(productDTO.getSellId()).orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 판매자가 없습니다: "));
-
+//            Seller seller = sellerRepository.findById(productDTO.getSellId()).orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 판매자가 없습니다: "));
+            MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Seller seller = auth.getUser().getSeller();
+            log.info("sellllllllllllllllllllll"+seller);
             productDTO.setSeller(seller);
             Product product = modelMapper.map(productDTO, Product.class);
             log.info("123123123123" + product);
@@ -159,8 +161,8 @@ public class ProductService {
         // 접속한 사람의 ID값 받아오기 (customer일경우 전부, seller일 경우 자신의 상품만)
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
-        long id = Integer.parseInt(((MyUserDetails) principal).getName());
-
+        long id = ((MyUserDetails) principal).getUser().getSeller().getId();
+        System.out.println(id+"==============================================");
         Pageable pageable = pageRequestDTO.getPageable("id");
         Page<Tuple> pageProduct = null;
         if(pageRequestDTO.getKeyword() == null) {

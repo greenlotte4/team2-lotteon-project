@@ -37,15 +37,20 @@ public class ApiAdminProdController {
     @PostMapping("/info")
     public ResponseEntity<Map<String, Object>> info(@ModelAttribute PostProdAllDTO postProdAllDTO) {
 
-        log.info("134443" + postProdAllDTO.getPostProductDTO());
+        // date를 timestamp로 바꿔서 집어넣는 과정
         LocalDateTime localDateTime = postProdAllDTO.getPostProdDetailDTO().getMDate1().atStartOfDay();
         Timestamp timestamp = Timestamp.valueOf(localDateTime);
         postProdAllDTO.getPostProdDetailDTO().setMdate(timestamp);
-        log.info("124443" + postProdAllDTO.getPostProdDetailDTO());
+
+
+
+//        postProdAllDTO.getPostProductDTO().setProdStock();
+
+        // 디테일이랑 카테고리 insert 하기전에 productId 넣어주는 작업
         Product result = productService.insertProduct(postProdAllDTO.getPostProductDTO(), postProdAllDTO.getPostProdDetailDTO());
         postProdAllDTO.getPostProdCateMapperDTO().setProductId(result.getId());
         postProdAllDTO.getPostProdDetailDTO().setProductId(result.getId());
-        log.info("323232323232323"+postProdAllDTO.getPostProdDetailDTO().getDescription());
+        
         productService.insertProdDetail(postProdAllDTO.getPostProdDetailDTO());
         categoryProductService.insertCateMapper(postProdAllDTO.getPostProdCateMapperDTO());
 

@@ -1,5 +1,6 @@
     let productAll = new FormData();
     let submitData = [];
+    let totalStock = 0;
     window.onload = function (){
         let duplication = 0;
         const prodInsert = document.getElementsByClassName('submit-btn')[0];
@@ -178,10 +179,14 @@
             stock: stock,
             productId: null
         };
-
+        totalStock += parseInt(jsonData.stock);
     submitData.push(jsonData);
 });
     console.log(submitData)
+    console.log("totalStock"+totalStock);
+    document.getElementById('prodStock').value = totalStock;
+    console.log("prodStock"+document.getElementById('prodStock').value);
+    totalStock = 0;
 }
 
     function deleteOption(event) {
