@@ -54,6 +54,4 @@ public class GetAdminUserDTO {
     private String  memEtc; // 기타 (회원 기타 정보입력)
 
 
-
 }
-

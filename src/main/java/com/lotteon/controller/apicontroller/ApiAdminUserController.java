@@ -51,12 +51,10 @@ public class ApiAdminUserController {
                                 @PathVariable("id") Long id,
                                 @RequestBody GetAdminUserDTO getAdminUserDTO) {
 
-
         log.info("minhee : "+id);
         log.info("getAdminUserDTO : "+ getAdminUserDTO);
 
         GetAdminUserDTO updatedCust = authService.updateCust(id,getAdminUserDTO);
-
 
         return ResponseEntity.ok().body(updatedCust);
     }

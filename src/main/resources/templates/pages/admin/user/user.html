@@ -268,9 +268,25 @@
                 }
                 return response.json();
             })
-            .then(() => {
+            .then(updatedData => {
                 alert('회원 정보가 성공적으로 수정되었습니다.');
-                closePopup();
+
+                // alert 창 닫은 후, HTML 요소 업데이트 (새로고침 없이)
+                const row = document.querySelector(`#member-${updatedData.custId}`);
+                if (row) {
+                    row.querySelector('.custName').textContent = updatedData.custName;
+                    row.querySelector('.custEmail').textContent = updatedData.custEmail;
+                    row.querySelector('.custGender').textContent = updatedData.custGender === 'M' ? '남' : '여';
+                    row.querySelector('.custHp').textContent = updatedData.custHp;
+                    row.querySelector('.custAddr1').textContent = updatedData.custAddr1;
+                    row.querySelector('.custAddr2').textContent = updatedData.custAddr2;
+                    row.querySelector('.custAddr3').textContent = updatedData.custAddr3;
+                    row.querySelector('.memEtc').textContent = updatedData.memEtc;
+                }
+
+                // 팝업 닫기 (alert 확인 버튼 클릭 후)
+                document.querySelector('.popup').style.display = 'none';
+                document.querySelector('.popupbg').style.display = 'none';
             })
             .catch(error => {
                 console.error('회원 정보 수정 오류:', error);

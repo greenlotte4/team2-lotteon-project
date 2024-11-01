@@ -83,8 +83,16 @@ public class Member {
         this.memPwd = encode;
     }
 
+    // 관리자 회원수정 (팝업 수정)
     public void updateUser(Customer customer, String memEtc) {
         this.customer = customer;
         this.memEtc = memEtc;
     }
+    // 관리자 회원수정 (팝업 수정 후 -> 회원 목록에서 보여짐)
+    public void updateListUser(Customer customer, String memEtc) {
+        this.customer = customer;
+        this.memEtc = memEtc;
+    }
+
+
 }

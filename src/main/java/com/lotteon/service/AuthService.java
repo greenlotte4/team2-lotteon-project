@@ -141,7 +141,8 @@ public class AuthService implements UserDetailsService {
 
     // 3. 관리자 회원 수정
     public GetAdminUserDTO updateCust(Long id, GetAdminUserDTO getAdminUserDTO) {
-        // 1. Member 조회
+
+        // Member 조회
         Optional<Customer> opt = customerRepository.findById(id);
 
         Customer cust = null;
@@ -151,29 +152,17 @@ public class AuthService implements UserDetailsService {
         Member member = memberRepository.findById(cust.getMember().getId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 회원이 없습니다: " + id));
 
-        // 2. Customer 엔티티의 updateUser 메서드를 통해 정보 업데이트
+        // Customer 엔티티의 updateUser 메서드를 통해 정보 업데이트
         Customer customer = member.getCustomer();
         customer.updateUser(getAdminUserDTO);
-
         member.updateUser(customer,getAdminUserDTO.getMemEtc());
+
+        // Member랑 Customer 정보 각각 저장
         memberRepository.save(member);
         customerRepository.save(customer);
-//        if (customer != null) {
-//
-//            customer.updateUser(getAdminUserDTO,member);
-////            member.setCustomer(customer);
-//            log.info("customer save :::::"+customer.toString());
-//        } else {
-//            throw new IllegalArgumentException("해당 ID의 회원 정보가 존재하지 않습니다.");
-//        }
 
-        // 3. 저장 및 반환
-//        log.info("member save :::::::"+customer.toString());
-//        customerRepository.save(customer);  // 연관된 Customer 객체가 자동으로 저장됨
         return modelMapper.map(customer, GetAdminUserDTO.class);
-
     }
-
 
     // 3. 관리자 회원목록 페이지 처리 (<이전 1,2,3 다음>)
     public Page<GetAdminUserDTO> selectCustAll2(int page) {
