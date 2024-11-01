@@ -11,13 +11,6 @@ window.onload = function (){
         const productInfo = new FormData(document.getElementById('productInfo'));
         const detail = new FormData(document.getElementById('detail'));
 
-        let prodDis = document.getElementsByClassName('productDiscount')[0];
-
-        if(prodDis.value > 100){
-            alert('100%보다 더 할인할 수 없습니다!')
-            return;
-        }
-
         e.preventDefault();
             for (const [key, value] of prodCate.entries()) {
                 productAll.append(`postProdCateMapperDTO.${key}`, value)
@@ -31,39 +24,44 @@ window.onload = function (){
         for (const [key, value] of productAll.entries()) {
             console.log(key, value)
         }
-        fetch('/admin/prod/info', {
-            method: 'POST',
-            body: productAll
-        })
-            .then(resp => resp.json())
-            .then(data => {
-                if (data.success > 0) {
-                    alert('결제 정보가 등록되었습니다!');
-                    for(let i = 0; i < submitData.length; i++){
-                        submitData[i].productId = String(data.success);
-                    }
-                    console.log("44555"+JSON.stringify(submitData));
-                    fetch("/admin/prod/option", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'  // 서버가 JSON 데이터를 받을 수 있도록 명시
-                        },
-                        body: JSON.stringify(submitData)
-                    }).then(resp => resp.json())
-                        .then(data => {
-                            console.log(data);
-                        }).catch(err => {
-                        console.log(err);
-                    })
-                    window.location.href ="/admin/prod/products";
-                } else {
-                    alert('결제 정보 등록에 실패하였습니다');
-                }
+        if(document.getElementById('prodStock').value <= 0){
+            alert('옵션에서 물품 수량을 지정해주세요!');
+            return;
+        }else {
+            fetch('/admin/prod/info', {
+                method: 'POST',
+                body: productAll
             })
-            .catch(err => {
-                console.log(err);
-                productAll = new FormData();
-            });
+                .then(resp => resp.json())
+                .then(data => {
+                    if (data.success > 0) {
+                        alert('결제 정보가 등록되었습니다!');
+                        for (let i = 0; i < submitData.length; i++) {
+                            submitData[i].productId = String(data.success);
+                        }
+                        console.log("44555" + JSON.stringify(submitData));
+                        fetch("/admin/prod/option", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'  // 서버가 JSON 데이터를 받을 수 있도록 명시
+                            },
+                            body: JSON.stringify(submitData)
+                        }).then(resp => resp.json())
+                            .then(data => {
+                                console.log(data);
+                            }).catch(err => {
+                            console.log(err);
+                        })
+                        window.location.href = "/admin/prod/products";
+                    } else {
+                        alert('결제 정보 등록에 실패하였습니다');
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                    productAll = new FormData();
+                });
+        }
     });
 }
 
@@ -165,8 +163,7 @@ function addParent(event) {
     // 옵션이 3개 이상이면 추가를 막음
     if (currentOptionsCount >= 3) {
         limit3.innerText = '옵션은 3개까지만 가능합니다';
-        document.getElementById('check').disabled = true;
-        return;
+        document.getElementById('check').style.display = 'none';
     }
 
 }
@@ -184,14 +181,19 @@ function confirmOption(event) {
     let optionName123 = null;
 
     document.querySelectorAll('.option_inputs').forEach(v => {
-        let name = v.querySelector('.option_input_name').value.trim() === '' ? null : v.querySelector('.option_input_name').value.trim();
-        let value = v.querySelector('.option_input_value').value.trim() === '' ? null : v.querySelector('.option_input_value').value.trim();
-        let name2 = v.querySelector('.option_input_name2').value.trim() === '' ? null : v.querySelector('.option_input_name2').value.trim();
-        let value2 = v.querySelector('.option_input_value2').value.trim() === '' ? null : v.querySelector('.option_input_value2').value.trim();
-        let name3 = v.querySelector('.option_input_name3').value.trim() === '' ? null : v.querySelector('.option_input_name3').value.trim();
-        let value3 = v.querySelector('.option_input_value3').value.trim() === '' ? null : v.querySelector('.option_input_value3').value.trim();
-        let price = v.querySelector('.option_input_price').value.trim() === '' ? null : v.querySelector('.option_input_price').value.trim();
-        let stock = v.querySelector('.option_input_stock').value.trim() === '' ? null : v.querySelector('.option_input_stock').value.trim();
+        const getValue = (selector) => {
+            const element = v.querySelector(selector);
+            return element ? element.value.trim() || null : null;
+        };
+
+        let name = getValue('.option_input_name');
+        let value = getValue('.option_input_value');
+        let name2 = getValue('.option_input_name2');
+        let value2 = getValue('.option_input_value2');
+        let name3 = getValue('.option_input_name3');
+        let value3 = getValue('.option_input_value3');
+        let price = getValue('.option_input_price');
+        let stock = getValue('.option_input_stock');
 
 
         if(name == null){
@@ -232,7 +234,7 @@ function deleteOption(event) {
     if (currentOptionsCount < 3) {
         const limit3 = document.querySelector('.limit3');
         limit3.innerText = '';
-        document.getElementById('check').disabled = false;
+        document.getElementById('check').style.display = 'inline-block';
     }
 }
 
@@ -247,7 +249,7 @@ function deleteOption2(event) {
     if (currentOptionsCount < 3) {
         const limit3 = document.querySelector('.limit3');
         limit3.innerText = '';
-        document.getElementById('check').disabled = false;
+        document.getElementById('check').style.display = 'inline-block';
     }
 }
 
@@ -336,6 +338,8 @@ function setSingleOption() {
     const optionInputs = document.querySelectorAll('.option_inputs input');
     // stock input태그 가져오기
     const stockInput = document.querySelector('.option_input_stock');
+    // 옵션 추가버튼 가져오기
+    const optionPlus = document.getElementById('check');
     // 테이블 내 동적으로 추가된 옵션 행들
     const optionsTable = document.querySelector('.tb4');
     const addedRows = optionsTable.querySelectorAll('tr:not(.tr_option)'); // 기본 행 제외
@@ -343,6 +347,7 @@ function setSingleOption() {
     if (button.innerText === "단일옵션") {
         // 버튼 텍스트를 조합형 옵션으로 변경
         button.innerText = "조합형 옵션";
+        optionPlus.style.display='none';
         isSingleOption = true; // 단일옵션 상태로 설정
         // 동적으로 추가된 행 삭제
         addedRows.forEach(row => row.remove());
@@ -359,6 +364,7 @@ function setSingleOption() {
     } else {
         // 버튼 텍스트를 단일옵션으로 변경
         button.innerText = "단일옵션";
+        optionPlus.style.display='inline-block';
         isSingleOption = false; // 조합형 옵션 상태로 설정
         // 입력 필드에 대해 반복 처리하여 type을 text로 복원
         optionInputs.forEach(input => {
@@ -444,3 +450,27 @@ function showMix() {
         mixOption.style.display = "none";   // 숨기도록 설정
     }
 }
+document.addEventListener("DOMContentLoaded", function() {
+    let prodPrice = document.getElementById('productPrice');
+    let prodDiscount = document.getElementsByClassName('productDiscount')[0];
+    let prodPoint = document.getElementById('productPoint');
+
+    function calculatePoint() {
+        const price = parseFloat(prodPrice.value) || 0;
+        const discount = parseFloat(prodDiscount.value) || 0;
+
+        if(discount > 100){
+            alert('100%보다 더 할인할 수 없습니다!')
+            prodDiscount.value = '';
+            return;
+        }
+
+        // 포인트 = (상품금액 - (상품금액 * 할인율 / 100)) * 0.01
+        // 계산 결과를 포인트 입력 필드에 출력
+        prodPoint.value = Math.floor((price - (price * discount / 100)) * 0.01);
+    }
+
+// 이벤트 리스너 등록 (입력 값 변경 시 자동 계산)
+    prodPrice.addEventListener("input", calculatePoint);
+    prodDiscount.addEventListener("input", calculatePoint);
+});

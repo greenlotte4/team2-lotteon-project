@@ -338,14 +338,14 @@
         if (optionNames[0] === '옵션없음') {
             qty.style.display = 'table-cell';
             document.getElementById('optionId').value = optionIds[0];
+        }else{
+            optionValues.forEach(value => {
+                const optionElement = document.createElement('option');
+                optionElement.textContent = value;
+                optionElement.value = value;
+                selectElement1.appendChild(optionElement);
+           });
         }
-
-        optionValues.forEach(value => {
-            const optionElement = document.createElement('option');
-            optionElement.textContent = value;
-            optionElement.value = value;
-            selectElement1.appendChild(optionElement);
-        });
 
         selectElement1.addEventListener('change', function () {
             const selectedValue1 = selectElement1.value;
@@ -367,11 +367,13 @@
                 const optionId = optionIdPair ? optionIdPair[1] : null;
                 const optionStockPair =keyValuePairs.find(pair => pair[0].trim() === 'stock');
                 const optionStock = optionStockPair ? optionStockPair[1] : null;
+                console.log(additionalPricePair+"llllll444444444")
                 // optionValue2가 null인 경우 추가 요금 포함
                 if (optionValue2Pair && optionValue2Pair[1] === 'null' && additionalPricePair) {
                     const additionalPrice = parseFloat(additionalPricePair[1]) || 0;
                     const additionalPriceFormatted = additionalPrice.toLocaleString(); // 포맷팅
                     selectedAdditionalPrice = additionalPriceFormatted.replace(',', '');
+                    console.log(additionalPricePair+"llllll444444444")
                     console.log(selectedAdditionalPrice);
                     calculateTotalPrice();
                     // 선택된 옵션의 텍스트를 업데이트
