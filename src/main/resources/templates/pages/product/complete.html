@@ -42,7 +42,7 @@
         <tr th:each="orderItem : ${order.orderItemDtos}">
           <td>
             <div class="img">
-              <img src="https://via.placeholder.com/74x69" />
+              <img style="width: 80px; height: 80px;" th:src="@{'/file/'+${orderItem.getProdListImg()}}" />
               <div class="name_desc">
                 <span th:text="${orderItem.prodName}">상품명</span> <br />
                 <span th:text="${orderItem.prodSummary}">상품설명</span>
