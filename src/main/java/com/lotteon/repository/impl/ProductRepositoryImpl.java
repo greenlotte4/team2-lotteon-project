@@ -93,6 +93,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                     .from(qProduct)
                     .join(qSeller)
                     .on(qProduct.seller.id.eq(qSeller.id))
+                    .where(qProduct.seller.id.eq(sellId))
                     .fetchOne();
 
             return new PageImpl<Tuple>(content, pageable, total);
@@ -178,8 +179,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                     .fetch();
 
             long total = queryFactory.select(qProduct.count())
-                    .from(qProduct).where(builder).join(qSeller)
-                    .on(qProduct.seller.id.eq(qSeller.id)).fetchOne();
+                    .from(qProduct).join(qSeller)
+                    .on(qProduct.seller.id.eq(qSeller.id)).where(builder).fetchOne();
 
         return new PageImpl<Tuple>(content, pageable, total);
 
