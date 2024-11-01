@@ -49,13 +49,13 @@
         console.log(prodId);
 
         if(confirm("정말 삭제하시겠습니까?")){
-
+            const prodIdList = [prodId];
             fetch("/admin/prod/product/delete", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(prodId)
+                body: JSON.stringify(prodIdList)
             })
                 .then(resp => resp.json())
                 .then(data => {
@@ -67,6 +67,7 @@
                 })
                 .catch(err => {
                     console.log(err);
+                    alert('상품이 이미 주문되어있어서 삭제할 수 없습니다!');
                 })
         }
 
