@@ -19,6 +19,9 @@ ul, li{list-style: none;}
 .cate_des{color: #808080; font-size: 13px; margin-top: 5px;}
 
 /* list_common */
+.cate2::after{ content: " ]";}
+.cate2::before{ content: "[ ";}
+.cate2{ text-align: left; font-weight: 400;}
 .cate::after{ content: " ]";}
 .cate::before{ content: "[ ";}
 .cate{ text-align: left; font-weight: 400;}

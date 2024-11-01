@@ -25,7 +25,7 @@
                 <li class="notice" th:each="notice, iterStat : ${notices}" th:if="${iterStat.index}<5">
                     <!-- 공지사항 ID를 URL에 포함하여 view 페이지로 이동 -->
                     <a th:href="@{/cs/notice/view/{id}(id=${notice.id})}">
-                        <p class="cate" th:text="${notice.cate1.categoryName}">공지 카테고리</p>
+                        <p class="cate2" th:text="${notice.cate1.categoryName}">공지</p>
                         <p class="content" th:text="${notice.noticeTitle}">공지사항 제목</p>
                         <span class="date" th:text="${#dates.format(notice.noticeRdate, 'yy.MM.dd')}">등록일</span>
                     </a>

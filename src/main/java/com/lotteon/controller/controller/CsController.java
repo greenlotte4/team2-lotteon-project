@@ -52,6 +52,7 @@ public class CsController {
     public String join(Model model) {
         // 최신 공지사항 10개를 가져와서 모델에 추가
         List<Notice> noticeList = noticeService.getTop10Notices();
+        log.info("컨트롤러 노티스 "+noticeList.toString());
         model.addAttribute("notices", noticeList);
 
         // 최신 문의하기 리스트 5개
