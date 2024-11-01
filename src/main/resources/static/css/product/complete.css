@@ -72,23 +72,23 @@ input:focus{outline: none;}
 .location > span:last-of-type:after{content:none;}
 
 /* 완료문구 */
-.clear {width: 797px; height: 85px; text-align: center; margin-top: 30px;}
+.clear {width: 797px;     height: 95px; text-align: center; margin-top: 65px;}
 .clear > span:first-child{font-size: 24px; }
-.clear > span:last-child{font-size: 16px; }
+.clear > span:last-child{font-size: 16px; padding: 20px;}
 
 /* tb1 */
 .tb1 {width: 797px; height: auto; border-top: 2.5px solid #000; margin: 0 auto; margin-top: 20px; border-collapse: collapse;}
-.tb1 th{height: 49px; border-bottom: 1px solid #bfbfbf;}
+.tb1 th{height: 49px; border-bottom: 1px solid #bfbfbf; text-align: center;}
 .tb1 td{text-align: center; height: 101px; border-bottom: 1px solid #bfbfbf; font-size: 14px;}
 .img {display: flex; align-items: center;}
 .img > img {margin-left: 20px; margin-right: 15px;}
-.name_desc > span {display: flex; flex-direction: column; line-height: 1px;}
-.name_desc > span:last-child {color: #7f7f7f;}
+.name_box > span:last-child {color: #7f7f7f;}
 .tb1 td:last-child{color: #c00000;}
 
 /* tb2 */
-.total {width: 240px; height: 115px; float: right;
-     background-color: #f2f2f2; 
+.total {width: 240px; height: 142px; float: right;
+     background-color: #f2f2f2;
+    padding: 20px;   margin-top: 30px;
 }
 
 .tb2 td {width: 115px; font-size: 14px; text-align: center; line-height: 25px;}
@@ -106,7 +106,7 @@ input:focus{outline: none;}
  }
 
  .tb3 {width: 797px; height: 108px; border-collapse: collapse; margin: 0 auto;}
- .tb3 th {background-color: #f2f2f2; width: 119px; font-size: 14px;}
+ .tb3 th {background-color: #f2f2f2;    height: 37px; width: 177px; padding: 0 20px; font-size: 14px;text-align: center;}
  .tb3 td {font-size: 14px; text-indent: 15px;}
 
  /* 배송 정보 */
@@ -121,5 +121,5 @@ input:focus{outline: none;}
  }
 
  .tb4 {width: 797px; height: 108px; border-collapse: collapse; margin: 0 auto;}
- .tb4 th {background-color: #f2f2f2; width: 119px; font-size: 14px;}
+ .tb4 th {background-color: #f2f2f2;  height: 37px; width: 177px; padding: 0 20px; font-size: 14px;text-align: center;}
  .tb4 td {font-size: 14px; text-indent: 15px;}

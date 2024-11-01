@@ -17,7 +17,7 @@
       </nav>
       <!-- .navi-->
       <div class="clear">
-        <span>고객님의 주문이 정상적으로 완료되었습니다.</span> <br />
+        <span>고객님의 주문이 정상적으로 완료되었습니다.</span> <br/><br/>
         <span
         >즐거운 쇼핑이 되셨나요? 항상 고객님을 위한 롯데ON이
             되겠습니다.</span
@@ -26,32 +26,43 @@
       <!-- .clear-->
       <table class="tb1">
         <colgroup>
-          <col style="width: 40%" />
-          <col style="width: 15%" />
-          <col style="width: 15%" />
-          <col style="width: 15%" />
-          <col style="width: 15%" />
+          <col style="width: 10%" />
+          <col style="width: 25%" />
+          <col style="width: 10%" />
+          <col style="width: 10%" />
+          <col style="width: 10%" />
+          <col style="width: 7%" />
+          <col style="width: 7%" />
+          <col style="width: 10%" />
+          <col style="width: 10%" />
         </colgroup>
         <tr>
+          <th>상품이미지</th>
           <th>상품명</th>
+          <th>옵션</th>
+          <th>수량</th>
           <th>상품금액</th>
           <th>할인금액</th>
-          <th>수량</th>
+          <th>포인트</th>
+          <th>배송비</th>
           <th>총합</th>
         </tr>
         <tr th:each="orderItem : ${order.orderItemDtos}">
           <td>
             <div class="img">
               <img style="width: 80px; height: 80px;" th:src="@{'/file/'+${orderItem.getProdListImg()}}" />
-              <div class="name_desc">
-                <span th:text="${orderItem.prodName}">상품명</span> <br />
-                <span th:text="${orderItem.prodSummary}">상품설명</span>
-              </div>
             </div>
           </td>
+          <td  class="name_box">
+            <span th:text="${orderItem.prodName}">상품명</span><br>
+            <span th:text="${orderItem.prodSummary}">상품설명</span>
+          </td>
+          <td>옵션</td>
+          <td th:text="${orderItem.quantity}">1</td>
           <td th:text="${orderItem.prodPrice}">27,000</td>
           <td th:text="${orderItem.discount}">-1,350</td>
-          <td th:text="${orderItem.quantity}">1</td>
+          <td>포인트</td>
+          <td>배송비</td>
           <td th:text="${orderItem.totalPrice}">25,650</td>
         </tr>
       </table>

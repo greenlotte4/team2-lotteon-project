@@ -202,13 +202,17 @@
           <tr th:each="cartItem : ${cartItems}" th:data-option-id="${cartItem.optionId}" th:data-product-id="${cartItem.cartProductDto.id}" th:data-quantity="${cartItem.quantity}">
             <td><input type="checkbox" class="checkboxItem" th:value="${cartItem.cartItemId}"/></td>
             <td>
+              <a th:href="@{'/prod/product?prodId='+${cartItem.cartProductDto.id}}">
               <div class="img">
                 <img style="width: 80px; height: 80px;" th:src="@{'/file/'+${cartItem.cartProductDto.getProdListImg()}}" />
               </div>
+              </a>
             </td>
             <td class="name_box">
+              <a th:href="@{'/prod/product?prodId='+${cartItem.cartProductDto.id}}">
               <span th:text="${cartItem.cartProductDto.prodName}">상품명</span><br>
               <span th:text="${cartItem.cartProductDto.prodSummary}">상품설명</span>
+              </a>
             </td>
             <td>
               <div class="cartOptions">
@@ -219,15 +223,16 @@
                   <th:block th:each="option : ${cartItem.optionValue}">
                     <span th:text="${option}">옵션있음</span>
                   </th:block>
+                    <span th:text="${cartItem.additionalPrice<0?'('+cartItem.additionalPrice+')':'(+'+cartItem.additionalPrice+')'}">([[${cartItem.additionalPrice<0?}]])</span>
                 </th:block>
               </div>
             </td>
             <td>[[${cartItem.quantity}]]</td>
-            <td>[[${cartItem != null ? #numbers.formatInteger(cartItem.totalPrice, 1, 'COMMA') : 0}]]원</td>
+            <td>[[${cartItem != null ? #numbers.formatInteger(cartItem.cartProductDto.prodPrice, 1, 'COMMA') : 0}]]원</td>
             <td>[[${cartItem != null ? #numbers.formatInteger(cartItem.cartProductDto.prodDiscount, 1, 'COMMA') : 0}]] %</td>
             <td>[[${cartItem.cartProductDto.prodPoint}]] P</td>
             <td>[[${cartItem != null ? #numbers.formatInteger(cartItem.cartProductDto.prodDeliver, 1, 'COMMA') : 0}]]원</td>
-            <td>[[${cartItem != null ? #numbers.formatInteger((cartItem.totalPrice * cartItem.quantity * (1-(cartItem.cartProductDto.prodDiscount / 100))), 1, 'COMMA') : 0}]]원</td>
+            <td>[[${cartItem != null ? #numbers.formatInteger(cartItem.totalPrice, 1, 'COMMA') : 0}]]원</td>
           </tr>
         </th:block>
         <th:block th:unless="${!cartItems.isEmpty()}">

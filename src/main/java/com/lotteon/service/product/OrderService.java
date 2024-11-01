@@ -101,9 +101,15 @@ public class OrderService {
                 optionId = postCartSaveDto.getOptionId();
                 ProductOption option = productOptionRepository.findById(optionId).orElse(null);
 
-                optionValue.add(option.getOptionValue());
-                optionValue.add(option.getOptionValue2());
-                optionValue.add(option.getOptionValue3());
+                if (option.getOptionValue() != null) {
+                    optionValue.add(option.getOptionValue());
+                }
+                if (option.getOptionValue2() != null) {
+                    optionValue.add(option.getOptionValue2());
+                }
+                if (option.getOptionValue3() != null) {
+                    optionValue.add(option.getOptionValue3());
+                }
             }
             log.info(" 옵션 밸류 볼래용 "+optionValue.toString());
 

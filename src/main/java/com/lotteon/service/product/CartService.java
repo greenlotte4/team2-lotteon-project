@@ -112,23 +112,10 @@ public class CartService {
         if(postCartDto.getOptionId()!=null){
              optionId = postCartDto.getOptionId();
         }
-//
-//        CartItem existingCartItem1 = null;
-//        for (CartItem cartItem : existingCartItems) {
-//            // 3. 선택된 옵션이 동일한지 확인
-//            Long findOptionId = cartItem.getOptionId();
-//
-//            // 선택된 옵션 리스트가 동일한지 비교
-//            if (optionId == findOptionId) {
-//                existingCartItem1 = cartItem;
-//                break;
-//            }
-//        }
-
 
         if (existingCartItem != null) {
             int newQuantity = existingCartItem.getQuantity() + postCartDto.getQuantity();
-            double newPrice = newQuantity * product.getProdPrice();
+            double newPrice = newQuantity * postCartDto.getTotalPrice();
             existingCartItem.setTotalPrice(newPrice);
             existingCartItem.setQuantity(newQuantity);
             cartItemRepository.save(existingCartItem);
@@ -138,7 +125,7 @@ public class CartService {
                     .cart(cart)
                     .product(product)
                     .quantity(postCartDto.getQuantity())
-                    .totalPrice(product.getProdPrice() * postCartDto.getQuantity())
+                    .totalPrice(postCartDto.getTotalPrice() * postCartDto.getQuantity())
                     .optionId(optionId)
                     .build();
 
@@ -179,14 +166,25 @@ public class CartService {
 
             //옵션이 있으면 옵션리스트에 담기
             Long optionId = null;
+            int additionalPrice = 0;
             List<String> optionValue = new ArrayList<>();
             if(cartItem.getOptionId()!=null){
                 optionId = cartItem.getOptionId();
                 ProductOption option = productOptionRepository.findById(optionId).orElse(null);
 
-                optionValue.add(option.getOptionValue());
-                optionValue.add(option.getOptionValue2());
-                optionValue.add(option.getOptionValue3());
+                if (option.getOptionValue() != null) {
+                    optionValue.add(option.getOptionValue());
+                }
+                if (option.getOptionValue2() != null) {
+                    optionValue.add(option.getOptionValue2());
+                }
+                if (option.getOptionValue3() != null) {
+                    optionValue.add(option.getOptionValue3());
+                }
+                if(option.getAdditionalPrice() != null){
+                    additionalPrice = option.getAdditionalPrice().intValue();
+                }
+
             }
             log.info(" 옵션 밸류 볼래용 "+optionValue.toString());
 
@@ -198,6 +196,7 @@ public class CartService {
                     .optionId(optionId)
                     .optionValue(optionValue)
                     .cartProductDto(cartProductDto)
+                    .additionalPrice(additionalPrice)
                     .build();
 
             // 7. DTO 리스트에 추가

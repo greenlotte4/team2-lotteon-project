@@ -19,4 +19,5 @@ public class GetCartDto {
 //    private String optionValue2;
 //    private String optionValue3;
     private CartProductDto cartProductDto;
+    private int additionalPrice;
 }

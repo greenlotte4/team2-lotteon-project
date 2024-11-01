@@ -40,7 +40,7 @@
       const deliveryFee = parseInt(cells[7]?.textContent.replace(/[^\d]/g, '').trim()) || 0; // 배송비 (숫자 외 제거)
       const totalPrice = parseInt(cells[8]?.textContent.replace(/[^\d]/g, '').trim()) || 0; // 총합 (숫자 외 제거)
 
-      const discountPrice = productPrice-(productPrice*(1-(discount/100)));
+      const discountPrice = parseInt(productPrice-(productPrice*(1-(discount/100))));
 
       totalqty += quantity;
       totalAllPrice += productPrice;
@@ -58,7 +58,7 @@
     qty.innerText = `${totalqty}`;
     AllDiscount.innerText = `${totalAllDiscount}`;
     AllDeliver.innerText = `${totalAllDeliver}`;
-    OrderPrice.innerText = `${totalOrderPrice + totalAllDeliver}`;
+    OrderPrice.innerText = `${totalOrderPrice}`;
     AllPoint.innerText = `${totalAllPoint}`;
 
     // 주문하기
@@ -521,11 +521,9 @@
                 <img style="width: 80px; height: 80px;" th:src="@{'/file/'+${order.products.getProdListImg()}}" />
               </div>
             </td>
-            <td th:data-product-id="${order.products.id}">
-              <div class="name_desc">
-                <span th:text="${order.products.prodName}">상품명</span> <br />
+            <td class="name_box" th:data-product-id="${order.products.id}">
+                <span th:text="${order.products.prodName}">상품명</span><br>
                 <span th:text="${order.products.prodSummary}">상품설명</span>
-              </div>
             </td>
             <td>
                 <th:block th:if="${order.optionValue.isEmpty()}">

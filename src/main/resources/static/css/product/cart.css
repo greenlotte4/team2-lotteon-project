@@ -78,7 +78,6 @@ input:focus{outline: none;}
 
 
 
-.name_box > span {}
 .name_box > span:last-child {color: #7f7f7f;}
 .tb1 td:last-child{color: #c00000;}
 .cartOptions div {display: flex; justify-content: center;}

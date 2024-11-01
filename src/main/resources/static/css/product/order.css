@@ -75,8 +75,7 @@ input:focus{outline: none;}
 .tb1 td{text-align: center; height: 101px; font-size: 14px;}
 .img {display: flex; align-items: center; display: inline-block;}
 .img > img {margin-left: 20px; margin-right: 15px;}
-.name_desc > span {display: flex; flex-direction: column; line-height: 1px;}
-.name_desc > span:last-child {color: #7f7f7f;}
+.name_box > span:last-child {color: #7f7f7f;}
 .tb1 td:last-child{color: #c00000;}
 
 /* 선택 삭제 버튼 */
@@ -95,6 +94,7 @@ input:focus{outline: none;}
 /* 배송 정보 */
 .sub_tit2 {width: 418px; font-size: 16px; font-weight: 700;
            border-bottom: 1px solid #d9d9d9;}
+input{text-indent: 5px;}
 .tb2 {width: 430px; height: auto; margin-left: 20px;}
 .tb2 td > input {width: 170px; height: 21px; margin-top: 3px;}
 .addr1, .addr2 {width: 317px !important; height: 21px;}
