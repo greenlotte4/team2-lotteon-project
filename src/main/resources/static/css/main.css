@@ -182,8 +182,12 @@ padding: 0 31px; padding-bottom: 30px; z-index: 1000; display: none; border: 1px
 .cont1 ul li .photo{overflow: hidden;}
 .cont1 ul li dl{padding:32px 25px 25px;} /* top: 32px; bottom: 25px; (left,right) :25px; */
 .cont1 ul li dl dt.proTit{display: block; font-size:15px; font-weight:bold; letter-spacing:-0.5px;}
-.cont1 ul li dl dt p.oPrice{ display:block; font-size:12px; font-weight:normal; margin-top:5px; text-decoration:line-through; color: #aaa;}
-.cont1 ul li dl dt .dis{float: left; font-style: normal; color: #ef2a23; margin-left:6px; margin-top:5px; font-weight: 700; text-decoration:none!important;}
+
+.cont1 ul li dl dd p.oPrice{ display:inline-block; font-size:12px; font-weight:normal; margin-top:5px;
+    text-decoration:line-through; color: #aaa;}
+/* 할인율 ↓ */
+.cont1 ul li dl dd .dis{font-style: normal; color: #ef2a23;
+    margin-left:4px; margin-top:5px; font-weight: 700; text-decoration:none!important;}
 
 .cont1 .dPrice{font-size: 13px; font-weight: 700; color:#444;}
 .cont1 .free{display: block; width: 70px; height: 22px; position: absolute; bottom: 25px;}
