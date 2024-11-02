@@ -1,5 +1,6 @@
 package com.lotteon.config;
 
+import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Member;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,6 +22,7 @@ import java.util.Map;
 @Builder
 public class MyUserDetails implements UserDetails, OAuth2User{
     private Member user;
+    private Customer customer;
     private String accessToken;
     private Map<String, Object> attributes;
 
@@ -71,5 +73,11 @@ public class MyUserDetails implements UserDetails, OAuth2User{
     public String getName() {
         return String.valueOf(user.getId());
     }
+
+//    @Override
+//    public String getCustName(){
+//        return customer.getCustName(); // 사용자 이름
+//    }
+
 
 }

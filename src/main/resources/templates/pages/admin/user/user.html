@@ -71,43 +71,45 @@
                     </tr>
                 </thead>
                 <tbody>
-                <tr th:each="cust : ${customers}">
-                   <!-- 번호, 아이디, 이름, 성별, 등급, 포인트, 이메일, 휴대폰, 가입일, 상태, 관리 -->
-                    <th class="checkbox">
-                        <input type="checkbox" id="allCheckbox2">
-                    </th>
-                    <td th:text="${cust.custId}">번호</td>
+                <th:block th:each="cust : ${customers}">
+                    <tr th:id="${'mem'+cust.custId}">
+                       <!-- 번호, 아이디, 이름, 성별, 등급, 포인트, 이메일, 휴대폰, 가입일, 상태, 관리 -->
+                        <th class="checkbox">
+                            <input type="checkbox" id="allCheckbox2">
+                        </th>
+                        <td th:text="${cust.custId}" class="custId">번호</td>
 
-                    <td th:text="${cust.memUid}">아이디</td>
-                    <td th:text="${cust.custName}">이름</td>
-                    <td th:text="${cust.custGender?'남':'여'}">성별</td>
+                        <td th:text="${cust.memUid}" class="memUid">아이디</td>
+                        <td th:text="${cust.custName}" class="custName">이름</td>
+                        <td th:text="${cust.custGender?'남':'여'}" class="custGender">성별</td>
 
-                    <td>
-                        <select name="search" class="grade custgrade" th:data-id="${cust.memUid}">
-                            <option value="VVIP" th:selected="${cust.custGrade}=='VVIP'">VVIP</option>
-                            <option value="VIP" th:selected="${cust.custGrade}=='VIP'">VIP</option>
-                            <option value="Gold" th:selected="${cust.custGrade}=='Gold'">Gold</option>
-                            <option value="Silver" th:selected="${cust.custGrade}=='Silver'">Silver</option>
-                            <option value="Family" th:selected="${cust.custGrade}=='Family'">Family</option>
-                        </select>
-                    </td>
+                        <td>
+                            <select name="search" class="grade custgrade custGrade" th:data-id="${cust.memUid}">
+                                <option value="VVIP" th:selected="${cust.custGrade}=='VVIP'">VVIP</option>
+                                <option value="VIP" th:selected="${cust.custGrade}=='VIP'">VIP</option>
+                                <option value="Gold" th:selected="${cust.custGrade}=='Gold'">Gold</option>
+                                <option value="Silver" th:selected="${cust.custGrade}=='Silver'">Silver</option>
+                                <option value="Family" th:selected="${cust.custGrade}=='Family'">Family</option>
+                            </select>
+                        </td>
 
-                    <td th:text="${cust.custPoint}">포인트</td>
-                    <td th:text="${cust.custEmail}">이메일</td>
-                    <td th:text="${cust.custHp}">휴대폰</td>
-                    <td th:text="${cust.memRdate}">가입일</td>
+                        <td th:text="${cust.custPoint}" class="custPoint">포인트</td>
+                        <td th:text="${cust.custEmail}" class="custEmail">이메일</td>
+                        <td th:text="${cust.custHp}" class="custHp">휴대폰</td>
+                        <td th:text="${cust.memRdate}" class="memRdate">가입일</td>
 
-                    <!-- 회원상태 (4가지 - 정상, 중지, 휴면, 탈퇴) -->
-                    <td th:if="${cust.memState == 'stop'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="condition stop">중지</td>
-                    <td th:if="${cust.memState == 'basic'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="condition basic">정상</td>
-                    <td th:if="${cust.memState == 'sleep'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="condition sleep">휴면</td>
-                    <td th:if="${cust.memState == 'reave'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="condition reave">탈퇴</td>
+                        <!-- 회원상태 (4가지 - 정상, 중지, 휴면, 탈퇴) -->
+                        <td th:if="${cust.memState == 'stop'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="condition stop">중지</td>
+                        <td th:if="${cust.memState == 'basic'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="condition basic">정상</td>
+                        <td th:if="${cust.memState == 'sleep'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="condition sleep">휴면</td>
+                        <td th:if="${cust.memState == 'reave'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="condition reave">탈퇴</td>
 
-                    <td class="td-admin">
-                        <input type="button" value="[ 수정 ]" th:data-id="${cust.custId}" onclick="openCustUpdatePopup(event,1)">
-                        <input type="button" value="[ 중지 ]">
-                    </td>
-                </tr>
+                        <td class="td-admin">
+                            <input type="button" value="[ 수정 ]" th:data-id="${cust.custId}" onclick="openCustUpdatePopup(event,1)">
+                            <input type="button" value="[ 중지 ]">
+                        </td>
+                    </tr>
+                </th:block>
                 </tbody>
             </table><!-- .tb1 .user-->
 
@@ -157,6 +159,7 @@
 
             const data = await resp.json();
             console.log("패치 "+data.custId)
+            console.log("패치2222 "+data.id)
             if (data!=null) {
                 // 팝업 내용 설정
                 popup.innerHTML = `
@@ -188,7 +191,7 @@
                         </tr>
                         <tr>
                             <th>상태</th>
-                            <td><input name="memState" value="${data.memState}" readonly></td>
+                            <td class="memState">${data.memState}</td>
                         </tr>
                         <tr>
                             <th>이메일</th>
@@ -200,7 +203,7 @@
                         </tr>
                         <tr>
                             <th>우편번호</th>
-                            <td><input name="custAddr1" value="${data.custAddr1}"></td>
+                            <td><input name="custAddr1" value="${data.custAddr1}" class=""></td>
                         </tr>
                         <tr>
                             <th>기본주소</th>
@@ -220,7 +223,7 @@
                         </tr>
                         <tr>
                             <th>기타</th>
-                            <td><textarea name="memEtc">${data.memEtc || ''}</textarea></td>
+                            <td><textarea name="memEtc" data-placeholder="회원에 대한 기타 정보입력">${data.memEtc || ''}</textarea></td>
                         </tr>
                         <input type="hidden" name="custId" value="${data.custId}">
                     </table>
@@ -241,13 +244,26 @@
 
     // 폼 제출 및 데이터 전송
     function submitForm(id) {
+        console.log('1'+document.querySelector('input[name="memUid"]').value);
+        console.log('2'+document.querySelector('input[name="custId"]').value);
+        console.log('3'+document.querySelector('input[name="custName"]').value);
+        console.log('4'+document.querySelector('input[name="custGender"]').value);
+        console.log('5'+document.querySelector('input[name="custGrade"]').value);
+        console.log('6'+document.getElementsByClassName('memState')[0].innerText);
+        console.log('7'+document.querySelector('input[name="custEmail"]').value);
+        console.log('8'+document.querySelector('input[name="custHp"]').value);
+        console.log('9'+document.querySelector('input[name="custAddr1"]').value);
+        console.log('10'+document.querySelector('input[name="custAddr2"]').value);
+        console.log('11'+document.querySelector('input[name="custAddr3"]').value);
+        console.log('12'+document.querySelector('textarea[name="memEtc"]').value);
+        const element = document.getElementById("id");
         const data = {
             memUid: document.querySelector('input[name="memUid"]').value,
             custId: document.querySelector('input[name="custId"]').value,
             custName: document.querySelector('input[name="custName"]').value,
             custGender: document.querySelector('input[name="custGender"]:checked').value,
             custGrade: document.querySelector('input[name="custGrade"]').value,
-            memState: document.querySelector('input[name="memState"]').value,
+            memState: document.getElementsByClassName('memState')[0].innerText,
             custEmail: document.querySelector('input[name="custEmail"]').value,
             custHp: document.querySelector('input[name="custHp"]').value,
             custAddr1: document.querySelector('input[name="custAddr1"]').value,
@@ -255,7 +271,7 @@
             custAddr3: document.querySelector('input[name="custAddr3"]').value,
             memEtc: document.querySelector('textarea[name="memEtc"]').value
         };
-
+        console.log('hi22222');
 
         fetch(`/admin/user/user/${data.custId}`, {
             method: 'PUT',
@@ -272,18 +288,7 @@
                 alert('회원 정보가 성공적으로 수정되었습니다.');
 
                 // alert 창 닫은 후, HTML 요소 업데이트 (새로고침 없이)
-                const row = document.querySelector(`#member-${updatedData.custId}`);
-                if (row) {
-                    row.querySelector('.custName').textContent = updatedData.custName;
-                    row.querySelector('.custEmail').textContent = updatedData.custEmail;
-                    row.querySelector('.custGender').textContent = updatedData.custGender === 'M' ? '남' : '여';
-                    row.querySelector('.custHp').textContent = updatedData.custHp;
-                    row.querySelector('.custAddr1').textContent = updatedData.custAddr1;
-                    row.querySelector('.custAddr2').textContent = updatedData.custAddr2;
-                    row.querySelector('.custAddr3').textContent = updatedData.custAddr3;
-                    row.querySelector('.memEtc').textContent = updatedData.memEtc;
-                }
-
+                window.location.href ="/admin/user/user";
                 // 팝업 닫기 (alert 확인 버튼 클릭 후)
                 document.querySelector('.popup').style.display = 'none';
                 document.querySelector('.popupbg').style.display = 'none';

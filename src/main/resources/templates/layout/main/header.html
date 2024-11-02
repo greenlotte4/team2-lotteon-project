@@ -19,22 +19,63 @@
     <link th:href="@{/js/jquery.bxslider.min.css}" rel="stylesheet" />
     <script defer th:src="@{/js/jquery.bxslider.min.js}"></script>
 </head>
+<!--
+
+     날짜 : 2024/10/13 (일)
+     이름 : 김민희
+     내용 : 메인 header.html 생성
+
+     수정이력
+      - 2025/10/30 (수) 김민희 - 실시간 검색어 및 GNB 영역 마크업 구조 수정
+      - 2025/11/02 (토) 김민희 - 로그인 시 관리자,판매자,일반사용자 구분 되는 인가설정
+-->
+
 <body>
     <header id="header">
+        <div class="h_utill"></div><!--.h_utill-->
         <div id="headerIn">
-            <h1 class="logo"><a style="z-index: 2; position: relative; top: 33px;" th:href="@{/}">
+            <h1 class="logo">
+                <a th:href="@{/}">
                 <img class="hlogo" th:src="@{'/file/'+${site.configHeaderLogo}}" alt="LotteON logo">
             </a></h1><!--.logo-->
 
             <div class="utill">
                 <ul>
-                    <li class="login" sec:authorize="!isAuthenticated()"><a th:href="@{/auth/login/view}">로그인</a></li><!-- .login -->
-                    <li class="logout" sec:authorize="isAuthenticated()"><a th:href="@{/auth/logout}">로그아웃</a></li><!-- .logout -->
-                    <li class="join" sec:authorize="!isAuthenticated()"><a th:href="@{/auth/join}">회원가입</a></li><!-- .join -->
+                    <li class="login" sec:authorize="!isAuthenticated()">
+                        <a th:href="@{/auth/login/view}">로그인</a>
+                    </li><!-- .login -->
+
+                    <li class="logout" sec:authorize="isAuthenticated()">
+                        <a th:href="@{/auth/logout}">로그아웃</a>
+                    </li><!-- .logout -->
+
+                    <li class="join" sec:authorize="!isAuthenticated()">
+                        <a th:href="@{/auth/join}">회원가입</a>
+                    </li><!-- .join -->
+
                     <li class="cs"><a th:href="@{/cs/index}">고객센터</a></li><!-- .cs -->
                     <li sec:authorize="hasRole('admin')"><a th:href="@{/admin/config/index}">관리자</a></li>
                     <li sec:authorize="hasRole('seller')"><a th:href="@{/admin/prod/products}">판매자</a></li>
-                    <li sec:authorize="isAuthenticated()"><a>이상훈님 환영합니다.</a></li>
+
+                    <!-- 로그인 시 || 안녕하세요, 000님 (관리자) -->
+                    <!-- 관리자: admin / 판매자: seller / 사용자: customer (사용자면 사용자 등급 표시)  -->
+                    <li sec:authorize="hasRole('admin')"><a>안녕하세요, 관리자님 환영합니다.</a></li>
+                    <li sec:authorize="hasRole('seller')"><a>안녕하세요, 판매자님 환영합니다.</a></li>
+
+                    <!-- (customer)일반사용자로 로그인 시 사용자등급별 출력 -->
+                    <li sec:authorize="isAuthenticated()">
+                        안녕하세요&nbsp;
+                        <span th:text="${#authentication.principal.user.customer.custName}"></span>&nbsp;님&nbsp;
+                        &#40;<span th:switch="${#authentication.principal.user.customer.custGrade}">
+                            <span th:case="'VVIP'">VVIP</span>
+                            <span th:case="'VIP'">VIP</span>
+                            <span th:case="'GOLD'">GOLD</span>
+                            <span th:case="'SILVER'">SILVER</span>
+                            <span th:case="'FAMILY'">FAMILY</span>
+                        </span>&#41;
+                    </li>
+
+
                 </ul>
             </div><!--.utill-->
 
@@ -67,12 +108,11 @@
                 <div class="menu-box-in">
 
                     <ul class="gnb cf">
-                        <li><a th:href="@{/event/attendance}">출석이벤트</a></li>
-                        <li><a href="#">쿠폰이벤트</a></li>
-                        <li><a href="#">오늘도</a></li>
-                        <li><a href="#">화이팅</a></li>
-                        <li><a href="#">로떼온</a></li>
-                        <li><a href="#">2조!!!</a></li>
+                        <li><a th:href="@{/event/attendance}">히트상품</a></li>
+                        <li><a href="#">추천상품</a></li>
+                        <li><a href="#">최신상품</a></li>
+                        <li><a href="#">인기상품</a></li>
+                        <li><a href="#">할인상품</a></li>
                     </ul><!-- .gnb -->
 
                     <!-- 실시간 검색어 start -->

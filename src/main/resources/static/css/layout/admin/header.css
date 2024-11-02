@@ -4,16 +4,6 @@ header {
     height: 100px;
 }
 
-.top-link {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-}
-
-.top-link a {
-    margin-right: 10px;
-    text-decoration: none;
-}
 
 .s1 {
     width: 100%;
@@ -22,6 +12,25 @@ header {
     padding-top: 20px;
     color: white;
 }
+
+.top-link {
+    width: 980px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.top-link span{margin-right:10px;}
+/*.top-link span:after{display: block; content:""; clear: both; width:1px; height:8px;*/
+/*    background: rgba(255,255,255,0.4);*/
+/*}*/
+
+.top-link a {
+    margin-right: 10px;
+    text-decoration: none;
+}
+
+
 
 .logo img {
     position: relative;

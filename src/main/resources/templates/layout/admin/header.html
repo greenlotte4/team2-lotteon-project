@@ -16,10 +16,15 @@
 <body>
         <section class="s1">
             <div class="top-link">
+                <!-- 로그인 시 || 안녕하세요, 000님 환영합니다. (사용자별) -->
+                <span sec:authorize="hasRole('admin')">안녕하세요, 관리자님</span>
+                <span sec:authorize="hasRole('seller')">안녕하세요, 판매자님</span>
+
                 <a th:href="@{/}">홈</a>
                 <a th:href="@{/auth/logout}">로그아웃</a>
                 <a th:href="@{/cs/index}">고객센터</a>
-            </div>
+
+            </div><!-- .top-link -->
         </section>
         <div onclick="getHome()" class="logo" style="cursor: pointer">
             <img th:src="@{'/file/'+${site.configHeaderLogo}}" style="width: 120px" alt="">
