@@ -26,6 +26,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/*
+ *  이름 : 박경림
+ *  날짜 : 2024-10-30
+ *  작업내용 : index에서 글 목록, 문의하기 글 목록, 글 보기
+ *
+ *
+ * 수정이력
+      - 2024/10/31 박경림 - CS qna 카테고리별 QNA 목록 조회 컨트롤러 추가
+      - 2024/11/04 신승우 - 카테고리 필터링 기능 추가
+ * */
+
 @Controller
 @RequestMapping("/cs")
 @RequiredArgsConstructor
