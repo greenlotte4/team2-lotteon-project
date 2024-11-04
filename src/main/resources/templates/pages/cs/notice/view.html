@@ -1,54 +1,70 @@
-
-<link rel="stylesheet" th:href="@{/css/cs/cs_notice.css}" />
-<link rel="stylesheet" th:href="@{/css/basic.css}">
-<link th:href="@{/css/cs/cs_common.css}" rel="stylesheet">
-<link th:href="@{/css/cs/common.css}" rel="stylesheet">
+<title>공지사항 상세</title>
+<link rel="stylesheet" th:href="@{/css/cs/cs_view.css}" />
+<link rel="stylesheet" th:href="@{/css/basic.css}" />
+<link rel="stylesheet" th:href="@{/css/cs/cs_common.css}" />
+<link rel="stylesheet" th:href="@{/css/cs/common.css}" />
 
 <header th:replace="layout/main/header.html"></header>
+
 <main style="margin: 0 auto; margin-bottom: 50px; margin-top: 230px;">
+    <!-- 사이드바 -->
     <aside class="cs_aside">
         <h3 class="aside_title">공지사항</h3>
         <ul class="aside_cate">
             <li class="cate_list"><a th:href="@{/cs/notices}">전체</a></li>
-            <li class="cate_list"><a href="#">고객서비스</a></li>
-            <li class="cate_list"><a href="#">안전거래</a></li>
-            <li class="cate_list"><a href="#">위해상품</a></li>
-            <li class="cate_list"><a href="#">이벤트당첨</a></li>
+            <li class="cate_list"><a th:href="@{/cs/notices(category='고객서비스')}">고객서비스</a></li>
+            <li class="cate_list"><a th:href="@{/cs/notices(category='안전거래')}">안전거래</a></li>
+            <li class="cate_list"><a th:href="@{/cs/notices(category='위해상품')}">위해상품</a></li>
+            <li class="cate_list"><a th:href="@{/cs/notices(category='이벤트당첨')}">이벤트당첨</a></li>
         </ul>
     </aside>
-    <div id="main" style="height: auto">
-        <nav class="cs_nav">
-            <p class="cs_nav_tit"><span>홈</span> > <span>공지사항</span></p>
-        </nav>
-        <div class="box">
 
+    <!-- 메인 컨텐츠 -->
+    <div id="main" style="height: auto;">
+        <!-- 상단 카테고리 제목과 네비게이션 경로를 함께 배치 -->
+        <div class="top-bar" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #e0e0e0;">
+            <div class="left">
+                <h3 class="cate_title" th:text="${selectedCate1 != null && !selectedCate1.isEmpty() ? selectedCate1 : '전체'}">전체</h3>
+                <p class="cate_des" th:text="${selectedCate1 != null && !selectedCate1.isEmpty() ? selectedCate1 + ' 관련 공지사항입니다.' : '공지사항 전체 내용입니다.'}">
+                    공지사항 전체 내용입니다.
+                </p>
+            </div>
+            <div class="right" style="text-align: right;">
+                <p class="cs_nav_tit" style="margin: 0; font-size: 0.9em; color: #555;"><span>홈</span> > <span>공지사항</span></p>
+            </div>
+        </div>
+
+        <!-- 공지사항 상세보기 박스 -->
+        <div class="box">
             <section class="cs_notice">
-                <div class="cate_bar">
-                    <h3 class="cate_title">전체</h3>
-                    <p class="cate_des">공지사항 전체 내용입니다.</p>
-                </div>
+                <!-- 공지사항 상세 정보 (카테고리 2와 제목, 날짜) -->
                 <div class="view_title">
-                    <p class="v_title cate" th:text="${notice.category1Name}">카테고리 이름</p>
                     <p class="v_title cate" th:text="${notice.category2Name}">카테고리2 이름</p>
                     <p class="v_title title" th:text="${notice.noticeTitle}">공지사항 제목</p>
                     <p class="date rdate" th:text="${#dates.format(notice.noticeRdate, 'yyyy.MM.dd')}">등록 날짜</p>
                 </div>
+
+                <!-- 공지사항 내용 -->
                 <div class="view_content">
                     <div>
-                        <p th:utext="${notice.noticeContent}"></p>
+                        <p th:utext="${notice.noticeContent}">공지사항 내용</p>
                     </div>
                 </div>
-                    <div class="autolink">
-                        <p>* 피싱 관련 피해신고<br><br>
-                            > 경찰사이버수사국 (국번없이) 182: http://어쩌구.go.kr<br>
-                            > KISA 인터넷침해대응센터 (국번없이) 182: http://어쩌구.go.kr<br>
-                            감사합니다.
-                        </p>
-                    </div>
+
+                <!-- 경고 메시지 -->
+                <div class="autolink" th:if="${categoryWarning != null}">
+                    <p th:text="${categoryWarning}">
+                        <!-- category_warning 내용이 여기에 표시됩니다. -->
+                    </p>
                 </div>
-                <a th:href="@{/cs/notices}" class="btn_gray btn_list">목록</a>
+
+                <!-- 목록으로 돌아가기 버튼 -->
+                <div style="text-align: center; padding-top: 40px;">
+                    <a th:href="@{/cs/notices}" class="btn_gray btn_list">목록</a>
+                </div>
             </section>
         </div>
     </div>
 </main>
+
 <footer th:replace="layout/main/footer.html"></footer>

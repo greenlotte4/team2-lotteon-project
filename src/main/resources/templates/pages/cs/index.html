@@ -1,6 +1,8 @@
 <link rel="stylesheet" th:href="@{/css/cs/cs_common.css}">
 <link rel="stylesheet" th:href="@{/css/cs/cs_index.css}">
 <link rel="stylesheet" th:href="@{/css/basic.css}">
+<!-- Font Awesome 추가 (CDN) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMnR4ZQ9F4MI6Z/5EdgW3Mvrrb14B3/5m55LJbB" crossorigin="anonymous">
 <header th:replace="layout/main/header.html"></header>
 <main style="margin: 0 auto; margin-bottom: 50px; margin-top: 230px;">
     <!--    <aside class="cs_aside">-->
@@ -33,32 +35,44 @@
             </ul>
         </section>
         <section class="cs_index cs_index_fnq">
-            <h3 class="sub_title">자주하는질문<a th:href="@{/cs/faqs}" class="viewAll">전체보기<img src="" alt=""></a></h3>
+            <h3 class="sub_title">자주하는 질문<a href="#">전체보기</a></h3>
             <ul class="fnq_ul">
-                <li class="fnq_li"><a href="#">
-                    <img src="/images/test_image.png" alt="예시이미지" class="fnq_img">
-                    <p class="fnq_content">회원</p>
-                </a></li>
-                <li class="fnq_li"><a href="#">
-                    <img src="/images/test_image.png" alt="예시이미지" class="fnq_img">
-                    <p class="fnq_content">쿠폰/이벤트</p>
-                </a></li>
-                <li class="fnq_li"><a href="#">
-                    <img src="/images/test_image.png" alt="예시이미지" class="fnq_img">
-                    <p class="fnq_content">주문/결제</p>
-                </a></li>
-                <li class="fnq_li"><a href="#">
-                    <img src="/images/test_image.png" alt="예시이미지" class="fnq_img">
-                    <p class="fnq_content">배송</p>
-                </a></li>
-                <li class="fnq_li"><a href="#">
-                    <img src="/images/test_image.png" alt="예시이미지" class="fnq_img">
-                    <p class="fnq_content">취소/반품/환불</p>
-                </a></li>
-                <li class="fnq_li"><a href="#">
-                    <img src="/images/test_image.png" alt="예시이미지" class="fnq_img">
-                    <p class="fnq_content">안전결제</p>
-                </a></li>
+                <li class="fnq_li">
+                    <a href="#">
+                        <img src="/static/images/자주하는질문/회원.gif" alt="회원" class="fnq_icon">
+                        <p class="fnq_content">회원</p>
+                    </a>
+                </li>
+                <li class="fnq_li">
+                    <a href="#">
+                        <img src="/static/images/자주하는질문/이벤트.gif" alt="쿠폰/이벤트" class="fnq_icon">
+                        <p class="fnq_content">쿠폰/이벤트</p>
+                    </a>
+                </li>
+                <li class="fnq_li">
+                    <a href="#">
+                        <img src="/static/images/자주하는질문/주문결제.gif" alt="주문/결제" class="fnq_icon">
+                        <p class="fnq_content">주문/결제</p>
+                    </a>
+                </li>
+                <li class="fnq_li">
+                    <a href="#">
+                        <img src="/static/images/자주하는질문/배송.gif" alt="배송" class="fnq_icon">
+                        <p class="fnq_content">배송</p>
+                    </a>
+                </li>
+                <li class="fnq_li">
+                    <a href="#">
+                        <img src="/static/images/자주하는질문/환불.gif" alt="취소/반품/환불" class="fnq_icon">
+                        <p class="fnq_content">취소/반품/환불</p>
+                    </a>
+                </li>
+                <li class="fnq_li">
+                    <a href="#">
+                        <img src="/static/images/자주하는질문/안전결제.gif" alt="안전결제" class="fnq_icon">
+                        <p class="fnq_content">안전결제</p>
+                    </a>
+                </li>
             </ul>
         </section>
 

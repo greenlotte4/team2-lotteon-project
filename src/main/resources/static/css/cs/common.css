@@ -3,7 +3,7 @@
 *{margin: 0; padding:0; font-family: "Inter", sans-serif; font-size: 12px; font-weight: 400;}
 a{text-decoration: none; color: #000;}
 ul, li{list-style: none;}
-#main{width: 1200px; height:auto; margin: 0 auto; border: 1px solid red;}
+#main{width: 1200px; height:auto; margin: 0 auto; border: 1px solid #ffffff;}
 
 /* aside */
 .cs_nav{ height: 40px; line-height: 40px; padding-left: 30px; border-bottom: 1px solid #D9D9D9;}
