@@ -12,6 +12,7 @@
                 <a th:classappend="${active} == 'basics' ? 'active' : ''" th:href="@{/admin/config/basics}">- 기본설정</a>
                 <a th:classappend="${active} == 'banners' ? 'active' : ''" th:href="@{/admin/config/banners}">- 배너관리</a>
                 <a th:classappend="${active} == 'terms' ? 'active' : ''" th:href="@{/admin/config/terms}">- 약관관리</a>
+                <a th:classappend="${active} == 'category' ? 'active' : ''" th:href="@{/admin/prod/category}">- 카테고리</a>
                 <a th:classappend="${active} == 'versions' ? 'active' : ''" th:href="@{/admin/config/versions}">- 버전관리</a>
             </div>
         </div>
@@ -34,7 +35,6 @@
             <div th:classappend="${config} == 'product' ? 'open' : ''"  class="menues" id="menu4">
                 <a th:classappend="${active} == 'products' ? 'active' : ''" th:href="@{/admin/prod/products}">- 상품현황</a>
                 <a th:classappend="${active} == 'product' ? 'active' : ''" th:href="@{/admin/prod/product/post}">- 상품등록</a>
-                <a th:classappend="${active} == 'category' ? 'active' : ''" th:href="@{/admin/prod/category}">- 카테고리</a>
             </div>
         </div>
         <div class="navi">

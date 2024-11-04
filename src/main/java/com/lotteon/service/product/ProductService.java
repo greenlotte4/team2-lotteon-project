@@ -4,8 +4,10 @@ import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.*;
 import com.lotteon.dto.responseDto.GetMainProductDto;
 import com.lotteon.dto.responseDto.ProductPageResponseDTO;
+import com.lotteon.entity.member.Member;
 import com.lotteon.entity.member.Seller;
 import com.lotteon.entity.product.*;
+import com.lotteon.repository.member.MemberRepository;
 import com.lotteon.repository.member.SellerRepository;
 import com.lotteon.repository.product.OrderRepository;
 import com.lotteon.repository.product.ProductDetailRepository;
@@ -52,6 +54,7 @@ public class ProductService {
     private final RedisTemplate<String,Object> redisTemplate;
     private final RedisTemplate<String,List<GetMainProductDto>> bestredisTemplate;
     private final SimpMessagingTemplate messagingTemplate;
+    private final MemberRepository memberRepository;
 
     @Value("${file.upload-dir}")
     private String uploadPath;
@@ -67,8 +70,6 @@ public class ProductService {
 
         //파일 업로드 시스템 경로 구하기
         String path = fileUploadPath.getAbsolutePath();
-
-        log.info("pathpathpathpathpathpath :: " + path);
 
         List<MultipartFile> prodFiles = new ArrayList<>();  // ArrayList로 초기화
         prodFiles.add(productDTO.getListImage());
@@ -113,16 +114,12 @@ public class ProductService {
         }
         if (isUploadSuccessful) {
 
-//            Seller seller = sellerRepository.findById(productDTO.getSellId()).orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 판매자가 없습니다: "));
             MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             Seller seller = auth.getUser().getSeller();
-            log.info("sellllllllllllllllllllll"+seller);
+            Member member = memberRepository.findBySeller(seller).orElseThrow();
             productDTO.setSeller(seller);
             Product product = modelMapper.map(productDTO, Product.class);
-            log.info("123123123123" + product);
-            Product result = productRepository.save(product);
-            log.info("result.getID 결과값은??????" + result.getId());
-            return result;
+            return productRepository.save(product);
         } else {
             return null;
         }

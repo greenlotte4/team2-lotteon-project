@@ -43,10 +43,6 @@ public class ApiAdminProdController {
         Timestamp timestamp = Timestamp.valueOf(localDateTime);
         postProdAllDTO.getPostProdDetailDTO().setMdate(timestamp);
 
-
-
-//        postProdAllDTO.getPostProductDTO().setProdStock();
-
         // 디테일이랑 카테고리 insert 하기전에 productId 넣어주는 작업
         Product result = productService.insertProduct(postProdAllDTO.getPostProductDTO(), postProdAllDTO.getPostProdDetailDTO());
         postProdAllDTO.getPostProdCateMapperDTO().setProductId(result.getId());

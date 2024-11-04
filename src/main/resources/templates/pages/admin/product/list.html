@@ -73,6 +73,11 @@
 
 
     }
+
+    function modifyProduct(button) {
+        const prodId = button.getAttribute("data-id");
+        location.href = '/admin/prod/product/modify?prodId=' + prodId;
+    }
 </script>
 <header th:replace="layout/admin/header.html"></header>
 <main style="margin: 0 auto; margin-bottom: 50px; margin-top: 50px;">
@@ -139,7 +144,7 @@
                 <td class="td-views">[[${product.getProdViews}]]</td>
                 <td class="td-admin">
                     <input type="button" class="deleteBtn" value="[ 삭제 ]" th:data-id="${product.getId()}" onclick="deleteOne(this)">
-                    <input type="button" class="modifyBtn" value="[ 수정 ]" th:data-id="${product.getId()}">
+                    <input type="button" class="modifyBtn" value="[ 수정 ]" th:data-id="${product.getId()}" onclick="modifyProduct(this)">
                 </td>
             </tr>
         </table>

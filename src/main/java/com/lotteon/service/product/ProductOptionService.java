@@ -1,11 +1,13 @@
 package com.lotteon.service.product;
 
+import com.lotteon.dto.requestDto.PostProductOptionDTO;
 import com.lotteon.dto.responseDto.GetOption1Dto;
 import com.lotteon.entity.product.Product;
 import com.lotteon.entity.product.ProductOption;
 import com.lotteon.repository.product.ProductOptionRepository;
 import com.lotteon.repository.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 public class ProductOptionService {
     private final ProductOptionRepository productOptionRepository;
     private final ProductRepository productRepository;
+    private final ModelMapper modelMapper;
 
     public List<GetOption1Dto> findByProdId(long prodId) {
         Optional<Product> product = productRepository.findById(prodId);
@@ -55,4 +58,19 @@ public class ProductOptionService {
 
         return dtos;
     }
+
+
+    public List<PostProductOptionDTO> findOptionByProduct(long prodId) {
+        List<ProductOption> options = productOptionRepository.findByProductId(prodId);
+
+        System.out.println("33333333333"+options);
+
+        List<PostProductOptionDTO> optionDtos = new ArrayList<>();
+        for(ProductOption option : options){
+            PostProductOptionDTO optionDTO = modelMapper.map(option, PostProductOptionDTO.class);
+            optionDtos.add(optionDTO);
+        }
+        return optionDtos;
+    }
+
 }

@@ -1,11 +1,15 @@
 package com.lotteon.controller.controller;
 
 import com.lotteon.config.MyUserDetails;
+import com.lotteon.dto.requestDto.PostProdDetailDTO;
 import com.lotteon.dto.requestDto.PostProductDTO;
+import com.lotteon.dto.requestDto.PostProductOptionDTO;
 import com.lotteon.dto.requestDto.ProductPageRequestDTO;
 import com.lotteon.dto.responseDto.*;
 import com.lotteon.entity.product.Product;
 import com.lotteon.service.category.CategoryProductService;
+import com.lotteon.service.product.ProductDetailService;
+import com.lotteon.service.product.ProductOptionService;
 import com.lotteon.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -23,8 +27,9 @@ import java.util.List;
 @Log4j2
 public class AdminProdController {
     private final CategoryProductService categoryProductService;
-
+    private final ProductOptionService productOptionService;
     private final ProductService productService;
+    private final ProductDetailService productDetailService;
     @ModelAttribute
     public void pageIndex(Model model) {
         model.addAttribute("config",getSideValue());
@@ -45,7 +50,6 @@ public class AdminProdController {
     public String post(Model model) {
         model.addAttribute("active","product");
         List<GetProdCateDTO> prodCate = categoryProductService.findCateAll();
-        log.info("333333333333333333333333"+prodCate);
         model.addAttribute("prodCate", prodCate);
         return "pages/admin/product/register";
     }
@@ -56,6 +60,22 @@ public class AdminProdController {
         model.addAttribute("cate1", cate1);
         model.addAttribute("active","category");
         return "pages/admin/product/category";
+    }
+
+    @GetMapping("/product/modify")
+    public String modify(Model model, @RequestParam(value = "prodId",required = false) long prodId) {
+
+        PostProductDTO postProductDTO = productService.selectProduct(prodId);
+        model.addAttribute("product", postProductDTO);
+        PostProdDetailDTO prodDetail = productDetailService.selectProdDetail(prodId);
+        model.addAttribute("prodDetail", prodDetail);
+        GetCateLocationDTO getCateLocationDTO = categoryProductService.cateLocation2(prodId);
+        model.addAttribute("productCategory", getCateLocationDTO);
+        List<PostProductOptionDTO> productOptions = productOptionService.findOptionByProduct(prodId);
+        model.addAttribute("options", productOptions);
+        List<GetProdCateDTO> prodCate = categoryProductService.findCateAll();
+        model.addAttribute("prodCate", prodCate);
+        return "pages/admin/product/modify";
     }
 
 }

@@ -123,68 +123,29 @@
         </form>
         <form>
             <div class="main3">
-                <div class="main-title">상품 옵션</div>
-                <div class="main-description">상품 옵션은 선택사항입니다.</div>
+                <div class="main-title">상품 재고</div>
+                <div class="main-description">옵션이 없을경우 재고량을 입력, 있을 경우 조합형 옵션 버튼을 눌러주세요.</div>
                 <div class="options">
-                    <table class="tb1 tb4" border="1">
+                    <table class="tb5" id="optionTable" border="1">
                         <tr class="tr_option">
-                            <th>옵션</th>
-                            <td class="optionTD">
+                            <th style="text-align: left">옵션</th>
+                            <td class="optionTD" style="text-align: left">
                                 <div class="option_inputs">
-                                    <input type="text" class="option_input option_input_name" placeholder="옵션명1">
-                                    <input type="text" class="option_input option_input_value" placeholder="옵션값1">
-                                    <input type="text" class="option_input option_input_name2" placeholder="옵션명2">
-                                    <input type="text" class="option_input option_input_value2" placeholder="옵션값2">
-                                    <input type="text" class="option_input option_input_name3" placeholder="옵션명3">
-                                    <input type="text" class="option_input option_input_value3" placeholder="옵션값3">
-                                    <input type="text" class="option_input option_input_price" placeholder="추가금액">
-                                    <input type="text" class="option_input option_input_stock" placeholder="재고량">
+                                    <input type="text" id="optionStock" class="option_input option_input_stock" placeholder="재고량">
                                 </div>
-                                <button class="btnOption btn_blue" type="button" onclick="addOption(event)">세부옵션추가
-                                </button>
-
                             </td>
                         </tr>
                     </table>
                 </div>
                 <button class="addoption" type="button" onclick="confirmOption(event)">옵션저장</button>
-                <button type="button" id="check" class="addoption" onclick="addParent(event)">옵션추가</button>
-                <button type="button" class="addoption" id="optionChange" onclick="setSingleOption()">단일옵션</button> <!-- 단일옵션 버튼 추가 -->
-                <button type="button" class="addoption" id="mix" onclick="showMix()">옵션 자동 조합</button> <!-- 단일옵션 버튼 추가 -->
-                <span class="limit3"></span>
+                <button type="button" class="addoption" id="mix" onclick="showMix()">조합형 옵션</button>
+                <button class="addoption" id="optionMix" type="button" onclick="showMixOption()" style="display: none">옵션 조합 생성</button>
+                <button class="addoption" id="optionMixPlus" type="button" onclick="addOptionRow()" style="display: none;">옵션 추가</button>
             </div>
 
             <div class="main3" id="mixOption" style="display: none;">
-                <div class="main-title">옵션 자동 조합</div>
-                <div class="main-description">옵션을 등록하면 자동으로 조합됩니다.</div>
-                <div class="main-options">
-                    <table class="tb2">
-                        <tr class="option0">
-                            <th>옵션명</th>
-                            <th>옵션값</th>
-                        </tr>
-                        <tr class="option1">
-                            <td>
-                                <input type="text" class="optionName" id="optionName1" placeholder="예: 색상">
-                            </td>
-                            <td>
-                                <input type="text" class="optionValue" id="optionValue1" placeholder="예: 레드, 블루">
-                            </td>
-                        </tr>
-                        <tr class="option2">
-                            <td>
-                                <input type="text" class="optionName" id="optionName2" placeholder="예: 사이즈">
-                            </td>
-                            <td>
-                                <input type="text" class="optionValue" id="optionValue2" placeholder="예: S, M, L">
-                            </td>
-                        </tr>
-                    </table>
-                    <button class="addoption" type="button" onclick="generateCombinations()">옵션 조합 생성</button>
-                </div>
-
                 <div class="options-table">
-                    <table class="tb2">
+                    <table class="tb5">
                         <thead>
                         <tr class="option0">
                             <th>옵션 조합</th>
@@ -242,7 +203,7 @@
                     </tr>
                     <tr class="mdate">
                         <th>제조연월</th>
-                        <td><input type="date" name="mDate1"></td>
+                        <td><input type="date" name="mDate1" style="text-indent: 0px;"></td>
                     </tr>
                     <tr class="caution">
                         <th>취급시 주의사항</th>

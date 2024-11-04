@@ -28,7 +28,7 @@ async function openCategory(event){
             <a href="#" onmouseover="hoverFunction(event)" data-id="${v.id}" class="d2_tit cf">${v.name}
                 <ul class="dep3 cf" id="${v.id}" style="display: none">
                     ${subCategories.map(sub => `
-                        <li><a href="#" data-value="${sub.id}" onclick="productList(this)">${sub.name}</a></li>
+                        <li><a href="#" data-value="${sub.id}" onclick="productList(${v.id})">${sub.name}</a></li>
                     `).join('')}
                 </ul>
             </a>
@@ -50,12 +50,7 @@ function closePopupCategory(){
 }
 
 function productList(e){
-    console.log(e.dataset.value);
-
-    const cate = e.dataset.value;
-    window.location.href = `/prod/products?cate=${cate}`;
-
-
+    window.location.href = `/prod/products?cate=${e}`;
 }
 
 function hoverFunction(event){

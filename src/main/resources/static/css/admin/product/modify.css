@@ -23,7 +23,7 @@ input {text-indent: 10px;}
     border-collapse: collapse;
     border-top: 1px solid #A6A6A6;
     border-bottom: 1px solid #A6A6A6;
-    width: 270px;
+    width: auto;
 }
 
 .tb1 th {

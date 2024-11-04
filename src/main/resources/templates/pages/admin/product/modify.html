@@ -1,4 +1,4 @@
-<link rel="stylesheet" th:href="@{/css/admin/product/register.css}" />
+<link rel="stylesheet" th:href="@{/css/admin/product/modify.css}" />
 <link rel="stylesheet" th:href="@{/css/basic.css}">
 <script th:src="@{/js/productRegister.js}"></script>
 <body>
@@ -8,13 +8,13 @@
     <aside th:replace="layout/admin/aside.html"></aside>
     <section class="container">
         <div class="header">
-            <span class="header-title">상품등록</span>
+            <span class="header-title">상품수정</span>
             <div class="header-right">
                 <span>HOME</span>
                 <span>></span>
                 <span>상품관리</span>
                 <span>></span>
-                <span class="bold">상품등록</span>
+                <span class="bold">상품수정</span>
             </div>
         </div>
 
@@ -27,31 +27,41 @@
                     <tr>
                         <th>1차 분류</th>
                         <td>
-                            <select class="cate1" oninput="updateSelect2()">
+                            <select class="cate1" name="categoryId1" th:value="${productCategory.getLevel1Name()}" oninput="updateSelect2()">
                                 <option value="">1차분류 선택</option>
                                 <th:block th:each="category : ${prodCate}">
                                     <option th:if="${category.getCategoryLevel() == 1}"
                                             th:value="${category.getCategoryId()}"
-                                            th:text="${category.getCategoryName()}">
+                                            th:text="${category.getCategoryName()}"
+                                            th:selected="${category.getCategoryName() == productCategory.getLevel1Name()}">
                                     </option>
                                 </th:block>
                             </select>
+                        </td>
+                        <td>
+                            <span>&nbsp;&nbsp; 현재 카테고리 : [[${productCategory.getLevel1Name()}]]</span>
                         </td>
                     </tr>
                     <tr>
                         <th>2차 분류</th>
                         <td>
-                            <select class="cate2" oninput="updateSelect3()">
+                            <select class="cate2" name="categoryId2" th:value="${productCategory.getLevel2Name()}" oninput="updateSelect3()">
                                 <option value="">2차분류 선택</option>
                             </select>
+                        </td>
+                        <td>
+                            <span>&nbsp;&nbsp; 현재 카테고리 : [[${productCategory.getLevel2Name()}]]</span>
                         </td>
                     </tr>
                     <tr>
                         <th>3차 분류</th>
                         <td>
-                            <select class="cate3" name="categoryId">
+                            <select class="cate3" name="categoryId3" th:value="${productCategory.getLevel3Name()}">
                                 <option value="">3차분류 선택</option>
                             </select>
+                        </td>
+                        <td>
+                            <span>&nbsp;&nbsp; 현재 카테고리 : [[${productCategory.getLevel3Name()}]]</span>
                         </td>
                     </tr>
                 </table>
@@ -64,45 +74,49 @@
                 <table class="tb2">
                     <tr class="name">
                         <th>상품명</th>
-                        <td><input type="text" name="prodName" placeholder="상품명 입력"></td>
+                        <td><input type="text" name="prodName" th:value="${product.prodName}"></td>
                     </tr>
                     <tr class="summary">
                         <th>기본설명</th>
-                        <td><input type="text" name="prodSummary" placeholder="요약설명 입력"></td>
+                        <td><input type="text" name="prodSummary" th:value="${product.prodSummary}"></td>
                     </tr>
                     <tr class="company">
                         <th>제조사</th>
-                        <td><input type="text" name="manufacture" placeholder="제조사 입력"></td>
+                        <td><input type="text" name="manufacture" th:value="${prodDetail.manufacture}" ></td>
                     </tr>
                     <tr class="price">
                         <th>상품금액</th>
-                        <td><input type="text" name="prodPrice" placeholder="금액 입력"> 원</td>
+                        <td><input type="text" id="productPrice" name="prodPrice" th:value="${#numbers.formatInteger(product.getProdPrice(), 1)}"> 원</td>
                     </tr>
                     <tr class="discount">
                         <th>할인율</th>
-                        <td><input type="text" name="prodDiscount" class="productDiscount" placeholder="할인율 입력"> %</td>
+                        <td><input type="text" name="prodDiscount" class="productDiscount" th:value="${#numbers.formatInteger(product.prodDiscount, 1)}"> %</td>
                     </tr>
                     <tr class="point">
                         <th>포인트</th>
-                        <td><input type="text" name="prodPoint" placeholder="포인트 입력"> p</td>
+                        <td><input type="text" id="productPoint" name="prodPoint" th:value="${product.prodPoint}"> p</td>
                     </tr>
                     <tr class="delivery">
                         <th>배송비</th>
-                        <td><input type="text" name="prodDeliver" placeholder="배송비 입력"> 원</td>
+                        <td><input type="text" name="prodDeliver" th:value="${product.getProdDeliver}"> 원</td>
                     </tr>
+                    <input type="hidden" name="prodStock" id="prodStock">
                     <tr class="images">
                         <th>상품이미지</th>
                         <td class="td-images">
                             <div class="img1">
                                 <input type="file" name="listImage" id="prodListImg">
+                                <img th:src="@{'/file/'+${product.getProdListImg()}}" id="listPreview" alt="미리보기 이미지" style="width: 100px; height: 100px;">
                                 <span>크기 190 x 190, 상품 목록에 출력될 이미지입니다.</span>
                             </div>
                             <div class="img2">
                                 <input type="file" name="basicImage" id="prodBasicImg">
+                                <img th:src="@{'/file/'+${product.getProdBasicImg()}}" id="basicPreview" alt="미리보기 이미지" style="width: 100px; height: 100px;">
                                 <span>크기 230 x 230, 상품 메인에 출력될 이미지입니다.</span>
                             </div>
                             <div class="img3">
                                 <input type="file" name="detailImage" id="prodDetailImg">
+                                <img th:src="@{'/file/'+${product.getProdDetailImg()}}" id="detailPreview" alt="미리보기 이미지" style="width: 100px; height: 100px;">
                                 <span>크기 450 x 450, 상품 상세에 출력될 이미지입니다.</span>
                             </div>
                         </td>
@@ -116,42 +130,49 @@
                             </div>
                         </td>
                     </tr>
-                    <input type="hidden" name="sellId" th:value="${#authentication.principal.user.id}">
+                    <input type="hidden" name="sellId" th:value="${#authentication.principal.user.seller.id}">
                 </table>
             </div>
         </form>
         <form>
             <div class="main3">
-                <div class="main-title">상품 옵션</div>
-                <div class="main-description">상품 옵션은 선택사항입니다.</div>
+                <div class="main-title">상품 재고</div>
+                <div class="main-description">옵션이 없을경우 재고량을 입력, 있을 경우 조합형 옵션 버튼을 눌러주세요.</div>
                 <div class="options">
-                    <table class="tb1 tb4" border="1">
+                    <table class="tb5" id="optionTable" border="1">
                         <tr class="tr_option">
-                            <th>옵션</th>
-                            <td class="optionTD">
+                            <th style="text-align: left">옵션</th>
+                            <td class="optionTD" style="text-align: left">
                                 <div class="option_inputs">
-                                    <input type="text" class="option_input option_input_name" placeholder="옵션명1">
-                                    <input type="text" class="option_input option_input_value" placeholder="옵션값1">
-                                    <input type="text" class="option_input option_input_name2" placeholder="옵션명2">
-                                    <input type="text" class="option_input option_input_value2" placeholder="옵션값2">
-                                    <input type="text" class="option_input option_input_name3" placeholder="옵션명3">
-                                    <input type="text" class="option_input option_input_value3" placeholder="옵션값3">
-                                    <input type="text" class="option_input option_input_price" placeholder="추가금액">
-                                    <input type="text" class="option_input option_input_stock" placeholder="재고량">
+                                    <input type="text" id="optionStock" class="option_input option_input_stock" placeholder="재고량">
                                 </div>
-                                <button class="btnOption btn_blue" type="button" onclick="addOption(event)">세부옵션추가
-                                </button>
-
                             </td>
                         </tr>
                     </table>
                 </div>
                 <button class="addoption" type="button" onclick="confirmOption(event)">옵션저장</button>
-                <button type="button" id="check" class="addoption" onclick="addParent(event)">옵션추가</button>
-                <span class="limit3"></span>
+                <button type="button" class="addoption" id="mix" onclick="showMix()">조합형 옵션</button>
+                <button class="addoption" id="optionMix" type="button" onclick="showMixOption()" style="display: none">옵션 조합 생성</button>
+                <button class="addoption" id="optionMixPlus" type="button" onclick="addOptionRow()" style="display: none;">옵션 추가</button>
+            </div>
+
+            <div class="main3" id="mixOption" style="display: none;">
+                <div class="options-table">
+                    <table class="tb5">
+                        <thead>
+                        <tr class="option0">
+                            <th>옵션 조합</th>
+                            <th>추가금액</th>
+                            <th>수량</th>
+                        </tr>
+                        </thead>
+                        <tbody id="optionMixed">
+                        <!-- 옵션 조합이 여기에 추가됩니다 -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </form>
-
         <form id="detail">
             <div class="main3">
                 <div class="main-title">상품정보 제공고시</div>
@@ -160,15 +181,17 @@
                 <table class="tb3">
                     <tr class="state">
                         <th>상품상태</th>
-                        <td><input type="text" name="stat" value="새상품"></td>
+                        <td><input type="text" name="stat" th:value="${prodDetail.stat}"></td>
                     </tr>
                     <tr class="taxation">
                         <th>부가세 면세여부</th>
-                        <td><select name="tax">
+                        <td><select name="tax"
+                            th:selected="${prodDetail.tax == true}">
                             <option value="true">
                                 과세상품
                             </option>
-                            <option value="false">
+                            <option value="false"
+                                    th:selected="${prodDetail.tax == false}">
                                 비과세상품
                             </option>
                         </select></td>
@@ -183,31 +206,38 @@
                     </tr>
                     <tr class="origin">
                         <th>원산지</th>
-                        <td><input type="text" name="origin" value=""></td>
+                        <td><input type="text" name="origin" th:value="${prodDetail.origin}"></td>
                     </tr>
                     <tr class="manufacture">
                         <th>제조자/수입국</th>
-                        <td><input type="text" name="manufacture" value=""></td>
+                        <td><input type="text" name="manufacture" th:value="${prodDetail.manufacture}"></td>
                     </tr>
                     <tr class="made-in">
                         <th>제조국</th>
-                        <td><input type="text" name="madein" value=""></td>
+                        <td><input type="text" name="madein" th:value="${prodDetail.madein}"></td>
+                    </tr>
+                    <tr class="mdate">
+                        <th>제조연월</th>
+                        <td><input type="date" name="mDate1" style="text-indent: 0px;"
+                                   th:value="${#dates.format(prodDetail.mdate, 'yyyy-MM-dd')}"></td>
                     </tr>
                     <tr class="caution">
                         <th>취급시 주의사항</th>
-                        <td><input type="text" name="caution" value=""></td>
+                        <td><input type="text" name="caution" th:value="${prodDetail.caution}"></td>
                     </tr>
                     <tr class="warranty">
                         <th>품질보증기간</th>
-                        <td><input type="text" name="warranty" value=""></td>
+                        <td><input type="text" name="warranty" th:value="${prodDetail.warranty}"></td>
                     </tr>
                     <tr class="deliAble">
                         <th>해외배송여부</th>
                         <td><select name="deliable">
-                            <option value="true">
+                            <option value="true"
+                                    th:selected="${prodDetail.deliable == true}">
                                 해외 배송 가능
                             </option>
-                            <option value="false">
+                            <option value="false"
+                                    th:selected="${prodDetail.deliable == false}">
                                 해외 배송 불가능
                             </option>
                         </select></td>
@@ -215,17 +245,19 @@
                     <tr class="card">
                         <th>할부 가능 여부</th>
                         <td><select name="installmentable">
-                            <option value="true">
+                            <option value="true"
+                                    th:selected="${prodDetail.installmentable == true}">
                                 할부 가능
                             </option>
-                            <option value="false">
+                            <option value="false"
+                                    th:selected="${prodDetail.installmentable == false}">
                                 할부 불가능
                             </option>
                         </select></td>
                     </tr>
                     <tr class="cardEvent">
                         <th>카드 혜택</th>
-                        <td><input type="text" name="cardEvent" value=""></td>
+                        <td><input type="text" name="cardEvent" th:value="${prodDetail.cardEvent}"></td>
                     </tr>
                 </table>
             </div>
