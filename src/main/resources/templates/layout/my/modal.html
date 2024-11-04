@@ -215,38 +215,28 @@
                 <button class="btn">X</button>
             </nav>
             <section>
-                <form>
+                <form action="#">
                     <table>
                         <tr>
                             <th>상품명</th>
-                            <td class="productName">
-                                <select id="select-prod-name">
-
-                                </select>
-                            </td>
+                            <td class="productName">상품명 </td>
                         </tr>
                         <tr>
                             <th>만족도</th>
                             <td class="rating">
-                                <div style="cursor: pointer" class="my-rating">
-                                    <span class="star" data-value="10">☆</span>
-                                    <span class="star" data-value="20">☆</span>
-                                    <span class="star" data-value="30">☆</span>
-                                    <span class="star" data-value="40">☆</span>
-                                    <span class="star" data-value="50">☆</span>
-                                </div>
+                                <div class="my-rating">☆☆☆☆☆</div>
                             </td>
                         </tr>
                         <tr>
                             <th>내용</th>
                             <td class="review">
-                                <textarea id="review-content" name="review" placeholder="내용입력"></textarea>
+                                <textarea name="review" placeholder="내용입력"></textarea>
                             </td>
                         </tr>
                     </table>
 
                     <div>
-                        <input id="reviewButton" type="button" class="btn color" value="작성완료"/>
+                        <input type="submit" class="btn color" value="작성완료"/>
                         <button class="btn grey">취소</button>
                     </div>
                 </form>

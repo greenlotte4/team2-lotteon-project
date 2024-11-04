@@ -23,4 +23,6 @@ public class PostProductOptionDTO {
     private Integer stock;
     private long productId;
     private int optionState; // 필수옵션인지 아닌지
+
+
 }

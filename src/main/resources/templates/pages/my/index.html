@@ -1,9 +1,8 @@
 <link rel="stylesheet" th:href="@{/css/my/my.css}">
 <link rel="stylesheet" th:href="@{/css/basic.css}">
-<link rel="stylesheet" th:href="@{/css/my/popup.css}">
 <header th:replace="layout/main/header.html"></header>
 <th:block th:replace="layout/my/modal.html"></th:block>
-<main style="margin-top: 230px">
+<main>
   <div id="my">
     <th:block th:replace="layout/my/aside.html"></th:block>
     <main>
@@ -41,10 +40,10 @@
             </td>
             <td class="status" th:text="${order.orderState==0}?'배송중':'배송완료'">배송완료</td>
             <td class="confirm">
-              <button class="receive color">수취확인</button>
-              <button onclick="openReviewWrite(event)" th:data-name="${order.prodName}" th:data-id="${order.orderId}" th:data-prod="${order.prodId}" class="review color">상품평쓰기</button>
-              <button class="refund grey">반품신청</button>
-              <button class="exchange grey">교환신청</button>
+              <a href="#" class="receive color">수취확인</a>
+              <a href="#" class="review color">상품평쓰기</a>
+              <a href="#" class="refund grey">반품신청</a>
+              <a href="#" class="exchange grey">교환신청</a>
             </td>
           </tr>
         </table>
@@ -75,7 +74,7 @@
 
       <h3>상품평<a th:href="@{/my/reviews/{page}(page=${page})}">더보기 &gt; </a></h3>
       <article>
-        <table th:if="${!noReview}" border="0" class="review">
+        <table border="0" class="review">
           <tr>
             <th>번호</th>
             <th>상품명</th>
@@ -83,36 +82,28 @@
             <th>평점</th>
             <th>작성일</th>
           </tr>
-          <tr th:each="review, stat : ${reviews}">
-            <td th:text="${stat.index + 1}">1</td>
-            <td><span th:text="${review.prodId}">상품번호</span> / <span> [[${#strings.length(review.prodName) > 10 ? #strings.substring(review.prodName, 0, 10) + '...' : review.prodName}]]</span></td>
-            <td style="text-align: center;" th:text="${review.review}">배송이 빠릅니다. 잘 사용하겠습니다.</td>
-            <td>
-              <span th:if="${review.score >= 10 && review.score <20}" style="font-size: 14px;">
-                            <img style="width: 76px; height: 17px;" th:src="@{/images/star1.png}">
-                        </span>
-              <span th:if="${review.score >= 20 && review.score <30}" style="font-size: 14px;">
-                            <img style="width: 76px; height: 17px;" th:src="@{/images/star2.png}">
-                        </span>
-              <span th:if="${review.score >= 30 && review.score <40}" style="font-size: 14px;">
-                            <img style="width: 76px; height: 17px;" th:src="@{/images/star3.png}">
-                        </span>
-              <span th:if="${review.score >= 40 && review.score <50}" style="font-size: 14px;">
-                            <img style="width: 76px; height: 17px;" th:src="@{/images/star4.png}">
-                        </span>
-              <span th:if="${review.score >= 50}" style="font-size: 14px;">
-                            <img style="width: 76px; height: 17px;" th:src="@{/images/star5.png}">
-                        </span>
-              <span th:if="${review.score  < 10}" style="font-size: 14px;">
-                            <img style="width: 76px; height: 17px;" th:src="@{/images/star1.png}">
-                        </span>
-            </td>
-            <td th:text="${review.rdate}">2024-12-10</td>
+          <tr>
+            <td>1</td>
+            <td><span>상품번호</span> / <span>상품명</span></td>
+            <td>배송이 빠릅니다. 잘 사용하겠습니다.</td>
+            <td>★★★★☆</td>
+            <td>2024-12-10</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td><span>상품번호</span> / <span>상품명</span></td>
+            <td>배송이 빠릅니다. 잘 사용하겠습니다.</td>
+            <td>★★★★☆</td>
+            <td>2024-12-06</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td><span>상품번호</span> / <span>상품명</span></td>
+            <td>배송이 빠릅니다. 잘 사용하겠습니다.</td>
+            <td>★★★★☆</td>
+            <td>2024-12-06</td>
           </tr>
         </table>
-        <div th:if="${noReview}">
-          등록된 상품평이 없습니다...
-        </div>
       </article>
 
       <h3>문의내역 <a th:href="@{/my/qnas/{page}(page=${page})}">더보기 &gt; </a></h3>
@@ -186,84 +177,5 @@
   </div>
 </main>
 <footer th:replace="layout/main/footer.html"></footer>
-
-<script th:inline="javascript">
-  let orderId;
-  let prodId;
-  let content;
-  let score;
-  async function openReviewWrite(event) {
-    orderId = event.target.dataset.id;
-    prodId = event.target.dataset.prod;
-
-    try {
-      const resp = await axios.get("/prod/review/names",{
-        headers:{
-          "Content-Type" : "application/json"
-        },
-        params : {
-          "orderId" : orderId
-        }
-      })
-      const prods = resp.data.names
-      const selectNames = document.getElementById('select-prod-name')
-      selectNames.innerHTML = prods.map(v=>`
-        <option value="${v.prodId}">${v.productName}</option>
-      `).join('');
-
-      selectNames.addEventListener('change', (event) => {
-        prodId = event.target.value;  // 선택된 값으로 prodId 업데이트
-        console.log('선택된 prodId:', prodId);  // 콘솔에 선택된 prodId 출력
-      });
-
-    } catch (e) {
-
-    }
-
-    const popReviewDialog = document.getElementById("popReview");
-    popReviewDialog.showModal();
-  }
-
-  const stars = document.querySelectorAll('.star');
-  // const selectedRatingDisplay = document.getElementById('selected-rating');
-
-  stars.forEach(star => {
-    star.addEventListener('click', function() {
-      const ratingValue = this.dataset.value;
-
-      stars.forEach(s => {
-        if (s.dataset.value <= ratingValue) {
-          s.classList.add('filled');
-        } else {
-          s.classList.remove('filled');
-        }
-      });
-      score = ratingValue;
-    });
-  });
-
-  document.getElementById('review-content').addEventListener('input',(e)=>{
-    content = e.target.value;
-  })
-
-  document.getElementById('reviewButton').addEventListener('click',async ()=>{
-    const submitData = {
-      "prodId" : prodId,
-      "orderId" : orderId,
-      "review" : content,
-      "score" : score
-    }
-    try {
-      const resp = await axios.post("/prod/review",submitData,{
-        headers: {
-          "Content-Type" : "application/json"
-        }
-      })
-      alert(resp.data)
-    } catch (e) {
-
-    }
-  })
-</script>
 
 

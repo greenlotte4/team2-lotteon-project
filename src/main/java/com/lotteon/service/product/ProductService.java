@@ -2,12 +2,13 @@ package com.lotteon.service.product;
 
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.*;
-import com.lotteon.dto.responseDto.GetMainProductDto;
 import com.lotteon.dto.responseDto.ProductPageResponseDTO;
 import com.lotteon.entity.member.Seller;
-import com.lotteon.entity.product.*;
+import com.lotteon.entity.product.Product;
+import com.lotteon.entity.product.ProductDetail;
+import com.lotteon.entity.product.ProductOption;
+import com.lotteon.entity.product.QProduct;
 import com.lotteon.repository.member.SellerRepository;
-import com.lotteon.repository.product.OrderRepository;
 import com.lotteon.repository.product.ProductDetailRepository;
 import com.lotteon.repository.product.ProductOptionRepository;
 import com.lotteon.repository.product.ProductRepository;
@@ -20,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.*;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -33,7 +33,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -52,7 +51,6 @@ public class ProductService {
     private final RedisTemplate<String,Object> redisTemplate;
     private final RedisTemplate<String,List<GetMainProductDto>> bestredisTemplate;
     private final SimpMessagingTemplate messagingTemplate;
-
     @Value("${file.upload-dir}")
     private String uploadPath;
 
@@ -247,13 +245,6 @@ public class ProductService {
         Pageable pageable = PageRequest.of(page, 7);
         Page<Product> products;
         Page<GetProductDto> dtos;
-        if(!search.equals("0")){
-            String redisKey = "search_count"; // ZSet 키
-            double incrementValue = 1.0; // 점수로 사용할 값 (1 증가)
-            redisTemplate.opsForZSet().incrementScore(redisKey, search, incrementValue);
-            redisTemplate.expire(redisKey, 2, TimeUnit.HOURS);
-        }
-
         if(sortBy.equals("0")){
             if(search.equals("0")){
                 products = productRepository.findAllByOrderByProdOrderCntDesc(pageable);
@@ -268,7 +259,6 @@ public class ProductService {
             }
         }
         dtos = products.map(v->v.toGetProductDto());
-
         return dtos;
     }
 
@@ -376,7 +366,6 @@ public class ProductService {
         System.out.println(dtos);
         return dtos;
     }
-
     public List<GetMainProductDto> findBestItem() {
 
         List<GetMainProductDto> cachedProducts = bestredisTemplate.opsForValue().get("best_products");

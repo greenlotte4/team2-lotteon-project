@@ -1,3 +1,13 @@
+/*
+     날짜 : 2024/10/16
+     이름 : 이상훈(최초 작성자)
+     내용 : 관리자 회원목록 레이아웃 css 생성
+
+     수정이력
+      - 2025/11/03 (일) 김민희 - tb1 각 td별 textover 효과 넣음
+*/
+
+
 @charset "UTF-8";
 
 *{margin: 0; padding:0; font-family: "Inter", sans-serif; font-size: 12px; font-weight: 400;}
@@ -106,7 +116,7 @@ input:focus{outline: none;}
 }
 
 
-/* 테이블1 */
+/* 테이블1 회원목록 */
 .tb1 {
     box-sizing: border-box;
     border-collapse: collapse;
@@ -129,6 +139,8 @@ input:focus{outline: none;}
     font-size: 12px;
     border-bottom: 2px solid #e8e8e8;
     height: 66px;
+    text-overflow: ellipsis; /* 영역 넘어가면 "..." 표기 */
+    overflow: hidden;
 }
 
 .tb1 > tbody > td > input[type="text"] {cursor: pointer;}
@@ -145,14 +157,15 @@ input:focus{outline: none;}
     appearance: none;
 }
 
-/*  회원 상태 (memState 정지,정상,휴면,탈퇴) */
-.condition {color: #00b050; cursor: pointer;}
+/* tb1 회원 상태 (memState 정지,정상,휴면,탈퇴) */
+.memState {color: #00b050; cursor: pointer;}
 
 .stop{color:#67738e;} /* 정지 */
 .basic{color:#4075ff;} /* 정상 */
 .sleep{color:#b4c0d3;} /* 휴면 */
 .reave{color:#eb413f;} /* 탈퇴 */
 
+/* 회원관리 7% */
 .td-admin input{
     border: none;
     background-color: white;
@@ -164,7 +177,6 @@ input:focus{outline: none;}
 }
 
 /* 삭제, 등록 버튼 */
-
 .btns {
     margin-top: 30px;
     width: 100%;

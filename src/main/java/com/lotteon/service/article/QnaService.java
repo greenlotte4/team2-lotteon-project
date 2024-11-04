@@ -12,7 +12,6 @@ import com.lotteon.service.category.CategoryArticleService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,7 +21,6 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 /*
  *  이름 : 박경림
  *  날짜 : 2024-10-30
@@ -39,7 +37,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class QnaService {
 
-    @Autowired
     private final QnaRepository qnaRepository;
     private final ModelMapper modelMapper;
     private final MemberRepository memberRepository;
@@ -176,6 +173,7 @@ public class QnaService {
         return qnaRepository.findTop5ByOrderByQnaRdateDesc();
     }
 
+    /* TODO: qna 1차 유형별 조회 기능 */
     // 1차 카테고리별 QNA 목록 조회
     public Page<ArticleDto> getQnasByCategory(String category, Pageable pageable) {
         CategoryArticle cate1 = categoryArticleRepository.findByCategoryName(category)
@@ -185,12 +183,8 @@ public class QnaService {
         return qnaPage.map(ArticleDto::fromEntity); // 기존 fromEntity 메서드 활용
     }
 
-    public List<ArticleDto> getMyQnas(Long memberId) {
-        List<Qna> qnas = qnaRepository.findByMemberId(memberId);
-        return qnas.stream()
-                .map(ArticleDto::fromEntity)
-                .collect(Collectors.toList());
-    }
+
+
 
 
 

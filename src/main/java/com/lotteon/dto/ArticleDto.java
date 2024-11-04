@@ -76,7 +76,7 @@ public class ArticleDto {
     }
 
 
-    /*public static ArticleDto fromEntity(Qna qna){
+    public static ArticleDto fromEntity(Qna qna){
         return ArticleDto.builder()
                 .id(qna.getId())
                 .title(qna.getQnaTitle())
@@ -90,24 +90,6 @@ public class ArticleDto {
                 .member(qna.getMember())
                 .memId(qna.getMember()!=null ? qna.getMember().getId() : null)
                 .answer(qna.getQnaAnswer())
-                .build();
-    }*/
-    public static ArticleDto fromEntity(Qna qna) {
-        return ArticleDto.builder()
-                .id(qna.getId())
-                .title(qna.getQnaTitle()) // **수정된 부분: title 필드에 qnaTitle 매핑**
-                .content(qna.getQnaContent())
-                .rdate(qna.getQnaRdate())
-                .views(qna.getQnaViews())
-                .cate1(qna.getCate1())
-                .cate2(qna.getCate2())
-                .cate1Id(qna.getCate1() != null ? qna.getCate1().getCategoryId() : null)
-                .cate2Id(qna.getCate2() != null ? qna.getCate2().getCategoryId() : null)
-                .member(qna.getMember())
-                .memId(qna.getMember() != null ? qna.getMember().getId() : null)
-                .answer(qna.getQnaAnswer()) // **수정된 부분: QnA 전용 필드 answer 매핑**
-                .state(qna.getQnaState())   // **수정된 부분: QnA 전용 필드 state 매핑**
-                .type(qna.getQnaType())     // **수정된 부분: QnA 전용 필드 type 매핑**
                 .build();
     }
 }

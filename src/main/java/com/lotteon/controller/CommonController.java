@@ -11,7 +11,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequiredArgsConstructor
 @ControllerAdvice
@@ -22,6 +21,12 @@ public class CommonController {
     private final FLotteService flotteService;
     private final FCsService fcsService;
     private final CopyrightService copyrightService;
+
+//    @Value(value = "${spring.application.name}")
+//    private String appName;
+//
+//    @Value(value = "${spring.application.version}")
+//    private String appVersion;
 
     @ModelAttribute
     public void getCommon(Model model) {

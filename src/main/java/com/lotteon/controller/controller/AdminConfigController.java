@@ -6,7 +6,6 @@ import com.lotteon.service.config.*;
 import com.lotteon.service.term.TermsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -42,10 +41,10 @@ public class AdminConfigController {
     @GetMapping("/index")
     public String index(Model model) {
         String key = "visitor:count:" + LocalDate.now();
-        LocalDate yesterday = LocalDate.now().minusDays(1);
+        String yesterday = "visitor:count:" + LocalDate.now().minusDays(1);
         Long todayCount = visitorService.getVisitorCount(key);
-        Long yesterdayCount = visitorService.findVisitorCount(yesterday);
-        Long weekCount = visitorService.findVisitorCountOfWeek(LocalDate.now());
+        Long yesterdayCount = visitorService.getVisitorCount(yesterday);
+        Long weekCount = visitorService.getWeekVisitorCount();
         model.addAttribute("todayCount", todayCount);
         model.addAttribute("yesterdayCount", yesterdayCount);
         model.addAttribute("weekCount", weekCount);

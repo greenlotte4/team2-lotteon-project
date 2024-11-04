@@ -1,6 +1,5 @@
 package com.lotteon.controller.apicontroller;
 
-import com.lotteon.dto.responseDto.GetLiveTopSearchDto;
 import com.lotteon.service.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.HashOperations;
@@ -11,7 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,13 +38,5 @@ public class ApiSearchController {
         }
 
         return ResponseEntity.ok(sortedMap.keySet());
-    }
-
-    @GetMapping("/live-search-top10")
-    public ResponseEntity<?> getLiveSearchTop10() {
-        List<GetLiveTopSearchDto> searches = searchService.getTopSearches();
-        Map<String,Object> map = new HashMap<>();
-        map.put("searches",searches);
-        return ResponseEntity.ok().body(map);
     }
 }

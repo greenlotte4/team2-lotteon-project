@@ -25,8 +25,6 @@ public interface CategoryArticleRepository extends JpaRepository<CategoryArticle
 
     Optional<CategoryArticle> findByCategoryNameAndCategoryLevelAndCategoryType(String categoryName1, int i, int i1);
 
-
-
     // 최신순으로 10개의 공지사항을 가져오는 메서드 추가
     List<CategoryArticle> findTop10ByOrderByNoticeDateDesc();
 

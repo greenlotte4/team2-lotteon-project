@@ -6,9 +6,7 @@ dialog .color{background: #558ED5; color: #FFF; width: 100px;}
 dialog .grey{background: #BFBFBF; color: #FFF;width: 100px;}
 dialog .imgbox80{width: 80px; height: 80px; overflow: hidden;}
 dialog img{height: 100%; width: 100%; object-fit: cover;}
-.filled {
-    color: gold; /* 채워진 별의 색상 */
-}
+
 dialog {
     position: fixed;
     left: 0;

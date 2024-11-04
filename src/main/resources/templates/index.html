@@ -39,10 +39,10 @@
                 </nav><!-- #memu .memu -->
                 <div class="memuBg"></div><!-- .memuBg -->
 
-                <div id="bestRank" class="best">
+                <div class="best">
                     <h3 class="tit_sty02 cf">
                         <img src="/images/ico_best.png" alt="베스트 상품 아이콘">
-                        베스트상품
+                        베스트 상품
                     </h3><!--.tit_sty02 -->
                     <ul class="bestRank">
                         <li><a href="#">
@@ -113,11 +113,11 @@
                     <div id="sliderPage"><span class="currentSlider">1</span> <span class="totalSlider"> / 3</span></div>
                 </div>
 
-                <div id="hit" class="cont1">
+                <div class="cont1">
                     <div class="inner">
                         <h2 class="tit cf">히트상품</h2><!--.tit-->
                         <div class="pro1 cf">
-                            <ul class="hit">
+                            <ul>
                                 <li><a href="#">
                                     <div class="photo">
                                         <img src="./images/240x200(1).jpg" alt="hit photo1">
@@ -184,7 +184,7 @@
                                     </div><!--.photo-->
                                     <dl>
                                         <dt class="proTit cf">
-                                            히트 상품명 4
+                                            히트 상품명 1
                                         </dt>
                                         <dd>
                                             <p class="oPrice cf">30,000원 </p>
@@ -201,20 +201,20 @@
                             </ul>
                         </div><!--.brsite-->
                     </div><!--.inner-->
-                </div><!-- .cont1 히트상품 -->
+                </div><!-- .cont1 -->
 
-                <div id="recommend" class="cont1">
+                <div class="cont1">
                     <div class="inner">
                         <h2 class="tit cf">추천상품</h2><!--.tit-->
                         <div class="pro1 cf">
-                            <ul class="recommend">
+                            <ul>
                                 <li><a href="#">
                                     <div class="photo">
                                         <img src="./images/index_img2_1(240x200).jpg" alt="hit photo1">
                                     </div><!--.photo-->
                                     <dl>
                                         <dt class="proTit cf">
-                                            추천 상품명 1
+                                            히트 상품명 1
                                         </dt>
                                         <dd>
                                             <p class="oPrice cf">30,000원 </p>
@@ -235,7 +235,7 @@
                                     </div><!--.photo-->
                                     <dl>
                                         <dt class="proTit cf">
-                                            추천 상품명 2
+                                            히트 상품명 1
                                         </dt>
                                         <dd>
                                             <p class="oPrice cf">30,000원 </p>
@@ -256,7 +256,7 @@
                                     </div><!--.photo-->
                                     <dl>
                                         <dt class="proTit cf">
-                                            추천 상품명 3
+                                            히트 상품명 1
                                         </dt>
                                         <dd>
                                             <p class="oPrice cf">30,000원 </p>
@@ -277,7 +277,7 @@
                                     </div><!--.photo-->
                                     <dl>
                                         <dt class="proTit cf">
-                                            추천 상품명 4
+                                            히트 상품명 1
                                         </dt>
                                         <dd>
                                             <p class="oPrice cf">30,000원 </p>
@@ -297,18 +297,18 @@
                     </div><!--.inner-->
                 </div><!-- .cont1 추천상품 -->
 
-                <div id="recent" class="cont1">
+                <div class="cont1">
                     <div class="inner">
                         <h2 class="tit cf">최신상품</h2><!--.tit-->
                         <div class="pro1 cf">
-                            <ul class="recent">
+                            <ul>
                                 <li><a href="#">
                                     <div class="photo">
                                         <img src="./images/index_img3_1(240x200).jpg" alt="hit photo1">
                                     </div><!--.photo-->
                                     <dl>
                                         <dt class="proTit cf">
-                                            최신 상품명 1
+                                            히트 상품명 1
                                         </dt>
                                         <dd>
                                             <p class="oPrice cf">30,000원 </p>
@@ -328,7 +328,7 @@
                                     </div><!--.photo-->
                                     <dl>
                                         <dt class="proTit cf">
-                                            최신 상품명 2
+                                            히트 상품명 1
                                         </dt>
                                         <dd>
                                             <p class="oPrice cf">30,000원 </p>
@@ -348,7 +348,7 @@
                                     </div><!--.photo-->
                                     <dl>
                                         <dt class="proTit cf">
-                                            최신 상품명 3
+                                            히트 상품명 1
                                         </dt>
                                         <dd>
                                             <p class="oPrice cf">30,000원 </p>
@@ -368,7 +368,7 @@
                                     </div><!--.photo-->
                                     <dl>
                                         <dt class="proTit cf">
-                                            최신 상품명 4
+                                            히트 상품명 1
                                         </dt>
                                         <dd>
                                             <p class="oPrice cf">30,000원 </p>
@@ -579,6 +579,7 @@
 
 <script>
     let birth = `[[${birth}]]` ;
+    console.log(birth)
     if(birth=='true'){
         alert('생일 축하합니다.')
     }
@@ -698,12 +699,8 @@
             // isLoading = false;
         }
 
+        alert('생일 축하합니다.')
     }
-
-
-
-
-
 </script>
 <script>
     $(document).ready(function() {

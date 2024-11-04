@@ -1,8 +1,6 @@
 package com.lotteon.entity.product;
 
 import com.lotteon.dto.requestDto.GetProductDto;
-import com.lotteon.dto.requestDto.GetProductNamesDto;
-import com.lotteon.dto.responseDto.GetMainProductDto;
 import com.lotteon.entity.category.CategoryProduct;
 import com.lotteon.entity.category.CategoryProductMapper;
 import com.lotteon.entity.member.Seller;

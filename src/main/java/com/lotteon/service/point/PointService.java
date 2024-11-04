@@ -7,12 +7,10 @@ import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.point.Point;
 import com.lotteon.repository.member.CustomerRepository;
 import com.lotteon.repository.point.PointRepository;
-import com.lotteon.service.member.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,20 +24,6 @@ import java.util.List;
 public class PointService {
     private final PointRepository pointRepository;
     private final CustomerRepository customerRepository;
-    private final CustomerService customerService;
-
-    @Scheduled(cron = "58 59 23 * * ?")
-    public void updatePointState(){
-        LocalDate today = LocalDate.now();
-        List<Point> points = pointRepository.findAllByPointExpirationBefore(today);
-        for(Point point : points){
-            point.expirationPoint();
-            pointRepository.save(point);
-            int pointvar = customerService.updateCustomerPoint(point.getCustomer());
-            point.getCustomer().updatePoint(pointvar);
-            customerRepository.save(point.getCustomer());
-        }
-    }
 
     @Scheduled(cron = "30 59 23 * * ?")
     public void deletePoint(){
@@ -55,7 +39,7 @@ public class PointService {
 
         Customer customer = auth.getUser().getCustomer();
 
-        Page<Point> points = pointRepository.findAllByCustomerAndPointTypeOrderByPointExpirationAsc(customer,1,pageable);
+        Page<Point> points = pointRepository.findAllByCustomerOrderByPointExpiration(customer,pageable);
         Page<GetPointsDto> dtos = points.map(v->v.toGetPointsDto());
 
         return dtos;
@@ -106,7 +90,7 @@ public class PointService {
     public Page<GetPointsDto> findAll(int page) {
         Pageable pageable = PageRequest.of(page, 7);
 
-        Page<Point> points = pointRepository.findAllByOrderByPointRdateDesc(pageable);
+        Page<Point> points = pointRepository.findAllByOrderById(pageable);
         Page<GetPointsDto> dtos = points.map(Point::toGetPointsDtoCustName);
 
         return dtos;
@@ -131,25 +115,25 @@ public class PointService {
 
     private Page<Point> findPointByCustHp(String keyword, Pageable pageable) {
         Customer customer = customerRepository.findByCustHp(keyword);
-        Page<Point> points = pointRepository.findAllByCustomer_CustHpOrderByPointRdateDesc(customer.getCustHp(),pageable);
+        Page<Point> points = pointRepository.findAllByCustomer_CustHp(customer.getCustHp(),pageable);
         return points;
     }
 
     private Page<Point> findPointByCustEmail(String keyword, Pageable pageable) {
         Customer customer = customerRepository.findByCustEmail(keyword);
-        Page<Point> points = pointRepository.findAllByCustomer_CustEmailOrderByPointRdateDesc(customer.getCustEmail(),pageable);
+        Page<Point> points = pointRepository.findAllByCustomer_CustEmail(customer.getCustEmail(),pageable);
         return points;
     }
 
     private Page<Point> findPointByCustName(String keyword, Pageable pageable) {
         Customer customer = customerRepository.findByCustName(keyword);
-        Page<Point> points = pointRepository.findAllByCustomer_CustNameOrderByPointRdateDesc(customer.getCustName(),pageable);
+        Page<Point> points = pointRepository.findAllByCustomer_CustName(customer.getCustName(),pageable);
         return points;
     }
 
     private Page<Point> findPointByUid(String keyword,Pageable pageable) {
         Customer customer = customerRepository.findByMember_MemUid(keyword);
-        Page<Point> points = pointRepository.findAllByCustomer_Member_IdOrderByPointRdateDesc(customer.getMember().getId(),pageable);
+        Page<Point> points = pointRepository.findAllByCustomer_Member_IdOrderByIdDesc(customer.getMember().getId(),pageable);
         return points;
     }
 

@@ -6,7 +6,8 @@
      내용 : 관리자 회원목록 출력을 위한 타임리프 구문 추가
 
      수정이력
-      - 2025/10/27 (일) 김민희 - 회원수정 팝업호출 기능 추가
+      - 2024/10/27 (일) 김민희 - 회원수정 팝업호출 기능 추가
+      - 2024/11/03 (일) 김민희 - 검색 기능 추가
 -->
 <body>
 <header th:replace="layout/admin/header.html"></header>
@@ -21,19 +22,19 @@
                     <span>회원관리</span>
                     <span>회원목록</span>
                 </p>
-            </nav>
-            <form th:action="@{/admin/user/user}" method="get" class="search">
-                <select name="search" class="search-option">
-                    <option th:selected="${search=='couponName'}" value="couponName">아이디</option>
-                    <option value="상품명">아이디</option>
-                    <option value="상품번호">이름</option>
-                    <option value="판매자">이메일</option>
-                    <option value="제조사">휴대폰</option>
-                </select>
-                <input class="search-keyword" type="text" name="keyword" placeholder="키워드 입력">
-                <button class="search-btn" type="submit">검색</button>
-            </form>
+            </nav><!-- .navi -->
 
+            <!-- 검색 -->
+            <form th:action="@{/admin/user/users}" method="get" class="search">
+                <select name="searchType" class="search-option">
+                    <option th:selected="${searchType=='memUid'}" value="memUid">아이디</option>
+                    <option th:selected="${searchType=='custName'}" value="custName">이름</option>
+                    <option th:selected="${searchType=='custEmail'}" value="custEmail">이메일</option>
+                    <option th:selected="${searchType=='custHp'}" value="custHp">휴대폰</option>
+                </select>
+                <input class="search-keyword" type="text" name="keyword" placeholder="검색어 입력">
+                <button class="search-btn" type="submit">검색</button>
+            </form><!-- .search -->
 
             <div class="header-gubun-bottom"></div>
 
@@ -45,8 +46,8 @@
                     <col style="width: 7%;">
                     <col style="width: 5%;">
                     <col style="width: 12%;">
-                    <col style="width: 10%;">
                     <col style="width: 5%;">
+                    <col style="width: 10%;">
                     <col style="width: 12%;">
                     <col style="width: 12%;">
                     <col style="width: 8%;">
@@ -57,17 +58,17 @@
                         <th class="checkbox">
                             <input type="checkbox" id="allCheckbox">
                         </th>
-                        <th>번호</th>
-                        <th>아이디</th>
-                        <th>이름</th>
-                        <th>성별</th>
-                        <th>등급</th>
-                        <th>포인트</th>
-                        <th>이메일</th>
-                        <th>휴대폰</th>
-                        <th>가입일</th>
-                        <th>상태</th>
-                        <th>관리</th>
+                        <th class="" >번호</th>
+                        <th class="">아이디</th>
+                        <th class="">이름</th>
+                        <th class="">성별</th>
+                        <th class="">등급</th>
+                        <th class="">포인트</th>
+                        <th class="">이메일</th>
+                        <th class="">휴대폰</th>
+                        <th class="">가입일</th>
+                        <th class="">상태</th>
+                        <th class="">관리</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -83,13 +84,13 @@
                         <td th:text="${cust.custName}" class="custName">이름</td>
                         <td th:text="${cust.custGender?'남':'여'}" class="custGender">성별</td>
 
-                        <td>
+                        <td class="custGrade"><!- 사용자 등급 (VVIP, VIP, GOLD, SILVER, FAMILY) -->
                             <select name="search" class="grade custgrade custGrade" th:data-id="${cust.memUid}">
                                 <option value="VVIP" th:selected="${cust.custGrade}=='VVIP'">VVIP</option>
                                 <option value="VIP" th:selected="${cust.custGrade}=='VIP'">VIP</option>
-                                <option value="Gold" th:selected="${cust.custGrade}=='Gold'">Gold</option>
-                                <option value="Silver" th:selected="${cust.custGrade}=='Silver'">Silver</option>
-                                <option value="Family" th:selected="${cust.custGrade}=='Family'">Family</option>
+                                <option value="GOLD" th:selected="${cust.custGrade}=='GOLD'">GOLD</option>
+                                <option value="SILVER" th:selected="${cust.custGrade}=='SILVER'">SILVER</option>
+                                <option value="FAMILY" th:selected="${cust.custGrade}=='FAMILY'">FAMILY</option>
                             </select>
                         </td>
 
@@ -99,10 +100,10 @@
                         <td th:text="${cust.memRdate}" class="memRdate">가입일</td>
 
                         <!-- 회원상태 (4가지 - 정상, 중지, 휴면, 탈퇴) -->
-                        <td th:if="${cust.memState == 'stop'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="condition stop">중지</td>
-                        <td th:if="${cust.memState == 'basic'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="condition basic">정상</td>
-                        <td th:if="${cust.memState == 'sleep'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="condition sleep">휴면</td>
-                        <td th:if="${cust.memState == 'reave'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="condition reave">탈퇴</td>
+                        <td th:if="${cust.memState == 'stop'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="memState stop">중지</td>
+                        <td th:if="${cust.memState == 'basic'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="memState basic">정상</td>
+                        <td th:if="${cust.memState == 'sleep'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="memState sleep">휴면</td>
+                        <td th:if="${cust.memState == 'reave'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="memState reave">탈퇴</td>
 
                         <td class="td-admin">
                             <input type="button" value="[ 수정 ]" th:data-id="${cust.custId}" onclick="openCustUpdatePopup(event,1)">
@@ -159,7 +160,6 @@
 
             const data = await resp.json();
             console.log("패치 "+data.custId)
-            console.log("패치2222 "+data.id)
             if (data!=null) {
                 // 팝업 내용 설정
                 popup.innerHTML = `
@@ -191,7 +191,7 @@
                         </tr>
                         <tr>
                             <th>상태</th>
-                            <td class="memState">${data.memState}</td>
+                            <td><input name="memState" value="${data.memState}" readonly></td>
                         </tr>
                         <tr>
                             <th>이메일</th>
@@ -203,7 +203,7 @@
                         </tr>
                         <tr>
                             <th>우편번호</th>
-                            <td><input name="custAddr1" value="${data.custAddr1}" class=""></td>
+                            <td><input name="custAddr1" value="${data.custAddr1}"></td>
                         </tr>
                         <tr>
                             <th>기본주소</th>
@@ -223,7 +223,7 @@
                         </tr>
                         <tr>
                             <th>기타</th>
-                            <td><textarea name="memEtc" data-placeholder="회원에 대한 기타 정보입력">${data.memEtc || ''}</textarea></td>
+                            <td><textarea name="memEtc">${data.memEtc || ''}</textarea></td>
                         </tr>
                         <input type="hidden" name="custId" value="${data.custId}">
                     </table>
@@ -244,26 +244,13 @@
 
     // 폼 제출 및 데이터 전송
     function submitForm(id) {
-        console.log('1'+document.querySelector('input[name="memUid"]').value);
-        console.log('2'+document.querySelector('input[name="custId"]').value);
-        console.log('3'+document.querySelector('input[name="custName"]').value);
-        console.log('4'+document.querySelector('input[name="custGender"]').value);
-        console.log('5'+document.querySelector('input[name="custGrade"]').value);
-        console.log('6'+document.getElementsByClassName('memState')[0].innerText);
-        console.log('7'+document.querySelector('input[name="custEmail"]').value);
-        console.log('8'+document.querySelector('input[name="custHp"]').value);
-        console.log('9'+document.querySelector('input[name="custAddr1"]').value);
-        console.log('10'+document.querySelector('input[name="custAddr2"]').value);
-        console.log('11'+document.querySelector('input[name="custAddr3"]').value);
-        console.log('12'+document.querySelector('textarea[name="memEtc"]').value);
-        const element = document.getElementById("id");
         const data = {
             memUid: document.querySelector('input[name="memUid"]').value,
             custId: document.querySelector('input[name="custId"]').value,
             custName: document.querySelector('input[name="custName"]').value,
             custGender: document.querySelector('input[name="custGender"]:checked').value,
             custGrade: document.querySelector('input[name="custGrade"]').value,
-            memState: document.getElementsByClassName('memState')[0].innerText,
+            memState: document.querySelector('input[name="memState"]').value,
             custEmail: document.querySelector('input[name="custEmail"]').value,
             custHp: document.querySelector('input[name="custHp"]').value,
             custAddr1: document.querySelector('input[name="custAddr1"]').value,
@@ -271,7 +258,7 @@
             custAddr3: document.querySelector('input[name="custAddr3"]').value,
             memEtc: document.querySelector('textarea[name="memEtc"]').value
         };
-        console.log('hi22222');
+
 
         fetch(`/admin/user/user/${data.custId}`, {
             method: 'PUT',
@@ -288,7 +275,18 @@
                 alert('회원 정보가 성공적으로 수정되었습니다.');
 
                 // alert 창 닫은 후, HTML 요소 업데이트 (새로고침 없이)
-                window.location.href ="/admin/user/user";
+                const row = document.querySelector(`#member-${updatedData.custId}`);
+                if (row) {
+                    row.querySelector('.custName').textContent = updatedData.custName;
+                    row.querySelector('.custEmail').textContent = updatedData.custEmail;
+                    row.querySelector('.custGender').textContent = updatedData.custGender === 'M' ? '남' : '여';
+                    row.querySelector('.custHp').textContent = updatedData.custHp;
+                    row.querySelector('.custAddr1').textContent = updatedData.custAddr1;
+                    row.querySelector('.custAddr2').textContent = updatedData.custAddr2;
+                    row.querySelector('.custAddr3').textContent = updatedData.custAddr3;
+                    row.querySelector('.memEtc').textContent = updatedData.memEtc;
+                }
+
                 // 팝업 닫기 (alert 확인 버튼 클릭 후)
                 document.querySelector('.popup').style.display = 'none';
                 document.querySelector('.popupbg').style.display = 'none';

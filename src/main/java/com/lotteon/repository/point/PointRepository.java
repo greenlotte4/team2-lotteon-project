@@ -21,6 +21,10 @@ public interface PointRepository extends JpaRepository<Point, Long> {
 
     Page<Point> findAllByCustomerOrderByPointExpiration(Customer customer, Pageable pageable);
 
+    Page<Point> findAllByOrderById(Pageable pageable);
+
+    Page<Point> findAllByCustomer_Member_IdOrderByIdDesc(Long id, Pageable pageable);
+
     Page<Point> findAllByCustomer_CustName(String custName, Pageable pageable);
 
     Page<Point> findAllByCustomer_CustEmail(String custEmail, Pageable pageable);
@@ -46,4 +50,5 @@ public interface PointRepository extends JpaRepository<Point, Long> {
     Page<Point> findAllByCustomer_CustHpOrderByPointRdateDesc(String custHp, Pageable pageable);
 
     List<Point> findAllByPointType(int i);
+
 }

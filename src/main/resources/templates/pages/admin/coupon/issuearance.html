@@ -49,7 +49,7 @@
                     <td th:text="${coupon.custCouponUdate}">2024.10.16<br>00:00:00</td>
                     <td th:if="${coupon.custCouponState == 1}" th:data-id="${coupon.id}" onclick="updateCouponState(event)" style="cursor:pointer">중단</td>
                     <td th:if="${coupon.custCouponState == 0}" th:data-id="${coupon.id}" onclick="updateCouponState(event)" style="cursor:pointer">활성화</td>
-                    <td th:if="${coupon.custCouponState == 2}" th:data-id="${coupon.id}" style="cursor:pointer">사용완료</td>
+                    <td th:if="${coupon.custCouponState == 2}" th:data-id="${coupon.id}"style="cursor:pointer">사용완료</td>
                 </tr>
             </table>
             <div class="page">
@@ -67,11 +67,12 @@
     </div>
 </main>
 <footer th:replace="layout/admin/footer.html"></footer>
+
 <script>
     const popup = document.querySelector('.popup')
     const bg = document.querySelector('.popupbg')
     async function openCustPopup(event){
-        let url = `/admin/coupon/cust?id=${event.target.innerText}`;
+        let url = "/admin/coupon/cust?id=" + event.target.innerText;
 
         const resp = await axios.get(url,{
             headers : {
@@ -132,7 +133,7 @@
                     </tr>
                 </table>
             </div>
-            <div style="margin-bottom:20px;" class="btns"><button onclick="closePopup(event)">닫기</button></div>
+            <div style="margin-bottom:20px" class="btns"><button onclick="closePopup(event)">닫기</button></div>
             `
         popup.style.display = "block";
      0..............   bg.style.display = "flex";

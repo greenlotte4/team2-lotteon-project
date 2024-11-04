@@ -1,18 +1,12 @@
 package com.lotteon.service;
 
-import com.lotteon.dto.responseDto.GetLiveTopSearchDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ZSetOperations;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +31,6 @@ public class SearchService {
         String key = RELATED_SEARCH_KEY_PREFIX + keyword.toLowerCase();
         return redisTemplate.opsForList().range(key, 0, -1); // 전체 조회
     }
-
     public List<GetLiveTopSearchDto> getTopSearches() {
         Set<ZSetOperations.TypedTuple<String>> topSearches = redisTemplate.opsForZSet()
                 .reverseRangeWithScores("search_count", 0, 9);
