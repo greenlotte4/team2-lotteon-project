@@ -33,6 +33,17 @@ public class ApiVisitorController {
         return ResponseEntity.ok("Visitor count incremented.");
     }
 
+    // 현재 방문자 수 조회
+    @GetMapping("/visitor-count")
+    public ResponseEntity<?> getVisitorCount() {
+        String key = "visitor:count:" + LocalDate.now();
+        Map<String,Object> map = new HashMap<>();
+
+        Long count = visitorService.getVisitorCount(key);
+        Long weekCount = visitorService.getWeekVisitorCount();
+
+        return ResponseEntity.ok(map);
+    }
 }
 
 

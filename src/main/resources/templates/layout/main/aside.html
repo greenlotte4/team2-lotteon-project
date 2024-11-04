@@ -20,7 +20,7 @@
         </ul>
     </nav><!-- #memu .memu -->
     <div class="memuBg"></div><!-- .memuBg -->
-    <div id="bestRank" class="best">
+    <div class="best">
         <h3 class="tit_sty02 cf">
             <img src="/images/ico_best.png" alt="베스트 상품 아이콘">
             베스트 상품
@@ -77,96 +77,4 @@
         </ul>
     </div><!--.best-->
 </aside>
-<script>
-    let isLoading = false;
-    const sections = ['bestRank','hi']
-    const loadedSections = new Set();
-
-    const socket = new SockJS('/ws');
-    const stompClient = Stomp.over(socket);
-
-    stompClient.connect({}, function () {
-        stompClient.subscribe('/topic/bestProducts', function (message) {
-            const bestProducts = JSON.parse(message.body);
-            console.log(bestProducts)
-
-            // 클라이언트에 베스트 상품 정보를 표시
-            document.querySelector('.bestRank').innerHTML = bestProducts.map(v => `
-            <li><a href="/prod/product?prodId=${v.id}">
-                    <div class="photo1">
-                        <img style="width:140px;" src="/file/${v.img}" class="bImg" alt="베스트 상품 이미지 1">
-                    </div><!--.photo-->
-                    <dl>
-                        <dt class="Btit cf">
-                            <p>${v.prodName}</p>
-                            <p class="oPrice cf">${v.prodPrice} </p>
-                            <em class="dis cf">${v.prodDiscount}%&#8595;</em>
-                        </dt><!--.Btit-->
-                        <dd class="dPrice">
-                            ${v.prodPrice}
-                        </dd><!--.price-->
-                    </dl>
-                </a></li>
-            `).join('');
-        });
-    });
-    window.addEventListener('scroll', () => {
-        if (isLoading) return;
-        sections.forEach(section => {
-            const sectionElement = document.getElementById(`${section}`);
-            if(!sectionElement){
-                return;
-            }
-            // 각 섹션의 위치를 계산
-            const sectionTop = sectionElement.offsetTop;
-            const sectionHeight = sectionElement.offsetHeight;
-            const scrollPosition = window.scrollY + window.innerHeight;
-
-            // 섹션의 상단에 가까워지면 데이터 로드
-            if (scrollPosition >= sectionTop && scrollPosition <= sectionTop + sectionHeight) {
-                if (!loadedSections.has(section)) {
-                    loadProducts(section);
-                    loadedSections.add(section); // 중복 로딩 방지
-                }
-            }
-        });
-    });
-
-    // 상품 데이터 로딩 함수
-    async function loadProducts(category) {
-        let addItems = document.querySelector(`.${category}`)
-        addItems.innerHTML = `<img src="/images/spinner.gif">`
-        let url = "/prod/main?type=" + category
-        if (isLoading) return; // 이미 로딩 중이면 실행하지 않음
-        try {
-            const resp = await axios.get(url, {
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            })
-            const product = resp.data.products
-            if (product[0].type === 'best') {
-                addItems.innerHTML = product.map(v => `
-                <li><a href="/prod/product?prodId=${v.id}">
-                    <div class="photo1">
-                        <img style="width:140px;" src="/file/${v.img}" class="bImg" alt="베스트 상품 이미지 1">
-                    </div><!--.photo-->
-                    <dl>
-                        <dt class="Btit cf">
-                            <p>${v.prodName}</p>
-                            <p class="oPrice cf">${v.prodPrice} </p>
-                            <em class="dis cf">${v.prodDiscount}%&#8595;</em>
-                        </dt><!--.Btit-->
-                        <dd class="dPrice">
-                            ${v.prodPrice}
-                        </dd><!--.price-->
-                    </dl>
-                </a></li>
-            `).join('');
-            }
-        } catch (e) {
-            console.log(e)
-        }
-    }
-</script>
 

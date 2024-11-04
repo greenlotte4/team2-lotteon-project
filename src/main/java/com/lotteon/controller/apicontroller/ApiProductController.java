@@ -1,15 +1,11 @@
 package com.lotteon.controller.apicontroller;
 
 import com.lotteon.config.MyUserDetails;
-import com.lotteon.dto.requestDto.GetProductNamesDto;
-import com.lotteon.dto.requestDto.PostReviewDto;
 import com.lotteon.dto.requestDto.cartOrder.*;
 import com.lotteon.dto.requestDto.PostCouponDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderDto;
 import com.lotteon.dto.requestDto.cartOrder.OrderItemDto;
 import com.lotteon.dto.requestDto.cartOrder.PostOrderDto;
-import com.lotteon.dto.responseDto.GetMainProductDto;
-import com.lotteon.dto.responseDto.GetOption1Dto;
 import com.lotteon.entity.product.Order;
 import com.lotteon.repository.member.UserLogRepository;
 import com.lotteon.service.member.UserLogService;
@@ -17,7 +13,9 @@ import com.lotteon.service.point.CouponService;
 import com.lotteon.entity.product.Cart;
 import com.lotteon.service.point.CustomerCouponService;
 import com.lotteon.service.point.PointService;
-import com.lotteon.service.product.*;
+import com.lotteon.service.product.CartService;
+import com.lotteon.service.product.OrderItemService;
+import com.lotteon.service.product.OrderService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -49,25 +47,11 @@ public class ApiProductController {
     private final CouponService couponService;
     private final UserLogRepository userLogRepository;
     private final UserLogService userLogService;
-    private final ProductOptionService productOptionService;
-    private final ProductService productService;
-    private final ReviewService reviewService;
 
     @GetMapping("/test/coupon")
     public void toTestCouponIssue(){
 
         customerCouponService.useCustCoupon();
-    }
-
-    @GetMapping("/option2")
-    public ResponseEntity<?> getOption2(
-            @RequestParam String optionValue,
-            @RequestParam Long prodId
-    ){
-        List<GetOption1Dto> options = productOptionService.findByOptionValue(optionValue,prodId);
-        Map<String,Object> map = new HashMap<>();
-        map.put("option2s",options);
-        return ResponseEntity.ok().body(map);
     }
 
     @PostMapping("/customer/coupon")
@@ -182,7 +166,12 @@ public class ApiProductController {
         }
 
         log.info("카트 아이템 아이디 세션에 저장된 거 "+cartItemIds.toString());
-
+        if(postOrderDto.getOrderPointAndCouponDto().getPoints()!=0){
+            pointService.usePoint(postOrderDto.getOrderPointAndCouponDto().getPoints());
+        }
+        if(postOrderDto.getOrderPointAndCouponDto().getCouponId()!=0){
+            customerCouponService.useCoupon(postOrderDto.getOrderPointAndCouponDto().getCouponId());
+        }
 
         OrderDto orderDto = postOrderDto.getOrderDto();
         List<OrderItemDto> orderItemDto = postOrderDto.getOrderItemDto();
@@ -191,60 +180,8 @@ public class ApiProductController {
         selectedProducts.forEach(v->{
             userLogService.saveUserLog(auth.getUser().getCustomer().getId(),v.getProductId(),"order");
         });
-        if(postOrderDto.getOrderPointAndCouponDto().getPoints()!=0){
-            pointService.usePoint(postOrderDto.getOrderPointAndCouponDto().getPoints());
-        }
-        if(postOrderDto.getOrderPointAndCouponDto().getCouponId()!=0){
-            customerCouponService.useCoupon(postOrderDto.getOrderPointAndCouponDto().getCouponId());
-        }
         session.removeAttribute("selectedProducts");
-
-        productService.top3UpdateBoolean();
-
         return orderItemResult;
-    }
-
-    @GetMapping("/main")
-    public ResponseEntity<?> getMainPage(
-            @RequestParam String type
-    ){
-        List<GetMainProductDto> products;
-        Map<String,Object> map = new HashMap<>();
-        if(type.equals("bestRank")){
-            products = productService.findBestItem();
-        } else if(type.equals("hit")){
-            products = productService.findHitItem();
-        } else if(type.equals("recent")){
-            products = productService.findRecentItem();
-        } else if(type.equals("recommend")) {
-            products = productService.findRecommendItem();
-        } else if(type.equals("discount")){
-            products = productService.findDiscountItem();
-        } else {
-            products = productService.findSavePointItem();
-        }
-        map.put("products",products);
-
-        return ResponseEntity.ok(map);
-    }
-
-    @PostMapping("/review")
-    public ResponseEntity<?> insertReview(
-            @RequestBody PostReviewDto review
-    ){
-        String result = reviewService.addReview(review);
-
-        return ResponseEntity.ok().body(result);
-    }
-
-    @GetMapping("/review/names")
-    public ResponseEntity<?> findReviewNames(
-            @RequestParam Long orderId
-    ){
-        List<GetProductNamesDto> names = productService.findReviewNames(orderId);
-        Map<String,Object> map = new HashMap<>();
-        map.put("names",names);
-        return ResponseEntity.ok(map);
     }
 
 }

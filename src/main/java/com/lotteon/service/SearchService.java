@@ -1,18 +1,12 @@
 package com.lotteon.service;
 
-import com.lotteon.dto.responseDto.GetLiveTopSearchDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ZSetOperations;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,36 +30,5 @@ public class SearchService {
     public List<String> getRelatedSearch(String keyword) {
         String key = RELATED_SEARCH_KEY_PREFIX + keyword.toLowerCase();
         return redisTemplate.opsForList().range(key, 0, -1); // 전체 조회
-    }
-
-    public List<GetLiveTopSearchDto> getTopSearches() {
-        Set<ZSetOperations.TypedTuple<String>> topSearches = redisTemplate.opsForZSet()
-                .reverseRangeWithScores("search_count", 0, 9);
-        if (topSearches != null) {
-            List<GetLiveTopSearchDto> listResults = topSearches.stream()
-                    .map(tuple -> new GetLiveTopSearchDto(tuple.getValue(), tuple.getScore())) // YourType에 검색어와 카운트를 담기
-                    .collect(Collectors.toList());
-            return listResults;
-        }
-        return Collections.emptyList();
-    }
-
-    @Scheduled(fixedRate = 3600000)
-    public void updateTopSearches() {
-        Set<ZSetOperations.TypedTuple<String>> topSearches = redisTemplate.opsForZSet()
-                .reverseRangeWithScores("search_count", 0, 9);
-
-        if (topSearches != null && !topSearches.isEmpty()) {
-            for (ZSetOperations.TypedTuple<String> tuple : topSearches) {
-                String searchKeyword = tuple.getValue();
-                double newScore = 1;
-
-                // 새로운 점수로 다시 저장
-                assert searchKeyword != null;
-                redisTemplate.opsForZSet().add("search_count", searchKeyword, newScore);
-            }
-
-            redisTemplate.expire("search_count", 2, TimeUnit.HOURS);
-        }
     }
 }

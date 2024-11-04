@@ -41,6 +41,16 @@ public class CategoryProductService {
     private final ProductRepository productRepository;
     private final ModelMapper modelMapper;
 
+//    public List<TestResponseDto                                                                                                                                                                                                                                                                                                                                                                                               > findCate() {
+//
+//        com.lotteon.entity.category.Category parentCategory = cateRepository.findById((long)13)
+//                .orElseThrow(() -> new RuntimeException("Parent category not found"));
+//
+//        List<TestResponseDto> result = new ArrayList<>();
+//        findAllChildCategories(parentCategory, result);
+//        return result;
+//    }
+
     public List<?> getProducts(){
         // 카테고리별 상품 뽑는법
         CategoryProduct cate = categoryProductRepository.findById((long)28).get();

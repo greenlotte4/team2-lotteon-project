@@ -3,7 +3,6 @@ package com.lotteon.repository.product;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Seller;
 import com.lotteon.entity.product.Order;
-import com.lotteon.entity.product.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -34,5 +33,4 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
 
     Page<Order> findAllByCustomerAndOrderRdateBetweenOrderByIdAsc(Customer customer, Timestamp startDate, Timestamp endDate, Pageable pageable);
 
-    boolean existsByCustomerAndOrderItems_Product(Customer customer, Product product);
-}
+   }

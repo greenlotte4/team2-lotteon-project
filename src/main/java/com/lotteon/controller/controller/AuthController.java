@@ -6,6 +6,7 @@ import com.lotteon.dto.requestDto.PostCustSignupDTO;
 import com.lotteon.dto.responseDto.GetBannerDTO;
 import com.lotteon.dto.responseDto.GetTermsResponseDto;
 import com.lotteon.entity.member.Member;
+import com.lotteon.service.SocialService;
 import com.lotteon.service.config.BannerService;
 import com.lotteon.service.member.CustomerService;
 import com.lotteon.service.member.MemberService;
@@ -34,13 +35,33 @@ public class AuthController {
     private final CustomerService customerService;
     private final TermsService termsService;
     private final BannerService bannerService;
+    private final SocialService socialService;
 
 
     @GetMapping("/login/view")
     public String login(Model model) {
         List<GetBannerDTO> bannerList = bannerService.selectUsingBannerAt(4);
         model.addAttribute("banner", bannerList);
+        String kakaoURL = socialService.getKakaoLogin();
+        model.addAttribute("kakaoURL", kakaoURL);
         return "pages/auth/login";
+    }
+
+    @RequestMapping("/{type}/callback")
+    public String socialLogin(@PathVariable String type, @RequestParam String code, Model model) {
+        String accessCode = socialService.getAccessToken(code,type);
+        log.info("accessCode : " +accessCode);
+        MyUserDetails member = socialService.getUserInfo(accessCode,type);
+        // Authentication 객체 생성 (principal = member, credential = null, 권한 목록)
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                member, null, member.getAuthorities()
+        );
+
+        // SecurityContextHolder에 인증 객체 설정
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        // 로그인 후 리다이렉트할 경로 설정
+        return "redirect:/";
     }
 
     @GetMapping("/join")

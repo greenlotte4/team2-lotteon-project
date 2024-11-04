@@ -2,7 +2,7 @@
 <link rel="stylesheet" th:href="@{/css/basic.css}">
 <header th:replace="layout/main/header.html"></header>
 <th:block th:replace="layout/my/modal.html"></th:block>
-<main style="margin-top: 230px">
+<main>
   <div id="my">
     <th:block th:replace="layout/my/aside.html"></th:block>
     <main>
@@ -19,17 +19,30 @@
             <th>작성일</th>
             <th>상태</th>
           </tr>
-          <!--  TODO : 문의 유형 출력 수정하기 -->
-          <tr th:each="qna, iterStat : ${qnaList}">
-            <td th:text="${iterStat.index + 1}">1</td>
-            <td>고객센터</td> <!-- 상위 카테고리로 고정 -->
-            <td th:text="${qna.cate1Name}">주문/결제</td> <!-- 1차 카테고리 출력 -->
-            <td th:text="${qna.title}">신용카드 결제 중 오류가 난 경우 어떻게 하나요?</td>
-            <td th:text="${#temporals.format(qna.rdate, 'yy.MM.dd')}">2024-12-12</td>
-            <td><span class="status confirm" th:classappend="${qna.answer != null && !#strings.isEmpty(qna.answer) ? 'answer-complete' : ''}" th:text="${qna.answer != null && !#strings.isEmpty(qna.answer) ? '답변완료' : '검토 중'}"></span>
-            </td>
+          <tr>
+            <td>1</td>
+            <td>고객센터</td>
+            <td>주문/결제</td>
+            <td>신용카드 결제 중 오류가 난 경우 어떻게 하나요?</td>
+            <td>2024-12-12</td>
+            <td><span class="check">검토중</span></td>
           </tr>
-
+          <tr>
+            <td>2</td>
+            <td>고객센터</td>
+            <td>주문/결제</td>
+            <td>신용카드 결제 중 오류가 난 경우 어떻게 하나요?</td>
+            <td>2024-12-12</td>
+            <td><span class="success">답변완료</span></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>판매자 게시판</td>
+            <td>배송</td>
+            <td>배송기간이 보통 얼마나 걸리나요?</td>
+            <td>2024-12-12</td>
+            <td><span class="success">답변완료</span></td>
+          </tr>
         </table>
         <div
                 style="

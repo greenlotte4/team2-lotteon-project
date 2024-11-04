@@ -112,7 +112,9 @@ public class FaqService {
 
 
     /* 일반 cs 기능 */
+    /*    TODO: faq 1차 유형별 페이지 조회 (1031 예정) */
     // 카테고리별 FAQ 목록 조회
+
 
     // 더보기 기능으로 최대 10개의 FAQ를 가져옴    10개까지 FAQ 데이터를 불러오고, 제목을 ArticleDto로 매핑하여 반환
     public List<ArticleDto> getTop10FaqsByCategory(CategoryArticle cate1, CategoryArticle cate2) {
@@ -121,8 +123,6 @@ public class FaqService {
                 .map(ArticleDto::fromEntity)
                 .collect(Collectors.toList());
     }
-
-
 
 
 

@@ -1,8 +1,6 @@
 package com.lotteon.entity.product;
 
 import com.lotteon.dto.requestDto.GetProductDto;
-import com.lotteon.dto.requestDto.GetProductNamesDto;
-import com.lotteon.dto.responseDto.GetMainProductDto;
 import com.lotteon.entity.category.CategoryProduct;
 import com.lotteon.entity.category.CategoryProductMapper;
 import com.lotteon.entity.member.Seller;
@@ -102,49 +100,5 @@ public class Product {
                 .sell_uid(seller.getSellCompany())
                 .grade(seller.getSellGrade())
                 .build();
-    }
-
-    public GetMainProductDto toGetMainBestDto(){
-        return GetMainProductDto.builder()
-                .prodPrice(prodPrice)
-                .prodDiscount(prodDiscount)
-                .img(prodListImg)
-                .prodName(prodName)
-                .id(id)
-                .type("best")
-                .build();
-    }
-
-    public GetMainProductDto toGetMainHitDto(){
-        String deli ;
-        if(prodDeliver>0){
-            deli = String.valueOf(prodDeliver);
-        } else {
-            deli = "무료배송";
-        }
-        return GetMainProductDto.builder()
-                .prodPrice(prodPrice)
-                .prodDiscount(prodDiscount)
-                .img(prodListImg)
-                .prodName(prodName)
-                .id(id)
-                .deli(deli)
-                .type("hit")
-                .build();
-    }
-
-    public void updateRating(double averageScore) {
-        this.prodRating = (int)averageScore;
-    }
-
-    public GetProductNamesDto toGetProductNamesDto(){
-        return GetProductNamesDto.builder()
-                .productName(prodName)
-                .prodId(id)
-                .build();
-    }
-
-    public void updateViewCnt() {
-        this.prodViews = prodViews +1;
     }
 }

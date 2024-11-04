@@ -59,34 +59,6 @@ spring:
     mode: HTML
     prefix: classpath:/templates/
     suffix: .html
-  security:
-    oauth2:
-      client:
-        registration:
-          kakao:
-            client-id: 9e7e74f690ce5a11cea8a9b1a21f9a8b
-            client-secret: kOQbxkPqD37FMM40lLSztlKUlPYFIb41
-            client-name: Kakao
-            client-authentication-method: client_secret_post
-            redirect-uri: "http://13.124.94.213:8080/login/oauth2/code/kakao"
-            authorization-grant-type: authorization_code
-            scope:
-              - profile_nickname
-              - account_email
-        provider:
-          naver:
-            authorization-uri: https://nid.naver.com/oauth2.0/authorize
-            token-uri: https://nid.naver.com/oauth2.0/token
-            user-info-uri: https://openapi.naver.com/v1/nid/me
-            user-info-authentication-method: header
-            user-name-attribute: response
-
-          kakao:
-            authorization-uri: https://kauth.kakao.com/oauth/authorize
-            token-uri: https://kauth.kakao.com/oauth/token
-            user-info-uri: https://kapi.kakao.com/v2/user/me
-            user-info-authentication-method: header
-            user-name-attribute: id
 
 file:
   upload-dir: /home/ubuntu/upload
@@ -105,3 +77,6 @@ logging:
         security: debug
         web: error
     root: info
+kakao:
+  client_id: 21f13935510b320e93de9c06c918e6ec
+  redirect_uri: http://localhost:8080/auth/kakao/callback

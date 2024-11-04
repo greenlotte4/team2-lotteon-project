@@ -1,15 +1,10 @@
 package com.lotteon.config;
 
 import com.lotteon.config.filter.CustomLoginFilter;
-import com.lotteon.repository.member.CustomerRepository;
-import com.lotteon.repository.member.MemberRepository;
-import com.lotteon.service.MyOauth2UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -33,13 +28,6 @@ public class SecurityConfig implements WebMvcConfigurer  {
     private final CustomLoginFilter customLoginFilter;
     private final UserDetailsService userDetailsService;
     private final PersistentTokenRepository tokenRepository;
-    private final MemberRepository memberRepository;
-    private final CustomerRepository customerRepository;
-
-    @Lazy
-    @Autowired
-    private MyOauth2UserService oauth2UserService;
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -87,11 +75,6 @@ public class SecurityConfig implements WebMvcConfigurer  {
                         .tokenRepository(tokenRepository)
                         .rememberMeParameter("remember-me") // 클라이언트 측의 체크박스 파라미터 이름 (기본은 "remember-me")
                         .userDetailsService(userDetailsService) // 유저 정보를 제공할 UserDetailsService
-                )
-                .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/auth/login/view") // 사용자 정의 로그인 페이지
-                        .userInfoEndpoint(userInfo -> userInfo.userService(oauth2UserService)) // 사용자 정보 서비스 설정
-                        .successHandler(customLoginFilter) // 로그인 성공 핸들러
                 )
                 .httpBasic(Customizer.withDefaults())
                 .build();

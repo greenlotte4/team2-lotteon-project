@@ -21,6 +21,10 @@ public interface PointRepository extends JpaRepository<Point, Long> {
 
     Page<Point> findAllByCustomerOrderByPointExpiration(Customer customer, Pageable pageable);
 
+    Page<Point> findAllByOrderById(Pageable pageable);
+
+    Page<Point> findAllByCustomer_Member_IdOrderByIdDesc(Long id, Pageable pageable);
+
     Page<Point> findAllByCustomer_CustName(String custName, Pageable pageable);
 
     Page<Point> findAllByCustomer_CustEmail(String custEmail, Pageable pageable);
@@ -28,22 +32,4 @@ public interface PointRepository extends JpaRepository<Point, Long> {
     Page<Point> findAllByCustomer_CustHp(String custHp, Pageable pageable);
 
     List<Point> findAllByCustomerAndPointTypeOrderByPointExpirationAsc(Customer customer, int i);
-
-    Page<Point> findAllByCustomerAndPointTypeOrderByPointExpirationAsc(Customer customer, int i, Pageable pageable);
-
-    List<Point> findAllByPointExpirationBefore(LocalDate today);
-
-    List<Point> findAllByCustomerAndPointType(Customer customer, int i);
-
-    Page<Point> findAllByOrderByPointRdateDesc(Pageable pageable);
-
-    Page<Point> findAllByCustomer_Member_IdOrderByPointRdateDesc(Long id, Pageable pageable);
-
-    Page<Point> findAllByCustomer_CustNameOrderByPointRdateDesc(String custName, Pageable pageable);
-
-    Page<Point> findAllByCustomer_CustEmailOrderByPointRdateDesc(String custEmail, Pageable pageable);
-
-    Page<Point> findAllByCustomer_CustHpOrderByPointRdateDesc(String custHp, Pageable pageable);
-
-    List<Point> findAllByPointType(int i);
 }

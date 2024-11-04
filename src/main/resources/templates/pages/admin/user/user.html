@@ -160,7 +160,6 @@
 
             const data = await resp.json();
             console.log("패치 "+data.custId)
-            console.log("패치2222 "+data.id)
             if (data!=null) {
                 // 팝업 내용 설정
                 popup.innerHTML = `
@@ -192,7 +191,7 @@
                         </tr>
                         <tr>
                             <th>상태</th>
-                            <td class="memState">${data.memState}</td>
+                            <td><input name="memState" value="${data.memState}" readonly></td>
                         </tr>
                         <tr>
                             <th>이메일</th>
@@ -204,7 +203,7 @@
                         </tr>
                         <tr>
                             <th>우편번호</th>
-                            <td><input name="custAddr1" value="${data.custAddr1}" class=""></td>
+                            <td><input name="custAddr1" value="${data.custAddr1}"></td>
                         </tr>
                         <tr>
                             <th>기본주소</th>
@@ -224,7 +223,7 @@
                         </tr>
                         <tr>
                             <th>기타</th>
-                            <td><textarea name="memEtc" data-placeholder="회원에 대한 기타 정보입력">${data.memEtc || ''}</textarea></td>
+                            <td><textarea name="memEtc">${data.memEtc || ''}</textarea></td>
                         </tr>
                         <input type="hidden" name="custId" value="${data.custId}">
                     </table>
@@ -245,26 +244,13 @@
 
     // 폼 제출 및 데이터 전송
     function submitForm(id) {
-        console.log('1'+document.querySelector('input[name="memUid"]').value);
-        console.log('2'+document.querySelector('input[name="custId"]').value);
-        console.log('3'+document.querySelector('input[name="custName"]').value);
-        console.log('4'+document.querySelector('input[name="custGender"]').value);
-        console.log('5'+document.querySelector('input[name="custGrade"]').value);
-        console.log('6'+document.getElementsByClassName('memState')[0].innerText);
-        console.log('7'+document.querySelector('input[name="custEmail"]').value);
-        console.log('8'+document.querySelector('input[name="custHp"]').value);
-        console.log('9'+document.querySelector('input[name="custAddr1"]').value);
-        console.log('10'+document.querySelector('input[name="custAddr2"]').value);
-        console.log('11'+document.querySelector('input[name="custAddr3"]').value);
-        console.log('12'+document.querySelector('textarea[name="memEtc"]').value);
-        const element = document.getElementById("id");
         const data = {
             memUid: document.querySelector('input[name="memUid"]').value,
             custId: document.querySelector('input[name="custId"]').value,
             custName: document.querySelector('input[name="custName"]').value,
             custGender: document.querySelector('input[name="custGender"]:checked').value,
             custGrade: document.querySelector('input[name="custGrade"]').value,
-            memState: document.getElementsByClassName('memState')[0].innerText,
+            memState: document.querySelector('input[name="memState"]').value,
             custEmail: document.querySelector('input[name="custEmail"]').value,
             custHp: document.querySelector('input[name="custHp"]').value,
             custAddr1: document.querySelector('input[name="custAddr1"]').value,
@@ -272,7 +258,7 @@
             custAddr3: document.querySelector('input[name="custAddr3"]').value,
             memEtc: document.querySelector('textarea[name="memEtc"]').value
         };
-        console.log('hi22222');
+
 
         fetch(`/admin/user/user/${data.custId}`, {
             method: 'PUT',
@@ -289,7 +275,18 @@
                 alert('회원 정보가 성공적으로 수정되었습니다.');
 
                 // alert 창 닫은 후, HTML 요소 업데이트 (새로고침 없이)
-                window.location.href ="/admin/user/user";
+                const row = document.querySelector(`#member-${updatedData.custId}`);
+                if (row) {
+                    row.querySelector('.custName').textContent = updatedData.custName;
+                    row.querySelector('.custEmail').textContent = updatedData.custEmail;
+                    row.querySelector('.custGender').textContent = updatedData.custGender === 'M' ? '남' : '여';
+                    row.querySelector('.custHp').textContent = updatedData.custHp;
+                    row.querySelector('.custAddr1').textContent = updatedData.custAddr1;
+                    row.querySelector('.custAddr2').textContent = updatedData.custAddr2;
+                    row.querySelector('.custAddr3').textContent = updatedData.custAddr3;
+                    row.querySelector('.memEtc').textContent = updatedData.memEtc;
+                }
+
                 // 팝업 닫기 (alert 확인 버튼 클릭 후)
                 document.querySelector('.popup').style.display = 'none';
                 document.querySelector('.popupbg').style.display = 'none';

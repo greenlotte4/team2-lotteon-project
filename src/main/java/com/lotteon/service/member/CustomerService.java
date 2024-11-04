@@ -43,7 +43,7 @@ public class CustomerService {
 
 
     @Transactional
-    public Member insertCustomer(PostCustSignupDTO postCustSignupDTO) {
+    public void insertCustomer(PostCustSignupDTO postCustSignupDTO) {
         try {
 
             // Member 객체 생성 및 저장 (멤버 DB에 아이디, 비번 저장)
@@ -54,7 +54,7 @@ public class CustomerService {
                     .memState("basic")   // 기본 계정 상태 "basic"
                     .build();
 
-            Member savedMember = memberRepository.save(member);
+            memberRepository.save(member);
             // Addr1 + Addr2 + Addr3 = 부산광역시 + 부산진구 + 부전동
             String addr = postCustSignupDTO.getAddr1()+"/"+postCustSignupDTO.getAddr2()+"/"+postCustSignupDTO.getAddr3();
 
@@ -84,8 +84,6 @@ public class CustomerService {
 
             //상훈 작업부분 포인트추가 끝
 
-            return savedMember;
-
         } catch (Exception e) {
             // 예외 발생 시 로그 출력 및 에러 처리
             log.error("사용자 등록 중 오류가 발생했습니다.: ", e);
@@ -104,7 +102,7 @@ public class CustomerService {
     }
 
     public int updateCustomerPoint(Customer customer) {
-        List<Point> points = pointRepository.findAllByCustomerAndPointType(customer,1);
+        List<Point> points = pointRepository.findAllByCustomer(customer);
         System.out.println(points);
         int point = 0;
 
