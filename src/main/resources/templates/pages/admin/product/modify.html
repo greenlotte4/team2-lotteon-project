@@ -1,6 +1,96 @@
 <link rel="stylesheet" th:href="@{/css/admin/product/modify.css}" />
 <link rel="stylesheet" th:href="@{/css/basic.css}">
 <script th:src="@{/js/productRegister.js}"></script>
+<script>
+    function updateSelect4() {
+        let option1Value = document.getElementsByClassName('cate1')[0];
+        let option2Value = document.getElementsByClassName('cate2')[0];
+
+
+        fetch("/admin/prod/cate1", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'  // 데이터를 JSON으로 전송하는 경우
+            },
+            body: JSON.stringify({id: option1Value.value})
+        })
+            .then(resp => resp.json())
+            .then(data => {
+                option2Value.innerHTML = '';
+                if (data.length > 0) {
+                    // 데이터가 있을 경우 옵션 추가
+                    data.forEach(item => {
+                        const prodcate_opt = document.createElement('option');
+                        prodcate_opt.value = item.id;
+                        prodcate_opt.innerText = item.name;
+                        console.log(document.getElementById('Category2').value)
+                        if(item.name === document.getElementById('Category2').value){
+                            prodcate_opt.selected = true;
+                        }
+                        option2Value.appendChild(prodcate_opt);
+                        updateSelect5();
+                    });
+                } else {
+                    // 데이터가 없을 경우 '선택사항 없음' 추가
+                    const prodcate_opt = document.createElement('option');
+                    prodcate_opt.innerText = "선택사항 없음";
+                    option2Value.appendChild(prodcate_opt);
+                }
+            }).catch(err => {
+            console.log(err);
+        });
+    }
+
+    function updateSelect5() {
+        let option2Value = document.getElementsByClassName('cate2')[0];
+        let option3Value = document.getElementsByClassName('cate3')[0];
+
+        fetch("/admin/prod/cate1", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'  // 데이터를 JSON으로 전송하는 경우
+            },
+            body: JSON.stringify({id: option2Value.value})
+        })
+            .then(resp => resp.json())
+            .then(data => {
+                console.log(data);
+                option3Value.innerHTML = '';
+                if (data.length > 0) {
+                    // 데이터가 있을 경우 옵션 추가
+                    data.forEach(item => {
+                        const prodcate_opt = document.createElement('option');
+                        prodcate_opt.value = item.id;
+                        prodcate_opt.innerText = item.name;
+                        console.log(document.getElementById('Category3').value)
+                        if(item.name === document.getElementById('Category3').value){
+                            prodcate_opt.selected = true;
+                        }
+                        option3Value.appendChild(prodcate_opt);
+                    });
+                } else {
+                    // 데이터가 없을 경우 '선택사항 없음' 추가
+                    const prodcate_opt = document.createElement('option');
+                    prodcate_opt.innerText = "선택사항 없음";
+                    option3Value.appendChild(prodcate_opt);
+                }
+            }).catch(err => {
+            console.log(err);
+        });
+
+        if (option3Value == null) {
+            let option3Value = document.getElementsByClassName('cate3')[0];
+            const prodcate_opt = document.createElement('option');
+            prodcate_opt.innerText = "선택사항 없음";
+            option3Value.appendChild(prodcate_opt);
+        }
+
+    }
+
+    window.onload = function (){
+        updateSelect4();
+    }
+</script>
 <body>
 <header th:replace="layout/admin/header.html"></header>
 <main style="margin: 0 auto; margin-bottom: 50px; margin-top: 50px;">
@@ -27,7 +117,7 @@
                     <tr>
                         <th>1차 분류</th>
                         <td>
-                            <select class="cate1" name="categoryId1" th:value="${productCategory.getLevel1Name()}" oninput="updateSelect2()">
+                            <select class="cate1" name="categoryId1" th:value="${productCategory.getLevel1Name()}" oninput="updateSelect4()">
                                 <option value="">1차분류 선택</option>
                                 <th:block th:each="category : ${prodCate}">
                                     <option th:if="${category.getCategoryLevel() == 1}"
@@ -45,7 +135,8 @@
                     <tr>
                         <th>2차 분류</th>
                         <td>
-                            <select class="cate2" name="categoryId2" th:value="${productCategory.getLevel2Name()}" oninput="updateSelect3()">
+                            <input type="hidden" id="Category2" th:value="${productCategory.getLevel2Name()}">
+                            <select class="cate2" name="categoryId2" onchange="updateSelect5()">
                                 <option value="">2차분류 선택</option>
                             </select>
                         </td>
@@ -56,7 +147,8 @@
                     <tr>
                         <th>3차 분류</th>
                         <td>
-                            <select class="cate3" name="categoryId3" th:value="${productCategory.getLevel3Name()}">
+                            <input type="hidden" id="Category3" th:value="${productCategory.getLevel3Name()}">
+                            <select class="cate3" name="categoryId3" >
                                 <option value="">3차분류 선택</option>
                             </select>
                         </td>

@@ -129,6 +129,9 @@ function updateSelect2() {
                     const prodcate_opt = document.createElement('option');
                     prodcate_opt.value = item.id;
                     prodcate_opt.innerText = item.name;
+                    if(item.name === document.getElementsByClassName('cate2')[0].value){
+                        prodcate_opt.selected = true;
+                    }
                     option2Value.appendChild(prodcate_opt);
                     updateSelect3();
                 });

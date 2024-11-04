@@ -59,6 +59,7 @@ public class AdminProdController {
         List<GetCategoryDto> cate1 = categoryProductService.findCategory();
         model.addAttribute("cate1", cate1);
         model.addAttribute("active","category");
+        model.addAttribute("config","config");
         return "pages/admin/product/category";
     }
 
