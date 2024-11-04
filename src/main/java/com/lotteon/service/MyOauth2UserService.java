@@ -103,14 +103,14 @@ public class MyOauth2UserService extends DefaultOAuth2UserService {
                 member = optMember.orElse(null);
             }else {
 
-            if (provider.equals("kakao")) {
+            if (provider.equals("kakao")){
 
                 custName = account.path("profile").path("nickname").asText("Unknown User");
                 String hp = Optional.ofNullable(account.path("phone_number").asText(null)).orElse("Unknown Phone");
                 if (!hp.equals("Unknown Phone")) {custHp = "0" + hp.split(" ")[1];}
                 custGender = "male".equals(account.path("gender").asText(null));
                 birthyear = account.path("birthyear").asText("0000");
-                birthday = account.path("birthday").asText("0000");
+                birthday = account.path("birthday").asText("0101");
                 custBirth = birthyear + "-" + birthday.substring(0, 2) + "-" + birthday.substring(2, 4);
 
             }else if(provider.equals("google")){
@@ -123,7 +123,7 @@ public class MyOauth2UserService extends DefaultOAuth2UserService {
                 custHp = account.path("mobile").asText("Unknown Phone");
                 custGender = "M".equals(account.path("gender").asText(null));
                 birthyear = account.path("birthyear").asText("0000");
-                birthday = account.path("birthday").asText("00-00");
+                birthday = account.path("birthday").asText("01-01");
                 custBirth = birthyear + "-" + birthday;
 
             }

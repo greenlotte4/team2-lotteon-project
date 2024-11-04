@@ -66,6 +66,8 @@ spring:
           google:
             client-id: 1069119228621-5e6hfjdev32eeehpuijm0tsheb2g0q2c.apps.googleusercontent.com
             client-secret: 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
+            client-name: Google
+            redirect-uri: "http://ec2-13-124-94-213.ap-northeast-2.compute.amazonaws.com:8080/login/oauth2/code/google"
             scope:
               - profile
               - email
