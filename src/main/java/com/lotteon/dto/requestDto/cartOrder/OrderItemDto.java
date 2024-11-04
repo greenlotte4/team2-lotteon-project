@@ -17,4 +17,5 @@ public class OrderItemDto {
     private int deliver;
     private int productPrice;
     private int savePoint;
+    private Long optionId;
 }

@@ -11,7 +11,7 @@ import lombok.*;
 public class GetMainProductDto {
     private String img;
     private String prodName;
-    private Double prodPrice;
+    private Double prodPrice; 
     private Double prodDiscount;
     private Long id;
     private String type;

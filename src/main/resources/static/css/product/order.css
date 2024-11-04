@@ -6,7 +6,7 @@ html, body{height:auto; }
 body{font-size:12px; line-height:18px; font-family: 'Noto Sans KR', sans-serif;}
 a, address, blockquote, br, fieldset, legend, label, form, input, select, textarea, button, cite, code, dl, dt, dd, h1, h2, h3, h4, h5, h6, p, div, iframe, ul, ol, li, hr, img {margin: 0; padding: 0; outline:none;}
 a{color:#111; text-decoration: none;}
-img{border:none; vertical-align: top;}
+/*img{border:none; vertical-align: top;}*/
 ul, ol{list-style:none;}
 address{font-style: normal;}
 /* clearfix */
@@ -73,7 +73,7 @@ input:focus{outline: none;}
 .tb1 tr{ border-bottom: 1px solid #bfbfbf;}
 .tb1 th{height: 49px; text-align: center; }
 .tb1 td{text-align: center; height: 101px; font-size: 14px;}
-.img {display: flex; align-items: center; display: inline-block;}
+.tb1 .img {display: flex; align-items: center; display: inline-block;}
 .img > img {margin-left: 20px; margin-right: 15px;}
 .name_box > span:last-child {color: #7f7f7f;}
 .tb1 td:last-child{color: #c00000;}
@@ -94,19 +94,21 @@ input:focus{outline: none;}
 /* 배송 정보 */
 .sub_tit2 {width: 418px; font-size: 16px; font-weight: 700;
            border-bottom: 1px solid #d9d9d9;}
-input{text-indent: 5px;}
+input{text-indent: 5px; border: 1px solid #d9d9d9;
+    height: 30px;}
 .tb2 {width: 430px; height: auto; margin-left: 20px;}
-.tb2 td > input {width: 170px; height: 21px; margin-top: 3px;}
+.tb2 td > input {width: 170px; height: 32px; margin-top: 3px;}
 .addr1, .addr2 {width: 317px !important; height: 21px;}
 .btn_zip {width: 71px; height: 30px; border: 1px solid #bfbfbf; background-color: #d9d9d9; font-size: 14px;}
+.req{width: 317px !important;}
 
 /* 할인 정보 */
 .sub_tit3 {width: 418px; font-size: 16px; font-weight: 700;
     border-bottom: 1px solid #d9d9d9;}
 .tb3 span {font-size: 14px; line-height: 17px; color: #808080;}
 .tb3 span:nth-of-type(1),.tb3 span:nth-of-type(2) {color: #000;}
-.point {width: 115px; height: 25px; margin-left: 30px; }
-.btn_point {width: 71px; height: 30px; border: 1px solid #bfbfbf; background-color: #d9d9d9; font-size: 14px;}
+.point {width: 130px; height: 30px; margin-left: 30px; border: 1px solid #d9d9d9;}
+.btn_point {width: 71px; height: 30px; border: 1px solid #bfbfbf; background-color: #d9d9d9;}
 .tb3 {font-size: 16px; margin-left: 20px;}
 .usedPoint{margin-right: 20px;}
 
@@ -115,22 +117,25 @@ input{text-indent: 5px;}
     border-bottom: 1px solid #d9d9d9;}
 .tb4 td{display: flex; margin-left: 30px;}
 .tb4 div{display: flex; flex-direction: column;}
-.tb4 div p{height: 30px; line-height: 30px; width: 100px;}
-.tb4 div:nth-of-type(2) p{width: 150px;}
-.tb4 img{margin-left: 5px; width: 50px;margin-top: 4px;}
+.tb4 div:first-child{width: 100px;}
+.tb4 div label{height: 40px; line-height: 30px; width: 150px;}
+.tb4 span{position: relative; top: -11px; margin-left: 5px;font-size: 13px;}
+.tb4 img{margin-left: 8px; width: 50px;margin-top: 4px;}
 
 
 
 /* 전체합계 */
 .total {width: 291px; height: auto;
-        border: 2px solid #d9d9d9; float: right;
+        border: 1px solid #d9d9d9; float: right;
+    border-radius: 30px;
          margin-top: 50px; margin-left: 40px;
     padding: 30px 30px;
 }
 .tb5 {width: 277px; height: auto; margin-bottom: 30px;}
-.tb5 th{text-align: left; font-size: 16px; height: 40px;
+.tb5 tr:first-child th{text-align: left; font-size: 16px; height: 40px;
         font-weight: 700;}
-.tb5 td {font-size: 14px; height: 25px;}
+.tb5 th{font-size: 14px;}
+.tb5 td {font-size: 14px; height: 32px;}
 .tb5 tr:nth-of-type(7) > td:last-child {color: #c00000;}
 
 .btn_order {width: 198px; height: 41px; 

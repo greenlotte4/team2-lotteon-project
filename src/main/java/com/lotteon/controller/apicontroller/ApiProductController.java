@@ -168,6 +168,8 @@ public class ApiProductController {
     public ResponseEntity order(@RequestBody PostOrderDto postOrderDto, HttpSession session){
         log.info("컨트롤러에 들어왔나요?"+postOrderDto.toString());
         MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        //카트 세션 꺼내서 null처리하고 삭제
         List<PostCartSaveDto> selectedProducts = (List<PostCartSaveDto>) session.getAttribute("selectedProducts");
 
         List<Long> cartItemIds = new ArrayList<>();
@@ -180,10 +182,11 @@ public class ApiProductController {
         if(!cartItemIds.isEmpty()){
             cartService.deleteCartItem(cartItemIds);
         }
-
         log.info("카트 아이템 아이디 세션에 저장된 거 "+cartItemIds.toString());
+        session.removeAttribute("selectedProducts");
 
 
+        //postOrderDto 꺼내기
         OrderDto orderDto = postOrderDto.getOrderDto();
         List<OrderItemDto> orderItemDto = postOrderDto.getOrderItemDto();
 
@@ -197,7 +200,7 @@ public class ApiProductController {
         if(postOrderDto.getOrderPointAndCouponDto().getCouponId()!=0){
             customerCouponService.useCoupon(postOrderDto.getOrderPointAndCouponDto().getCouponId());
         }
-        session.removeAttribute("selectedProducts");
+
 
         productService.top3UpdateBoolean();
 

@@ -10,6 +10,9 @@
 <script th:src="@{/js/main.js}"></script>
 <script>
   window.onload=function (){
+    function addCommas(amount) {
+      return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
 
     // 주문정보 출력
     const listItems = document.querySelectorAll('table.tb1 tr');
@@ -20,6 +23,7 @@
     const AllDeliver = document.querySelector('.AllDeliver');
     const OrderPrice = document.querySelector('.OrderPrice');
     const AllPoint = document.querySelector('.AllPoint');
+    const AllsavedPoint = document.querySelector('.AllsavedPoint');
 
     let totalqty = 0;
     let totalAllPrice = 0;
@@ -36,7 +40,7 @@
       const quantity = parseInt(cells[3]?.textContent.trim()) || 0;     // 수량 (그대로 정수로 변환)
       const productPrice = parseInt(cells[4]?.textContent.replace(/[^\d]/g, '').trim()) || 0; // 상품금액 (숫자 이외의 문자 제거 후 정수로 변환)
       const discount = parseInt(cells[5]?.textContent.replace(/[^\d]/g, '').trim()) || 0;  // 할인율 (% 제거)
-      const point = parseInt(cells[6]?.textContent.replace(/[^\d]/g, '').trim()) || 0;     // 포인트 (P 제거)
+      const point = parseInt(cells[6]?.textContent.replace(/[^\d]/g, '').trim())*parseInt(cells[3]?.textContent.trim()) || 0;     // 포인트 (P 제거)
       const deliveryFee = parseInt(cells[7]?.textContent.replace(/[^\d]/g, '').trim()) || 0; // 배송비 (숫자 외 제거)
       const totalPrice = parseInt(cells[8]?.textContent.replace(/[^\d]/g, '').trim()) || 0; // 총합 (숫자 외 제거)
 
@@ -51,15 +55,16 @@
 
     })
 
-    totalAllDeliver = (totalAllDeliver === 0) ? "무료배송" : totalAllDeliver;
+
+    let totalAllDelivery= (totalAllDeliver === 0) ? "무료배송" : addCommas(totalAllDeliver);
 
 
-    AllPrice.innerText = `${totalAllPrice}`;
-    qty.innerText = `${totalqty}`;
-    AllDiscount.innerText = `${totalAllDiscount}`;
-    AllDeliver.innerText = `${totalAllDeliver}`;
-    OrderPrice.innerText = `${totalOrderPrice}`;
-    AllPoint.innerText = `${totalAllPoint}`;
+    AllPrice.innerText = totalAllPrice;
+    qty.innerText = totalqty;
+    AllDiscount.innerText = totalAllDiscount;
+    AllDeliver.innerText = totalAllDelivery;
+    OrderPrice.innerText = totalOrderPrice;
+    AllsavedPoint.innerText = totalAllPoint;
 
     // 주문하기
     const btnOrder = document.querySelector('#btnOrder');
@@ -75,6 +80,9 @@
       const receiverZip = form.receiverZip.value;
       const receiverAddr1 = form.receiverAddr1.value;
       const receiverAddr2 = form.receiverAddr2.value;
+      const receiverReq = form.receiverReq.value;
+
+
 
       const orderData = {
         "orderPayment":payment,
@@ -82,7 +90,12 @@
         "receiverHp":receiverHp,
         "receiverZip":receiverZip,
         "receiverAddr1":receiverAddr1,
-        "receiverAddr2":receiverAddr2
+        "receiverAddr2":receiverAddr2,
+        "orderReq":receiverReq,
+        "orderDeli":totalAllDeliver,
+        "orderDiscount":totalAllDiscount,
+        "orderTotal":totalOrderPrice,
+        "orderQuantity":totalqty
       };
       console.log(orderData);
 
@@ -101,13 +114,15 @@
 
         // `td`의 `data-product-id` 속성에서 값 가져오기
         const productId = parseInt(cells[1].dataset.productId) || 0;
+        const optionId = parseInt(cells[2].dataset.option);
         const quantity = parseInt(cells[3]?.textContent.trim()) || 0; // 수량
         const productPrice = parseInt(cells[4]?.textContent.replace(/[^\d]/g, '').trim()) || 0; // 상품금액
         const discount = parseInt(cells[5]?.textContent.replace(/[^\d]/g, '').trim()) || 0;  // 할인율
+        const savePoint = parseInt(cells[6].textContent.replace(/[^\d]/g, '').trim()) || 0;
         const deliveryFee = parseInt(cells[7]?.textContent.replace(/[^\d]/g, '').trim()) || 0; // 배송비
         const totalPrice = parseInt(cells[8]?.textContent.replace(/[^\d]/g, '').trim()) || 0; // 총합
-        const savePoint = parseInt(cells[6].textContent.replace(/[^\d]/g, '').trim()) || 0;
 
+        console.log(optionId)
         // 각 상품을 객체로 만들어 배열에 추가
         products.push({
           productId: productId,
@@ -116,11 +131,12 @@
           discount: discount,
           deliver: deliveryFee,
           totalPrice: totalPrice,
-          savePoint : savePoint
+          savePoint : savePoint,
+          optionId : optionId
         });
       });
 
-      console.log(products);
+      console.log("products "+JSON.stringify(products));
 
       const jsonData = {
         orderDto: orderData,
@@ -128,7 +144,7 @@
         orderPointAndCouponDto:submitData
       }
 
-      console.log(jsonData);
+      console.log("쩨이슨 데이터 "+JSON.stringify(jsonData));
 
       fetch('/prod/order',{
         method:'POST',
@@ -150,8 +166,6 @@
               .catch(err => {
                 console.log(err);
               });
-
-
     })
 
   };
@@ -527,8 +541,8 @@
                 <span th:text="${order.products.prodName}">상품명</span><br>
                 <span th:text="${order.products.prodSummary}">상품설명</span>
             </td>
-            <td>
-                <th:block th:if="${order.optionValue.isEmpty()}">
+            <td th:data-option="${order.optionId}" >
+                <th:block th:if="${order.optionValue.isEmpty()}" >
                   <span>옵션없음</span>
                 </th:block>
                 <th:block th:unless="${order.optionValue.isEmpty()}">
@@ -543,7 +557,7 @@
             <td>[[${order != null ? #numbers.formatInteger(order.products.prodDiscount, 1, 'COMMA') : 0}]] %</td>
             <td>[[${order.products.prodPoint}]] P</td>
             <td>[[${order.products.prodDeliver != 0 ? #numbers.formatInteger(order.products.prodDeliver, 1, 'COMMA') + '원' : '무료배송'}]]</td>
-            <td>[[${#numbers.formatInteger(order.products.prodPrice * order.cartItems.quantity * (1 - (order.products.prodDiscount / 100)), 1, 'COMMA')}]]원</td>
+            <td>[[${#numbers.formatInteger(order.products.totalPrice, 1, 'COMMA')}]]원</td>
           </tr>
         </table>
         <!-- .tb1-->
@@ -575,7 +589,13 @@
               <tr>
                 <th>상세주소</th>
                 <td>
-                  <input type="text" class="addr2" placeholder="상세주소 입력" name="receiverAddr2" th:value="${customer.custAddr2}" />
+                  <input type="text" class="addr2" placeholder="상세주소" name="receiverAddr2" th:value="${customer.custAddr2}" />
+                </td>
+              </tr>
+              <tr>
+                <th>요청사항</th>
+                <td>
+                  <input type="text" class="req" placeholder="배송 요청사항을 입력해주세요." name="receiverReq" />
                 </td>
               </tr>
             </table>
@@ -617,14 +637,14 @@
             <table class="tb4">
               <td>
                 <div>
-                  <p><input type="radio"  name="payment" value="1"/> <span>신용카드</span></p>
-                  <p><input type="radio"  name="payment" value="2"/> <span>체크카드</span></p>
-                  <p><input type="radio"  name="payment" value="3"/> <span>계좌이체</span></p>
+                  <label><input type="radio"  name="payment" value="1"/> <span>신용카드</span></label>
+                  <label><input type="radio"  name="payment" value="2"/> <span>체크카드</span></label>
+                  <label><input type="radio"  name="payment" value="3"/> <span>계좌이체</span></label>
                 </div>
                 <div>
-                  <p><input type="radio"  name="payment" value="4"/> <span>무통장입금</span></p>
-                  <p><input type="radio"  name="payment" value="5"/> <span>휴대폰결제</span></p>
-                  <p><input type="radio"  name="payment" value="6"/> <span>카카오페이</span><img th:src="@{/images/payment_icon_yellow_medium.png}" /></p>
+                  <label><input type="radio"  name="payment" value="4"/> <span>무통장입금</span></label>
+                  <label><input type="radio"  name="payment" value="5"/> <span>휴대폰결제</span></label>
+                  <label><input type="radio"  name="payment" value="6"/> <span>카카오페이</span><img th:src="@{/images/payment_icon_yellow_medium.png}" /></label>
                 </div>
               </td>
             </table>
@@ -637,32 +657,32 @@
                 <th colspan="2">최종결제정보</th>
               </tr>
               <tr>
-                <td>상품수</td>
+                <th>상품수</th>
                 <td class="qty">1</td>
               </tr>
               <tr>
-                <td>상품금액</td>
+                <th>상품금액</th>
                 <td class="AllPrice">27,000</td>
               </tr>
               <tr>
-                <td>할인금액</td>
+                <th>할인금액</th>
                 <td class="AllDiscount">-1,350</td>
               </tr>
               <tr>
-                <td>배송비</td>
+                <th>배송비</th>
                 <td class="AllDeliver">0</td>
               </tr>
               <tr>
-                <td>포인트 할인</td>
+                <th>포인트 할인</th>
                 <td class="AllPoint">0</td>
               </tr>
               <tr>
-                <td>전체주문금액</td>
+                <th>전체주문금액</th>
                 <td class="OrderPrice">25,650</td>
               </tr>
               <tr>
-                <td>적립 포인트</td>
-                <td class="AllPoint">270</td>
+                <th>적립 포인트</th>
+                <td class="AllsavedPoint">270</td>
               </tr>
             </table>
             <!-- .tb5-->

@@ -59,6 +59,7 @@ public class OrderService {
 
         List<GetOrderDto> orderDtos = new ArrayList<>();
 
+        log.info("셀렉티드 프로덕트 보기 "+selectedProducts.toString());
         for(PostCartSaveDto postCartSaveDto : selectedProducts) {
 
             Long productId = postCartSaveDto.getProductId();
@@ -73,6 +74,7 @@ public class OrderService {
                                             .prodPoint(product.get().getProdPoint())
                                             .prodSummary(product.get().getProdSummary())
                                             .prodListImg(product.get().getProdListImg())
+                                            .totalPrice(postCartSaveDto.getTotalPrice())
                                             .sellId(product.get().getSeller().getId())
                                             .stock(product.get().getProdStock())
                                             .build();
@@ -116,6 +118,7 @@ public class OrderService {
             GetOrderDto orderDto = GetOrderDto.builder()
                                             .products(productDto)
                                             .quantity(postCartSaveDto.getQuantity())
+                                            .optionId(optionId)
                                             .optionValue(optionValue)
                                             .totalPrice(postCartSaveDto.getTotalPrice())
                                             .cartItems(cartItemDto)
@@ -147,6 +150,11 @@ public class OrderService {
                             .receiverName(orderDto.getReceiverName())
                             .receiverHp(orderDto.getReceiverHp())
                             .receiverAddr(zip+"/"+addr1+"/"+addr2)
+                            .orderReq(orderDto.getOrderReq()==null?null:orderDto.getOrderReq())
+                            .orderDeli(orderDto.getOrderDeli())
+                            .orderDiscount(orderDto.getOrderDiscount())
+                            .orderQuantity(orderDto.getOrderQuantity())
+                            .orderTotal(orderDto.getOrderTotal())
                             .build();
 
         Order order = orderRepository.save(saveorder);

@@ -93,4 +93,17 @@ public class MemberService {
         }
     }
 
+    public Map<String, String> findByCompany(String company) {
+        Map<String,String> map = new HashMap<>();
+        Optional<Member> member = memberRepository.findBySeller_SellCompany(company);
+        if(member.isPresent()){
+            map.put("code" ,"DUP");
+            map.put("msg","중복된 회사명입니다.");
+            return map;
+        } else {
+            map.put("code","SU");
+            map.put("msg","사용할 수 있는 회사명입니다.");
+            return map;
+        }
+    }
 }

@@ -148,6 +148,18 @@ input:focus{outline: none;}
     border-radius: 50%; /* 원 모양으로 만들기 */
     display: inline-block; }
 
+.cir2 { width: 10px;  /* 원의 너비 */
+    height: 10px; /* 원의 높이 */
+    background-color: #ff0000; /* 원의 색상 */
+    border-radius: 50%; /* 원 모양으로 만들기 */
+    display: inline-block; }
+
+.cir3 { width: 10px;  /* 원의 너비 */
+    height: 10px; /* 원의 높이 */
+    background-color: #0070c0; /* 원의 색상 */
+    border-radius: 50%; /* 원 모양으로 만들기 */
+    display: inline-block; }
+
 .td-admin input{
     border: none;
     background-color: white;

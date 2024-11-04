@@ -16,4 +16,10 @@ public class OrderDto {
     private String receiverAddr1;
     private String receiverAddr2;
     private String receiverZip;
+    private String orderReq;
+
+    private int orderDeli;
+    private int orderDiscount;
+    private int orderQuantity;
+    private int orderTotal;
 }

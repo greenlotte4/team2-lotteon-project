@@ -102,6 +102,12 @@ public class ApiAuthController {
         return ResponseEntity.ok().body(map);
     }
 
+    @PostMapping("/check/company")
+    public ResponseEntity<?> checkCompany(@RequestParam String company){
+        Map<String,String> map = memberService.findByCompany(company);
+
+        return ResponseEntity.ok().body(map);
+    }
 
 
 

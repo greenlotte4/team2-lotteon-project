@@ -1,5 +1,6 @@
 package com.lotteon.service.article;
 
+import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.ArticleDto;
 import com.lotteon.entity.article.Qna;
 import com.lotteon.entity.article.Qna;
@@ -15,6 +16,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,7 +67,14 @@ public class QnaService {
     // QNA 목록 조회 (전부)
     public Page<ArticleDto> getAllQnas(Pageable pageable) {
         // 1. QnaRepository에서 페이징 처리된 결과가 반환되게
-        Page<Qna> qnaPage = qnaRepository.findAll(pageable);
+        Page<Qna> qnaPage;
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Member member = auth.getUser();
+        if(member.getMemRole().equals("seller")){
+            qnaPage = qnaRepository.findAllByMember_Seller(member.getSeller(),pageable);
+        } else {
+            qnaPage = qnaRepository.findAll(pageable);
+        }
         // 2. Qna타입을 갖고있는 page를 ArticleDto타입을 갖는 page로 변환
         Page<ArticleDto> result = qnaPage.map(qna-> ArticleDto.fromEntity(qna));
         return result;

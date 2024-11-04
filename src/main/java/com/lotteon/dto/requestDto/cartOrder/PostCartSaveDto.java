@@ -14,6 +14,6 @@ public class PostCartSaveDto {
     private Long productId;
     private int quantity;
     private Long optionId;
-    private double totalPrice;
+    private int totalPrice;
 
 }

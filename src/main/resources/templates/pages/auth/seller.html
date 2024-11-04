@@ -1,78 +1,96 @@
 <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
 <link rel="stylesheet" th:href="@{/css/auth/seller.css}">
 <link rel="stylesheet" th:href="@{/css/basic.css}">
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <header th:replace="layout/main/header.html"></header>
 <main style="margin-top: 230px;">
     <div class="container">
         <h3 class="header-title">판매자 회원가입</h3>
         <div class="header-gubun"></div>
-        <form class="customer" action="#">
+        <form id="signup-form" class="customer" action="/auth/seller" method="post">
             <table class="tb1">
                 <tr>
                     <th>아이디</th>
                     <td>
-                        <input id="id" type="text">
-                        <span>영문 , 숫자 4~12자리 설정</span>
+                        <input id="id" name="memId" type="text" placeholder="아이디 입력" required/>
+                        <span class="noti_txt1">영문 , 숫자 4~12자리 설정</span>
+                        <span id="resultUid" class="resultId"></span>
                     </td>
                 </tr>
                 <tr>
                     <th>비밀번호</th>
                     <td>
-                        <input id="password" type="password">
+                        <input id="password" name="memPwd" type="password"  class="inputPass" placeholder="비밀번호 입력"/>
                         <span>영문, 숫자 , 특수문자 8~12자리 설정</span>
                     </td>
                 </tr>
                 <tr>
                     <th>비밀번호확인</th>
-                    <td><input id="confirm" type="password"></td>
+                    <td>
+                        <input id="confirm" type="password" name="pass2" class="inputPass" placeholder="비밀번호 확인 입력"/>
+                        <span class="resultPass desc" id="resultPass"></span>
+                    </td>
                 </tr>
             </table>
             <table class="tb2">
                 <tr>
+                    <th>사업자등록번호</th>
+                    <td>
+                        <input name="sellBusinessCode" id="number1" class="inp" type="text" placeholder="사업자등록번호 입력">
+                        <span>- 포함 10자리 입력</span>
+                        <span class="resultBusiness" id="resultBusiness"></span>
+                    </td>
+                </tr>
+                <tr>
                     <th>회사명</th>
-                    <td><input id="company" class="inp" placeholder="회사명입력" type="text"></td>
+                    <td>
+                        <input id="company" name="sellCompany" class="inp" placeholder="회사명입력" type="text">
+                        <span class="resultCompany" id="resultCompany"></span>
+                    </td>
                 </tr>
                 <tr>
                     <th>대표</th>
-                    <td><input id="representative" class="inp" placeholder="이름입력" type="text"></td>
+                    <td>
+                        <input id="representative" name="sellRepresentative" class="inp" placeholder="대표명입력" type="text">
+                        <span class="resultRepresentative" id="resultRepresentative"></span>
+                    </td>
                 </tr>
                 <tr>
                     <th>이메일</th>
-                    <td><input id="email" class="inp" placeholder="이메일입력" type="email"></td>
-                </tr>
-                <tr>
-                    <th>사업자등록번호</th>
-                    <td>
-                        <input id="number1" class="inp" type="text" placeholder="사업자등록번호 입력">
-                        <span>- 포함 12자리 입력</span>
+                    <td class="email-validation">
+                        <input id="email" class="inp" name="sellEmail" type="email" placeholder="이메일입력">
+                        <span class="resultEmail" id="resultEmail"></span><br>
                     </td>
                 </tr>
                 <tr>
                     <th>통신판매업번호</th>
                     <td>
-                        <input id="number2" class="inp" type="text" placeholder="통신판매업번호 입력">
+                        <input id="number2" name="sellOrderCode" class="inp" type="text" placeholder="통신판매업번호 입력">
+                        <span class="resultOrder" id="resultOrder"></span>
                     </td>
                 </tr>
                 <tr>
                     <th>전화번호</th>
                     <td>
-                        <input id="hp" class="inp" type="text" placeholder="전화번호 입력">
+                        <input id="hp" name="sellHp" class="inp" type="text" placeholder="전화번호 입력">
                         <span>- 없이 11자리 입력</span>
+                        <span class="resultHp" id="resultHp"></span>
                     </td>
                 </tr>
                 <tr>
                     <th>팩스번호</th>
                     <td>
-                        <input id="fax" class="inp" type="text" placeholder="팩스번호 입력">
+                        <input id="fax" class="inp" name="sellFax" type="text" placeholder="팩스번호 입력">
                         <span>- 없이 **자리 입력</span>
+                        <span class="resultFax" id="resultFax"></span>
                     </td>
                 </tr>
                 <tr>
                     <th class="th-addr">주소</th>
-                    <td class="td-addr">
-                        <input id="addr1" class="addr1" type="text" placeholder="우편번호검색 클릭" >
-                        <input id="addr2" class="addr2" type="text" placeholder="기본주소" >
-                        <input id="addr3" class="addr3" type="text" placeholder="상세주소">
+                    <td onclick="execDaumPostcode()" class="td-addr">
+                        <input readonly id="addr1" name="addr1" class="addr1" type="text" placeholder="우편번호검색 클릭" >
+                        <input readonly id="addr2" name="addr2" class="addr2" type="text" placeholder="기본주소">
+                        <input onclick="testCheck()" id="addr3" name="addr3" class="addr3" type="text" placeholder="상세주소">
                     </td>
                 </tr>
             </table>
@@ -86,66 +104,397 @@
 
 
     <script>
-        const signupBtn = document.getElementById('signup-btn');
-        const form = document.querySelector('.customer');
-    
-        // 각 입력 필드
-        const idInput = document.getElementById('id'); // 아이디
-        const passwordInput = document.getElementById('password'); // 비밀번호
-        const passwordConfirmInput = document.getElementById('confirm'); // 비밀번호 확인
-        const companyInput = document.getElementById('company'); // 회사명
-        const representativeInput = document.getElementById('representative'); // 대표
-        const businessNumberInput = document.getElementById('number1'); // 사업자등록번호
-        const saleNumberInput = document.getElementById('number2'); // 통신판매업번호
-        const phoneInput = document.getElementById('hp'); // 전화번호
-        const faxInput = document.getElementById('fax'); // 팩스번호
-        const addr1Input = document.getElementById('addr1'); // 주소1
-        const addr2Input = document.getElementById('addr2'); // 주소2
-    
-        // 사업자등록번호 유효성 검사 함수
-        function isValidBusinessNumber(number) {
-            // 사업자등록번호는 10자리 숫자여야 합니다.
-            return /^\d{10}$/.test(number);
+        let url;
+        let uidChecker = false;
+        let pwdChecker = false;
+        let confirmChecker = false;
+        let companyChecker = false;
+        let representativeChecker = false;
+        let businessChecker = false;
+        let emailChecker = false;
+        let orderChecker = false;
+        let validationChecker = false;
+        let hpChecker = false;
+        let addrChecker = false;
+        let faxChecker = false;
+        let randomCode;
+
+        document.getElementById('id').addEventListener('input',(e)=>{
+            delay(e,'uid')
+        })
+        document.getElementById('password').addEventListener('input',(e)=>{
+            delay(e,'password')
+        })
+        document.getElementById('confirm').addEventListener('input',(e)=>{
+            delay(e,'confirm')
+        })
+        document.getElementById('company').addEventListener('input',(e)=>{
+            delay(e,'company')
+        })
+        document.getElementById('representative').addEventListener('input',(e)=>{
+            delay(e,'representative')
+        })
+        document.getElementById('email').addEventListener('input',(e)=>{
+            delay(e,'email')
+        })
+        document.getElementById('number1').addEventListener('input',(e)=>{
+            delay(e,'business')
+        })
+        document.getElementById('number2').addEventListener('input',(e)=>{
+            delay(e,'order')
+        })
+        document.getElementById('hp').addEventListener('input',(e)=>{
+            delay(e,'hp')
+        })
+        document.getElementById('fax').addEventListener('input',(e)=>{
+            delay(e,'fax')
+        })
+
+
+
+        function delay(event,type){
+            clearTimeout(timer);  // 이전 타이머를 초기화하여 중복 요청 방지
+
+            // 새로운 타이머 설정 (2초 후에 연관 검색어 표시)
+            timer = setTimeout(() => {
+                const currentValue = event.target.value;
+                if (currentValue) {
+                    if(type === "uid"){
+                        checkUid(currentValue)
+                    } else if(type === "password"){
+                        checkPwd(currentValue)
+                    } else if(type === "confirm"){
+                        checkConfirm(currentValue)
+                    } else if(type === "company"){
+                        checkCompany(currentValue)
+                    } else if(type === "representative"){
+                        checkName(currentValue)
+                    } else if(type === "email"){
+                        checkEmail(currentValue)
+                    } else if(type === "business"){
+                        checkBusiness(currentValue)
+                    } else if(type === "order"){
+                        checkOrder(currentValue)
+                    } else if(type === "validation"){
+                        checkValidation(currentValue)
+                    } else if(type === "hp"){
+                        checkHp(currentValue)
+                    } else if(type === "fax"){
+                        checkFax(currentValue)
+                    }
+                }
+            }, 1000);
         }
-    
-        // 통신판매업번호 유효성 검사 함수 (간단히 숫자 12자리로 처리)
-        function isValidSaleNumber(number) {
-            // 통신판매업번호는 12자리 숫자 (또는 형식이 있을 경우 추가 수정)
-            return /^\d{12}$/.test(number);
+
+        async function checkUid(currentValue){
+            const regex = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{4,12}$/;
+            let validation = regex.test(currentValue);
+            if(!validation){
+                document.getElementById('resultUid').innerText = '형식이 맞지 않습니다.'
+                document.getElementById('resultUid').classList.remove('success-color')
+                document.getElementById('resultUid').classList.add('error-color')
+                uidChecker = false;
+                return;
+            }
+            try {
+                const resp = await axios.post(`/auth/check/uid?uid=${currentValue}`, null, {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+                const data = resp.data
+                console.log(data)
+                if(data.code==="SU"){
+                    uidChecker = true;
+                    document.getElementById('resultUid').innerText= data.msg
+                    document.getElementById('resultUid').classList.remove('error-color')
+                    document.getElementById('resultUid').classList.add('success-color')
+                } else {
+                    uidChecker = false;
+                    document.getElementById('resultUid').innerText= data.msg
+                    document.getElementById('resultUid').classList.remove('success-color')
+                    document.getElementById('resultUid').classList.add('error-color')
+                }
+            } catch (e) {
+                console.log(e)
+            }
         }
-    
-        // 유효성 검사 함수
-        function validateForm() {
-            const isIdValid = /^[a-zA-Z0-9]{4,12}$/.test(idInput.value); // 아이디: 영문, 숫자 4~12자리
-            const isPasswordValid = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{8,12}$/.test(passwordInput.value); // 비밀번호: 영문, 숫자, 특수문자 8~12자리
-            const isPasswordConfirmed = passwordInput.value === passwordConfirmInput.value; // 비밀번호 확인
-            const isCompanyValid = companyInput.value.trim() !== ''; // 회사명: 빈 값이 아닌지
-            const isRepresentativeValid = representativeInput.value.trim() !== ''; // 대표: 빈 값이 아닌지
-            const isBusinessNumberValid = isValidBusinessNumber(businessNumberInput.value); // 사업자등록번호
-            const isSaleNumberValid = isValidSaleNumber(saleNumberInput.value); // 통신판매업번호
-            const isPhoneValid = /^\d{10,11}$/.test(phoneInput.value); // 전화번호: 10~11자리 숫자
-            const isFaxValid = /^\d{10,11}$/.test(faxInput.value); // 팩스번호: 10~11자리 숫자
-            const isAddrValid = addr1Input.value.trim() !== '' && addr2Input.value.trim() !== ''; // 주소: 주소1, 주소2 필수
-    
-            // 모든 조건이 참이면 버튼 활성화
-            const isFormValid = isIdValid && isPasswordValid && isPasswordConfirmed && isCompanyValid && isRepresentativeValid && isBusinessNumberValid && isSaleNumberValid && isPhoneValid && isFaxValid && isAddrValid;
-            signupBtn.disabled = !isFormValid;
-    
-            return isFormValid;
+
+        function checkName(currentValue){
+            const regex = /^[가-힣]+$/;
+            let validation = regex.test(currentValue);
+            if(!validation){
+                document.getElementById('resultRepresentative').innerText = '형식이 맞지 않습니다.'
+                document.getElementById('resultRepresentative').classList.remove('success-color')
+                document.getElementById('resultRepresentative').classList.add('error-color')
+                representativeChecker = false;
+            } else {
+                document.getElementById('resultRepresentative').innerText = '형식이 일치합니다.'
+                document.getElementById('resultRepresentative').classList.add('success-color')
+                document.getElementById('resultRepresentative').classList.remove('error-color')
+                representativeChecker = true;
+            }
+
         }
-    
-        // 입력 필드에 이벤트 리스너 추가 (입력값 변경시마다 유효성 검사)
-        form.querySelectorAll('input').forEach(input => {
-            input.addEventListener('input', validateForm);
-        });
-    
-        // 폼 제출 이벤트 처리
-        form.addEventListener('submit', function (e) {
-            if (!validateForm()) {
-                e.preventDefault(); // 유효하지 않으면 폼 제출 막기
-                alert('모든 필수 항목을 올바르게 입력해주세요.');
+
+        async function checkBusiness(currentValue) {
+            const submitData = {
+                "b_no": [currentValue]
+            };
+            const serviceKey = 'WwuCEfbV5O3Rn1TWY7ADGxenhuVbqxdw1lsQIXqTaUFV6V9kLY1Xwoqg4mkOF4jKeKxcN/5O4gIpuqQd9yCHiQ==';
+
+            try {
+                const response = await fetch(`http://localhost:8080/api/bizno?brno=${currentValue}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                // businessInfo.tax_type === '국세청에 등록되지 않은 사업자등록번호입니다.'
+                const result = await response.json();
+                const items =result.items[0]
+                if(items.bno){
+                    businessChecker = true;
+                    document.getElementById('resultBusiness').innerText= '등록된 사업자등록번호입니다.'
+                    document.getElementById('resultBusiness').classList.remove('error-color')
+                    document.getElementById('resultBusiness').classList.add('success-color')
+                } else {
+                    businessChecker = false;
+                    document.getElementById('resultBusiness').innerText= '등록되지않은 사업자등록번호입니다.'
+                    document.getElementById('resultBusiness').classList.remove('error-color')
+                    document.getElementById('resultBusiness').classList.add('success-color')
+                }
+                if(items.company){
+                    document.getElementById('company').value = items.company
+                    await checkCompany(items.company)
+                }
+
+            } catch (error) {
+                console.error("Fetch error: ", error);
+            }
+        }
+
+        async function checkEmail(currentValue){
+
+            const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/;
+            let validation = regex.test(currentValue);
+            if(!validation){
+                document.getElementById('resultEmail').innerText = '형식이 맞지 않습니다.'
+                document.getElementById('resultEmail').classList.remove('success-color')
+                document.getElementById('resultEmail').classList.add('error-color')
+                emailChecker = false;
+                return;
+            }
+            alert('이메일이 발송되었습니다.')
+            try {
+                const resp = await axios.post(`/auth/check/email?email=${currentValue}`, null, {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+                const data = resp.data
+                console.log(data)
+                if(data.code==="SU"){
+                    emailChecker = true;
+                    randomCode = data.validation
+                    document.querySelector('.email-validation').innerHTML = `
+                    <input style="margin-bottom: 10px;" id="email" class="inp" name="custEmail" value="${currentValue}" type="email" placeholder="이메일입력">
+                    <button class="retry-btn" type="button" onclick="checkEmail('${currentValue}')">재요청</button>
+                    <span class="resultEmail" id="resultEmail"></span><br>
+                    <input id="validation" class="validation inp" type="text" placeholder="인증번호를 입력해주세요">
+                    <span class="resultValidation" id="resultValidation"></span>
+                `
+                    document.getElementById('resultEmail').innerText= data.msg
+                    document.getElementById('resultEmail').classList.remove('error-color')
+                    document.getElementById('resultEmail').classList.add('success-color')
+                    document.getElementById('validation').addEventListener('input',(e)=>{
+                        delay(e,'validation')
+                        console.log(randomCode)
+                    })
+                } else {
+                    emailChecker = false;
+                    document.getElementById('resultEmail').innerText= data.msg
+                    document.getElementById('resultEmail').classList.remove('success-color')
+                    document.getElementById('resultEmail').classList.add('error-color')
+                }
+            } catch (e) {
+                console.log(e)
+            }
+        }
+
+        function  checkValidation(currentValue){
+            if(randomCode === currentValue){
+                validationChecker = true;
+                document.getElementById('resultValidation').innerText= '인증이 완료되었습니다.'
+                document.getElementById('resultValidation').classList.remove('error-color')
+                document.getElementById('resultValidation').classList.add('success-color')
+            } else {
+                validationChecker = false;
+                document.getElementById('resultValidation').innerText= '인증번호가 일치하지 않습니다.'
+                document.getElementById('resultValidation').classList.add('error-color')
+                document.getElementById('resultValidation').classList.remove('success-color')
+            }
+        }
+
+        function checkOrder(currentValue){
+            const regex = /^\d{4}-[가-힣a-zA-Z]+-\d{2,5}$/;
+            let validation = regex.test(currentValue)
+            if(!validation){
+                orderChecker = false;
+                document.getElementById('resultOrder').innerText= '잘못된 형식입니다.'
+                document.getElementById('resultOrder').classList.add('error-color')
+                document.getElementById('resultOrder').classList.remove('success-color')
+            } else {
+                orderChecker = true;
+                document.getElementById('resultOrder').innerText= '형식이 일치합니다.'
+                document.getElementById('resultOrder').classList.remove('error-color')
+                document.getElementById('resultOrder').classList.add('success-color')
+            }
+        }
+
+        function checkHp(currentValue){
+            const regex = /^(01[016789])\d{3,4}\d{4}$/;
+            let validation = regex.test(currentValue);
+            if(!validation){
+                hpChecker = false;
+                document.getElementById('resultHp').innerText= '-을 빼고 입력해주세요.'
+                document.getElementById('resultHp').classList.add('error-color')
+                document.getElementById('resultHp').classList.remove('success-color')
+            } else {
+                hpChecker = true;
+                document.getElementById('resultHp').innerText= '형식이 일치합니다.'
+                document.getElementById('resultHp').classList.remove('error-color')
+                document.getElementById('resultHp').classList.add('success-color')
+            }
+        }
+
+        function checkFax(currentValue){
+            const regex = /^(0\d{1,2})(\d{3,4})(\d{4})$/;
+            let validation = regex.test(currentValue);
+            if(!validation){
+                faxChecker = false;
+                document.getElementById('resultFax').innerText= '-을 빼고 입력해주세요.'
+                document.getElementById('resultFax').classList.add('error-color')
+                document.getElementById('resultFax').classList.remove('success-color')
+            } else {
+                faxChecker = true;
+                document.getElementById('resultFax').innerText= '형식이 일치합니다.'
+                document.getElementById('resultFax').classList.remove('error-color')
+                document.getElementById('resultFax').classList.add('success-color')
+            }
+        }
+
+        function checkPwd(currentValue){
+            const regex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*\W)[a-zA-Z\d\W]{8,12}$/;
+            let validation = regex.test(currentValue);
+            if(!validation){
+                document.getElementById('resultPass').innerText = '형식이 맞지 않습니다.'
+                document.getElementById('resultPass').classList.remove('success-color')
+                document.getElementById('resultPass').classList.add('error-color')
+                pwdChecker = false;
+            } else {
+                document.getElementById('resultPass').innerText = '사용할 수 있는 비밀번호입니다.'
+                document.getElementById('resultPass').classList.add('success-color')
+                document.getElementById('resultPass').classList.remove('error-color')
+                pwdChecker = true;
+            }
+        }
+
+        function checkConfirm(currentValue){
+            const resultPass = document.getElementById('password')
+            if(resultPass.value === currentValue){
+                document.getElementById('resultPass').innerText = '비밀번호 확인이 일치합니다.'
+                document.getElementById('resultPass').classList.add('success-color')
+                document.getElementById('resultPass').classList.remove('error-color')
+                confirmChecker = true;
+            } else {
+                document.getElementById('resultPass').innerText = '비밀번호 확인이 일치하지않습니다.'
+                document.getElementById('resultPass').classList.remove('success-color')
+                document.getElementById('resultPass').classList.add('error-color')
+                confirmChecker = false;
+            }
+        }
+
+        async function checkCompany(currentValue){
+            try {
+                const resp = await axios.post(`/auth/check/company?company=${currentValue}`,null, {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+
+                });
+                const data = resp.data
+                console.log(data)
+                if(data.code==="SU"){
+                    companyChecker = true;
+                    document.getElementById('resultCompany').innerText= data.msg
+                    document.getElementById('resultCompany').classList.remove('error-color')
+                    document.getElementById('resultCompany').classList.add('success-color')
+                } else {
+                    companyChecker = false;
+                    document.getElementById('resultCompany').innerText= data.msg
+                    document.getElementById('resultCompany').classList.remove('success-color')
+                    document.getElementById('resultCompany').classList.add('error-color')
+                }
+            } catch (e) {
+
+            }
+        }
+
+        function execDaumPostcode() {
+            event.preventDefault();
+            new daum.Postcode({
+                oncomplete: function(data) {
+                    // 우편번호와 주소 정보를 해당 입력 필드에 채워줍니다.
+                    document.getElementById('addr1').value = data.zonecode; // 우편번호
+                    document.getElementById('addr2').value = data.roadAddress; // 도로명 주소
+
+                    // 사용자가 선택한 주소에 추가 정보가 있다면 추가
+                    var extraAddr = '';
+                    if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+                        extraAddr += data.bname;
+                    }
+                    if (data.buildingName !== '' && data.apartment === 'Y') {
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    if (extraAddr !== '') {
+                        document.getElementById('addr2').value += ' (' + extraAddr + ')';
+                    }
+
+                    document.getElementById('addr3').focus();
+                    addrChecker = true;
+                }
+            }).open();
+        }
+
+        document.getElementById('signup-form').addEventListener('submit', function(event) {
+            // 모든 체크 변수가 true인지 확인
+            if (!(
+                uidChecker &&
+                pwdChecker &&
+                confirmChecker &&
+                companyChecker &&
+                representativeChecker &&
+                businessChecker &&
+                emailChecker &&
+                orderChecker &&
+                validationChecker &&
+                hpChecker &&
+                faxChecker &&
+                addrChecker
+            )) {
+                // 모든 체크가 true가 아닐 경우 폼 제출 방지
+                event.preventDefault(); // 기본 폼 제출 동작 방지
+                alert("모든 필드를 올바르게 입력해 주세요."); // 사용자에게 알림
             }
         });
+
+
     
     </script>
     

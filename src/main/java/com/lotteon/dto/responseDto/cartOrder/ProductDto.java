@@ -18,4 +18,5 @@ public class ProductDto {
     private String prodListImg;
     private int prodPoint;
     private int stock;
+    private int totalPrice;
 }

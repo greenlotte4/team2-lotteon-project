@@ -115,7 +115,7 @@ public class CartService {
 
         if (existingCartItem != null) {
             int newQuantity = existingCartItem.getQuantity() + postCartDto.getQuantity();
-            double newPrice = newQuantity * postCartDto.getTotalPrice();
+            double newPrice = existingCartItem.getTotalPrice() + postCartDto.getTotalPrice();
             existingCartItem.setTotalPrice(newPrice);
             existingCartItem.setQuantity(newQuantity);
             cartItemRepository.save(existingCartItem);
@@ -125,7 +125,7 @@ public class CartService {
                     .cart(cart)
                     .product(product)
                     .quantity(postCartDto.getQuantity())
-                    .totalPrice(postCartDto.getTotalPrice() * postCartDto.getQuantity())
+                    .totalPrice(postCartDto.getTotalPrice())
                     .optionId(optionId)
                     .build();
 

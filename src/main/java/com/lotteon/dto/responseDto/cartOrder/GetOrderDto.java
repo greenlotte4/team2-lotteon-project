@@ -16,5 +16,5 @@ public class GetOrderDto {
     private List<String> optionValue;
     private String option2;
     private String option3;
-    private double totalPrice;
+    private int totalPrice;
 }

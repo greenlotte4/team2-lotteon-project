@@ -40,7 +40,9 @@
                 const price = parseInt(tr.querySelector('td:nth-child(6)').textContent.trim().replace(/[^0-9.-]+/g,""), 10); // 상품금액
                 const discount = parseFloat(tr.querySelector('td:nth-child(7)').textContent.trim().replace('%', '')); // 할인 (퍼센트)
                 const point = parseInt(tr.querySelector('td:nth-child(8)').textContent.trim().replace(/[^0-9.-]+/g,""), 10); // 포인트
-                const deliver = parseInt(tr.querySelector('td:nth-child(9)').textContent.trim().replace(/[^0-9.-]+/g,""), 10); // 배송비
+                const deliver = tr.querySelector('td:nth-child(9)').textContent.trim()=='무료배송'
+                        ? 0 :
+                        parseInt(tr.querySelector('td:nth-child(9)').textContent.trim().replace(/[^0-9.-]+/g,""), 10); // 배송비
                 const totalPrice = parseInt(tr.querySelector('td:nth-child(10)').textContent.trim().replace(/[^0-9.-]+/g,""), 10); // 총금액
 
                 return {
@@ -53,14 +55,26 @@
                 };
               });
 
+      if (selectedItems.length === 0) {
+        // 선택된 항목이 없을 경우 모든 합계 값을 0으로 초기화
+        qtyElement.innerText = '0';
+        priceElement.innerText = '0';
+        discountElement.innerText = '0';
+        deliverElement.innerText = '0';
+        pointElement.innerText = '0';
+        realTotalElement.innerText = '0';
+        return;
+      }
+
       // 수량, 가격, 할인금액, 배송비, 포인트, 실제 총합 계산
       const totalQuantity = selectedItems.reduce((acc, item) => acc + item.quantity, 0);
-      const price = selectedItems.reduce((acc, item) => acc + item.price, 0);
+      const price = selectedItems.reduce((acc, item) => acc + item.price* item.quantity, 0);
       const totalPrice = selectedItems.reduce((acc, item) => acc + item.totalPrice, 0);
-      const totalDiscount = selectedItems.reduce((acc, item) => acc + (item.price * item.quantity * item.discount / 100), 0);
-      const totalDeliver = selectedItems.reduce((acc, item) => acc + item.deliver, 0);
+      const totalDiscount = parseInt(selectedItems.reduce((acc, item) => acc + (item.price * item.quantity * item.discount / 100), 0));
+      const totalDeliver = selectedItems.reduce((acc, item) => acc + item.deliver, 0)==0?'무료배송':selectedItems.reduce((acc, item) => acc + item.deliver, 0);
       const totalPoint = selectedItems.reduce((acc, item) => acc + item.point * item.quantity, 0); // 포인트 합계
-      const realTotal = totalPrice + totalDeliver;
+      const realTotal = totalDeliver=='무료배송'?totalPrice:totalPrice + totalDeliver;
+
 
       // 계산된 값들을 DOM에 업데이트
       qtyElement.innerText = totalQuantity.toLocaleString(); // 콤마 추가
@@ -84,6 +98,7 @@
       if (selectedValues.length > 0) {
         console.log('선택된 항목의 ID들:', selectedValues);  // 선택된 체크박스의 value들 출력
 
+        console.log("셀렉티드밸류스 "+ selectedValues)
         fetch('/prod/cart',{
           method:'DELETE',
           headers:{
@@ -118,18 +133,20 @@
                 const productId = tr.getAttribute('data-product-id'); // 여기서 product id를 가져옴
                 const quantity = tr.getAttribute('data-quantity');
                 const optionId = tr.getAttribute('data-option-id');
+                const totalPrice =  parseInt(tr.getAttribute('data-total-price'));
                 return {
                   cartItemId: checkbox.value,
                   productId: productId,
                   quantity: quantity,
-                  optionId:optionId
+                  optionId:optionId,
+                  totalPrice:totalPrice
                 };
               });
 
       if (selectedProducts.length > 0) {
 
 
-        console.log('선택된 항목들:', selectedProducts);
+        console.log('선택된 항목들:', JSON.stringify(selectedProducts));
 
         fetch('/prod/cart/save',{
           method:'Post',
@@ -199,7 +216,7 @@
           <th>총합</th>
         </tr>
         <th:block th:if="${!cartItems.isEmpty()}">
-          <tr th:each="cartItem : ${cartItems}" th:data-option-id="${cartItem.optionId}" th:data-product-id="${cartItem.cartProductDto.id}" th:data-quantity="${cartItem.quantity}">
+          <tr th:each="cartItem : ${cartItems}" th:data-total-price="${cartItem.totalPrice}" th:data-option-id="${cartItem.optionId}" th:data-product-id="${cartItem.cartProductDto.id}" th:data-quantity="${cartItem.quantity}">
             <td><input type="checkbox" class="checkboxItem" th:value="${cartItem.cartItemId}"/></td>
             <td>
               <a th:href="@{'/prod/product?prodId='+${cartItem.cartProductDto.id}}">
@@ -231,7 +248,7 @@
             <td>[[${cartItem != null ? #numbers.formatInteger(cartItem.cartProductDto.prodPrice, 1, 'COMMA') : 0}]]원</td>
             <td>[[${cartItem != null ? #numbers.formatInteger(cartItem.cartProductDto.prodDiscount, 1, 'COMMA') : 0}]] %</td>
             <td>[[${cartItem.cartProductDto.prodPoint}]] P</td>
-            <td>[[${cartItem != null ? #numbers.formatInteger(cartItem.cartProductDto.prodDeliver, 1, 'COMMA') : 0}]]원</td>
+            <td>[[${cartItem.cartProductDto.prodDeliver > 0 ? #numbers.formatInteger(cartItem.cartProductDto.prodDeliver, 1, 'COMMA')+'원' : '무료배송'}]]</td>
             <td>[[${cartItem != null ? #numbers.formatInteger(cartItem.totalPrice, 1, 'COMMA') : 0}]]원</td>
           </tr>
         </th:block>

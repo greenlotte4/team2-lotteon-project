@@ -60,7 +60,6 @@ public class SearchService {
                 String searchKeyword = tuple.getValue();
                 double newScore = 1;
 
-                // 새로운 점수로 다시 저장
                 assert searchKeyword != null;
                 redisTemplate.opsForZSet().add("search_count", searchKeyword, newScore);
             }

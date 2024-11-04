@@ -52,4 +52,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
     List<Product> findTop4ByOrderByProdDiscountDesc();
 
     List<Product> findTop4ByOrderByProdPointDesc();
+
+    Page<Product> findAllByProdNameContaining(String keyword, Pageable pageable);
 }

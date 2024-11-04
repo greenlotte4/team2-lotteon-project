@@ -124,3 +124,14 @@
     align-items: center;
     margin:  40px 0;
 }
+
+.retry-btn {
+    background-color: transparent;
+    width: 40px;
+    height: 30px;
+    border: 2px solid #bfbfbf;
+    outline: none;
+}
+
+.customer .success-color {color: blue}
+.customer .error-color {color: red}

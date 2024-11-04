@@ -70,7 +70,7 @@
                                 <td>
                                     <span style="margin-right: 20px;" th:text="${option1s[0].optionName}"></span>
                                     <select onchange="optionIdChanger(event)" name="options" class="prodOptions" id="select1">
-                                        <option id="noOption" th:if="${option1.type == 'noOption'}" th:each="option1 : ${option1s}">옵션 없음</option>
+                                        <option id="noOption" th:data-id="${option1.optionId}" th:if="${option1.type == 'noOption'}" th:each="option1 : ${option1s}">옵션 없음</option>
                                         <option class="endOption"
                                                 th:data-price="${option1.optionPrice}"
                                                 th:data-id="${option1.optionId}"
@@ -247,7 +247,9 @@
     let count = 0;
     let basePrice = parseFloat([[${#numbers.formatInteger(product.getTotalPrice(), 1)}]]);
     if(noOption){
-
+        const select1 = document.getElementById('select1')
+        const selectedOption = select1.options[select1.selectedIndex];
+        optionId.value = selectedOption.dataset.id;
         qty.style.display='block'
     }
     if(endOption){
@@ -434,6 +436,11 @@
             e.preventDefault();
             let readPrice = totalPrice.value
             const optionId = document.getElementById('optionId').value
+
+            if(readPrice==null){
+                readPrice = basePrice;
+            }
+
             const jsonData = {
                 "prodId": productForm.prodId.value,
                 "quantity":productForm.quantity.value,
@@ -473,10 +480,9 @@
             let readPrice = totalPrice.value
             const optionId = document.getElementById('optionId').value
 
-
-
-            readPrice = basePrice;
-
+            if(readPrice==null){
+                readPrice = basePrice;
+            }
 
             const jsonData = {
                 "productId": productForm.prodId.value,

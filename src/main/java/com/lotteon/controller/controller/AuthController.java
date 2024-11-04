@@ -3,6 +3,7 @@ package com.lotteon.controller.controller;
 
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostCustSignupDTO;
+import com.lotteon.dto.requestDto.PostSellerSignupDTO;
 import com.lotteon.dto.responseDto.GetBannerDTO;
 import com.lotteon.dto.responseDto.GetTermsResponseDto;
 import com.lotteon.entity.member.Member;
@@ -34,7 +35,7 @@ public class AuthController {
     private final CustomerService customerService;
     private final TermsService termsService;
     private final BannerService bannerService;
-
+    private final SellerService sellerService;
 
     @GetMapping("/login/view")
     public String login(Model model) {
@@ -82,15 +83,13 @@ public class AuthController {
     // 2-2. 회원가입 (판매회원 정보입력)
     @GetMapping("/seller")
     public String seller(){
-
-
         return "pages/auth/seller";
     }
 
     // 2-2. 회원가입 (판매회원 정보입력)
     @PostMapping("/seller")
-    public String seller(PostCustSignupDTO postCustSignupDTO){
-
+    public String seller(PostSellerSignupDTO postSellerSignupDTO){
+        sellerService.insertSeller(postSellerSignupDTO);
         return "redirect:/auth/login/view";
     }
 

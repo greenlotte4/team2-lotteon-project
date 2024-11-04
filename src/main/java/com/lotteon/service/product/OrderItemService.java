@@ -12,12 +12,14 @@ import com.lotteon.entity.point.Point;
 import com.lotteon.entity.product.Order;
 import com.lotteon.entity.product.OrderItem;
 import com.lotteon.entity.product.Product;
+import com.lotteon.entity.product.ProductOption;
 import com.lotteon.repository.impl.OrderItemRepositoryImpl;
 import com.lotteon.repository.member.CustomerRepository;
 import com.lotteon.repository.member.SellerRepository;
 import com.lotteon.repository.point.PointRepository;
 import com.lotteon.repository.product.OrderItemRepository;
 import com.lotteon.repository.product.OrderRepository;
+import com.lotteon.repository.product.ProductOptionRepository;
 import com.lotteon.repository.product.ProductRepository;
 import com.lotteon.service.member.CustomerService;
 import jakarta.servlet.http.HttpSession;
@@ -47,6 +49,7 @@ public class OrderItemService {
     private final PointRepository pointRepository;
     private final CustomerService customerService;
     private final CustomerRepository customerRepository;
+    private final ProductOptionRepository productOptionRepository;
 
 
     public ResponseEntity insertOrderItem(List<OrderItemDto> orderItemDto, OrderDto orderDto, HttpSession session) {
@@ -63,6 +66,15 @@ public class OrderItemService {
         List<Long> orderItemIds = new ArrayList<>();
         for(OrderItemDto orderItem :orderItemDto){
             Optional<Product> optProduct = productRepository.findById(orderItem.getProductId());
+
+            int orderItemQuantity = orderItem.getQuantity();
+            Long optionId = orderItem.getOptionId();
+
+            //재고 처리
+            Optional<ProductOption> optProductOption = productOptionRepository.findById(optionId);
+            ProductOption productOption = optProductOption.get();
+            int savedStock = productOption.getStock() - orderItemQuantity;
+            productOption.setStock(savedStock);
 
             if(!optProduct.isPresent()){
                 return ResponseEntity.ok().body(false);

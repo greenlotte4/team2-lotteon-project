@@ -15,11 +15,11 @@
                 </p>
             </nav>
             <form class="search">
-                <select name="search" class="search-option">
-                    <option value="상품명">상품명</option>
-                    <option value="상품번호">상품번호</option>
-                    <option value="판매자">판매자</option>
-                    <option value="제조사">제조사</option>
+                <select name="searchType" class="search-option">
+                    <option th:selected="${searchType == 'sellCompany'}" value="sellCompany">상호명</option>
+                    <option th:selected="${searchType == 'sellRep'}" value="sellRep">대표자</option>
+                    <option th:selected="${searchType == 'busiCode'}" value="busiCode">사업자등록번호</option>
+                    <option th:selected="${searchType == 'sellHp'}" value="sellHp">연락처</option>
                 </select>
                 <input class="search-keyword" type="text" name="keyword" placeholder="키워드 입력">
                 <button class="search-btn" type="submit">검색</button>
@@ -55,67 +55,38 @@
                     <th>운영</th>
                     <th>관리</th>
                 </tr>
-                <tr>
+                <tr th:each="shop : ${shops}">
                     <td>
-                        <input type="checkbox" class="checkbox">
+                        <input th:data-id="${shop.id}" type="checkbox" class="checkbox">
                     </td>
-                    <td>5</td>
-                    <td>(주)다나와</td>
-                    <td>정우성</td>
-                    <td>112-12-12345</td>
-                    <td>2024 - 서울강남 - 04433</td>
-                    <td>010-1234-1001</td>
-                    <td><div class="cir"></div></td>
+                    <td th:text="${shop.id}">5</td>
+                    <td th:text="${shop.company}">(주)다나와</td>
+                    <td th:text="${shop.name}">정우성</td>
+                    <td th:text="${shop.businessCode}">112-12-12345</td>
+                    <td th:text="${shop.orderCode}">2024 - 서울강남 - 04433</td>
+                    <td th:text="${shop.hp}">010-1234-1001</td>
+                    <td>
+                        <div th:if="${shop.state == '운영중'}" class="cir"></div>
+                        <div th:if="${shop.state == '운영중지'}" class="cir2"></div>
+                        <div th:if="${shop.state == '운영준비'}" class="cir3"></div>
+                    </td>
                     <td class="td-admin">
-                        <input type="button" value="[ 중단 ]">
+                        <input th:data-id="${shop.id}" type="button" value="[ 중단 ]">
                     </td>
                 </tr>
-
-                <tr>
-                    <td>
-                        <input type="checkbox" class="checkbox">
-                    </td>
-                    <td>5</td>
-                    <td>(주)다나와</td>
-                    <td>정우성</td>
-                    <td>112-12-12345</td>
-                    <td>2024 - 서울강남 - 04433</td>
-                    <td>010-1234-1001</td>
-                    <td><div class="cir"></div></td>
-                    <td class="td-admin">
-                        <input type="button" value="[ 중단 ]">
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <input type="checkbox" class="checkbox">
-                    </td>
-                    <td>5</td>
-                    <td>(주)다나와</td>
-                    <td>정우성</td>
-                    <td>112-12-12345</td>
-                    <td>2024 - 서울강남 - 04433</td>
-                    <td>010-1234-1001</td>
-                    <td><div class="cir"></div></td>
-                    <td class="td-admin">
-                        <input type="button" value="[ 중단 ]">
-                    </td>
-                </tr>
-
             </table>
             <div class="btns">
-                <button class="delete-btn">선택삭제</button>
+                <button class="delete-btn" id="deleteButton">선택삭제</button>
                 <button onclick="openShopPopup()" class="insert-btn">상점등록</button>
             </div>
             <div class="page">
-                <a href="#" class="first"><<</a>
-                <a class="on" href="#">1</a>
-                <a href="#">2</a>
-                <a href="#">3</a>
-                <a href="#">4</a>
-                <a href="#">5</a>
-                <a href="#" class="last">>></a>
+                <a class="none" th:href="@{/admin/shop/shop(page=0, searchType=${searchType}, keyword=${keyword})}"><<</a>
+                <a class="none" th:href="@{/admin/shop/shop(page=${page - 2}, searchType=${searchType}, keyword=${keyword})}" th:if="${page>=2}" th:text="${page}-1"></a>
+                <a class="none" th:href="@{/admin/shop/shop(page=${page - 1}, searchType=${searchType}, keyword=${keyword})}" th:if="${page>=1}" th:text="${page}"></a>
+                <a class="active" style="font-weight: 600; text-decoration: underline;" th:text="${page}+1"></a>
+                <a class="none" th:href="@{/admin/shop/shop(page=${page + 1}, searchType=${searchType}, keyword=${keyword})}" th:if="${(totalPages - page)>=2}" th:text="${page}+2"></a>
+                <a class="none" th:href="@{/admin/shop/shop(page=${page + 2}, searchType=${searchType}, keyword=${keyword})}" th:if="${(totalPages - page)>=3}" th:text="${page}+3"></a>
+                <a class="none" th:href="@{/admin/shop/shop(page=${totalPages - 1}, searchType=${searchType}, keyword=${keyword})}" >>></a>
             </div>
             <div class="popup">
                 <div class="header">
@@ -286,5 +257,61 @@
             console.error(e)
         }
     }
+
+    const allCheckbox = document.getElementById('allCheckbox');
+    const checkboxes = document.querySelectorAll('.checkbox');
+    const submitData = [];
+
+    // 전체 체크박스 클릭 이벤트
+    allCheckbox.addEventListener('change', function() {
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = allCheckbox.checked;
+            updateSubmitData();
+        });
+    });
+
+    // 각 체크박스 클릭 이벤트
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            updateSubmitData();
+
+            // 전체 체크박스 상태 업데이트
+            const allChecked = [...checkboxes].every(checkbox => checkbox.checked);
+            allCheckbox.checked = allChecked;
+        });
+    });
+
+    // 선택된 체크박스의 data-id를 submitData에 추가
+    function updateSubmitData() {
+        submitData.length = 0; // 기존 데이터 초기화
+        checkboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                submitData.push(checkbox.getAttribute('data-id'));
+            }
+        });
+    }
+
+    // 삭제 버튼 클릭 이벤트
+    document.getElementById('deleteButton').addEventListener('click',async function() {
+        if (submitData.length > 0) {
+            // 삭제 처리 로직 추가
+            console.log('삭제할 데이터 ID:', submitData);
+            try {
+                const resp = await axios.delete("/admin/shop/shop",{
+                    params:{
+                        id : submitData.join(",")
+                    },
+                    headers : {
+                        "Content-Type" : "application/json"
+                    }
+                })
+
+            } catch (e) {
+
+            }
+        } else {
+            alert('삭제할 항목이 선택되지 않았습니다.');
+        }
+    });
 
 </script>

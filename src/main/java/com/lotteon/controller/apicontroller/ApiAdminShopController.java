@@ -4,10 +4,11 @@ import com.lotteon.dto.requestDto.PostAdminSellerDto;
 import com.lotteon.service.member.SellerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/admin/shop")
@@ -24,6 +25,18 @@ public class ApiAdminShopController {
         sellerService.postSeller(postAdminSellerDto);
 
 
+        return ResponseEntity.ok("SU");
+    }
+
+    @DeleteMapping("/shop")
+    public ResponseEntity<?> deleteShop(
+            @RequestParam String id
+    ){
+        List<Long> ids = Arrays.stream(id.split(","))
+                .map(Long::valueOf) // 각 요소를 Long으로 변환
+                .collect(Collectors.toList());
+
+        sellerService.delete(ids);
         return ResponseEntity.ok("SU");
     }
 }

@@ -78,7 +78,7 @@ input:focus{outline: none;}
 
 
 
-.name_box > span:last-child {color: #7f7f7f;}
+.name_box span:last-child {color: #7f7f7f;}
 .tb1 td:last-child{color: #c00000;}
 .cartOptions div {display: flex; justify-content: center;}
 .cartOptions span{margin: 3px 2px;}
@@ -95,12 +95,12 @@ input:focus{outline: none;}
 
 /* 전체합계 */
 .total_yh{    width: 90%;}
-.total {width: 291px; height: 300px; margin-left: auto; margin-right: 20px;
-        border: 2px solid #d9d9d9;padding: 20px 30px;}
-.tb2 {width: 200px; height: auto; }
+.total {width: 291px; height: 360px; margin-left: auto;
+        border: 1px solid #d9d9d9;padding: 30px 30px;/*border-radius: 30px;*/}
+.tb2 {width: 200px; height: auto;     margin-left: 10px;}
 .tb2 .th{text-align: left; font-size: 16px;height: 30px;
         font-weight: 700;}
-.tb2 th {font-size: 14px; height: 25px; width: 40px!important;}
+.tb2 th {font-size: 14px; height: 32px; width: 40px!important;}
 .tb2 .red {color: #c00000;}
 .tb2 .data{width: 30px; margin-left: 10px; text-align: right;}
 

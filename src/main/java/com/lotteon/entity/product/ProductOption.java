@@ -46,6 +46,7 @@ public class ProductOption {
     @Column(name = "additionalPrice")
     private Double additionalPrice;
 
+    @Setter
     @Column(name = "prod_option_stock")
     private Integer stock = 0; // 추가 가격 (옵션 선택 시 가격 증가분) , null오류를 위해 기본값 설정해두기
 
