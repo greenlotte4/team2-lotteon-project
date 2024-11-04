@@ -1,6 +1,7 @@
 package com.lotteon.service.point;
 
 import com.lotteon.config.MyUserDetails;
+import com.lotteon.dto.requestDto.cartOrder.OrderItemDto;
 import com.lotteon.dto.responseDto.GetPointsDto;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.point.Point;
@@ -23,6 +24,12 @@ import java.util.List;
 public class PointService {
     private final PointRepository pointRepository;
     private final CustomerRepository customerRepository;
+
+    @Scheduled(cron = "30 59 23 * * ?")
+    public void deletePoint(){
+        List<Point> points = pointRepository.findAllByPointType(0);
+        pointRepository.deleteAll(points);
+    }
 
     public Page<GetPointsDto> findAllByCustomer(int page) {
         Pageable pageable = PageRequest.of(page, 5);
@@ -156,4 +163,5 @@ public class PointService {
         }
 
     }
+
 }

@@ -85,7 +85,7 @@ padding: 0 31px; padding-bottom: 30px; z-index: 1000; display: none; border: 1px
 
 /* 메인컨텐츠 본문영역 */
 /* main */
-#main{width: 100%; height: 2000px; display: flex; justify-content: center; /* 콘텐츠를 중앙에 배치 */}
+#main{width: 100%; height: 2700px; display: flex; justify-content: center; /* 콘텐츠를 중앙에 배치 */}
 .mainIn{width: 1200px; margin: 0 auto; display: flex;}
 
 #aside{width:220px; height: 100%; margin:0 auto; margin-top: 150px;}

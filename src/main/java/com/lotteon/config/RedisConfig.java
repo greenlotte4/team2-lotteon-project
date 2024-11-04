@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.lotteon.dto.responseDto.GetCategoryDto;
+import com.lotteon.dto.responseDto.GetMainProductDto;
 import com.lotteon.repository.impl.token.PersistentRememberMeTokenDeserializer;
 import com.lotteon.repository.impl.token.PersistentRememberMeTokenSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,34 +39,55 @@ public class RedisConfig {
         return new LettuceConnectionFactory(host, port);
     }
 
-@Bean
-public RedisTemplate<String, Object> getRedisTemplate(RedisConnectionFactory connectionFactory) {
-    RedisTemplate<String, Object> template = new RedisTemplate<>();
-    template.setConnectionFactory(connectionFactory);
+    @Bean
+    public RedisTemplate<String, Object> getRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
 
-    // Key Serializer 설정
-    template.setKeySerializer(new StringRedisSerializer());
+        // Key Serializer 설정
+        template.setKeySerializer(new StringRedisSerializer());
 
-    // Hash Key Serializer 설정
-    template.setHashKeySerializer(new StringRedisSerializer());
+        // Hash Key Serializer 설정
+        template.setHashKeySerializer(new StringRedisSerializer());
 
-    // Hash Value Serializer 설정
-    ObjectMapper objectMapper = new ObjectMapper();
-    objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL);
+        // Hash Value Serializer 설정
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL);
 
-    // GenericJackson2JsonRedisSerializer에 ObjectMapper를 적용
-    GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
+        // GenericJackson2JsonRedisSerializer에 ObjectMapper를 적용
+        GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
 
-    // Value Serializer 설정
-    template.setValueSerializer(serializer);
+        // Value Serializer 설정
+        template.setValueSerializer(serializer);
 
-    // Hash Value Serializer 설정
-    template.setHashValueSerializer(serializer);
+        // Hash Value Serializer 설정
+        template.setHashValueSerializer(serializer);
 
-    template.afterPropertiesSet();
-    return template;
-}
+        template.afterPropertiesSet();
+        return template;
+    }
+
+    @Bean
+    public RedisTemplate<String, List<GetMainProductDto>> bestredisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, List<GetMainProductDto>> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+
+        // Key Serializer
+        template.setKeySerializer(new StringRedisSerializer());
+
+        // Value Serializer
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+
+        // Hash Key Serializer
+        template.setHashKeySerializer(new StringRedisSerializer());
+
+        // Hash Value Serializer
+        template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
+
+        template.afterPropertiesSet();
+        return template;
+    }
 
     @Bean
     public RedisTemplate<String, List<GetCategoryDto>> getCategoryRedisTemplate() {

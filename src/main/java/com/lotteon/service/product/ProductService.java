@@ -22,6 +22,8 @@ import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -45,6 +47,10 @@ public class ProductService {
     private final ModelMapper modelMapper;
     private final SellerRepository sellerRepository;
     private final JPAQueryFactory queryFactory;
+    private final OrderRepository orderRepository;
+    private final RedisTemplate<String,Object> redisTemplate;
+    private final RedisTemplate<String,List<GetMainProductDto>> bestredisTemplate;
+    private final SimpMessagingTemplate messagingTemplate;
     @Value("${file.upload-dir}")
     private String uploadPath;
 
@@ -215,6 +221,7 @@ public class ProductService {
         double total = postProductDTO.getProdPrice() - postProductDTO.getProdPrice() * (postProductDTO.getProdDiscount()/100);
         log.info("123432114455" + total);
         postProductDTO.setTotalPrice(total);
+        opt.get().updateViewCnt();
 
         return postProductDTO;
     }
@@ -357,6 +364,73 @@ public class ProductService {
         Page<Product> products2 = new PageImpl<>(products, pageable, total);
         Page<GetProductDto> dtos = products2.map(v->v.toGetProductDto());
         System.out.println(dtos);
+        return dtos;
+    }
+    public List<GetMainProductDto> findBestItem() {
+
+        List<GetMainProductDto> cachedProducts = bestredisTemplate.opsForValue().get("best_products");
+        System.out.println(cachedProducts);
+        if (cachedProducts != null) {
+            return cachedProducts;
+        }
+
+        List<Product> products = productRepository.findTop3ByOrderByProdOrderCntDesc();
+        List<GetMainProductDto> dtos = products.stream().map(Product::toGetMainBestDto).collect(Collectors.toList());
+
+        bestredisTemplate.opsForValue().set("best_products", dtos, 2, TimeUnit.HOURS);
+        return dtos;
+    }
+
+    public void updateBestItems() {
+        List<GetMainProductDto> bestProducts = findBestItem();
+
+        // 클라이언트에게 실시간으로 베스트 상품 정보 전송
+        messagingTemplate.convertAndSend("/topic/bestProducts", bestProducts);
+    }
+
+    public List<GetMainProductDto> findHitItem() {
+        List<Product> products = productRepository.findTop4ByOrderByProdViewsDesc();
+        List<GetMainProductDto> dtos = products.stream().map(Product::toGetMainHitDto).toList();
+        return dtos;
+    }
+
+    public List<GetMainProductDto> findRecentItem() {
+        List<Product> products = productRepository.findTop4ByOrderByProdRdateDesc();
+        List<GetMainProductDto> dtos = products.stream().map(Product::toGetMainHitDto).toList();
+        return dtos;
+    }
+
+    public List<GetMainProductDto> findRecommendItem() {
+        List<Product> products = productRepository.findTop4ByOrderByProdRatingDesc();
+        List<GetMainProductDto> dtos = products.stream().map(Product::toGetMainHitDto).toList();
+        return dtos;
+    }
+
+    public List<GetProductNamesDto> findReviewNames(Long orderId) {
+        Optional<Order> order = orderRepository.findById(orderId);
+        List<Product> products = order.get().getOrderItems().stream().map(v->v.getProduct()).toList();
+        List<GetProductNamesDto> dtos = products.stream().map(Product::toGetProductNamesDto).toList();
+        return dtos;
+    }
+
+    public void top3UpdateBoolean() {
+        List<GetMainProductDto> cachedProducts = bestredisTemplate.opsForValue().get("best_products");
+        List<Product> products = productRepository.findTop3ByOrderByProdOrderCntDesc();
+        List<GetMainProductDto> dtos = products.stream().map(Product::toGetMainBestDto).collect(Collectors.toList());
+        if (cachedProducts == null || !cachedProducts.equals(dtos)) {
+            bestredisTemplate.opsForValue().set("best_products", dtos, 2, TimeUnit.HOURS);
+        }
+    }
+
+    public List<GetMainProductDto> findDiscountItem() {
+        List<Product> products = productRepository.findTop4ByOrderByProdDiscountDesc();
+        List<GetMainProductDto> dtos = products.stream().map(Product::toGetMainHitDto).toList();
+        return dtos;
+    }
+
+    public List<GetMainProductDto> findSavePointItem() {
+        List<Product> products = productRepository.findTop4ByOrderByProdPointDesc();
+        List<GetMainProductDto> dtos = products.stream().map(Product::toGetMainHitDto).toList();
         return dtos;
     }
 }

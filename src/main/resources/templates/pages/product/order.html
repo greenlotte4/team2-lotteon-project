@@ -106,6 +106,7 @@
         const discount = parseInt(cells[5]?.textContent.replace(/[^\d]/g, '').trim()) || 0;  // 할인율
         const deliveryFee = parseInt(cells[7]?.textContent.replace(/[^\d]/g, '').trim()) || 0; // 배송비
         const totalPrice = parseInt(cells[8]?.textContent.replace(/[^\d]/g, '').trim()) || 0; // 총합
+        const savePoint = parseInt(cells[6].textContent.replace(/[^\d]/g, '').trim()) || 0;
 
         // 각 상품을 객체로 만들어 배열에 추가
         products.push({
@@ -114,7 +115,8 @@
           productPrice: productPrice,
           discount: discount,
           deliver: deliveryFee,
-          totalPrice: totalPrice
+          totalPrice: totalPrice,
+          savePoint : savePoint
         });
       });
 

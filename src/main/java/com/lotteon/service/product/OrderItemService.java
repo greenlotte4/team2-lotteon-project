@@ -6,15 +6,20 @@ import com.lotteon.dto.requestDto.cartOrder.OrderItemDto;
 import com.lotteon.dto.responseDto.cartOrder.ResponseOrderDto;
 import com.lotteon.dto.responseDto.cartOrder.ResponseOrderItemDto;
 import com.lotteon.dto.responseDto.cartOrder.UserOrderDto;
+import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Seller;
+import com.lotteon.entity.point.Point;
 import com.lotteon.entity.product.Order;
 import com.lotteon.entity.product.OrderItem;
 import com.lotteon.entity.product.Product;
 import com.lotteon.repository.impl.OrderItemRepositoryImpl;
+import com.lotteon.repository.member.CustomerRepository;
 import com.lotteon.repository.member.SellerRepository;
+import com.lotteon.repository.point.PointRepository;
 import com.lotteon.repository.product.OrderItemRepository;
 import com.lotteon.repository.product.OrderRepository;
 import com.lotteon.repository.product.ProductRepository;
+import com.lotteon.service.member.CustomerService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -23,6 +28,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,11 +44,16 @@ public class OrderItemService {
     private final ProductRepository productRepository;
     private final SellerRepository sellerRepository;
     private final OrderItemRepositoryImpl orderItemRepositoryImpl;
+    private final PointRepository pointRepository;
+    private final CustomerService customerService;
+    private final CustomerRepository customerRepository;
 
 
     public ResponseEntity insertOrderItem(List<OrderItemDto> orderItemDto, OrderDto orderDto, HttpSession session) {
         log.info("오더아이템 서비스 들어옴 ");
-
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Customer customer = auth.getUser().getCustomer();
+        LocalDate today = LocalDate.now();
         Order order = orderService.insertOrder(orderDto);
         log.info("오더 저장 성공 : "+order);
 
@@ -88,12 +99,28 @@ public class OrderItemService {
 
             orderItemIds.add(orderItemId);
 
+            Point point = Point.builder()
+                    .pointType(1)
+                    .pointVar(orderItem.getSavePoint())
+                    .customer(customer)
+                    .pointEtc("상품구매 포인트적립")
+                    .pointExpiration(today.plusMonths(2))
+                    .orderId(orderItemId)
+                    .build();
+
+            pointRepository.save(point);
+
+            int points = customerService.updateCustomerPoint(customer);
+            customer.updatePoint(points);
+            customerRepository.save(customer);
+
             if(returnorderItem==null){
                 return ResponseEntity.ok().body(false);
             }
         };
 
         session.setAttribute("orderItemIds",orderItemIds);
+
         return ResponseEntity.ok().body(true);
     }
 

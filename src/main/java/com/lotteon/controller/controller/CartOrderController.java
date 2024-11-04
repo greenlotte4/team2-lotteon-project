@@ -74,7 +74,6 @@ public class CartOrderController {
         List<Long> productIds = selectedProducts.stream().map(v->v.getProductId()).toList();
         List<GetCouponDto> coupons = customerCouponService.findByCustomerAndSeller(productIds);
         model.addAttribute("coupons",coupons);
-        
 
         return "pages/product/order";
     }
