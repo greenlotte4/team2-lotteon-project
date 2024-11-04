@@ -51,7 +51,7 @@ public class CustomerService {
                  member = Member.builder()
                         .memUid(postCustSignupDTO.getMemId())
                         .memPwd(passwordEncoder.encode(UUID.randomUUID().toString()))
-                        .memRole("GUEST")
+                        .memRole("guest")
                         .memState("basic")
                         .build();
             }else {
