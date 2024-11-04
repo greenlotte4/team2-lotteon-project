@@ -68,15 +68,22 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <select name="options" class="prodOptions" id="select1">
-                                        <option value="">Select an Option</option>
+                                    <span style="margin-right: 20px;" th:text="${option1s[0].optionName}"></span>
+                                    <select onchange="optionIdChanger(event)" name="options" class="prodOptions" id="select1">
+                                        <option id="noOption" th:if="${option1.type == 'noOption'}" th:each="option1 : ${option1s}">옵션 없음</option>
+                                        <option class="endOption"
+                                                th:data-price="${option1.optionPrice}"
+                                                th:data-id="${option1.optionId}"
+                                                th:if="${option1.type == 'endOption'}"
+                                                th:each="option1 : ${option1s}"
+                                                th:text="${option1.optionValue} + (${option1.optionPrice} != null ? ' - ' + ${option1.optionPrice} + '원' : '')"></option>
+                                        <option class="nextOption" th:data-option="${option1.optionValue}" th:if="${option1.type == 'nextOption'}" th:each="option1 : ${option1s}" th:text="${option1.optionValue}"></option>
                                     </select>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="display: none">
-                                    <select name="options" class="prodOptions" id="select2">
-                                    </select>
+                                <td id="select2" style="display: none">
+
                                 </td>
                             </tr>
                             <tr>
@@ -228,8 +235,25 @@
     <input type="hidden" th:value="${options}" id="hiddenOption">
 </main>
 <footer th:replace="layout/main/footer.html"></footer>
-<!-- #wrap -->
 <script>
+    const noOption = document.getElementById('noOption');
+    const totalPrice = document.getElementById('totalPrice')
+    const qty = document.getElementById('qty')
+    const endOption = document.querySelector('.endOption')
+    const endOption2 = document.querySelector('.endOption2')
+    const nextOption = document.querySelector('.nextOption')
+    const optionId = document.getElementById('optionId')
+    let selectedAdditionalPrice = 0;
+    let count = 0;
+    let basePrice = parseFloat([[${#numbers.formatInteger(product.getTotalPrice(), 1)}]]);
+    if(noOption){
+
+        qty.style.display='block'
+    }
+    if(endOption){
+        qty.style.display='block'
+    }
+
     async function getCustomerCoupon(event){
         const submitData = {
             'id' : event.target.dataset.id
@@ -304,222 +328,103 @@
         }
     });
 
+    countInput.addEventListener('change', function () {
+        calculateTotalPrice();
+    });
+
+    function calculateTotalPrice() {
+        const countInput = document.querySelector('.count');
+        let inNum = countInput.value || 0; // 수량을 가져오고 기본값 0 설정
+        let totalPriceValue = Number(inNum * basePrice); // 총 가격 계산
+        if(selectedAdditionalPrice !== 0){
+            totalPriceValue = Number(inNum) * (Number(basePrice)+Number(selectedAdditionalPrice));
+        }
+        totalPrice.innerText = totalPriceValue + "원"; // 화면에 표시
+        totalPrice.value = totalPriceValue;
+    }
+
+
+
+    async function optionIdChanger(event){
+        if(endOption){
+            const selectedOption = event.target.options[event.target.selectedIndex];
+            if (selectedOption.classList.contains("endOption")) {
+                optionId.value = selectedOption.dataset.id;
+                if(selectedOption.dataset.price){
+                    selectedAdditionalPrice = Number(selectedOption.dataset.price);
+                    calculateTotalPrice()
+                }
+            }
+        } else if(nextOption){
+            const select2 = document.getElementById('select2')
+            const selectedOption = event.target.options[event.target.selectedIndex];
+            try {
+                const resp = await axios.get("/prod/option2",{
+                    headers: {
+                        "Content-Type" : "application/json"
+                    },
+                    params: {
+                        "optionValue" : selectedOption.dataset.option,
+                        "prodId" : [[${product.id}]]
+                    }
+                })
+                const option2 = resp.data.option2s
+                if(option2[0].type==="endOption2"){
+                    select2.innerHTML = `
+                        <span style="margin-right: 31px;">${option2[0].optionName}</span>
+                        <select onclick="optionId2Changer(event)" class="prodOptions">
+                    ` + option2.map(v => `
+                        <option class="endOption2" data-price="${v.optionPrice}" data-id="${v.optionId}">
+                            ${v.optionValue}${v.optionPrice != null ? ' - ' + v.optionPrice + '원' : ''}
+                        </option>
+                    `).join('') + `
+                        </select>
+                    `;
+                } else {
+                    select2.innerHTML = `
+                        <span style="margin-right: 31px;">${option2[0].optionName}</span>
+                        <select onclick="optionId2Changer(event)" class="prodOptions">
+                    ` + option2.map(v => `
+                        <option class="nextOption2" data-option="${v.optionValue}">${v.optionValue}</option>
+                    `).join('') +`
+                        </select>
+                    `
+                }
+                select2.style.display='block'
+
+            } catch (e) {
+
+            }
+        }
+    }
+
+    async function optionId2Changer(event){
+        const selectedOption = event.target.options[event.target.selectedIndex];
+        if (selectedOption.classList.contains("endOption2")) {
+            optionId.value = selectedOption.dataset.id;
+            qty.style.display='block'
+            if(selectedOption.dataset.price){
+                selectedAdditionalPrice = Number(selectedOption.dataset.price);
+                calculateTotalPrice()
+            }
+
+        }
+    }
+
     window.onload = function () {
-        let totalPrice = document.getElementById('totalPrice');
-        let basePrice = parseFloat([[${#numbers.formatInteger(product.getTotalPrice(), 1)}]]); // 기본 가격
-        let selectedAdditionalPrice = 0; // 선택된 추가 가격 초기화
-        let selectedOptionId = null; // 선택된 옵션 ID 초기화
-        const qty = document.getElementById('qty');
+        const select1 = document.getElementById('select1');
 
-        countInput.addEventListener('change', function () {
-            calculateTotalPrice();
-        });
-
-        let option = document.getElementById('hiddenOption').value.trim();
-        option = option.replace(/^\[|\PostProductOptionDTO|\]$/g, '').trim();
-        console.log(option);
-        if(option === ''){
-            qty.style.display = 'table-cell';
-        }
-
-        function splitDataByParentheses(data) {
-            const splitData = data.split("),");
-            const cleanedData = splitData.map((item, index) => {
-                return index !== splitData.length - 1 ? item + ")" : item;
-            });
-            return cleanedData;
-        }
-
-        const splitResult = splitDataByParentheses(option);
-        function extractOptionValue(dataArray, keyName) {
-            return dataArray.map(item => {
-                const keyValuePairs = item.replace('(', '').replace(')', '').split(',').map(pair => pair.trim().split('='));
-                const foundPair = keyValuePairs.find(pair => pair[0].trim() === keyName);
-                return foundPair ? foundPair[1] : null;
-            }).filter(value => value !== null);
-        }
-
-        const optionValues = Array.from(new Set(extractOptionValue(splitResult, 'optionValue')));
-        const optionIds = Array.from(new Set(extractOptionValue(splitResult, 'id')));
-        const optionNames = Array.from(new Set(extractOptionValue(splitResult, 'optionName'))); // optionName2 추출
-        const selectElement1 = document.getElementById('select1');
-        selectElement1.innerHTML = `<option value="">${optionNames[0] || "Select an Option"}</option>`;
-
-        if (optionNames[0] === '옵션없음') {
-            qty.style.display = 'table-cell';
-            document.getElementById('optionId').value = optionIds[0];
-        }else{
-            optionValues.forEach(value => {
-                const optionElement = document.createElement('option');
-                optionElement.textContent = value;
-                optionElement.value = value;
-                selectElement1.appendChild(optionElement);
-           });
-        }
-
-        selectElement1.addEventListener('change', function () {
-            const selectedValue1 = selectElement1.value;
-            const parentTd = document.getElementById('select2').parentNode;
-            parentTd.style.display = 'none';
-            const parentTd2 = document.getElementById('select3').parentNode;
-            parentTd2.style.display = 'none';
-            const filteredData = splitResult.filter(item => {
-                const keyValuePairs = item.replace('(', '').replace(')', '').split(',').map(pair => pair.trim().split('='));
-                const foundPair = keyValuePairs.find(pair => pair[0].trim() === 'optionValue');
-                return foundPair && foundPair[1] === selectedValue1;
-            });
-
-            filteredData.forEach(item => {
-                const keyValuePairs = item.replace('(', '').replace(')', '').split(',').map(pair => pair.trim().split('='));
-                const optionValue2Pair = keyValuePairs.find(pair => pair[0].trim() === 'optionValue2');
-                const additionalPricePair = keyValuePairs.find(pair => pair[0].trim() === 'additionalPrice');
-                const optionIdPair = keyValuePairs.find(pair => pair[0].trim() === 'id');
-                const optionId = optionIdPair ? optionIdPair[1] : null;
-                const optionStockPair =keyValuePairs.find(pair => pair[0].trim() === 'stock');
-                const optionStock = optionStockPair ? optionStockPair[1] : null;
-                // optionValue2가 null인 경우 추가 요금 포함
-                if (optionValue2Pair && optionValue2Pair[1] === 'null' && additionalPricePair) {
-                    const additionalPrice = parseFloat(additionalPricePair[1]) || 0;
-                    const additionalPriceFormatted = additionalPrice.toLocaleString(); // 포맷팅
-                    selectedAdditionalPrice = additionalPriceFormatted.replace(',', '');
-                    console.log(selectedAdditionalPrice);
+        if (endOption) {
+            const selectedOption = select1.options[select1.selectedIndex];
+            if (selectedOption.classList.contains("endOption")) {
+                optionId.value = selectedOption.dataset.id;
+                if (selectedOption.dataset.price) {
+                    selectedAdditionalPrice = Number(selectedOption.dataset.price);
                     calculateTotalPrice();
-                    // 선택된 옵션의 텍스트를 업데이트
-                    const selectedOption = selectElement1.querySelector(`option[value="${selectedValue1}"]`);
-                    if (selectedOption) {
-                        if(additionalPriceFormatted.charAt(0) === '-'){
-                            selectedOption.textContent = `${selectedOption.value} (${additionalPriceFormatted}원)`;
-                        }else{
-                        selectedOption.textContent = `${selectedOption.value} (+${additionalPriceFormatted}원)`;
-                        }
-                        document.getElementById('optionId').value = optionId;
-                        console.log("id"+document.getElementById('optionId').value);
-                        document.getElementById('optionStock').value = optionStock;
-                        console.log("stock"+document.getElementById('optionStock').value);
-                    }
-                    const parentTd = document.getElementById('select2').parentNode;
-                    parentTd.style.display = 'none';
-                    const parentTd2 = document.getElementById('select3').parentNode;
-                    parentTd2.style.display = 'none';
-                    qty.style.display = 'table-cell';
                 }
-            });
+            } else {
 
-            const optionValues2 = Array.from(new Set(extractOptionValue(filteredData, 'optionValue2')));
-            const optionNames2 = Array.from(new Set(extractOptionValue(filteredData, 'optionName2'))); // optionName2 추출
-
-            const selectElement2 = document.getElementById('select2');
-            selectElement2.innerHTML = `<option value="">${optionNames2[0] || "Select an Option"}</option>`;
-
-            optionValues2.forEach((value, index) => {
-                const optionElement = document.createElement('option');
-                optionElement.textContent = value;
-                optionElement.value = value;
-                selectElement2.appendChild(optionElement);
-                const parentTd = selectElement2.parentNode;
-                if (optionElement.value !== "null") {
-                    parentTd.style.display = 'table-cell';
-                    qty.style.display = 'none';
-                }
-            });
-
-            selectElement2.addEventListener('change', function () {
-                const selectedValue2 = selectElement2.value;
-
-                const filteredData2 = filteredData.filter(item => {
-                    const keyValuePairs = item.replace('(', '').replace(')', '').split(',').map(pair => pair.trim().split('='));
-                    const foundPair = keyValuePairs.find(pair => pair[0].trim() === 'optionValue2');
-                    return foundPair && foundPair[1] === selectedValue2;
-                });
-
-                filteredData2.forEach(item => {
-                    const keyValuePairs = item.replace('(', '').replace(')', '').split(',').map(pair => pair.trim().split('='));
-                    const optionValue3Pair = keyValuePairs.find(pair => pair[0].trim() === 'optionValue3');
-                    const additionalPricePair = keyValuePairs.find(pair => pair[0].trim() === 'additionalPrice');
-                    const optionIdPair = keyValuePairs.find(pair => pair[0].trim() === 'id');
-                    const optionId = optionIdPair ? optionIdPair[1] : null;
-                    const optionStockPair =keyValuePairs.find(pair => pair[0].trim() === 'stock');
-                    const optionStock = optionStockPair ? optionStockPair[1] : null;
-                    // optionValue3가 null인 경우 추가 요금 포함
-                    if (optionValue3Pair && optionValue3Pair[1] === 'null' && additionalPricePair) {
-                        const additionalPrice = parseFloat(additionalPricePair[1]) || 0;
-                        const additionalPriceFormatted = additionalPrice.toLocaleString(); // 포맷팅
-                        selectedAdditionalPrice = additionalPriceFormatted.replace(',', '');
-                        calculateTotalPrice();
-                        // 선택된 옵션의 텍스트를 업데이트
-                        const selectedOption = selectElement2.querySelector(`option[value="${selectedValue2}"]`);
-                        if (selectedOption) {
-                            selectedOption.textContent = `${selectedOption.value} (+${additionalPriceFormatted}원)`;
-                            document.getElementById('optionId').value = optionId;
-                            console.log("id"+document.getElementById('optionId').value);
-                            document.getElementById('optionStock').value = optionStock;
-                            console.log("stock"+document.getElementById('optionStock').value);
-                        }
-                        const parentTd = document.getElementById('select3').parentNode;
-                        parentTd.style.display = 'none';
-                        qty.style.display = 'table-cell';
-                    }
-                });
-
-                const optionValues3 = Array.from(new Set(extractOptionValue(filteredData2, 'optionValue3')));
-                const optionNames3 = Array.from(new Set(extractOptionValue(filteredData2, 'optionName3'))); // optionName2 추출
-                const additionalPrices = extractKeyValue(filteredData2, 'additionalPrice');
-                let addPriceFinal = null;
-                const selectElement3 = document.getElementById('select3');
-                selectElement3.innerHTML = `<option value="">${optionNames3[0] || "Select an Option"}</option>`;
-
-                optionValues3.forEach((value, index) => {
-                    const addPrice = Math.floor(additionalPrices[index]); // 해당 인덱스의 추가 가격
-                    const optionElement = document.createElement('option');
-                    optionElement.textContent = `${value} (+${addPrice}원)`;
-                    optionElement.value = String(index); // 인덱스를 값으로 사용하여 선택 시 해당 인덱스를 가져올 수 있도록 함
-
-                    const parentTd = selectElement3.parentNode;
-                    if (value !== "null") {
-                        parentTd.style.display = 'table-cell';
-                        selectElement3.appendChild(optionElement);
-                    }
-                });
-                selectElement3.addEventListener('change', function () {
-                    const selectedIndex = selectElement3.value;
-                    if (selectedIndex === "") {
-                        // 선택된 값이 없을 때 처리
-                        document.getElementById('optionId').value = "";
-                        document.getElementById('optionStock').value = "";
-                        selectedAdditionalPrice = 0;
-                        return;
-                    }
-                    // 선택된 인덱스를 기반으로 각 값 설정
-                    selectedAdditionalPrice = Math.floor(additionalPrices[selectedIndex]);
-                    const selectedId = extractKeyValue(filteredData2, 'id')[selectedIndex];
-                    const selectedStock = extractKeyValue(filteredData2, 'stock')[selectedIndex];
-                    document.getElementById('optionId').value = selectedId;
-                    document.getElementById('optionStock').value = selectedStock;
-                    console.log("id: " + selectedId);
-                    console.log("stock: " + selectedStock);
-                    console.log("addPrice: " + selectedAdditionalPrice);
-
-                    qty.style.display = 'table-cell';
-                    calculateTotalPrice(); // 총 가격 계산
-                });
-            });
-        });
-
-        function extractKeyValue(dataArray, keyName) {
-            return dataArray.map(item => {
-                const keyValuePairs = item.replace('(', '').replace(')', '').split(',').map(pair => pair.trim().split('='));
-                const foundPair = keyValuePairs.find(pair => pair[0].trim() === keyName);
-                return foundPair ? foundPair[1] : null;
-            }).filter(value => value !== null);
-        }
-
-        // 가격 계산 함수
-        function calculateTotalPrice() {
-            let inNum = countInput.value || 0; // 수량을 가져오고 기본값 0 설정
-            let additionalPriceSum = selectedAdditionalPrice * inNum; // 선택된 추가 가격을 수량과 곱함
-            let totalPriceValue = (inNum * basePrice) + additionalPriceSum; // 총 가격 계산
-            totalPrice.innerText = totalPriceValue + "원"; // 화면에 표시
-            totalPrice.value = totalPriceValue;
+            }
         }
 
 
@@ -530,15 +435,6 @@
             e.preventDefault();
             let readPrice = totalPrice.value
             const optionId = document.getElementById('optionId').value
-
-            //
-            // if(qty.style.display !== 'table-cell'){
-            //     alert('옵션을 선택해 주세요.');
-            //     return;
-            // }else{
-            //     readPrice = basePrice;
-            // }
-
             const jsonData = {
                 "prodId": productForm.prodId.value,
                 "quantity":productForm.quantity.value,
@@ -579,12 +475,9 @@
             const optionId = document.getElementById('optionId').value
 
 
-            if(qty.style.display != 'table-cell'){
-                alert('옵션을 선택해 주세요.');
-                return;
-            }else{
-                readPrice = basePrice;
-            }
+
+            readPrice = basePrice;
+
 
             const jsonData = {
                 "productId": productForm.prodId.value,
