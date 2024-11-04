@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Log4j2
 @Service
@@ -45,15 +46,23 @@ public class CustomerService {
     @Transactional
     public Member insertCustomer(PostCustSignupDTO postCustSignupDTO) {
         try {
-
-            // Member 객체 생성 및 저장 (멤버 DB에 아이디, 비번 저장)
-            Member member = Member.builder()
-                    .memUid(postCustSignupDTO.getMemId())
-                    .memPwd(passwordEncoder.encode(postCustSignupDTO.getMemPwd()))
-                    .memRole("customer") // 기본 사용자 유형 "customer"
-                    .memState("basic")   // 기본 계정 상태 "basic"
-                    .build();
-
+            Member member;
+            if(postCustSignupDTO.getMemPwd().equals("SOCIAL")){
+                 member = Member.builder()
+                        .memUid(postCustSignupDTO.getMemId())
+                        .memPwd(passwordEncoder.encode(UUID.randomUUID().toString()))
+                        .memRole("GUEST")
+                        .memState("basic")
+                        .build();
+            }else {
+                // Member 객체 생성 및 저장 (멤버 DB에 아이디, 비번 저장)
+                 member = Member.builder()
+                        .memUid(postCustSignupDTO.getMemId())
+                        .memPwd(passwordEncoder.encode(postCustSignupDTO.getMemPwd()))
+                        .memRole("customer") // 기본 사용자 유형 "customer"
+                        .memState("basic")   // 기본 계정 상태 "basic"
+                        .build();
+            }
             Member savedMember = memberRepository.save(member);
             // Addr1 + Addr2 + Addr3 = 부산광역시 + 부산진구 + 부전동
             String addr = postCustSignupDTO.getAddr1()+"/"+postCustSignupDTO.getAddr2()+"/"+postCustSignupDTO.getAddr3();

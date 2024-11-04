@@ -130,7 +130,7 @@ public class MyOauth2UserService extends DefaultOAuth2UserService {
 
             PostCustSignupDTO dto = PostCustSignupDTO.builder()
                     .memId(memUid)
-                    .memPwd(UUID.randomUUID()+"")
+                    .memPwd("SOCIAL")
                     .custHp(custHp)
                     .custName(custName)
                     .custGender(custGender)

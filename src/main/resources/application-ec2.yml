@@ -73,7 +73,7 @@ spring:
             client-id: _7AvRNH_KtAQRx_nsACn
             client-secret: OuIZNWyTT7
             client-name: Naver
-            redirect-uri: "http://13.124.94.213:8080/login/oauth2/code/naver"
+            redirect-uri: "http://ec2-13-124-94-213.ap-northeast-2.compute.amazonaws.com:8080/login/oauth2/code/naver"
             authorization-grant-type: authorization_code
             scope:
               - name
@@ -83,7 +83,7 @@ spring:
             client-secret: kOQbxkPqD37FMM40lLSztlKUlPYFIb41
             client-name: Kakao
             client-authentication-method: client_secret_post
-            redirect-uri: "http://13.124.94.213:8080/login/oauth2/code/kakao"
+            redirect-uri: "http://ec2-13-124-94-213.ap-northeast-2.compute.amazonaws.com:8080/login/oauth2/code/kakao"
             authorization-grant-type: authorization_code
             scope:
               - profile_nickname

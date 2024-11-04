@@ -80,6 +80,10 @@
     border-radius: 5px;
     margin-top: 10px;
 }
+#lsh-container .social-ctn>a.social{display: inline-block; margin: 20px 10px -20px}
+.social-ctn>a.social.google{width: 30px; height: 30px;background: url(/images/ico_social_sprites.png) -10px -10px;}
+.social-ctn>a.social.naver{width: 30px; height: 30px;background: url(/images/ico_social_sprites.png) -60px -10px;}
+.social-ctn>a.social.kakao{width: 30px; height: 30px;background: url(/images/ico_social_sprites.png) -10px -60px;}
 
 #lsh-container .login-btn:hover{
     opacity: 0.8;
