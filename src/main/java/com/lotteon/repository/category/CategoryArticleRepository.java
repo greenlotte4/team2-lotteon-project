@@ -26,6 +26,14 @@ public interface CategoryArticleRepository extends JpaRepository<CategoryArticle
     // 카테고리 이름, 레벨, 타입에 따른 카테고리 조회
     Optional<CategoryArticle> findByCategoryNameAndCategoryLevelAndCategoryType(String categoryName, int level, int type);
 
+    // 최신순으로 10개의 공지사항을 가져오는 메서드 추가
+    List<CategoryArticle> findTop10ByOrderByNoticeDateDesc();
+
+    Optional<CategoryArticle> findByCategoryNameAndCategoryLevel(String cate1Name, int i);
+
+    // 특정 카테고리 ID로 카테고리 조회
+    CategoryArticle findByCategoryId(Long category1);
+
     // 특정 카테고리 ID로 자식 카테고리 조회
     @Query("SELECT c FROM CategoryArticle c WHERE c.parent.categoryId = :parentId")
     List<CategoryArticle> findByParentCategoryId(Long parentId);
