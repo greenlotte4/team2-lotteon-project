@@ -36,7 +36,6 @@ public class GetAdminUserDTO {
     private String  custEmail;      // 이메일
     private String  custHp;         // 휴대폰 번호
 
-    @CreationTimestamp
     private Timestamp memRdate;     // 가입일
     private String memState;        // 계정 상태 (활성, 비활성) [로그인, 로그아웃]
 
@@ -48,7 +47,6 @@ public class GetAdminUserDTO {
     private String custAddr2; // 주소
     private String custAddr3; // 상세주소
 
-    @CreationTimestamp
     private LocalDateTime memLastLoginDate; // 최근 로그인 날짜
 
     private String  memEtc; // 기타 (회원 기타 정보입력)

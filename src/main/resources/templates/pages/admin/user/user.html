@@ -6,7 +6,8 @@
      내용 : 관리자 회원목록 출력을 위한 타임리프 구문 추가
 
      수정이력
-      - 2025/10/27 (일) 김민희 - 회원수정 팝업호출 기능 추가
+      - 2024/10/27 (일) 김민희 - 회원수정 팝업호출 기능 추가
+      - 2024/11/03 (일) 김민희 - 검색 기능 추가
 -->
 <body>
 <header th:replace="layout/admin/header.html"></header>
@@ -21,19 +22,19 @@
                     <span>회원관리</span>
                     <span>회원목록</span>
                 </p>
-            </nav>
-            <form th:action="@{/admin/user/user}" method="get" class="search">
-                <select name="search" class="search-option">
-                    <option th:selected="${search=='couponName'}" value="couponName">아이디</option>
-                    <option value="상품명">아이디</option>
-                    <option value="상품번호">이름</option>
-                    <option value="판매자">이메일</option>
-                    <option value="제조사">휴대폰</option>
-                </select>
-                <input class="search-keyword" type="text" name="keyword" placeholder="키워드 입력">
-                <button class="search-btn" type="submit">검색</button>
-            </form>
+            </nav><!-- .navi -->
 
+            <!-- 검색 -->
+            <form th:action="@{/admin/user/users}" method="get" class="search">
+                <select name="searchType" class="search-option">
+                    <option th:selected="${searchType=='memUid'}" value="memUid">아이디</option>
+                    <option th:selected="${searchType=='custName'}" value="custName">이름</option>
+                    <option th:selected="${searchType=='custEmail'}" value="custEmail">이메일</option>
+                    <option th:selected="${searchType=='custHp'}" value="custHp">휴대폰</option>
+                </select>
+                <input class="search-keyword" type="text" name="keyword" placeholder="검색어 입력">
+                <button class="search-btn" type="submit">검색</button>
+            </form><!-- .search -->
 
             <div class="header-gubun-bottom"></div>
 
@@ -45,8 +46,8 @@
                     <col style="width: 7%;">
                     <col style="width: 5%;">
                     <col style="width: 12%;">
-                    <col style="width: 10%;">
                     <col style="width: 5%;">
+                    <col style="width: 10%;">
                     <col style="width: 12%;">
                     <col style="width: 12%;">
                     <col style="width: 8%;">
@@ -57,17 +58,17 @@
                         <th class="checkbox">
                             <input type="checkbox" id="allCheckbox">
                         </th>
-                        <th>번호</th>
-                        <th>아이디</th>
-                        <th>이름</th>
-                        <th>성별</th>
-                        <th>등급</th>
-                        <th>포인트</th>
-                        <th>이메일</th>
-                        <th>휴대폰</th>
-                        <th>가입일</th>
-                        <th>상태</th>
-                        <th>관리</th>
+                        <th class="" >번호</th>
+                        <th class="">아이디</th>
+                        <th class="">이름</th>
+                        <th class="">성별</th>
+                        <th class="">등급</th>
+                        <th class="">포인트</th>
+                        <th class="">이메일</th>
+                        <th class="">휴대폰</th>
+                        <th class="">가입일</th>
+                        <th class="">상태</th>
+                        <th class="">관리</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -83,13 +84,13 @@
                         <td th:text="${cust.custName}" class="custName">이름</td>
                         <td th:text="${cust.custGender?'남':'여'}" class="custGender">성별</td>
 
-                        <td>
+                        <td class="custGrade"><!- 사용자 등급 (VVIP, VIP, GOLD, SILVER, FAMILY) -->
                             <select name="search" class="grade custgrade custGrade" th:data-id="${cust.memUid}">
                                 <option value="VVIP" th:selected="${cust.custGrade}=='VVIP'">VVIP</option>
                                 <option value="VIP" th:selected="${cust.custGrade}=='VIP'">VIP</option>
-                                <option value="Gold" th:selected="${cust.custGrade}=='Gold'">Gold</option>
-                                <option value="Silver" th:selected="${cust.custGrade}=='Silver'">Silver</option>
-                                <option value="Family" th:selected="${cust.custGrade}=='Family'">Family</option>
+                                <option value="GOLD" th:selected="${cust.custGrade}=='GOLD'">GOLD</option>
+                                <option value="SILVER" th:selected="${cust.custGrade}=='SILVER'">SILVER</option>
+                                <option value="FAMILY" th:selected="${cust.custGrade}=='FAMILY'">FAMILY</option>
                             </select>
                         </td>
 
@@ -99,10 +100,10 @@
                         <td th:text="${cust.memRdate}" class="memRdate">가입일</td>
 
                         <!-- 회원상태 (4가지 - 정상, 중지, 휴면, 탈퇴) -->
-                        <td th:if="${cust.memState == 'stop'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="condition stop">중지</td>
-                        <td th:if="${cust.memState == 'basic'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="condition basic">정상</td>
-                        <td th:if="${cust.memState == 'sleep'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="condition sleep">휴면</td>
-                        <td th:if="${cust.memState == 'reave'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="condition reave">탈퇴</td>
+                        <td th:if="${cust.memState == 'stop'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="memState stop">중지</td>
+                        <td th:if="${cust.memState == 'basic'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="memState basic">정상</td>
+                        <td th:if="${cust.memState == 'sleep'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="memState sleep">휴면</td>
+                        <td th:if="${cust.memState == 'reave'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="memState reave">탈퇴</td>
 
                         <td class="td-admin">
                             <input type="button" value="[ 수정 ]" th:data-id="${cust.custId}" onclick="openCustUpdatePopup(event,1)">
