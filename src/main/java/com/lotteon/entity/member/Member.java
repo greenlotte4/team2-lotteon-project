@@ -57,6 +57,7 @@ public class Member {
     private List<Coupon> coupons;
 
     public GetAdminUserDTO toGetAdminUserDTO() {
+        // 팝업 호출 (회원 목록 수정)
         if(memRole.equals("customer")){
             return GetAdminUserDTO.builder()
                     .custId(customer.getId()) // 번호
@@ -70,9 +71,19 @@ public class Member {
                     .memRdate(memRdate) // 가입일
                     .memState(String.valueOf(memState)) // 계정 상태 (4가지 - 정산, 중지, 휴면, 탈퇴)
                     .build();
+          // 소셜 로그인 사용자일 때 (= guest)
         } else {
             return GetAdminUserDTO.builder()
-                    
+                    .custId(customer.getId()) // 번호
+                    .memUid(String.valueOf(customer.getMember().getMemUid())) // 아이디
+                    .custName(customer.getCustName()) // 이름
+                    .custGender(customer.getCustGender()) // 성별
+                    .custGrade(customer.getCustGrade()) // 등급
+                    .custPoint(customer.getCustPoint()) // 포인트
+                    .custEmail(customer.getCustEmail()) // 이메일
+                    .custHp(customer.getCustHp()) // 휴대폰
+                    .memRdate(memRdate) // 가입일
+                    .memState(String.valueOf(memState)) // 계정 상태 (4가지 - 정산, 중지, 휴면, 탈퇴)
                     .build();
         }
 
@@ -96,6 +107,7 @@ public class Member {
     }
 
     // 관리자 회원수정 (팝업 수정)
+
     public void updateUser(Customer customer, String memEtc) {
         this.customer = customer;
         this.memEtc = memEtc;

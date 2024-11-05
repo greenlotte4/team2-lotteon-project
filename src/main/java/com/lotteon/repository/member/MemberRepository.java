@@ -22,6 +22,12 @@ public interface  MemberRepository extends JpaRepository<Member, Long> {
 
     Page<Member> findAllByMemRole(String customer, Pageable pageable);
 
+    // memRole이 특정 값들 중 하나에 해당하는 데이터를 id 내림차순으로 페이징하여 조회
+    Page<Member> findAllByMemRoleInOrderByIdDesc(List<String> roles, Pageable pageable);
+
+    // `customer`의 경우에만 수정 로직 진행
+    Optional<Member> findById(Long id);
+
     Page<Member> findAllByMemRoleOrderByIdDesc(String customer, Pageable pageable);
 
     List<Member> findAllByMemLastLoginDateBefore(LocalDateTime standardDate);

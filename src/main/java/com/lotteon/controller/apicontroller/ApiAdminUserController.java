@@ -2,7 +2,9 @@ package com.lotteon.controller.apicontroller;
 
 import com.lotteon.dto.responseDto.GetAdminUserDTO;
 import com.lotteon.entity.member.Member;
+import com.lotteon.repository.member.MemberRepository;
 import com.lotteon.service.AuthService;
+import com.lotteon.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.eclipse.angus.mail.iap.Response;
@@ -34,16 +36,52 @@ import java.util.Optional;
 public class ApiAdminUserController {
 
     private final AuthService authService;
+    private final MemberRepository memberRepository;
+
 
     // 1. 관리자 회원수정 정보조회 (+팝업호출)
+//    @GetMapping("/user/{id}")
+//    public ResponseEntity<?> popCust(@PathVariable("id") Long id) {
+//        log.info("id: "+id+"에 해당하는 회원 정보");
+//        GetAdminUserDTO custPop = authService.popCust(id);
+//        log.info("api 컨트롤러 업데이트 커스트 "+custPop);
+//
+//        return ResponseEntity.ok().body(custPop);
+//    }
+
     @GetMapping("/user/{id}")
     public ResponseEntity<?> popCust(@PathVariable("id") Long id) {
-        log.info("id: "+id+"에 해당하는 회원 정보");
-        GetAdminUserDTO custPop = authService.popCust(id);
-        log.info("api 컨트롤러 업데이트 커스트 "+custPop);
+        log.info("id: " + id + "에 해당하는 회원 정보");
 
-        return ResponseEntity.ok().body(custPop);
+        // `AuthService.popCust(id)`에서 역할에 따른 로직 분기
+        Optional<Member> memberOpt = memberRepository.findByCustomer_id(id);
+        if (memberOpt.isPresent()) {
+            Member member = memberOpt.get();
+            String role = member.getMemRole();
+
+            // `customer` 역할일 경우 Customer 정보 DTO 반환
+            if (role.equals("customer")) {
+                GetAdminUserDTO custPop = authService.popCust(id);  // 기존 방식 유지
+                System.out.println(custPop.getMemRole());
+                log.info("customer 정보: " + custPop);
+                return ResponseEntity.ok().body(custPop);
+
+            // `guest` 역할일 경우 새로운 DTO 반환
+            } else {
+                GetAdminUserDTO guestPop = authService.popGuest(id);  // 새로운 guest용 메서드
+                System.out.println(guestPop.getMemRole());
+                log.info("guest 정보: " + guestPop);
+                return ResponseEntity.ok().body(guestPop);
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 ID를 가진 회원 정보가 없습니다.");
+        }
+
     }
+
+
+
+
 
     // 2. 관리자 회원 수정
     @PutMapping("/user/{id}")

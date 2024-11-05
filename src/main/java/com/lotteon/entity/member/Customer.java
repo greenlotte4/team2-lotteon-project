@@ -74,7 +74,7 @@ public class Customer {
         this.custPoint = point;
     }
 
-    // 회원 정보 수정
+    // 회원 정보 수정 (팝업호출) (Member Entity에는 회원 수정할 내용이 없다!)
     // 이름, 성별, 이메일, 휴대폰, 우편+기본+상세주소, 기타
     public void updateUser(GetAdminUserDTO dto){
         this.custName = dto.getCustName();

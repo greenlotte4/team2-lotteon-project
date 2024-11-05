@@ -108,9 +108,16 @@
                         <td th:if="${cust.memState == 'reave'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="memState reave">탈퇴</td>
 
                         <td class="td-admin">
-                            <input type="button" value="[ 수정 ]" th:data-id="${cust.custId}" onclick="openCustUpdatePopup(event,1)">
+                            <input type="button" value="[ 수정 ]" th:data-id="${cust.custId}" onclick="openCustUpdatePopup(event)">
                             <input type="button" value="[ 중지 ]">
                         </td>
+<!--                        <td class="td-admin">-->
+<!--                            <input type="button" value="[ 수정 ]" th:data-id="${cust.custId}"-->
+<!--                                   th:onclick="${cust.memRole == 'customer'} ? 'openCustUpdatePopup(event, 1)' : 'alert(\"게스트 사용자는 수정할 수 없습니다.\")">-->
+<!--                            <input type="button" value="[ 중지 ]">-->
+<!--                        </td>-->
+
+
                     </tr>
                 </th:block>
                 </tbody>
@@ -145,7 +152,7 @@
     const bg = document.querySelector(".popupbg");
 
 
-    async function openCustUpdatePopup(event,type) {
+    async function openCustUpdatePopup(event) {
         const id = event.target.dataset.id;
         console.log(id);
 
@@ -186,8 +193,8 @@
                         <tr>
                             <th>성별</th>
                             <td>
-                                <label><input type="radio" name="custGender" value="true" ${+data.custGender === 0 ? "checked" : ""}>남</label>
-                                <label><input type="radio" name="custGender" value="false" ${+data.custGender === 1 ? "checked" : ""}>여</label>
+                                <label><input type="radio" name="custGender" value="true" ${+data.custGender === 1 ? "checked" : ""}>남</label>
+                                <label><input type="radio" name="custGender" value="false" ${+data.custGender === 0 ? "checked" : ""}>여</label>
                             </td>
                         </tr>
                         <tr>
@@ -243,7 +250,8 @@
 
 
             } else {
-                // Guest 팝업 내용 설정 (소설 sns 회원 = Guest)
+                alert("해당 사용자는 수정할 수 없습니다.");
+                // Guest 팝업 내용 설정 (소설 sns 회원 = Guest) 수정할 수 없으면 수정할 내용의 팝업창 필요 없는 것 아닌가여?
                 popup.innerHTML = `
                 <div class="header">
                     <div class="title">소셜 회원수정</div>
@@ -278,8 +286,10 @@
                 <div style="margin-bottom:20px" class="btns">
                     <button onclick="submitForm(${data.id})">수정하기</button>
                 </div>
-                `;
 
+                `;
+                popup.style.display = "block";
+                bg.style.display = "flex";
             }
         } catch (err) {
             console.error('Error:', err);

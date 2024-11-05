@@ -22,8 +22,12 @@ import java.time.LocalDateTime;
 @Getter
 @ToString
 public class GetAdminUserDTO {
+    // Customer -> mem_id
+    // Member -> id
+
     // 번호, 아이디, 이름, 성별, 등급, 포인트, 이메일, 휴대폰, 가입일, 상태, 관리
     // 관리자 회원목록
+    //private Long    memId;         // 사용자 번호
     private Long    custId;         // 사용자 번호
     private String  memUid;         // 아이디
     private String  custName;       // 이름
@@ -47,9 +51,7 @@ public class GetAdminUserDTO {
     private String custAddr2; // 주소
     private String custAddr3; // 상세주소
 
-
     private String memLastLoginDate; // 최근 로그인 날짜 (YY-MM-DD HH-MM-SS)
-
 
     private String  memEtc; // 기타 (회원 기타 정보입력)
 
