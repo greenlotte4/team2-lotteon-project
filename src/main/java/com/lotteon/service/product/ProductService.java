@@ -4,9 +4,11 @@ import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.*;
 import com.lotteon.dto.responseDto.GetMainProductDto;
 import com.lotteon.dto.responseDto.ProductPageResponseDTO;
+import com.lotteon.entity.category.CategoryProductMapper;
 import com.lotteon.entity.member.Member;
 import com.lotteon.entity.member.Seller;
 import com.lotteon.entity.product.*;
+import com.lotteon.repository.category.CategoryProdMapperRepository;
 import com.lotteon.repository.member.MemberRepository;
 import com.lotteon.repository.member.SellerRepository;
 import com.lotteon.repository.product.OrderRepository;
@@ -18,6 +20,7 @@ import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -55,6 +58,7 @@ public class ProductService {
     private final RedisTemplate<String,List<GetMainProductDto>> bestredisTemplate;
     private final SimpMessagingTemplate messagingTemplate;
     private final MemberRepository memberRepository;
+    private final CategoryProdMapperRepository categoryProdMapperRepository;
 
     @Value("${file.upload-dir}")
     private String uploadPath;
@@ -441,4 +445,74 @@ public class ProductService {
         List<GetMainProductDto> dtos = products.stream().map(Product::toGetMainHitDto).toList();
         return dtos;
     }
+
+    public Product updateProduct(PostProductDTO productDTO, PostProdDetailDTO prodDetailDTO, long prodId){
+        File fileUploadPath = new File(uploadPath);
+
+        //파일 업로드 디렉터리가 존재하지 않으면 디렉터리 생성
+        if (!fileUploadPath.exists()) {
+            fileUploadPath.mkdirs();
+        }
+
+        //파일 업로드 시스템 경로 구하기
+        String path = fileUploadPath.getAbsolutePath();
+
+        List<MultipartFile> prodFiles = new ArrayList<>();  // ArrayList로 초기화
+        prodFiles.add(productDTO.getListImage());
+        prodFiles.add(productDTO.getBasicImage());
+        prodFiles.add(productDTO.getDetailImage());
+        prodFiles.add(productDTO.getDescription());
+
+        int i = 1;  // 이미지 번호를 매기기 위한 인덱스
+        boolean isUploadSuccessful = true;
+        for (MultipartFile file : prodFiles) {
+            if (!file.isEmpty()) {
+                // 원본 파일명 가져오기
+                String oName = file.getOriginalFilename();
+                // 파일 확장자 추출
+                String ext = oName.substring(oName.lastIndexOf("."));
+                // UUID를 사용하여 새로운 파일명 생성
+                String sName = UUID.randomUUID().toString() + ext;
+
+                // 파일 저장
+                try {
+                    file.transferTo(new File(path, sName));
+                    switch (i) {
+                        case 1:
+                            productDTO.setProdListImg(sName);
+                            log.info("Setting List Image: " + sName);
+                            break;
+                        case 2:
+                            productDTO.setProdBasicImg(sName);
+                            break;
+                        case 3:
+                            productDTO.setProdDetailImg(sName);
+                            break;
+                        case 4:
+                            prodDetailDTO.setDescription(sName);
+                            break;
+                    }
+                } catch (IOException e) {
+                    log.error(e);
+                    isUploadSuccessful = false;
+                }
+            }
+            i++;
+        }
+        if (isUploadSuccessful) {
+
+            Product product = productRepository.findById(prodId).orElseThrow(() -> new EntityNotFoundException("Entity not found"));
+            ProductDetail productDetail = productDetailRepository.findByProductId(prodId);
+            prodDetailDTO.setProductId(prodId);
+            productDetail.updateDetail(prodDetailDTO);
+            productDTO.updateSeller(product, prodId);
+            product.updateProduct(productDTO);
+
+            return product;
+
+        }else{
+            return null;
+        }
+    }
+
 }

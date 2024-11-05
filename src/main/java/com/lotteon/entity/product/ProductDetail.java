@@ -1,5 +1,6 @@
 package com.lotteon.entity.product;
 
+import com.lotteon.dto.requestDto.PostProdDetailDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -64,4 +65,21 @@ public class ProductDetail {
 
     @Column(name = "prod_deli_date")
     private int deliDate;
+
+    public void updateDetail(PostProdDetailDTO dto) {
+        this.manufacture = dto.getManufacture();
+        this.productId = dto.getProductId();
+        this.madein = dto.getMadein();
+        this.caution = dto.getCaution();
+        this.mdate = dto.getMdate();
+        this.warranty = dto.getWarranty();
+        this.warrantyType = dto.getWarrantyType();
+        this.description = dto.getDescription();
+        this.stat = dto.getStat();
+        this.tax = dto.getTax();
+        this.origin = dto.getOrigin();
+        this.id = dto.getId();
+        this.cardEvent = dto.getCardEvent();
+        this.cardType = dto.getCardType();
+    }
 }

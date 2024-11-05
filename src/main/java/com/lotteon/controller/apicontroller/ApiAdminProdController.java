@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Log4j2
 @RestController
@@ -38,21 +39,33 @@ public class ApiAdminProdController {
     @PostMapping("/info")
     public ResponseEntity<Map<String, Object>> info(@ModelAttribute PostProdAllDTO postProdAllDTO) {
 
-        // date를 timestamp로 바꿔서 집어넣는 과정
-        LocalDateTime localDateTime = postProdAllDTO.getPostProdDetailDTO().getMDate1().atStartOfDay();
-        Timestamp timestamp = Timestamp.valueOf(localDateTime);
-        postProdAllDTO.getPostProdDetailDTO().setMdate(timestamp);
-
-        // 디테일이랑 카테고리 insert 하기전에 productId 넣어주는 작업
-        Product result = productService.insertProduct(postProdAllDTO.getPostProductDTO(), postProdAllDTO.getPostProdDetailDTO());
-        postProdAllDTO.getPostProdCateMapperDTO().setProductId(result.getId());
-        postProdAllDTO.getPostProdDetailDTO().setProductId(result.getId());
-        
-        productService.insertProdDetail(postProdAllDTO.getPostProdDetailDTO());
-        categoryProductService.insertCateMapper(postProdAllDTO.getPostProdCateMapperDTO());
-
         Map<String, Object> response = new HashMap<>();
-        response.put("success", result.getId());
+
+        if(Objects.equals(postProdAllDTO.getType(), "insert")){
+            // date를 timestamp로 바꿔서 집어넣는 과정
+            LocalDateTime localDateTime = postProdAllDTO.getPostProdDetailDTO().getMDate1().atStartOfDay();
+            Timestamp timestamp = Timestamp.valueOf(localDateTime);
+            postProdAllDTO.getPostProdDetailDTO().setMdate(timestamp);
+
+            // 디테일이랑 카테고리 insert 하기전에 productId 넣어주는 작업
+            Product result = productService.insertProduct(postProdAllDTO.getPostProductDTO(), postProdAllDTO.getPostProdDetailDTO());
+            postProdAllDTO.getPostProdCateMapperDTO().setProductId(result.getId());
+            postProdAllDTO.getPostProdDetailDTO().setProductId(result.getId());
+
+            productService.insertProdDetail(postProdAllDTO.getPostProdDetailDTO());
+            categoryProductService.insertCateMapper(postProdAllDTO.getPostProdCateMapperDTO());
+            response.put("success", result.getId());
+        }else if(Objects.equals(postProdAllDTO.getType(), "modify")){
+            log.info("444444444444444444444"+postProdAllDTO.getPostProdCateMapperDTO());
+            LocalDateTime localDateTime = postProdAllDTO.getPostProdDetailDTO().getMDate1().atStartOfDay();
+            Timestamp timestamp = Timestamp.valueOf(localDateTime);
+            postProdAllDTO.getPostProdDetailDTO().setMdate(timestamp);
+
+            Product product = productService.updateProduct(postProdAllDTO.getPostProductDTO(), postProdAllDTO.getPostProdDetailDTO(), postProdAllDTO.getProdId());
+            categoryProductService.updateCateMapper(postProdAllDTO.getPostProdCateMapperDTO(), product);
+        }
+
+
         return ResponseEntity.ok(response);
     }
 

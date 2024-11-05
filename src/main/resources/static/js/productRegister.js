@@ -3,6 +3,9 @@ let submitData = [];
 let totalStock = 0;
 let isSingleOption = false;
 window.onload = function (){
+    if(document.getElementById('Category3') !== null){
+        updateSelect4();
+    }
     const prodInsert = document.getElementsByClassName('submit-btn')[0];
     prodInsert.addEventListener('click', (e) => {
 
@@ -24,6 +27,13 @@ window.onload = function (){
             console.log(key, value)
         }
         console.log("44444"+document.getElementById('prodStock').value);
+        if(document.getElementById('Category3') !== null){
+            productAll.append('type', 'modify');
+            productAll.append('prodId', document.getElementById('prodId').value);
+        }else{
+            productAll.append('type', 'insert');
+            productAll.append('prodId', '0');
+        }
         if(document.getElementById('prodStock').value <= 0){
             alert('옵션에서 물품 수량을 지정해주세요!');
         }else {

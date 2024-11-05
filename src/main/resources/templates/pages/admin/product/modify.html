@@ -24,7 +24,7 @@
                         prodcate_opt.value = item.id;
                         prodcate_opt.innerText = item.name;
                         console.log(document.getElementById('Category2').value)
-                        if(item.name === document.getElementById('Category2').value){
+                        if (item.name === document.getElementById('Category2').value) {
                             prodcate_opt.selected = true;
                         }
                         option2Value.appendChild(prodcate_opt);
@@ -63,7 +63,7 @@
                         prodcate_opt.value = item.id;
                         prodcate_opt.innerText = item.name;
                         console.log(document.getElementById('Category3').value)
-                        if(item.name === document.getElementById('Category3').value){
+                        if (item.name === document.getElementById('Category3').value) {
                             prodcate_opt.selected = true;
                         }
                         option3Value.appendChild(prodcate_opt);
@@ -84,11 +84,13 @@
             prodcate_opt.innerText = "선택사항 없음";
             option3Value.appendChild(prodcate_opt);
         }
-
     }
-
-    window.onload = function (){
-        updateSelect4();
+    function deleteRow(button) {
+        // button의 부모 tr 요소를 찾아서 삭제
+        const row = button.closest('tr');
+        if (row) {
+            row.remove();
+        }
     }
 </script>
 <body>
@@ -117,7 +119,8 @@
                     <tr>
                         <th>1차 분류</th>
                         <td>
-                            <select class="cate1" name="categoryId1" th:value="${productCategory.getLevel1Name()}" oninput="updateSelect4()">
+                            <select class="cate1" name="categoryId1" th:value="${productCategory.getLevel1Name()}"
+                                    oninput="updateSelect4()">
                                 <option value="">1차분류 선택</option>
                                 <th:block th:each="category : ${prodCate}">
                                     <option th:if="${category.getCategoryLevel() == 1}"
@@ -148,7 +151,7 @@
                         <th>3차 분류</th>
                         <td>
                             <input type="hidden" id="Category3" th:value="${productCategory.getLevel3Name()}">
-                            <select class="cate3" name="categoryId3" >
+                            <select class="cate3" name="categoryId3">
                                 <option value="">3차분류 선택</option>
                             </select>
                         </td>
@@ -174,41 +177,44 @@
                     </tr>
                     <tr class="company">
                         <th>제조사</th>
-                        <td><input type="text" name="manufacture" th:value="${prodDetail.manufacture}" ></td>
+                        <td><input type="text" name="manufacture" th:value="${prodDetail.manufacture}"></td>
                     </tr>
                     <tr class="price">
                         <th>상품금액</th>
-                        <td><input type="text" id="productPrice" name="prodPrice" th:value="${#numbers.formatInteger(product.getProdPrice(), 1)}"> 원</td>
+                        <td><input type="text" id="productPrice" name="prodPrice"
+                                   th:value="${#numbers.formatInteger(product.getProdPrice(), 1)}"> 원
+                        </td>
                     </tr>
                     <tr class="discount">
                         <th>할인율</th>
-                        <td><input type="text" name="prodDiscount" class="productDiscount" th:value="${#numbers.formatInteger(product.prodDiscount, 1)}"> %</td>
+                        <td><input type="text" name="prodDiscount" class="productDiscount"
+                                   th:value="${#numbers.formatInteger(product.prodDiscount, 1)}"> %
+                        </td>
                     </tr>
                     <tr class="point">
                         <th>포인트</th>
-                        <td><input type="text" id="productPoint" name="prodPoint" th:value="${product.prodPoint}"> p</td>
+                        <td><input type="text" id="productPoint" name="prodPoint" th:value="${product.prodPoint}"> p
+                        </td>
                     </tr>
                     <tr class="delivery">
                         <th>배송비</th>
                         <td><input type="text" name="prodDeliver" th:value="${product.getProdDeliver}"> 원</td>
                     </tr>
                     <input type="hidden" name="prodStock" id="prodStock">
+                    <input type="hidden" th:value="${product.getId()}" name="id" id="prodId">
                     <tr class="images">
                         <th>상품이미지</th>
                         <td class="td-images">
                             <div class="img1">
                                 <input type="file" name="listImage" id="prodListImg">
-                                <img th:src="@{'/file/'+${product.getProdListImg()}}" id="listPreview" alt="미리보기 이미지" style="width: 100px; height: 100px;">
                                 <span>크기 190 x 190, 상품 목록에 출력될 이미지입니다.</span>
                             </div>
                             <div class="img2">
                                 <input type="file" name="basicImage" id="prodBasicImg">
-                                <img th:src="@{'/file/'+${product.getProdBasicImg()}}" id="basicPreview" alt="미리보기 이미지" style="width: 100px; height: 100px;">
                                 <span>크기 230 x 230, 상품 메인에 출력될 이미지입니다.</span>
                             </div>
                             <div class="img3">
                                 <input type="file" name="detailImage" id="prodDetailImg">
-                                <img th:src="@{'/file/'+${product.getProdDetailImg()}}" id="detailPreview" alt="미리보기 이미지" style="width: 100px; height: 100px;">
                                 <span>크기 450 x 450, 상품 상세에 출력될 이미지입니다.</span>
                             </div>
                         </td>
@@ -228,24 +234,67 @@
         </form>
         <form>
             <div class="main3">
-                <div class="main-title">상품 재고</div>
-                <div class="main-description">옵션이 없을경우 재고량을 입력, 있을 경우 조합형 옵션 버튼을 눌러주세요.</div>
+                <div class="main-title">옵션 수정</div>
+                <div class="main-description">옵션이 없을경우 재고량만 입력하시면 됩니다.</div>
                 <div class="options">
                     <table class="tb5" id="optionTable" border="1">
-                        <tr class="tr_option">
+                        <tr class="tr_option" th:if="${#lists.size(options) == 1 and options.get(0).optionName == '옵션없음'}">
                             <th style="text-align: left">옵션</th>
                             <td class="optionTD" style="text-align: left">
                                 <div class="option_inputs">
-                                    <input type="text" id="optionStock" class="option_input option_input_stock" placeholder="재고량">
+                                    <input type="text" id="optionStock" class="option_input option_input_stock"
+                                           placeholder="재고량" th:value="${options.get(0).stock}">
                                 </div>
                             </td>
                         </tr>
+                        <th:block th:unless="${#lists.size(options) == 1 and options.get(0).optionName == '옵션없음'}">
+                            <tr class="option0">
+                                <th>옵션 조합</th>
+                                <th>추가금액</th>
+                                <th>수량</th>
+                                <th>삭제</th>
+                            </tr>
+                        <tr class="option1" th:each="option : ${options}" >
+                            <th:block th:if="${option.optionName3 == null && option.optionName2 != null}">
+                                <td>
+                                    [[${option.optionName}]]:[[${option.optionValue}]] / [[${option.optionName2}]]:[[${option.optionValue2}]]
+                                </td>
+                                <td>
+                                    <input type="text" class="addPrice" th:value="${#numbers.formatInteger(option.additionalPrice, 1)}">
+                                </td>
+                                <td>
+                                    <input type="text" class="optionStock" th:value="${option.stock}">
+                                </td>
+                                <td>
+                                    <button type="button" class="deleteOptionBtn" onclick="deleteRow(this)">삭제</button>
+                                </td>
+                            </th:block>
+                            <th:block th:if="${option.optionName2 == null && option.optionName3 == null}">
+                                <td>
+                                    [[${option.optionName}]]:[[${option.optionValue}]]
+                                </td>
+                                <td>
+                                    <input type="text" class="addPrice" th:value="${#numbers.formatInteger(option.additionalPrice, 1)}">
+                                </td>
+                                <td>
+                                    <input type="text" class="optionStock" th:value="${option.stock}">
+                                </td>
+                                <td>
+                                    <button type="button" class="delete-button" onclick="deleteRow(this)">삭제</button>
+                                </td>
+                            </th:block>
+                        </tr>
+                        </th:block>
                     </table>
                 </div>
                 <button class="addoption" type="button" onclick="confirmOption(event)">옵션저장</button>
-                <button type="button" class="addoption" id="mix" onclick="showMix()">조합형 옵션</button>
-                <button class="addoption" id="optionMix" type="button" onclick="showMixOption()" style="display: none">옵션 조합 생성</button>
-                <button class="addoption" id="optionMixPlus" type="button" onclick="addOptionRow()" style="display: none;">옵션 추가</button>
+                <button type="button" class="addoption" id="mix" onclick="showMix()">단일 옵션</button>
+                <button class="addoption" id="optionMix" type="button" onclick="showMixOption()" style="display: none">
+                    옵션 조합 생성
+                </button>
+                <button class="addoption" id="optionMixPlus" type="button" onclick="addOptionRow()"
+                        style="display: none;">옵션 추가
+                </button>
             </div>
 
             <div class="main3" id="mixOption" style="display: none;">
@@ -278,7 +327,7 @@
                     <tr class="taxation">
                         <th>부가세 면세여부</th>
                         <td><select name="tax"
-                            th:selected="${prodDetail.tax == true}">
+                                    th:selected="${prodDetail.tax == true}">
                             <option value="true">
                                 과세상품
                             </option>
@@ -353,6 +402,7 @@
                     </tr>
                 </table>
             </div>
+            <input type="hidden" name="id" th:value="${prodDetail.getId()}" id="prodDetailId">
         </form>
         <div class="advice-footer">
             전자상거래등에서의 상품등의 정보제공에 관한 고시에따라 총 35개 상품군에대해 상품특성들을 양식에따라 입력할 수 있습니다.

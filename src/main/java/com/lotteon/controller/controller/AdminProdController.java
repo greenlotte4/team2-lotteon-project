@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -73,6 +74,16 @@ public class AdminProdController {
         GetCateLocationDTO getCateLocationDTO = categoryProductService.cateLocation2(prodId);
         model.addAttribute("productCategory", getCateLocationDTO);
         List<PostProductOptionDTO> productOptions = productOptionService.findOptionByProduct(prodId);
+
+        List<String> value = new ArrayList<>();
+        List<String> name = new ArrayList<>();
+        for(PostProductOptionDTO option : productOptions) {
+
+            if (!name.contains(option.getOptionName())) {
+                name.add(option.getOptionName());
+            }
+
+        }
         model.addAttribute("options", productOptions);
         List<GetProdCateDTO> prodCate = categoryProductService.findCateAll();
         model.addAttribute("prodCate", prodCate);

@@ -242,3 +242,13 @@ input {text-indent: 10px;}
     transition: box-shadow 0.3s ease;
     float: right;
 }
+
+.deleteOptionBtn{
+    background-color: #FFFFFF;
+    border: none;
+    margin-left: 10px;
+}
+
+.deleteOptionBtn:hover {
+    cursor: pointer;
+}

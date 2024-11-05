@@ -13,5 +13,6 @@ public class PostProdAllDTO {
     private PostProductDTO postProductDTO;
     private PostProdCateMapperDTO postProdCateMapperDTO;
     private PostProdDetailDTO postProdDetailDTO;
-
+    private String type;
+    private long prodId;
 }

@@ -16,12 +16,16 @@ public class CategoryProductMapper {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id")
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private CategoryProduct category;
+
+    public void categoryUpdate(CategoryProduct newCategory){
+        this.category = newCategory;
+    }
 
 }

@@ -2,6 +2,7 @@ package com.lotteon.dto.requestDto;
 
 import com.lotteon.entity.category.CategoryProductMapper;
 import com.lotteon.entity.member.Seller;
+import com.lotteon.entity.product.Product;
 import com.lotteon.entity.product.ProductOption;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -53,4 +54,13 @@ public class PostProductDTO {
     private double totalPrice;
 
     private Seller seller;
+
+    public void updateSeller(Product product, long prodId) {
+        this.id = prodId;
+        this.seller = product.getSeller();
+        this.sellId = product.getSeller().getId();
+        this.sellGrade = product.getSeller().getSellGrade();
+        this.sellCompany = product.getSeller().getSellCompany();
+    }
+
 }

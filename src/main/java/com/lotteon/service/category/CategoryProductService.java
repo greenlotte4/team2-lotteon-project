@@ -41,11 +41,11 @@ public class CategoryProductService {
     private final ProductRepository productRepository;
     private final ModelMapper modelMapper;
 
-    public List<?> getProducts(){
+    public List<?> getProducts() {
         // 카테고리별 상품 뽑는법
-        CategoryProduct cate = categoryProductRepository.findById((long)28).get();
+        CategoryProduct cate = categoryProductRepository.findById((long) 28).get();
         List<CategoryProductMapper> products = categoryProdMapperRepository.findAllByCategory(cate);
-        if(products.isEmpty()){
+        if (products.isEmpty()) {
             System.out.println("상품없음");
             return null;
         }
@@ -64,16 +64,16 @@ public class CategoryProductService {
         }
     }
 
-    @Cacheable(value = "categoryCache", key = "'category'",cacheManager = "cacheManager")
+    @Cacheable(value = "categoryCache", key = "'category'", cacheManager = "cacheManager")
     public List<GetCategoryDto> findCategory() {
         System.out.println("디비접속후 카테고리 조회");
         List<CategoryProduct> categoryProducts = categoryProductRepository.findAllByCategoryLevel(1);
-        List<GetCategoryDto> dtos = categoryProducts.stream().map(v->v.toGetCategoryDto()).collect(Collectors.toList());
+        List<GetCategoryDto> dtos = categoryProducts.stream().map(v -> v.toGetCategoryDto()).collect(Collectors.toList());
 
         return dtos;
     }
 
-    @Cacheable(value = "categoryCache", key = "'category2_' + #id",cacheManager = "cacheManager")
+    @Cacheable(value = "categoryCache", key = "'category2_' + #id", cacheManager = "cacheManager")
     public List<GetCategoryDto> findCategory2(Long id) {
         CategoryProduct categoryProducts = categoryProductRepository.findByCategoryId(id);
         List<CategoryProduct> cates = categoryProducts.getChildren();
@@ -86,45 +86,48 @@ public class CategoryProductService {
         return dtos;
     }
 
-    @Cacheable(value = "categoryCache", key = "'category3_' + #id",cacheManager = "cacheManager")
-    public Map<String,Object> findCategory3(Long id) {
+    @Cacheable(value = "categoryCache", key = "'category3_' + #id", cacheManager = "cacheManager")
+    public Map<String, Object> findCategory3(Long id) {
         CategoryProduct categoryProducts = categoryProductRepository.findByCategoryId(id);
         List<CategoryProduct> cates = categoryProducts.getChildren();
-        Map<String,Object> map = new HashMap<>();
-        cates.forEach(v->{
+        Map<String, Object> map = new HashMap<>();
+        cates.forEach(v -> {
 
             List<CategoryProduct> cates2 = v.getChildren();
-            List<GetCategoryDto> dtos = cates2.stream().map(v2->v2.toGetCategoryDto()).collect(Collectors.toList());
-            map.put(v.getCategoryName(),dtos);
+            List<GetCategoryDto> dtos = cates2.stream().map(v2 -> v2.toGetCategoryDto()).collect(Collectors.toList());
+            map.put(v.getCategoryName(), dtos);
         });
 
 
         return map;
     }
+
     @CacheEvict(value = "categoryCache", allEntries = true)
     public String deleteCategory(Long id) {
         CategoryProduct categoryProducts = categoryProductRepository.findByCategoryId(id);
-        if(categoryProducts.getProductMappings().isEmpty()){
+        if (categoryProducts.getProductMappings().isEmpty()) {
             categoryProductRepository.deleteById(id);
             return "SU";
         } else {
             return "FA";
         }
     }
+
     @CacheEvict(value = "categoryCache", allEntries = true)
     public void insertProdCate() {
-        Product product = productRepository.findById((long)1).orElse(null);
-        List<CategoryProduct> categoryProduct1 = categoryProductRepository.findAllByCategoryId((long)28);
-        categoryProduct1.stream().forEach(v-> System.out.println(v.getParent().getCategoryId()));
+        Product product = productRepository.findById((long) 1).orElse(null);
+        List<CategoryProduct> categoryProduct1 = categoryProductRepository.findAllByCategoryId((long) 28);
+        categoryProduct1.stream().forEach(v -> System.out.println(v.getParent().getCategoryId()));
 
 //        categoryProdMapperRepository.save(categoryProduct);
 
     }
+
     @CacheEvict(value = "categoryCache", allEntries = true)
     public void postCategory(GetCategoryDto getCategoryDto) {
         Optional<CategoryProduct> categoryProduct = categoryProductRepository.findById(getCategoryDto.getId());
 
-        if(categoryProduct.isEmpty()){
+        if (categoryProduct.isEmpty()) {
             return;
         }
 
@@ -144,22 +147,23 @@ public class CategoryProductService {
         categoryProductRepository.save(newCategoryProduct);
 
     }
+
     @CacheEvict(value = "categoryCache", allEntries = true)
     public void putCategory(GetCategoryDto getCategoryDto) {
         Optional<CategoryProduct> categoryProduct = categoryProductRepository.findById(Long.parseLong(getCategoryDto.getName()));
         Optional<CategoryProduct> categoryParent = categoryProductRepository.findById(getCategoryDto.getId());
-        if(categoryProduct.get().getCategoryLevel() > categoryParent.get().getCategoryLevel()){
+        if (categoryProduct.get().getCategoryLevel() > categoryParent.get().getCategoryLevel()) {
             categoryProduct.get().updateParent(categoryParent.get());
         } else if (categoryProduct.get().getCategoryLevel() == categoryParent.get().getCategoryLevel()
-                && categoryProduct.get().getParent()==categoryParent.get().getParent()
-        ){
+                && categoryProduct.get().getParent() == categoryParent.get().getParent()
+        ) {
             categoryProduct.get().replaceOrder(categoryParent.get());
         }
 
 
     }
 
-    public List<GetProdCateDTO> findCateAll(){
+    public List<GetProdCateDTO> findCateAll() {
         List<CategoryProduct> categoryProducts = categoryProductRepository.findAll();
 
         System.out.println("123333322" + categoryProducts);
@@ -204,7 +208,7 @@ public class CategoryProductService {
     public ProductPageResponseDTO<PostProductDTO> findProductCategory(String cate, ProductPageRequestDTO pageRequestDTO) {
         Optional<CategoryProduct> opt = categoryProductRepository.findById(Long.parseLong(cate));
         CategoryProduct categoryProduct1 = null;
-        if(opt.isPresent()){
+        if (opt.isPresent()) {
             categoryProduct1 = opt.get();
         }
         List<CategoryProductMapper> cateMappers = categoryProdMapperRepository.findAllByCategory(categoryProduct1);
@@ -228,7 +232,7 @@ public class CategoryProductService {
             return modelMapper.map(product, PostProductDTO.class);
         }).toList();
 
-        for(int i = 0; i < companys.size(); i++) {
+        for (int i = 0; i < companys.size(); i++) {
             productList.get(i).setSellCompany(companys.get(i));
             productList.get(i).setSellGrade(grade.get(i));
         }
@@ -237,7 +241,7 @@ public class CategoryProductService {
             productDTO.setTotalPrice(productDTO.getProdPrice() - productDTO.getProdPrice() * productDTO.getProdDiscount() / 100);
         }
 
-        int total = (int)pageProduct.getTotalElements();
+        int total = (int) pageProduct.getTotalElements();
 
         log.info("11111111111111111111" + productList);
 
@@ -249,7 +253,7 @@ public class CategoryProductService {
 
     }
 
-    public GetCateLocationDTO cateLocation(long id){
+    public GetCateLocationDTO cateLocation(long id) {
         CategoryProduct cateLevel1 = categoryProductRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 카테고리가 없습니다."));
         CategoryProduct cateLevel2 = categoryProductRepository.findById(cateLevel1.getParent().getCategoryId()).orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 카테고리가 없습니다."));
         CategoryProduct cateLevel3 = categoryProductRepository.findById(cateLevel2.getParent().getCategoryId()).orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 카테고리가 없습니다."));
@@ -261,23 +265,41 @@ public class CategoryProductService {
                 .build();
 
     }
-    public GetCateLocationDTO cateLocation2(long id){
+
+    public GetCateLocationDTO cateLocation2(long id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 카테고리가 없습니다."));
         List<CategoryProductMapper> categoryProductMapper = categoryProdMapperRepository.findAllByProduct(product);
 
-        log.info("CategoryMapper::::"+categoryProductMapper);
+        log.info("CategoryMapper::::" + categoryProductMapper);
 
         CategoryProductMapper cate1 = null;
-        for(CategoryProductMapper cate : categoryProductMapper){
+        for (CategoryProductMapper cate : categoryProductMapper) {
             cate1 = cate;
         }
 
-        log.info("cateMaper::::"+cate1);
+        log.info("cateMaper::::" + cate1);
 
-        return  GetCateLocationDTO.builder()
+        return GetCateLocationDTO.builder()
                 .level1Name(cate1.getCategory().getParent().getParent().getCategoryName())
                 .level2Name(cate1.getCategory().getParent().getCategoryName())
                 .level3Name(cate1.getCategory().getCategoryName())
                 .build();
+    }
+
+    public void updateCateMapper(PostProdCateMapperDTO postProdCateMapperDTO, Product product) {
+
+        List<CategoryProductMapper> cates = categoryProdMapperRepository.findAllByProduct(product);
+
+        if (cates.size() >= 3) {
+            cates.get(0).categoryUpdate(categoryProductRepository.findByCategoryId(postProdCateMapperDTO.getCategoryId1()));
+            cates.get(1).categoryUpdate(categoryProductRepository.findByCategoryId(postProdCateMapperDTO.getCategoryId2()));
+            cates.get(2).categoryUpdate(categoryProductRepository.findByCategoryId(postProdCateMapperDTO.getCategoryId3()));
+
+            // 변경된 내용을 저장
+            categoryProdMapperRepository.saveAll(cates);
+
+
+            log.info("56666666666666666" + cates);
+        }
     }
 }

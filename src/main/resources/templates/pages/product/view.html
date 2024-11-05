@@ -121,7 +121,7 @@
             </div>
             <h2 class="sub_tit2">상품보기</h2>
             <div class="detail_image">
-                <img src="https://via.placeholder.com/784x111" alt="상품 상세 이미지">
+                <img th:src="@{'/file/'+${prodDetail.getDescription()}}" alt="상품 상세보기 이미지">
             </div> <!-- .detail_image-->
             <h2 class="sub_tit3">
                 상품정보 제공고시
