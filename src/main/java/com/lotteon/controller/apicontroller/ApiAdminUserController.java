@@ -40,15 +40,6 @@ public class ApiAdminUserController {
 
 
     // 1. 관리자 회원수정 정보조회 (+팝업호출)
-//    @GetMapping("/user/{id}")
-//    public ResponseEntity<?> popCust(@PathVariable("id") Long id) {
-//        log.info("id: "+id+"에 해당하는 회원 정보");
-//        GetAdminUserDTO custPop = authService.popCust(id);
-//        log.info("api 컨트롤러 업데이트 커스트 "+custPop);
-//
-//        return ResponseEntity.ok().body(custPop);
-//    }
-
     @GetMapping("/user/{id}")
     public ResponseEntity<?> popCust(@PathVariable("id") Long id) {
         log.info("id: " + id + "에 해당하는 회원 정보");
@@ -76,12 +67,7 @@ public class ApiAdminUserController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 ID를 가진 회원 정보가 없습니다.");
         }
-
     }
-
-
-
-
 
     // 2. 관리자 회원 수정
     @PutMapping("/user/{id}")

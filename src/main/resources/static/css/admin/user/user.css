@@ -337,7 +337,10 @@ input:focus{outline: none;}
     outline: none;
     padding: 10px;
     color: #808080;
+    resize: none;
 }
+
+/*.tb4 .custEmail{width: 300px;}*/
 
 /*.btns {*/
 /*    width: 100%;*/

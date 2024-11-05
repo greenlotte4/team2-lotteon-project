@@ -25,7 +25,7 @@
             </nav><!-- .navi -->
 
             <!-- 검색 -->
-            <form th:action="@{/admin/user/users}" method="get" class="search">
+            <form th:action="@{/admin/user/user}" method="get" class="search">
                 <select name="searchType" class="search-option">
                     <option th:selected="${searchType=='memUid'}" value="memUid">아이디</option>
                     <option th:selected="${searchType=='custName'}" value="custName">이름</option>
@@ -97,8 +97,8 @@
                         <td th:text="${cust.custPoint}" class="custPoint">포인트</td>
                         <td th:text="${cust.custEmail}" class="custEmail">이메일</td>
                         <td th:text="${cust.custHp}" class="custHp">휴대폰</td>
-<!--                        <td th:text="${cust.memRdate}" class="memRdate">가입일</td>-->
-                        <td th:text="${#dates.format(cust.memRdate, 'yy-MM-dd HH:mm:ss')}" class="memRdate">가입일</td>
+                        <td th:text="${#dates.format(cust.memRdate, 'yy-MM-dd')}" class="memRdate">가입일</td>
+                        <!-- <td th:text="${#dates.format(cust.memRdate, 'yy-MM-dd HH:mm:ss')}" class="memRdate">가입일</td> -->
 
 
                         <!-- 회원상태 (4가지 - 정상, 중지, 휴면, 탈퇴) -->
@@ -184,58 +184,54 @@
                     <table class="tb4">
                         <tr>
                             <th>아이디</th>
-                            <td><input name="memUid" value="${data.memUid}" readonly></td>
+                            <td><input name="memUid" class="memUid" value="${data.memUid}" readonly></td>
+                            <th>이름</th>
+                            <td><input name="custName" class="custName" value="${data.custName}"></td>
                         </tr>
                         <tr>
-                            <th>이름</th>
-                            <td><input name="custName" value="${data.custName}"></td>
+                            <th>휴대폰</th>
+                            <td><input name="custHp" value="${data.custHp}" class="custHp"></td>
+                            <th>이메일</th>
+                            <td><input name="custEmail" value="${data.custEmail}" class="custEmail"></td>
+
                         </tr>
                         <tr>
                             <th>성별</th>
                             <td>
-                                <label><input type="radio" name="custGender" value="true" ${+data.custGender === 1 ? "checked" : ""}>남</label>
-                                <label><input type="radio" name="custGender" value="false" ${+data.custGender === 0 ? "checked" : ""}>여</label>
+                                <label><input type="radio" name="custGender" class="custGender" value="true" ${+data.custGender === 1 ? "checked" : ""}>남</label>
+                                <label><input type="radio" name="custGender" class="custGender" value="false" ${+data.custGender === 0 ? "checked" : ""}>여</label>
                             </td>
-                        </tr>
-                        <tr>
-                            <th>등급</th>
-                            <td><input name="custGrade" value="${data.custGrade}" readonly></td>
-                        </tr>
-                        <tr>
                             <th>상태</th>
                             <td class="memState">${data.memState}</td>
                         </tr>
                         <tr>
-                            <th>이메일</th>
-                            <td><input name="custEmail" value="${data.custEmail}"></td>
-                        </tr>
-                        <tr>
-                            <th>휴대폰</th>
-                            <td><input name="custHp" value="${data.custHp}"></td>
+                            <th>등급</th>
+                            <td><input name="custGrade" value="${data.custGrade}" class="custGrade" readonly>
+                                <span>등급 수정은 회원 목록에서 선택수정 가능</span>
+                            </td>
                         </tr>
                         <tr>
                             <th>우편번호</th>
-                            <td><input name="custAddr1" value="${data.custAddr1}" class=""></td>
-                        </tr>
+                            <td><input name="custAddr1" value="${data.custAddr1}" class="custAddr1"></td>
                         <tr>
                             <th>기본주소</th>
-                            <td><input name="custAddr2" value="${data.custAddr2}"></td>
+                            <td><input name="custAddr2" value="${data.custAddr2}" class="custAddr2"></td>
                         </tr>
                         <tr>
                             <th>상세주소</th>
-                            <td><input name="custAddr3" value="${data.custAddr3}"></td>
+                            <td><input name="custAddr3" value="${data.custAddr3}" class="custAddr3"></td>
                         </tr>
                         <tr>
                             <th>가입일</th>
                             <td>${data.memRdate}</td>
-                        </tr>
-                        <tr>
                             <th>최근 로그인 날짜</th>
-                            <td>${data.lastLoginDate}</td>
+                            <td>${data.memLastLoginDate}</td>
                         </tr>
                         <tr>
                             <th>기타</th>
-                            <td><textarea name="memEtc" data-placeholder="회원에 대한 기타 정보입력">${data.memEtc || ''}</textarea></td>
+                            <td colspan="3">
+                                <textarea name="memEtc" data-placeholder="회원에 대한 기타 정보입력">${data.memEtc || ''}</textarea>
+                            </td>
                         </tr>
                         <input type="hidden" name="custId" value="${data.custId}">
                     </table>
@@ -288,8 +284,8 @@
                 </div>
 
                 `;
-                popup.style.display = "block";
-                bg.style.display = "flex";
+                // popup.style.display = "block";
+                // bg.style.display = "flex";
             }
         } catch (err) {
             console.error('Error:', err);

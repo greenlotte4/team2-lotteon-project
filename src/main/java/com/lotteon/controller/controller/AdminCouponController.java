@@ -73,7 +73,7 @@ public class AdminCouponController {
         }
 
         Page<GetCouponDto> coupons = couponService.findAllCoupons(page);
-        model.addAttribute("coupons", coupons);
+          model.addAttribute("coupons", coupons);
         model.addAttribute("page",page);
         model.addAttribute("totalPages",coupons.getTotalPages());
         model.addAttribute("memId",auth.getUser().getId());

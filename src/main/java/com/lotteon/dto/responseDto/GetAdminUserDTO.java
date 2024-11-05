@@ -52,7 +52,7 @@ public class GetAdminUserDTO {
     private String custAddr3; // 상세주소
 
     private String memLastLoginDate; // 최근 로그인 날짜 (YY-MM-DD HH-MM-SS)
-
+    private String lastLoginDate = "최근 로그인 기록 없음";
     private String  memEtc; // 기타 (회원 기타 정보입력)
 
 

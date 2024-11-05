@@ -1,5 +1,6 @@
 package com.lotteon.controller.controller;
 
+import com.lotteon.dto.requestDto.GetDeliveryDto;
 import com.lotteon.dto.responseDto.GetAdminUserDTO;
 import com.lotteon.dto.responseDto.GetPointsDto;
 import com.lotteon.service.AuthService;
@@ -42,9 +43,18 @@ public class AdminUserController {
             @RequestParam(name = "keyword", defaultValue = "0") String keyword
 
     ) {
+        // active라는 속성에 "users" 값을 추가해서 뷰에 전달 (현재 활성화된 페이지나 섹션을 표시)
+        model.addAttribute("active","users");
+        Page<GetAdminUserDTO> cust2;
+        if(searchType.equals("0")){
+            cust2 = authService.selectCustAndGuestAll(page);
+        } else {
+            cust2 = authService.findAllSearchType(page,searchType,keyword);
+        }
+
         // 페이지 처리
         //Page<GetAdminUserDTO> cust2 = authService.selectCustAll2(page);
-        Page<GetAdminUserDTO> cust2 = authService.selectCustAndGuestAll(page);
+
 
         // 2-1. 회원목록 모델에 담아서 뷰에서 보기
         model.addAttribute("customers", cust2);

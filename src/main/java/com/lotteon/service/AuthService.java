@@ -5,6 +5,7 @@ import com.lotteon.dto.responseDto.GetAdminUserDTO;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Member;
 import com.lotteon.entity.member.Seller;
+import com.lotteon.entity.product.Order;
 import com.lotteon.repository.member.CustomerRepository;
 import com.lotteon.repository.member.MemberRepository;
 import com.lotteon.repository.member.SellerRepository;
@@ -15,6 +16,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -71,20 +73,14 @@ public class AuthService implements UserDetailsService {
     // 1. 관리자 회원목록 출력기능
     public List<GetAdminUserDTO> selectCustAll() {
 
-//        String role = "customer";
-//        List<Member> customers = memberRepository.findAllByMemRole(role);
-//        log.info("커스터머 서비스 : "+customers);
-
         List<String> roles = Arrays.asList("customer", "guest");
         List<Member> customersAndGuests = memberRepository.findAllByMemRoleIn(roles);
 
         log.info("커스터머 서비스 : "+customersAndGuests);
 
-        // List<GetAdminUserDTO> cust = customers.stream().map(customer -> modelMapper.map(customer, GetAdminUserDTO.class)).toList();
         List<GetAdminUserDTO> cust = new ArrayList<>();
         customersAndGuests.forEach(customer -> {
             // 번호, 아이디, 이름, 성별, 등급, 포인트, 이메일, 휴대폰, 가입일, 상태, 관리
-            //if (customer.getCustomer() != null&&customer.getMemRole().equals("customer")) {
             if (customer.getMemRole().equals("customer")) {
                 GetAdminUserDTO dto = GetAdminUserDTO.builder()
                         .custId(customer.getId()) // 번호
@@ -116,7 +112,6 @@ public class AuthService implements UserDetailsService {
             }
         });
         return cust;
-
     }
 
     // 2. 관리자 회원수정 정보조회 (+팝업호출 = select) [수정] 버튼 클릭 시
@@ -127,69 +122,40 @@ public class AuthService implements UserDetailsService {
         // 전역 변수로 dto 사용해주기 !
         GetAdminUserDTO dto;
 
+        Member member = optMember.get();
+        log.info("여기까지는 들어오나? ");
 
-            Member member = optMember.get();
-            log.info("여기까지는 들어오나? ");
+        String[] addr = member.getCustomer().getCustAddr().split("/");
+        log.info("배열에 들어가는지 확인 (addr 주소값) "+addr);
 
-            String[] addr = member.getCustomer().getCustAddr().split("/");
-            log.info("배열에 들어가는지 확인 (addr 주소값) "+addr);
+        String lastLogin = member.getMemLastLoginDate()!=null
+                ?
+                member.getMemLastLoginDate().toString().replace("T", " ")
+                :
+                "최근 로그인 기록 없음";
 
-            dto = GetAdminUserDTO.builder()
-                    .custId(member.getCustomer().getId())
-                    .memUid(member.getMemUid())
-                    .custName(member.getCustomer().getCustName())
-                    .custGrade(member.getCustomer().getCustGrade())
-                    .custGender(member.getCustomer().getCustGender())
-                    .custEmail(member.getCustomer().getCustEmail())
-                    .custHp(member.getCustomer().getCustHp())
-                    .memRdate(member.getMemRdate())
-                    .memState(member.getMemState())
-                    .custAddr1(addr[0])
-                    .custAddr2(addr[1])
-                    .custAddr3(addr[2])
-                    .memRole(member.getMemRole())
-                    .memEtc(member.getMemEtc())
-                    .memLastLoginDate(member.getMemLastLoginDate().toString().replace("T", " "))
-                    .build();
+        dto = GetAdminUserDTO.builder()
+                .custId(member.getCustomer().getId())
+                .memUid(member.getMemUid())
+                .custName(member.getCustomer().getCustName())
+                .custGrade(member.getCustomer().getCustGrade())
+                .custGender(member.getCustomer().getCustGender())
+                .custEmail(member.getCustomer().getCustEmail())
+                .custHp(member.getCustomer().getCustHp())
+                .memRdate(member.getMemRdate())
+                .memState(member.getMemState())
+                .custAddr1(addr[0])
+                .custAddr2(addr[1])
+                .custAddr3(addr[2])
+                .memRole(member.getMemRole())
+                .memEtc(member.getMemEtc())
+                .memLastLoginDate(lastLogin)
+                .build();
 
-            log.info("여기까지 들어오나 2 "+dto);
+        log.info("여기까지 들어오나 2 "+dto);
 
-       // Optional<Member> custPop = memberRepository.findByMemUid(selectCustDto.getMemUid());
         return dto;
     }
-
-    /*
-    // 3. 관리자 회원 수정
-    public GetAdminUserDTO updateCust(Long id, GetAdminUserDTO getAdminUserDTO) {
-
-        // Member 조회
-        Optional<Customer> opt = customerRepository.findById(id);
-        if(opt.get().getMember().getMemRole().equals("guest")){
-
-            return null;
-        } else {
-            Customer cust = null;
-            if(opt.isPresent()) {
-                cust = opt.get();
-            }
-            Member member = memberRepository.findById(cust.getMember().getId())
-                    .orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 회원이 없습니다: " + id));
-
-            // Customer 엔티티의 updateUser 메서드를 통해 정보 업데이트
-            Customer customer = member.getCustomer();
-            customer.updateUser(getAdminUserDTO);
-            member.updateUser(customer,getAdminUserDTO.getMemEtc());
-
-            // Member랑 Customer 정보 각각 저장
-            memberRepository.save(member);
-            customerRepository.save(customer);
-
-            return modelMapper.map(customer, GetAdminUserDTO.class);
-        }
-
-    }
-    */
-
 
     // guest 일 때,
     public GetAdminUserDTO popGuest(Long id) {
@@ -249,13 +215,13 @@ public class AuthService implements UserDetailsService {
 
 
     // 3. 관리자 회원목록 페이지 처리 (<이전 1,2,3 다음>)
-//    public Page<GetAdminUserDTO> selectCustAll2(int page) {
-//        Pageable pageable = PageRequest.of(page, 10);
-//        Page<Member> members = memberRepository.findAllByMemRoleOrderByIdDesc("customer",pageable);
-//        Page<GetAdminUserDTO> dtos = members.map(v->v.toGetAdminUserDTO());
-//        log.info("서비스 디티오 변환한 거 "+dtos.getContent());
-//        return dtos;
-//    }
+    public Page<GetAdminUserDTO> selectCustAll2(int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<Member> members = memberRepository.findAllByMemRoleOrderByIdDesc("customer",pageable);
+        Page<GetAdminUserDTO> dtos = members.map(v->v.toGetAdminUserDTO());
+        log.info("서비스 디티오 변환한 거 "+dtos.getContent());
+        return dtos;
+    }
 
     public Page<GetAdminUserDTO> selectCustAndGuestAll(int page) {
         Pageable pageable = PageRequest.of(page, 10);
@@ -313,8 +279,28 @@ public class AuthService implements UserDetailsService {
         return "NF";
     }
 
+    // 검색 기능
+    public Page<GetAdminUserDTO> findAllSearchType(int page, String searchType, String keyword) {
+        log.info("연화를 찾아라1 ");
+        Pageable pageable = PageRequest.of(page,10, Sort.by(Sort.Direction.DESC, "id"));
+        Page<Member> members;
 
+        if(searchType.equals("memUid")){  // 아이디
+            members = memberRepository.findAllByMemUidOrderByIdDesc(keyword,pageable);
+        } else if (searchType.equals("custName")){ // 이름
+            members = memberRepository.findAllByCustNameOrderByIdDesc(keyword,pageable);
+        } else if (searchType.equals("custEmail")){ // 이메일
+            members = memberRepository.findAllByCustEmailOrderByIdDesc(keyword,pageable);
+        } else { // 휴대폰
+            members = memberRepository.findAllByCustHpOrderByIdDesc(keyword,pageable);
+        }
+
+        log.info("연화를 찾아라 2"+members.getContent());
+        Page<GetAdminUserDTO> dtos = members.map(v -> v.toGetAdminUserDTO());
+        return dtos;
+    }
 }
+
 
 
 
