@@ -1,262 +1,189 @@
-.cs_index {
-    width: 790px;
+/* 전체 섹션 스타일 */
+.cs_index_notice, .cs_index_qna, .cs_index_fnq, .cs_index_info {
+    width: 100%;
+    max-width: 800px;
     margin: 0 auto;
-    border-top: 1px solid #e0e0e0; /* 약간 연한 회색으로 변경 */
-    padding-top: 20px;
+    padding: 20px 0;
+    font-family: Arial, sans-serif;
 }
 
-/* 롯데온이 도와드릴게요! */
-.cs_index_title {
-    height: 100px;
+/* 메인 제목 스타일 */
+.cs_index_title .cs_main_title {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #333;
     text-align: center;
-    line-height: 100px;
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-}
-
-.cs_index_title .cs_main_title,
-.cs_main_title > .cs_main_lotte {
-    font-size: 23px;
-    font-weight: 900;
+    margin-bottom: 30px;
 }
 
 .cs_index_title .cs_main_lotte {
-    color: #FF5A5F; /* 눈에 띄는 세련된 레드 톤 */
+    color: #FF5A5F; /* 롯데ON 부분에 빨간색 강조 */
+    font-size: 1.2em;
 }
 
-/* Sub Title */
+/* 섹션 제목 스타일 */
 .sub_title {
+    font-size: 1.5em; /* 폰트 크기 조정 */
+    font-weight: bold;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 10px;
+}
+
+.sub_title span {
     font-size: 20px;
-    font-weight: 900;
-    margin-top: 8px;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
+    color: #FF5A5F; /* 섹션 이름에 빨간색 강조 */
 }
 
+/* "전체보기" 링크 스타일 */
 .sub_title .viewAll {
-    font-size: 12px;
-    line-height: 30px;
-    font-weight: 700;
-    color: #007BFF; /* 링크 색상을 파란색으로 변경 */
-    text-decoration: underline;
+    font-size: 0.7em;
+    color: #717171;
     cursor: pointer;
+    transition: color 0.3s ease;
 }
 
-/* Notice */
-.cs_index_notice {
-    height: 260px;
-    margin-top: 20px;
+.sub_title .viewAll:hover {
+    color: #0056b3;
 }
 
-.cs_index_notice > .notice_box {
-    margin-top: 20px;
-    margin-left: 20px;
-}
-
-.cs_index_notice .notice {
-    height: 30px;
-    margin-bottom: 10px;
-}
-
-.cs_index_notice .notice > a {
+/* 공지사항 및 문의하기 카드 스타일 */
+.notice_card, .qna_card {
     display: flex;
     align-items: center;
-    color: #333;
-    font-weight: 500;
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.cs_index_notice .cate {
-    width: 70px;
-    text-align: center;
+.notice_card:hover, .qna_card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* 카테고리 스타일 */
+.notice_card .category, .qna_card .category {
+    font-size: 1em;
     font-weight: bold;
     color: #FF5A5F;
+    margin-right: 10px;
 }
 
-.cs_index_notice .notice_box .content {
-    width: 180px;
-}
-
-/* FNQ */
-.cs_index_fnq {
-    height: 280px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.cs_index_fnq .fnq_ul {
-    width: 100%;
-    margin-top: 20px;
+/* 텍스트 영역 */
+.notice_card .content, .qna_card .content {
+    flex: 1;
     display: flex;
     justify-content: space-between;
-}
-
-.cs_index_fnq .fnq_li > a {
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    padding: 10px;
-    border-radius: 10px;
-    transition: background-color 0.3s ease;
 }
 
-.cs_index_fnq .fnq_li > a:hover {
-    background-color: #eceff1;
-}
-
-.cs_index_fnq .fnq_img {
-    width: 85px;
-    height: 85px;
-    margin-bottom: 10px;
-}
-
-.cs_index_fnq .fnq_content {
-    font-size: 14px;
-    text-align: center;
-    color: #555;
-}
-
-/* QNA */
-.cs_index_qna {
-    height: 290px;
-    margin-top: 20px;
-}
-
-.cs_index_qna .qna_ul {
-    width: 100%;
-    margin-top: 20px;
-}
-
-.cs_index_qna .qna {
-    height: 30px;
-    line-height: 30px;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-}
-
-.cs_index_qna .qna > a {
-    display: flex;
-    align-items: center;
+.notice_card .title, .qna_card .title {
+    font-size: 1.2em;
+    font-weight: 600;
     color: #333;
-    font-weight: 500;
 }
 
-.cs_index_qna .cate {
-    width: 130px;
-    text-align: center;
-    font-weight: bold;
-    color: #FF5A5F;
-}
-
-.cs_index_qna .content {
-    width: 350px;
-}
-
-.cs_index_qna .qna_sub_info {
-    float: right;
-}
-
-.cs_index_qna .nick {
-    display: inline-block;
-    width: 60px;
-    text-align: center;
-    margin-left: auto;
-    color: #555;
-}
-
-.cs_index_qna .date {
-    margin-left: auto;
+.notice_card .date, .qna_card .date {
+    font-size: 0.9em;
     color: #999;
+    text-align: right;
+    min-width: 80px;
+    margin-left: auto;
 }
 
-.cs_index_qna .qna_link {
-    font-weight: 900;
-    font-size: 16px;
-    color: #007BFF;
-    display: inline-block;
-    margin-top: 30px;
-    text-decoration: none;
+/* 자주 묻는 질문 (FNQ) */
+.cs_index_fnq .fnq_ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
 }
 
-.cs_index_qna .qna_link:hover {
-    text-decoration: underline;
+.cs_index_fnq .fnq_li {
+    width: calc(33.33% - 20px); /* 가로로 3개씩 */
+    margin-bottom: 20px;
+    text-align: center;
+    padding: 10px;
+    border-radius: 12px;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
 
-/* Info */
+.cs_index_fnq .fnq_li:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    background-color: #f8f9fa;
+}
+
+.fnq_icon {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    margin-bottom: 10px;
+    transition: transform 0.4s ease;
+}
+
+.cs_index_fnq .fnq_li:hover .fnq_icon {
+    transform: scale(1.1);
+}
+
+/* 1:1 상담안내 (쇼핑몰 스타일로) */
 .cs_index_info {
-    height: 300px;
-    margin-top: 20px;
+    padding: 20px;
     background-color: #f9f9f9;
     border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .cs_index_info .infos {
-    margin-top: 20px;
     display: flex;
-    justify-content: space-around;
+    gap: 20px;
+    justify-content: space-between;
 }
 
-.cs_index_info .info {
-    height: 200px;
-    border: 1px solid #e0e0e0;
-    width: 300px;
+.info_card {
+    flex: 1;
     padding: 20px;
-    border-radius: 8px;
-    transition: transform 0.2s, box-shadow 0.2s;
+    border-radius: 12px;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.cs_index_info .info:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+.info_card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
-.cs_index_info .info_cate {
-    margin-top: 15px;
-    font-size: 13px;
-    color: #777;
-}
-
-.cs_index_info .info_title {
-    font-size: 18px;
-    font-weight: 900;
-    margin: 0;
+.info_title {
+    font-size: 1.3em;
+    font-weight: bold;
     color: #333;
+    margin-bottom: 10px;
 }
 
-.cs_index_info .info_number {
-    display: inline-block;
-    font-size: 23px;
-    font-weight: 900;
+.info_number {
+    font-size: 1.8em;
+    font-weight: bold;
     color: #FF5A5F;
 }
 
-.cs_index_info .info_time {
-    margin-left: 5px;
+.info_time {
+    font-size: 0.9em;
     color: #666;
+    margin-left: 5px;
 }
 
-.cs_index_info .info_guide {
-    display: inline-block;
-    margin-top: 20px;
-    font-size: 20px;
-    font-weight: 900;
+.info_guide {
+    font-size: 1em;
     color: #007BFF;
-}
-.fnq_icon {
-    font-size: 2.5em; /* 크기를 더 크게 설정 */
-    color: #FF5A5F; /* 원하는 색상으로 변경 */
-    margin-bottom: 10px;
-    transition: color 0.3s ease, transform 0.3s ease;
-}
-
-.fnq_li a:hover .fnq_icon {
-    color: #e74c3c;
-    transform: scale(1.2);
+    margin-top: 20px;
+    display: inline-block;
+    text-decoration: underline;
 }

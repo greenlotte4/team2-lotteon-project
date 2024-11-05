@@ -1,120 +1,101 @@
+<!-- CSS 파일 로드 -->
 <link rel="stylesheet" th:href="@{/css/cs/cs_common.css}">
 <link rel="stylesheet" th:href="@{/css/cs/cs_index.css}">
 <link rel="stylesheet" th:href="@{/css/basic.css}">
 <!-- Font Awesome 추가 (CDN) -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMnR4ZQ9F4MI6Z/5EdgW3Mvrrb14B3/5m55LJbB" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMnR4ZQ9F4MI6Z/5m55LJbB" crossorigin="anonymous">
 <header th:replace="layout/main/header.html"></header>
-<main style="margin: 0 auto; margin-bottom: 50px; margin-top: 230px;">
-    <!--    <aside class="cs_aside">-->
-    <!--        <h3 class="aside_title">문의하기</h3>-->
-    <!--        <ul class="aside_cate">-->
-    <!--            <li class="cate_list"><a href="#">회원</a></li>-->
-    <!--            <li class="cate_list"><a href="#">쿠폰/이벤트</a></li>-->
-    <!--            <li class="cate_list"><a href="#">주문/결제/배송</a></li>-->
-    <!--            <li class="cate_list"><a href="#">취소/반품/교환</a></li>-->
-    <!--            <li class="cate_list"><a href="#">여행/숙박/항공</a></li>-->
-    <!--            <li class="cate_list"><a href="#">안전거래</a></li>-->
-    <!--        </ul>-->
-    <!--    </aside>-->
 
+<main style="margin: 0 auto; margin-bottom: 50px; margin-top: 230px;">
     <div id="main" style="height: auto">
+        <!-- 메인 제목 -->
         <div class="cs_index_title">
             <h2 class="cs_main_title"><span class="cs_main_lotte">롯데 ON</span> 이 도와드릴게요 !</h2>
         </div>
+
+        <!-- 공지사항 섹션 -->
         <section class="cs_index cs_index_notice">
-            <h3 class="sub_title">공지사항<a th:href="@{/cs/notices}" class="viewAll">전체보기</a></h3>
+            <h3 class="sub_title"><span>공지사항</span><a th:href="@{/cs/notices}" class="viewAll">전체보기</a></h3>
             <ul class="notice_box">
-                <li class="notice" th:each="notice, iterStat : ${notices}" th:if="${iterStat.index}<5">
-                    <!-- 공지사항 ID를 URL에 포함하여 view 페이지로 이동 -->
-                    <a th:href="@{/cs/notice/view/{id}(id=${notice.id})}">
-                        <p class="cate2" th:text="${notice.cate1.categoryName}">공지</p>
-                        <p class="content" th:text="${notice.noticeTitle}">공지사항 제목</p>
-                        <span class="date" th:text="${#dates.format(notice.noticeRdate, 'yy.MM.dd')}">등록일</span>
+                <li class="notice_card" th:each="notice, iterStat : ${notices}" th:if="${iterStat.index}<5">
+                    <a th:href="@{/cs/notice/view/{id}(id=${notice.id})}" class="notice_link">
+                        <span class="category" th:data-value="${notice.cate1.categoryName}" th:text="${notice.cate1.categoryName}">카테고리</span>
+                        <div class="content">
+                            <p class="title" th:text="${notice.noticeTitle}">공지사항 제목</p>
+                            <span class="date" th:text="${#dates.format(notice.noticeRdate, 'yy.MM.dd')}">등록일</span>
+                        </div>
                     </a>
                 </li>
             </ul>
         </section>
+
+        <!-- 자주하는 질문 섹션 -->
         <section class="cs_index cs_index_fnq">
-            <h3 class="sub_title">자주하는 질문<a href="#">전체보기</a></h3>
+            <h3 class="sub_title"><span>자주하는 질문</span><a href="#" class="viewAll">전체보기</a></h3>
             <ul class="fnq_ul">
                 <li class="fnq_li">
                     <a href="#">
-                        <img src="/static/images/자주하는질문/회원.gif" alt="회원" class="fnq_icon">
+                        <img th:src="@{/images/자주하는질문/회원.png}" alt="회원" class="fnq_icon">
                         <p class="fnq_content">회원</p>
                     </a>
                 </li>
                 <li class="fnq_li">
                     <a href="#">
-                        <img src="/static/images/자주하는질문/이벤트.gif" alt="쿠폰/이벤트" class="fnq_icon">
+                        <img th:src="@{/images/자주하는질문/쿠폰이벤트.png}" alt="쿠폰/이벤트" class="fnq_icon">
                         <p class="fnq_content">쿠폰/이벤트</p>
                     </a>
                 </li>
                 <li class="fnq_li">
                     <a href="#">
-                        <img src="/static/images/자주하는질문/주문결제.gif" alt="주문/결제" class="fnq_icon">
+                        <img th:src="@{/images/자주하는질문/주문결제.png}" alt="주문/결제" class="fnq_icon">
                         <p class="fnq_content">주문/결제</p>
                     </a>
                 </li>
                 <li class="fnq_li">
                     <a href="#">
-                        <img src="/static/images/자주하는질문/배송.gif" alt="배송" class="fnq_icon">
+                        <img th:src="@{/images/자주하는질문/배송.png}" alt="배송" class="fnq_icon">
                         <p class="fnq_content">배송</p>
                     </a>
                 </li>
                 <li class="fnq_li">
                     <a href="#">
-                        <img src="/static/images/자주하는질문/환불.gif" alt="취소/반품/환불" class="fnq_icon">
+                        <img th:src="@{/images/자주하는질문/취소반품.png}" alt="취소/반품/환불" class="fnq_icon">
                         <p class="fnq_content">취소/반품/환불</p>
                     </a>
                 </li>
                 <li class="fnq_li">
                     <a href="#">
-                        <img src="/static/images/자주하는질문/안전결제.gif" alt="안전결제" class="fnq_icon">
+                        <img th:src="@{/images/자주하는질문/안전결제.png}" alt="안전결제" class="fnq_icon">
                         <p class="fnq_content">안전결제</p>
                     </a>
                 </li>
             </ul>
         </section>
 
-        <section class="cs_index cs_index_qna">
-            <h3 class="sub_title">문의하기<a th:href="@{/cs/qnas}" class="viewAll">전체보기</a></h3>
-            <ul class="qna_ul">
-                <li th:each="qna : ${qnas}" class="qna">
-                    <a href="">
-                        <p class="cate" th:data-value="${qna.cate1.categoryName}" th:text="${qna.cate1.categoryName}">회원</p>
-                        <p class="title" th:text="${qna.qnaTitle}">개인회원과 법인회원에 차이가 있나요?</p>
-                        <span class="q_nick"
-                              th:text="${qna.member != null && qna.member.memUid != null ? (qna.member.memUid.length() >= 2 ? qna.member.memUid.substring(0, 2) + '**' : qna.member.memUid + '**') : 'N/A'}"></span>
-                        <span class="date" th:text="${#temporals.format(qna.qnaRdate, 'yy.MM.dd')}"></span>
-                    </a>
-                </li>
-            </ul>
-            <a th:href="@{/cs/qna/write}" class="qna_link">문의글 작성 ></a>
-        </section>
+        <!-- 1:1 상담안내 섹션 (쇼핑몰 스타일로 업데이트) -->
         <section class="cs_index cs_index_info">
-            <h3 class="sub_title">1:1 상담안내</h3>
+            <h3 class="sub_title"><span>1:1 상담안내</span></h3>
             <ul class="infos">
-                <li class="info">
-                    <p class="info_title">이용안내</p>
+                <li class="info_card">
+                    <div class="info_title">이용안내</div>
                     <p class="info_cate">일반회원/비회원</p>
                     <strong class="info_number">1566-0001<span class="info_time">(평일 09:00 ~ 18:00)</span></strong>
                     <p class="info_cate">스마일클럽전용</p>
                     <strong class="info_number">1566-0002<span class="info_time">(365일 09:00 ~ 18:00)</span></strong>
                 </li>
-                <li class="info">
-                    <p class="info_title">판매상담이용안내</p>
-                    <div>
-                        <p class="info_cate">판매고객</p>
-                        <strong class="info_number">1566-5700<span class="info_time">(평일 09:00 ~ 18:00)</span></strong>
-                    </div>
+                <li class="info_card">
+                    <div class="info_title">판매상담이용안내</div>
+                    <p class="info_cate">판매고객</p>
+                    <strong class="info_number">1566-5700<span class="info_time">(평일 09:00 ~ 18:00)</span></strong>
                     <a href="#">
-                        <strong class="info_guide">판매자가입및서류접수안내 ></strong>
+                        <strong class="info_guide">판매자가입 및 서류접수안내 ></strong>
                     </a>
                 </li>
             </ul>
         </section>
     </div>
 </main>
+
 <footer th:replace="layout/main/footer.html"></footer>
 <script>
     const firstCategoryMap = {
@@ -129,9 +110,9 @@
 
     // 1차 카테고리명을 한글로 변환하여 표시
     document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.cate').forEach(function (item) {
+        document.querySelectorAll('.category').forEach(function (item) {
             const value = item.getAttribute('data-value');
-            item.textContent = firstCategoryMap[value] || value; // 한글로 변환 또는 기본값 유지
+            item.textContent = firstCategoryMap[value] || value;
         });
     });
 </script>
