@@ -178,7 +178,7 @@ public class CustomerService {
                     .custAddr2(addr[2])
                     .points(member.getCustomer().getCustPoint())
                     .build();
-        }
+        } 
         String address = addressEntity.get().getAddress();
         String[] addr = address.split("/");
 
