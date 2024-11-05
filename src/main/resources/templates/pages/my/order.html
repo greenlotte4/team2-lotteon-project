@@ -1,5 +1,6 @@
 <link rel="stylesheet" th:href="@{/css/my/my.css}">
 <link rel="stylesheet" th:href="@{/css/basic.css}">
+<link rel="stylesheet" th:href="@{/css/my/popup.css}">
 <header th:replace="layout/main/header.html"></header>
 <th:block th:replace="layout/my/modal.html"></th:block>
 <main style="margin-top: 230px">
@@ -51,7 +52,7 @@
             <td>
               <ul>
                 <li class="company" th:text="${order.seller}">(주) 회사명</li>
-                <li class="prodName"><a href="#" th:text="${order.orderItemCount}>1 ? ${order.prodName}+'외'+(${order.orderItemCount}-1)+'개' : ${order.prodName}">상품명</a></li>
+                <li class="prodName"><a onclick="orderPop(this)" th:text="${order.orderItemCount}>1 ? ${order.prodName}+'외'+(${order.orderItemCount}-1)+'개' : ${order.prodName}">상품명</a></li>
                 <li>
                   수량 : <span class="prodCount" th:text="${order.orderQuantity}==null?0:${order.orderQuantity}">5</span>개 / 주문번호 :
                   <span class="ordNo" th:text="${order.orderId}">1234567</span>
@@ -103,3 +104,21 @@
 </main>
 <footer th:replace="layout/main/footer.html"></footer>
 
+<script>
+
+  const popOrderDialog = document.getElementById("popOrder");
+  function orderPop(element) {
+    event.preventDefault();
+
+
+    popOrderDialog.showModal();
+
+
+  }
+
+  function closeModal(){
+    popOrderDialog.close();
+  }
+
+
+</script>

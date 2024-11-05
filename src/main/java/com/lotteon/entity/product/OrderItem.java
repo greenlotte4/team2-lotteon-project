@@ -8,7 +8,6 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -91,4 +90,5 @@ public class OrderItem {
     public void setOrderDeliSdate(LocalDate today) {
         this.deliSdate = today;
     }
+
 }
