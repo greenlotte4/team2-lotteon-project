@@ -25,37 +25,44 @@
                                     <span>[[${product.getSellCompany}]]</span>
                                     <span>상품번호 : [[${product.getId}]]</span>
                                     <input type="hidden" th:value="${product.getId}" name="prodId">
-                                    <span style="
-                                        cursor: pointer;
-                                        color: red;
-                                        border: 1px solid black;
-                                        padding: 2px 4px;
-                                     " th:if="${couponId != 0}" th:data-id="${couponId}" onclick="getCustomerCoupon(event)">쿠폰 발급받기</span>
+                                    <span id="coupondl" th:if="${couponId != 0}" th:data-id="${couponId}" onclick="getCustomerCoupon(event)">
+                                        쿠폰받기
+                                        <span class="img"></span>
+                                    </span>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="prod_name">
-                                    <span>[[${product.getProdName}]]</span> <br>
-                                    <img src="https://via.placeholder.com/56x17" alt="별점">
-                                    <a href="#prodReview">상품평보기</a>
-                                    <a href="#related-products">Ai추천 상품 보기</a>
+                                    <span class="prod_name_span">[[${product.getProdName}]]</span> <br>
+                                    <span class="box">
+                                        <span class="ratingBg">
+                                            <span class="rating" th:style="'width:'+ ${product.prodRating * 2}+'%;'"></span>
+                                        </span>
+                                        <a href="#prodReview">
+                                            <span th:text="${#numbers.formatDecimal(product.prodRating / 10.0, 1, 1)}"></span>
+                                            상품평보기
+                                        </a><a>|</a>
+                                        <a href="#related-products">Ai추천 상품 보기</a>
+                                    </span>
+
                                 </td>
                             </tr>
                             <tr>
                                 <td class="price">
-                                    <del>[[${#numbers.formatInteger(product.getProdPrice(), 1)}]]원&nbsp;</del>
+                                    <del>[[${#numbers.formatInteger(product.getProdPrice(), 1,'COMMA')}]]원&nbsp;</del>
                                     <span>[[${#numbers.formatInteger(product.getProdDiscount(), 1)}]]%&#8595;</span>
-                                    <img src="https://via.placeholder.com/33x17" alt="별점">
+                                    <i class="install"></i>
                                     <span th:if="${prodDetail.installmentable}">무이자할부</span>
                                     <span th:unless="${prodDetail.installmentable}">할부(무이자X)</span>
-                                    <img src="https://via.placeholder.com/33x17" alt="별점">
+                                    <i class="cardEvent"></i>
                                     <span>카드 추가 혜택</span> <br>
-                                    <span id="finalPrice">[[${#numbers.formatInteger(product.getTotalPrice(), 1)}]]원</span>
+                                    <span id="finalPrice">[[${#numbers.formatInteger(product.getTotalPrice(), 1,'COMMA')}]]원</span>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="delivery">
-                                    <span th:text="'배송비 : ' + ${product.prodDeliver > 0 ? product.prodDeliver + '원' : '무료배송'}"></span>
+                                    <span th:text="'배송비 : ' + ${product.prodDeliver > 0 ?
+                                    #numbers.formatInteger(product.getProdDeliver(), 1,'COMMA') + '원' : '무료배송'}"></span>
                                     <span id="delivery-date"></span> <br>
                                     <span th:if="${prodDetail.deliable}">본상품은 해외배송이 가능합니다.</span>
                                     <span th:unless="${prodDetail.deliable}">본상품은 국내배송만 가능합니다</span>
@@ -95,8 +102,8 @@
                                 </td>
                             </tr>
                             <tr class="count_qty">
-                                <td style="float: right; display: none;" id="qty">
-                                    <span class="qty">수량 </span>
+                                <td style="float: right; display: none;" id="qty" class="d-flex align-items-center">
+                                    <span class="qty me-auto">수량 </span>
                                     <button type="button" class="decrement">-</button> <!-- 감소 버튼 -->
                                     <input name="quantity" type="number" class="count" value="1" min="1"/>
                                     <button type="button" class="increment">+</button> <!-- 증가 버튼 -->
@@ -105,7 +112,7 @@
                             <tr>
                                 <td class="total">
                                     <span>총 상품 금액 </span>
-                                    <span name="totalPrice" id="totalPrice">[[${#numbers.formatInteger(product.getTotalPrice(), 1)}]]원</span>
+                                    <span name="totalPrice" id="totalPrice">[[${#numbers.formatInteger(product.getTotalPrice(), 1,'COMMA')}]]원</span>
                                 </td>
                             </tr>
                         </table> <!-- .tb1-->
@@ -117,7 +124,15 @@
                 </div> <!-- .product_details -->
             </div> <!-- .product_info -->
             <div class="view_banner">
-                <img src="https://via.placeholder.com/550x64" alt="상품 상세보기 배너">
+                <a
+                        class="banner"
+                        th:unless="${banner eq null}"
+                        th:href="@{'/'+${banner.bannerLink}}"
+                        th:style="'background-color:'+${banner.bannerBg}">
+                    <img
+                            th:src="@{'/file/'+${banner.bannerImg}}"
+                            th:alt="${banner.bannerName}">
+                </a>
             </div>
             <h2 class="sub_tit2">상품보기</h2>
             <div class="detail_image">

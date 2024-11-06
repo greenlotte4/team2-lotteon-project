@@ -56,7 +56,7 @@
     margin-top: 24px;
     gap: 22px;
 }
-.product_info > img {width: 353px; height: 211px;}
+.product_info > img {width: 380px; height: 380px;}
 
 .tb1 {width: 390px;}
 .tb1 tr {border-bottom: 1.5px solid #f2f2f2;}
@@ -68,15 +68,39 @@
     font-weight: 700;
 }
 .td_company > span:last-child{float: right;}
-
+#coupondl{
+    cursor: pointer;
+    color: #E60012;
+    border: 1px solid #E60012;
+    padding: 10px 10px;
+    border-radius: 15px;
+    width: 80px;
+    height: 30px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+#coupondl>.img{
+    display: inline-block; background: url('/images/ico_sprites.png') no-repeat -328px -140px #FFFFFF;
+    width: 26px;height: 24px; border: none; outline: none; zoom:0.5; padding-top: 2px
+}
 /* 상품 이름, 별점 */
-.prod_name > span{font-size: 16px;}
-.prod_name > a{color: #0b0bcf; text-decoration: underline;}
+.prod_name > .prod_name_span{font-size: 16px;}
+.prod_name > .box {display: flex ; height: 16px ; overflow: hidden; align-items: center; margin-top: 5px}
+.prod_name > .box > * {margin: 0 5px; padding-top:2px;}
+.prod_name > .box > .ratingBg{padding: 0 ;display: inline-block; background: url("/images/ico_rating_star.png") no-repeat 0 0;width: 84px;height: 16px;}
+.prod_name > .box > .ratingBg > .rating{display: inline-block; background: url("/images/ico_rating_star.png") no-repeat 0 -200px;width: 84px;height: 16px;}
+.prod_name > .box > a{display: inline-block ;height: 16px; line-height: 16px}
+.prod_name > .box > a > span {display: inline-block ;margin-top: -2px;height: 16px;}
+
 
 /* 가격 */
 .price > del{color: #7f7f7f; font-size: 16px;}
 .price > span:nth-child(2){font-size: 16px; color: #c00000;}
 .price > span:last-child{font-size: 20px;}
+.price > .cardEvent{display:inline-block;background: url('/images/ico_sprites.png') no-repeat -54px -22px;width: 25px;height: 17px;zoom:0.8;}
+.price > .install{display:inline-block;background: url('/images/ico_sprites.png') no-repeat -133px 0;width: 21px;height: 15px;zoom:0.8; margin-left: 2px}
 
 /* 배송비 관련 */
 .delivery > :nth-child(1){font-size: 16px; color: #538cd5;}
@@ -88,8 +112,12 @@
 .tb1 .qty {font-size: 16px; margin-right: 10px;}
 
 /* 수량 */
-.count{width: 40px; height: 25px; font-size: 16px;}
 .count_qty{padding: 10px;}
+.qty{display: inline-block; width: 30px;}
+#qty{width: 160px}
+#qty>span{display: inline-block;}
+.count{width: 40px; height: 30px; font-size: 15px; text-align: right;font-weight: 400; padding: 5px; border-radius: 0;border: solid #bfbfbf; border-width: 1px 0;}
+#qty > .decrement, #qty > .increment {width: 30px;height: 30px; margin: 0;font-size: 15px; gap: 0;color: #666; box-sizing: border-box;}
 
 /* 총 금액 */
 .total{text-align: right;}
@@ -100,9 +128,10 @@
 #wrap .buttons {display: flex;}
 #wrap .cart, .btnorder {width: 184px; height: 35px; margin-right: 12px; border: none; color: #ffffff;  font-size: 16px;}
 #wrap .cart {background-color: #bfbfbf;}
-#wrap .btnorder > a{ display: inline-block; font-size: 16px; background-color: #558ed5; width: 184px; height: 35px; margin-right: 12px; border: none; color: #ffffff; line-height: 35px;}
+#wrap .btnorder > a{ display: inline-block; font-size: 16px; background-color: #E60012; width: 184px; height: 35px; margin-right: 12px; border: none; color: #ffffff; line-height: 35px;}
 
-.view_banner { width: auto; height: auto; margin: 0 auto;}
+.view_banner { width: 100%; height: 64px; }
+.view_banner img{float: right; width: 390px}
 
 /* 상품 디테일 이미지 */
 #wrap .sub_tit2, .sub_tit3, .sub_tit4{
@@ -113,6 +142,7 @@
     margin-top: 5px;
     border-bottom: 2px solid #D9D9D9;
 }
+#wrap .sub_tit2{margin-top: 20px;margin-bottom: 50px}
 .detail_image {
     margin: 0 auto;
     width: 816px;
