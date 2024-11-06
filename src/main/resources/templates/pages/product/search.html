@@ -39,12 +39,13 @@
                             <input type="hidden" name="sortBy" th:value="${sortBy}">
                             <button type="submit" class="btn_search">검색</button>
                         </form>
-                        <input onchange="updateSearchType(event, '판매자')" type="radio" name="additional">판매자
-                        <input onchange="updateSearchType(event, '설명')" type="radio" name="additional">설명
-<!--                        <input onchange="updateSearchType(event, '카테고리')" type="checkbox">카테고리-->
-                        <input th:value="${min}" oninput="updatePriceRange()" type="number" id="minPrice">
-                        <span>&#126;</span>
-                        <input th:value="${max}" oninput="updatePriceRange()" type="number" id="maxPrice">
+                        <div class="center-align-container">
+                            <input onchange="updateSearchType(event, '판매자')" type="radio" name="additional">판매자
+                            <input onchange="updateSearchType(event, '설명')" type="radio" name="additional">설명
+                            <input th:value="${min}" oninput="updatePriceRange()" type="number" id="minPrice">
+                            <span>&#126;</span>
+                            <input th:value="${max}" oninput="updatePriceRange()" type="number" id="maxPrice">
+                        </div>
                     </td>
                 </tr>
             </table> <!-- .tb_search-->
