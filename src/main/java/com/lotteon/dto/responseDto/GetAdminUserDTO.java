@@ -55,5 +55,9 @@ public class GetAdminUserDTO {
     private String lastLoginDate = "최근 로그인 기록 없음";
     private String  memEtc; // 기타 (회원 기타 정보입력)
 
+    // 추가 필드 (나의 설정)
+    private String  custBirth; // 생일
+
+
 
 }

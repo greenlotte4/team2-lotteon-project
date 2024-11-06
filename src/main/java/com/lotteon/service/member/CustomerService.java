@@ -3,6 +3,7 @@ package com.lotteon.service.member;
 import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.requestDto.PostCustSignupDTO;
 import com.lotteon.dto.requestDto.PostFindIdDto;
+import com.lotteon.dto.responseDto.GetAdminUserDTO;
 import com.lotteon.dto.responseDto.cartOrder.UserOrderDto;
 import com.lotteon.entity.member.Address;
 import com.lotteon.entity.member.AttendanceEvent;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.text.html.Option;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -201,4 +203,38 @@ public class CustomerService {
         }
         return customer.get().getMember().getMemUid();
     }
+
+    // 나의 설정 목록 출력
+    public Optional<GetAdminUserDTO> myInfo(Long id) {
+        Optional<Customer> optCust = customerRepository.findById(id);
+
+        if (optCust.isEmpty()) {
+            log.warn("Customer not found for id: " + id);
+            return Optional.empty();
+        }
+
+        Customer customer = optCust.get();
+        log.info("사용자 확인: " + customer.toString());
+
+        String[] addr = customer.getCustAddr().split("/");
+        log.info("주소 확인: " + Arrays.toString(addr));
+
+        GetAdminUserDTO dto = GetAdminUserDTO.builder()
+                .custId(customer.getId()) // 번호
+                .memUid(customer.getMember().getMemUid()) // 아이디
+                .custName(customer.getCustName()) // 이름
+                .custEmail(customer.getCustEmail()) // 이메일
+                .custHp(customer.getCustHp()) // 휴대폰
+                .custBirth(customer.getCustBirth()) // 생일
+                .custAddr1(addr[0]) // 우편
+                .custAddr2(addr[1]) // 기본
+                .custAddr3(addr[2]) // 상세
+                .build();
+
+        log.info("DTO 정보: " + dto);
+
+        return Optional.of(dto);
+    }
+
+
 }

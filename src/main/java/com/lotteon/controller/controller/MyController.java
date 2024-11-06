@@ -22,14 +22,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/my")
@@ -95,10 +93,27 @@ public class MyController {
 
         return "pages/my/coupon";
     }
+
+    // 나의 쇼핑정보 > 나의 설정
     @GetMapping("/info")
-    public String info(Model model) {
+    public String info(Model model,Authentication authentication) {
+        log.info("컨트롤러 접속 ");
+        MyUserDetails auth = (MyUserDetails) authentication.getPrincipal();
+        Long custId = auth.getUser().getCustomer().getId();
+        log.info("커스터머 아이디 "+custId);
+        Optional<GetAdminUserDTO> getCust = customerService.myInfo(custId);
+        if (getCust.isPresent()) {
+            model.addAttribute("cust", getCust.get());
+        } else {
+            // 예외 처리: 고객 정보가 없는 경우
+            log.warn("찾을 수 없는 id : " + custId);
+            model.addAttribute("errorMessage",
+                    "회원 정보를 찾을 수 없습니다.");
+        }
         return "pages/my/info";
     }
+
+    // 나의 쇼핑정보 > 나의 설정 end
 
     @GetMapping("/orders")
     public String order(Model model,

@@ -51,7 +51,4 @@ public interface  MemberRepository extends JpaRepository<Member, Long> {
     @Query("SELECT m FROM Member m JOIN m.customer c WHERE c.custHp = :custHp ORDER BY m.id DESC")
     Page<Member> findAllByCustHpOrderByIdDesc(@Param("custHp") String custHp, Pageable pageable);
 
-    //Page<Member> findAllByCustNameOrderByIdDesc(String keyword, Pageable pageable);
-    //Page<Member> findAllByCustEmailOrderByIdDesc(String keyword, Pageable pageable);
-    //Page<Member> findAllByCustHpOrderByIdDesc(String keyword, Pageable pageable);
 }

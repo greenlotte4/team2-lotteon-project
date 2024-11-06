@@ -46,6 +46,7 @@ public class AdminUserController {
         // active라는 속성에 "users" 값을 추가해서 뷰에 전달 (현재 활성화된 페이지나 섹션을 표시)
         model.addAttribute("active","users");
         Page<GetAdminUserDTO> cust2;
+
         if(searchType.equals("0")){
             cust2 = authService.selectCustAndGuestAll(page);
         } else {
@@ -54,7 +55,6 @@ public class AdminUserController {
 
         // 페이지 처리
         //Page<GetAdminUserDTO> cust2 = authService.selectCustAll2(page);
-
 
         // 2-1. 회원목록 모델에 담아서 뷰에서 보기
         model.addAttribute("customers", cust2);
@@ -70,9 +70,6 @@ public class AdminUserController {
         // 6. 관리자 회원목록 으로 이동
         return "pages/admin/user/user";
     }
-
-
-
 
     // 2. 관리자 포인트 관리
     @GetMapping("/point")

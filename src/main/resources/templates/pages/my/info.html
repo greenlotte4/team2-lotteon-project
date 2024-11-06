@@ -4,92 +4,83 @@
 <main style="margin-top: 230px">
   <div id="my">
     <th:block th:replace="layout/my/aside.html"></th:block>
-    <main>
+<!--    <main>-->
       <th:block th:replace="layout/my/banner.html"></th:block>
     <section>
       <h3>나의설정</h3>
 
       <article>
-        <form>
-          <table border="0" class="myInfo">
-            <tr>
-              <th>사용자 ID</th>
-              <td>
-                <input type="text" disabled value="user123" />
-              </td>
-            </tr>
-            <tr>
-              <th>비밀번호</th>
-              <td>
-                <input type="button" value="수정하기" class="btn" />
-              </td>
-            </tr>
-            <tr>
-              <th>이름</th>
-              <td>
-                <input type="text" disabled value="홍길동" />
-              </td>
-            </tr>
-            <tr>
-              <th>생년월일</th>
-              <td>
-                <input type="text" disabled value="1990년 12월 30일" />
-              </td>
-            </tr>
-            <tr>
-              <th>Email</th>
-              <td>
-                <input type="text" name="email" /> @
-                <input type="text" name="email" />
-                <select>
-                  <option selected>직접입력</option>
-                  <option>gmail.com</option>
-                  <option>naver.com</option>
-                  <option>daum.net</option>
-                </select>
-                <input type="button" class="btn" value="수정하기" />
-              </td>
-            </tr>
-            <tr>
-              <th>휴대폰</th>
-              <td>
-                <input type="number" max="999" /> -
-                <input type="number" max="9999" /> -
-                <input type="number" max="9999" />
-                <input type="button" class="btn" value="수정하기" />
-              </td>
-            </tr>
-            <tr>
-              <th>주소</th>
-              <td>
-                <input
-                        name="zip"
-                        type="text"
-                        placeholder="우편번호"
-                        readonly
-                />
-                <input type="button" value="주소검색" class="btn" /><br />
-                <input
-                        name="addr1"
-                        class="addr"
-                        type="text"
-                        placeholder="기본주소"
-                        readonly
-                /><br />
-                <input
-                        name="addr2"
-                        class="addr"
-                        type="text"
-                        placeholder="상세주소"
-                />
-              </td>
-            </tr>
-            <tr>
-              <th>탈퇴</th>
-              <td>
-                <input type="button" class="btn quit" value="탈퇴하기" />
-              </td>
-            </tr>
+        <form th:action="@{/my/info}" method="post">
+          <table border="0" class="myInfo" style="width: 700px;">
+<!--            <th:block th:each="cust : ${customer}">-->
+              <tr>
+                <th>사용자 ID</th>
+                <td>
+                  <input type="text" id="uid" class="uid" name="uid" th:value="${cust.memUid}" disabled/>
+                </td>
+              </tr>
+              <tr>
+                <th>비밀번호</th>
+                <td>
+                  <a th:href="@{/my/info}" class="btn">수정하기</a>
+<!--                  <input type="button" value="수정하기" class="btn" />-->
+                </td>
+              </tr>
+              <tr>
+                <th>이름</th>
+                <td>
+<!--                  <input type="text" disabled value="홍길동" />-->
+                  <input type="text" disabled th:text="${cust.memUid}" />
+                </td>
+              </tr>
+              <tr>
+                <th>생년월일</th>
+                <td>
+<!--                  <input type="text" disabled value="1990년 12월 30일" />-->
+                  <input type="text" disabled th:value="${cust.custBirth}" />
+                </td>
+              </tr>
+              <tr>
+                <th>Email</th>
+                <td>
+                  <input type="text" name="email" /> @
+                  <input type="text" name="email" />
+                  <select>
+                    <option selected>직접입력</option>
+                    <option>gmail.com</option>
+                    <option>naver.com</option>
+                    <option>daum.net</option>
+                  </select>
+                  <input type="button" class="btn" value="수정하기" />
+                </td>
+              </tr>
+              <tr>
+                <th>휴대폰</th>
+                <td>
+                  <input type="number" max="999" /> -
+                  <input type="number" max="9999" /> -
+                  <input type="number" max="9999" />
+                  <input type="button" class="btn" value="수정하기" />
+                </td>
+              </tr>
+              <tr>
+                <th>주소</th>
+                <td>
+<!--                  <input name="zip" type="text" placeholder="우편번호" readonly />-->
+                  <input name="zip" type="text" placeholder="우편번호" th:value="${cust.custAddr1}" readonly />
+
+                  <input type="button" value="주소검색" class="btn" /><br />
+                  <input name="addr1" class="addr" type="text" placeholder="기본주소" th:value="${cust.custAddr2}" readonly /><br />
+                  <input name="addr2" class="addr" type="text" placeholder="상세주소" th:value="${cust.custAddr3}" />
+                </td>
+              </tr>
+              <tr>
+                <th>탈퇴</th>
+                <td>
+                  <input type="button" class="btn quit" value="탈퇴하기" />
+                </td>
+              </tr>
+<!--            </th:block>-->
           </table>
           <p><input type="submit" class="btn submit" value="수정하기" /></p>
         </form>

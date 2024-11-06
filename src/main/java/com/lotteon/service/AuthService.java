@@ -98,18 +98,9 @@ public class AuthService implements UserDetailsService {
                 cust.add(dto);
                 log.info("거짓말 이거 사용 안 한다구??" + dto);
             }else {
-                GetAdminUserDTO dto = GetAdminUserDTO.builder()
-                        .custId(customer.getId()) // 번호
-                        .memUid(String.valueOf(customer.getMemUid())) // 아이디
-                        .custName(customer.getCustomer().getCustName()) // 이름
-                        .custEmail(customer.getCustomer().getCustEmail()) // 이메일
-                        .custHp(customer.getCustomer().getCustHp()) // 휴대폰
-                        .memRole(customer.getMemRole())
-                        .memRdate(customer.getMemRdate()) // 가입일
-                        .memState(String.valueOf(customer.getMemState())) // 상태
-                        //.custAddr3("소셜로그인유저입니다.")
-                        .build();
-                cust.add(dto);
+
+
+
             }
         });
         return cust;
