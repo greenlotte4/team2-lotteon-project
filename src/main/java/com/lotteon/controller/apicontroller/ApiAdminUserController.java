@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /*
      날짜 : 2024/10/25 (금)
@@ -25,7 +26,8 @@ import java.util.Optional;
      내용 : 관리자 회원목록 수정 API Controller 생성
      
      수정이력
-      - 2025/10/27 (일) 김민희 - 회원수정 팝업호출 기능 메서드 추가
+      - 2024/10/27 (일) 김민희 - 회원수정 팝업호출 기능 메서드 추가
+      - 2024/11/06 (수) 김주경 - 선택수정 기능 메서드 추가
 
 */
 
@@ -84,17 +86,29 @@ public class ApiAdminUserController {
     }
 
 
-    // 2. 관리자 회원목록 선택삭제
-    @DeleteMapping("/user")
-    public ResponseEntity<?> deleteCust(@RequestBody List<Long> deleteCustIds){
-
-        Boolean success = authService.deleteCustsById(deleteCustIds); // 담을 물건 준비
+    // 2. 관리자 회원목록 선택수정
+    @PatchMapping("/select")
+    public ResponseEntity<?> modifyCustGrade(@RequestBody Map<String, List<?>> arrays) {
+        List<Long> custIds = ((List<?>) arrays.get("ids"))
+                .stream()
+                .map(id -> Long.valueOf(id.toString()))
+                .collect(Collectors.toList());
+        List<String> custGrades = (List<String>) arrays.get("grades");
+        Boolean success = authService.modifyCustsGradeById(custIds,custGrades); // 담을 물건 준비
         log.info(success);
 
-        Map<String, Object> response = new HashMap<>(); //택배 상자 준비
-        response.put("success", success); // 물건 담기
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", success);
 
-        return ResponseEntity.ok(response); // 배송 ㄱㄱ
+        return ResponseEntity.ok(response);
     }
 
+    @PatchMapping("/{id}/{state}")
+    public ResponseEntity<?> modifyCustState(@PathVariable("id") Long id, @PathVariable("state") String state) {
+        Boolean success = authService.modifyCustStateById(id,state);
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", success);
+
+        return ResponseEntity.ok(response);
+    }
 }

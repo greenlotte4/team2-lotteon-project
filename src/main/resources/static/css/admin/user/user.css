@@ -117,12 +117,26 @@ input:focus{outline: none;}
 
 
 /* 테이블1 회원목록 */
+
 .tb1 {
+    table-layout: fixed;
     box-sizing: border-box;
     border-collapse: collapse;
     border-top: 1px solid #a6a6a6;
     width: 100%;
 }
+.tb1 tr > th:nth-of-type(1){ width:  5%;}/* 체크박스 */
+.tb1 tr > th:nth-of-type(2){ width:  5%;}/* 번호 */
+.tb1 tr > th:nth-of-type(3){ width: 18%;}/* 아이디 */
+.tb1 tr > th:nth-of-type(4){ width:  8%;}/* 이름 */
+.tb1 tr > th:nth-of-type(5){ width:  5%;}/* 성별 */
+.tb1 tr > th:nth-of-type(6){ width: 10%;}/* 등급 */
+.tb1 tr > th:nth-of-type(7){ width: 10%;}/* 포인트 */
+.tb1 tr > th:nth-of-type(8){ width: 18%;}/* 이메일 */
+.tb1 tr > th:nth-of-type(9){ width: 13%;}/* 휴대폰번호 */
+.tb1 tr > th:nth-of-type(10){ width: 8%;}/* 가입일 */
+.tb1 tr > th:nth-of-type(11){ width: 5%;}/* 상태 */
+.tb1 tr > th:nth-of-type(12){ width: 5%;}/* 관리 */
 
 .tb1 th {
     height: 50px;
@@ -139,9 +153,8 @@ input:focus{outline: none;}
     font-size: 12px;
     border-bottom: 2px solid #e8e8e8;
     height: 66px;
-    text-overflow: ellipsis; /* 영역 넘어가면 "..." 표기 */
-    overflow: hidden;
 }
+.tb1 tr>td:nth-of-type(2), .tb1 tr>td:nth-of-type(3), .tb1 tr>td:nth-of-type(7), .tb1 tr>td:nth-of-type(8) {white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
 
 .tb1 > tbody > td > input[type="text"] {cursor: pointer;}
 
@@ -160,21 +173,27 @@ input:focus{outline: none;}
 /* tb1 회원 상태 (memState 정지,정상,휴면,탈퇴) */
 .memState {color: #00b050; cursor: pointer;}
 
-.stop{color:#67738e;} /* 정지 */
-.basic{color:#4075ff;} /* 정상 */
-.sleep{color:#b4c0d3;} /* 휴면 */
-.reave{color:#eb413f;} /* 탈퇴 */
+.memState.stop{color:#67738e;} /* 정지 */
+.memState.basic{color:#4075ff;} /* 정상 */
+.memState.sleep{color:#b4c0d3;} /* 휴면 */
+.memState.reave{color:#eb413f;} /* 탈퇴 */
+
 
 /* 회원관리 7% */
 .td-admin input{
     border: none;
-    background-color: white;
+    color: white;
     cursor: pointer;
-
+    margin: 2px;
+    padding: 2px 6px;
+    background: rgba(48, 54, 68, 0.5);
+    border-radius: 3px;
     &:hover {
         opacity: 0.8;
     }
 }
+.td-admin > .stop{background: rgba(0, 176, 80, 0.7)}
+.td-admin > .basic{background: rgba(235, 65, 63, 0.7)}
 
 /* 삭제, 등록 버튼 */
 .btns {

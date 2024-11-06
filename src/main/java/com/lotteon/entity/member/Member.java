@@ -106,6 +106,7 @@ public class Member {
         this.memState = "leave";
     }
 
+    public void updateMemberState(String state) {this.memState = state;}
 
     public void updatePassword(String encode) {
         this.memPwd = encode;

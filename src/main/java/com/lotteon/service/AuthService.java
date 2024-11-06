@@ -36,6 +36,7 @@ import java.util.Optional;
       - 2025/10/27 (일) 김민희 - 회원정보조회 팝업호출 기능 메서드(popCust) 추가
       - 2025/10/28 (월) 김민희 - 회원수정 기능 메서드 추가
       - 2025/10/31 (목) 김민희 - 회원수정 기능 메서드 추가
+      - 2024/11/06 (수) 김주경 - 선택수정 기능 메서드 추가
 */
 
 @Log4j2
@@ -241,17 +242,37 @@ public class AuthService implements UserDetailsService {
 
 
 
-    // 4. 관리자 회원목록 선택삭제 기능
-    public boolean deleteCustsById(List<Long> deleteCustIds) {
+    // 4. 관리자 회원목록 선택수정 기능
+    public boolean modifyCustsGradeById(List<Long> ids, List<String> grades) {
         try{
-            for (Long deleteCustId : deleteCustIds) {
-                memberRepository.deleteById(deleteCustId);
+            int size = ids.size();
+            for (int i = 0 ; i<size ; i++) {
+                Optional<Customer> optCust = customerRepository.findById(ids.get(i));
+                if(optCust.isPresent()){
+                    Customer cust = optCust.get();
+                    cust.setGrade(grades.get(i));
+                }
             }
             return true;
         }catch (Exception e) {
             log.error(e.getMessage());
             return false;
         }
+    }
+
+    public boolean modifyCustStateById(Long id, String state) {
+        try {
+            Optional<Member> optMember = memberRepository.findByCustomer_id(id);
+            if(optMember.isPresent()){
+                Member member = optMember.get();
+                member.updateMemberState(state);
+                return true;
+            }
+        }catch (Exception e) {
+            log.error(e.getMessage());
+            return false;
+        }
+        return false;
     }
 
 

@@ -8,6 +8,7 @@
      수정이력
       - 2024/10/27 (일) 김민희 - 회원수정 팝업호출 기능 추가
       - 2024/11/03 (일) 김민희 - 검색 기능 추가
+      - 2024/11/06 (수) 김주경 - 선택수정 기능 추가
 -->
 <body>
 <header th:replace="layout/admin/header.html"></header>
@@ -39,44 +40,30 @@
             <div class="header-gubun-bottom"></div>
 
             <table class="tb1 user">
-                <colgroup>
-                    <col style="width: 5%;">
-                    <col style="width: 5%;">
-                    <col style="width: 12%;">
-                    <col style="width: 7%;">
-                    <col style="width: 5%;">
-                    <col style="width: 12%;">
-                    <col style="width: 5%;">
-                    <col style="width: 10%;">
-                    <col style="width: 12%;">
-                    <col style="width: 12%;">
-                    <col style="width: 8%;">
-                    <col style="width: 7%;">
-                </colgroup>
                 <thead>
                     <tr>
                         <th class="checkbox">
-                            <input type="checkbox" id="allCheckbox">
+                            <input type="checkbox" class="selectall">
                         </th>
-                        <th class="" >번호</th>
-                        <th class="">아이디</th>
-                        <th class="">이름</th>
-                        <th class="">성별</th>
-                        <th class="">등급</th>
-                        <th class="">포인트</th>
-                        <th class="">이메일</th>
-                        <th class="">휴대폰</th>
-                        <th class="">가입일</th>
-                        <th class="">상태</th>
-                        <th class="">관리</th>
+                        <th>번호</th>
+                        <th>아이디</th>
+                        <th>이름</th>
+                        <th>성별</th>
+                        <th>등급</th>
+                        <th>포인트</th>
+                        <th>이메일</th>
+                        <th>휴대폰</th>
+                        <th>가입일</th>
+                        <th>상태</th>
+                        <th>관리</th>
                     </tr>
                 </thead>
                 <tbody>
                 <th:block th:each="cust : ${customers}">
-                    <tr th:id="${'mem'+cust.custId}">
+                    <tr th:id="${'mem'+cust.custId}" th:data-id="${cust.custId}">
                        <!-- 번호, 아이디, 이름, 성별, 등급, 포인트, 이메일, 휴대폰, 가입일, 상태, 관리 -->
                         <th class="checkbox">
-                            <input type="checkbox" id="allCheckbox2">
+                            <input type="checkbox" class="select">
                         </th>
                         <td th:text="${cust.custId}" class="custId">번호</td>
 
@@ -84,7 +71,7 @@
                         <td th:text="${cust.custName}" class="custName">이름</td>
                         <td th:text="${cust.custGender?'남':'여'}" class="custGender">성별</td>
 
-                        <td class="custGrade"><!- 사용자 등급 (VVIP, VIP, GOLD, SILVER, FAMILY) -->
+                        <td class="custGrade"> <!-- 사용자 등급 (VVIP, VIP, GOLD, SILVER, FAMILY) -->
                             <select name="search" class="grade custgrade custGrade" th:data-id="${cust.memUid}">
                                 <option value="VVIP" th:selected="${cust.custGrade}=='VVIP'">VVIP</option>
                                 <option value="VIP" th:selected="${cust.custGrade}=='VIP'">VIP</option>
@@ -108,15 +95,9 @@
                         <td th:if="${cust.memState == 'reave'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="memState reave">탈퇴</td>
 
                         <td class="td-admin">
-                            <input type="button" value="[ 수정 ]" th:data-id="${cust.custId}" onclick="openCustUpdatePopup(event)">
-                            <input type="button" value="[ 중지 ]">
+                            <input type="button" value="수정" th:data-id="${cust.custId}" onclick="openCustUpdatePopup(event)">
+                            <input type="button" th:value="${cust.memState eq 'stop'?'재개':'중지'}" th:data-id="${cust.custId}" th:data-state="${cust.memState}" th:class="'state-modify '+${cust.memState}">
                         </td>
-<!--                        <td class="td-admin">-->
-<!--                            <input type="button" value="[ 수정 ]" th:data-id="${cust.custId}"-->
-<!--                                   th:onclick="${cust.memRole == 'customer'} ? 'openCustUpdatePopup(event, 1)' : 'alert(\"게스트 사용자는 수정할 수 없습니다.\")">-->
-<!--                            <input type="button" value="[ 중지 ]">-->
-<!--                        </td>-->
-
 
                     </tr>
                 </th:block>
@@ -124,7 +105,7 @@
             </table><!-- .tb1 .user-->
 
             <div class="btns">
-                <button class="delete-btn">선택수정</button>
+                <button class="modify-btn">선택수정</button>
             </div><!-- .btns -->
 
             <!-- 페이지 이동 -->
@@ -206,7 +187,7 @@
                         </tr>
                         <tr>
                             <th>등급</th>
-                            <td><input name="custGrade" value="${data.custGrade}" class="custGrade" readonly>
+                            <td colspan="3"><input name="custGrade" value="${data.custGrade}" class="custGrade" readonly>
                                 <span>등급 수정은 회원 목록에서 선택수정 가능</span>
                             </td>
                         </tr>
@@ -372,7 +353,114 @@
     }
 
     // 선택 수정
-    // 수정 버튼 클릭 시
+    document.addEventListener('click',function (e){
+        const selectall = document.querySelector('.selectall');
+        const checkboxes = document.querySelectorAll('.select');
 
+        if (e.target.classList.contains('selectall')) {selectAll(e.target);}
+        if (e.target.classList.contains('select')) {updateSelectAllCheckbox();}
+
+        function selectAll(selectAllCheckbox) {
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+        }
+
+        function updateSelectAllCheckbox() {
+            const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+            selectall.checked = allChecked;
+        }
+
+        if (e.target.classList.contains('state-modify')) {
+            e.preventDefault();
+            e.target.disabled = true; // 버튼 비활성화 (fetch 중복 방지)
+
+            const confirmMsg = e.target.value;
+
+            if(!confirm(`정말 해당 계정을 ${confirmMsg}하시겠습니까?`)){return;}
+
+            const id = e.target.dataset.id;
+            const state = e.target.dataset.state;
+
+            const changeState = state !== 'stop' ? 'stop' : 'basic';
+            fetch(`/admin/user/${id}/${changeState}`, {
+                method: 'PATCH'
+            })
+                .then(resp => resp.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(`성공적으로 ${confirmMsg}되었습니다.`);
+                        location.href="";
+                    } else {
+                        alert('수정에 실패했습니다.');
+                    }
+                })
+                .catch(err => {
+                    console.error('Error:', err);
+                    alert('회원 상태 수정 중 오류가 발생했습니다.');
+                })
+                .finally(() => {
+                    e.target.disabled = false; // 버튼 비활성화 (fetch 중복 방지)
+                });
+
+
+        }
+            // 선택수정 버튼 클릭 시
+        if (e.target.classList.contains('modify-btn')) {
+            e.preventDefault();
+
+            e.target.disabled = true; // 버튼 비활성화 (fetch 중복 방지)
+            const selectedCheckboxes = document.querySelectorAll('.select:checked');
+            let selectedIds = [];
+            let changedGrade = [];
+
+            for (let checkbox of selectedCheckboxes) {
+                const row = checkbox.closest('tr');
+                const memberId = row.dataset.id;
+                const chngGrd = row.querySelector('.grade').value;
+                console.log(memberId);
+                console.log(chngGrd);
+                selectedIds.push(+memberId);
+                changedGrade.push(chngGrd);
+            }
+
+            if (selectedIds.length === 0) {
+                alert('수정할 회원을 선택하세요.');
+                return;
+            }
+            const formData = new FormData();
+            formData.append("ids",selectedIds);
+            formData.append("grades",changedGrade);
+            console.log('Form Data:', ...formData.entries()); // 폼 데이터 출력
+
+            fetch('/admin/user/select', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "ids": selectedIds,
+                    "grades": changedGrade
+                })
+            })
+                .then(resp => resp.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('수정되었습니다.');
+                        location.href="";
+                    } else {
+                        alert('수정에 실패했습니다.');
+                    }
+
+                })
+                .catch(err => {
+                    console.error('Error:', err);
+                    alert('수정 중 오류가 발생했습니다.');
+                })
+                .finally(() => {
+                    e.target.disabled = false; // 버튼 비활성화 (fetch 중복 방지)
+                });
+        }
+    })
 
 </script>

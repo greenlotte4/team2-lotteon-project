@@ -84,6 +84,11 @@ public class Customer {
         this.custAddr = dto.getCustAddr1() + "/" + dto.getCustAddr2() + "/" + dto.getCustAddr3();
     }
 
+    public void setGrade(String grade){
+        this.custGrade = grade;
+    }
+
+
 }
 
 
