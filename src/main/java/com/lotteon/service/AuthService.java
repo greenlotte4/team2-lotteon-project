@@ -298,13 +298,14 @@ public class AuthService implements UserDetailsService {
         Page<Member> members;
 
         if(searchType.equals("memUid")){  // 아이디
-            members = memberRepository.findAllByMemUidOrderByIdDesc(keyword,pageable);
+            List<String> roles = Arrays.asList("customer", "guest");
+            members = memberRepository.findAllByMemUidContainsAndMemRoleInOrderByIdDesc(keyword,roles,pageable);
         } else if (searchType.equals("custName")){ // 이름
-            members = memberRepository.findAllByCustNameOrderByIdDesc(keyword,pageable);
+            members = memberRepository.findAllByCustomer_CustNameContainsOrderByIdDesc(keyword,pageable);
         } else if (searchType.equals("custEmail")){ // 이메일
-            members = memberRepository.findAllByCustEmailOrderByIdDesc(keyword,pageable);
+            members = memberRepository.findAllByCustomer_CustEmailContainsOrderByIdDesc(keyword,pageable);
         } else { // 휴대폰
-            members = memberRepository.findAllByCustHpOrderByIdDesc(keyword,pageable);
+            members = memberRepository.findAllByCustomer_CustHpContainsOrderByIdDesc(keyword,pageable);
         }
 
         log.info("연화를 찾아라 2"+members.getContent());

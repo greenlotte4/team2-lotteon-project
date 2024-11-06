@@ -89,10 +89,11 @@
 
 
                         <!-- 회원상태 (4가지 - 정상, 중지, 휴면, 탈퇴) -->
+                        <td th:if="${cust.memState == 'start'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="memState start">-</td>
                         <td th:if="${cust.memState == 'stop'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="memState stop">중지</td>
                         <td th:if="${cust.memState == 'basic'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="memState basic">정상</td>
                         <td th:if="${cust.memState == 'sleep'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="memState sleep">휴면</td>
-                        <td th:if="${cust.memState == 'reave'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="memState reave">탈퇴</td>
+                        <td th:if="${cust.memState == 'leave'}" th:data-id="${cust.memState}" onclick="stateChanger(event)" class="memState leave">탈퇴</td>
 
                         <td class="td-admin">
                             <input type="button" value="수정" th:data-id="${cust.custId}" onclick="openCustUpdatePopup(event)">

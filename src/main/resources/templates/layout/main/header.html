@@ -184,15 +184,28 @@
 
     function openRelated(){
         const related = document.getElementById('related-box')
+        const search = document.getElementById('search2')
         const relatedSearch = document.querySelector('.related-search-inp')
-        related.style.display='block'
+        related.style.display='block';
+        search.classList.add("open");
         relatedSearch.focus()
     }
 
     function closeRelated(){
         const related = document.getElementById('related-box')
+        const search = document.getElementById('search2')
+        search.classList.remove("open");
         related.style.display='none'
     }
+    document.addEventListener('click', function(event) {
+        const related = document.getElementById('related-box');
+        const search = document.getElementById('search2');
+
+        if (!related.contains(event.target) && !search.contains(event.target)) {
+            search.classList.remove('open');
+            related.style.display='none'
+        }
+    });
 
     document.getElementById("search2").addEventListener("input", function() {
         clearTimeout(timer);  // 이전 타이머를 초기화하여 중복 요청 방지

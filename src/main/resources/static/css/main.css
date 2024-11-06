@@ -4,7 +4,7 @@
      내용 : 메인(index) 레이아웃 css 생성
 
      수정이력
-      - 2025/10/30 (수) 김민희 : 마이페이지, gnb 메뉴, 실시간 검색어 수정 (myTool, menu-box, search-slider)
+      - 2024/10/30 (수) 김민희 : 마이페이지, gnb 메뉴, 실시간 검색어 수정 (myTool, menu-box, search-slider)
 */
 
 /* reset: 실시간 검색어 ico 수평 설정 */
@@ -34,19 +34,17 @@
 
 /* 검색 bar */
 #headerIn .search2{position: absolute; top: 30px; right: 31%; margin-left: -175px; transition: all 0.5s; padding-top: 34px}
-#headerIn .search2 input{width: 368px; height: 44px; text-indent: 13px; border-radius: 34px; border: 2.5px solid #ef2a23; background-color: #fff; text-overflow: ellipsis; /*  검색 칸 사이즈 초과시 ... 처리  */ }
+#headerIn .search2 input{width: 460px;height: 44px;text-indent: 13px;border-radius: 21px;border: 2.5px solid #ef2a23;background-color: #fff;text-overflow: ellipsis;}
+#headerIn .search2 input.open{border-radius: 21px 21px 0 0; border-bottom: 1px solid #F2F2F2;}
 #headerIn .search2 .ico_sch img{position: absolute; top: 10px; right: 26px; padding-top: 39px;}
 
 /* 연관검색어 */
-.related-search-box{position: absolute; top: 117px; left: 415px; width: 461px; background-color: white;
-padding: 0 31px; padding-bottom: 30px; z-index: 1000; display: none; border: 1px solid #c1c1c1;
-    border-radius: 19px; color: #484848;}
-
-.related-search-box h4 {margin-top: 30px;}
+.related-search-box{position: absolute;top: 108px;left: 361px;width: 460px; background-color: white;padding: 0 20px 20px; z-index: 1000; display: none;color: #484848;border-radius: 0 0 21px 21px;border: 2.5px solid #ef2a23;border-top: none; min-height: 150px}
+.related-search-box h4 {margin-top: 10px;font-size: 14px;}
 .related-search-box span {margin-left: 10px;min-width: 60px;display: inline-block;border:1px solid #828282; margin-top: 10px;border-radius: 5px;text-align: center; cursor: pointer;}
 .related-search-box .related-search-inp{width: 600px;height: 44px;text-indent: 13px;border-radius: 34px;border: 2.5px solid #ef2a23;background-color: #fff;text-overflow: ellipsis;}
 .related-search-box .related-search-ico{position: absolute;top: -25px;right: 90px;padding-top: 39px;}
-.related-search-box .close-related {position: absolute;right: 35px;font-size: 16px;top: 13px; cursor:pointer}
+.related-search-box .close-related {position: absolute;right: 20px;font-size: 14px;top: 10px;cursor: pointer;}
 
 /* 마이롯데, 장바구니, 나의 찜 */
 #header .myTool {display: flex; gap: 25px; justify-content: flex-end; position: absolute; top: 80px; right:0;}

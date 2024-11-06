@@ -120,18 +120,16 @@ body{height: 100vh;}
 #my ul.notice > li { padding-left: 20px; color: #777; line-height: 17px; font-size: 14px; font-weight: 400;}
 
 /* 나의설정 테이블 */
-#my table.user{background: #DCE6F2; border: 0.5px solid #BFBFBF; table-layout: fixed;}
-#my table.user tr:nth-of-type(1){height: 17px;}
-#my table.user tr:nth-of-type(2){height: 105px;}
-#my table.user tr:nth-of-type(3){height: 17px;}
-#my table.user div{display: flex; justify-content: space-between;}
-#my table.user b{font-size: 16px;}
-#my table.user a[href]{text-decoration: underline; color: #0070C0;}
-#my table.user td{border-left: #BFBFBF 1px solid; border-width: 0 0 0 1px; text-align: left; padding: 0 20px;}
-#my table.user p{ color: #808080; text-align: left; box-sizing: border-box; margin-top: 10px;}
+#my section.user {display: flex; justify-content: space-between; padding: 20px}
+#my section.user > a > article {border: 0.5px solid #BFBFBF; text-align: left; padding: 50px 20px; height: 130px; width: 33%; border-radius: 5px; display: flex; flex-direction: column; justify-content: center}
+#my section.user > a > article > div{display: flex; justify-content: space-between;}
+#my section.user b{font-size: 16px;}
+#my section.user a[href]{text-decoration: underline; color: #0070C0;}
+#my section.user p{ color: #808080; text-align: left; box-sizing: border-box; margin-top: 10px;}
+#my section.user > a > article:hover{border: 0.5px solid #808080;}
 
 #my table.myInfo{width: 100%;height: auto;border: 1px solid #000000; border-width: 0.4px 0 0.4px 0 ; margin-top: 6px;border-collapse: collapse;}
-#my table.myInfo  * {font-family: '돋움';color: #444; text-align: left;}
+#my table.myInfo  * {font-family: '돋움', serif;color: #444; text-align: left;}
 #my table.myInfo th {padding: 6px;background-color: #F2F2F2;box-sizing: border-box;width: 150px; font-weight: 400; padding-left: 20px; vertical-align: top; padding-top: 15px;}
 #my table.myInfo td {padding: 5px 10px;box-sizing: border-box;overflow: hidden; font-size: 14px;}
 
@@ -145,6 +143,7 @@ body{height: 100vh;}
 #my table.myInfo .quit{background-color: #C00000; color: #FFF; border: none;}
 #my form>p{display: flex; justify-content: center;}
 #my form>p>input.submit{background: #558ED5; color: #FFF; margin-top: 20px; border: none; text-align: center; width: 200px; height: 40px;}
+
 
 
 /* 페이징 */

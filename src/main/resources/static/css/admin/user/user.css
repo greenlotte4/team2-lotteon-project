@@ -176,7 +176,7 @@ input:focus{outline: none;}
 .memState.stop{color:#67738e;} /* 정지 */
 .memState.basic{color:#4075ff;} /* 정상 */
 .memState.sleep{color:#b4c0d3;} /* 휴면 */
-.memState.reave{color:#eb413f;} /* 탈퇴 */
+.memState.leave{color:#eb413f;} /* 탈퇴 */
 
 
 /* 회원관리 7% */

@@ -163,32 +163,30 @@
       </article>
 
       <h3>나의설정</h3>
-      <article>
-        <table class="user">
-          <tr>
-            <td colspan="3"></td>
-          </tr>
-          <tr>
-            <td>
-              <div><b>기본배송지 설정</b> <a href="#">변경</a></div>
+      <article class="user-settings">
+        <section class="user">
+          <a th:href="@{/my/address}">
+            <article>
+              <div><b>기본배송지 설정</b> <a>변경</a></div>
               <p class="addr1">부산광역시 부산진구 대연동 120</p>
               <p class="addr2">한빛빌딩 10층</p>
-            </td>
-            <td>
-              <div><b>Email 설정</b> <a href="#">변경</a></div>
+            </article>
+          </a>
+          <a th:href="@{/my/info}">
+            <article>
+              <div><b>Email 설정</b> <a>변경</a></div>
               <p>abc123@naver.com</p>
               <p class="lastUpdate">(최종수정일 2021-12-10)</p>
-            </td>
-            <td>
-              <div><b>휴대폰 설정</b> <a href="#">변경</a></div>
+            </article>
+          </a>
+          <a th:href="@{/my/info}">
+            <article>
+              <div><b>휴대폰 설정</b> <a>변경</a></div>
               <p>010-1234-1001</p>
               <p class="lastUpdate">(최종수정일 2021-12-10)</p>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="3"></td>
-          </tr>
-        </table>
+            </article>
+          </a>
+        </section>
       </article>
     </section>
     </main>

@@ -40,15 +40,12 @@ public interface  MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findBySeller_SellCompany(String company);
 
     // 검색 기능 (아이디, 이름, 이메일, 휴대폰)
-    Page<Member> findAllByMemUidOrderByIdDesc(String keyword, Pageable pageable);
+    Page<Member> findAllByMemUidContainsAndMemRoleInOrderByIdDesc(String keyword, List<String> roles, Pageable pageable);
 
-    @Query("SELECT m FROM Member m JOIN m.customer c WHERE  c.custName like :custName ORDER BY m.id DESC")
-    Page<Member> findAllByCustNameOrderByIdDesc(@Param("custName") String custName, Pageable pageable);
+    Page<Member> findAllByCustomer_CustNameContainsOrderByIdDesc(String custName, Pageable pageable);
 
-    @Query("SELECT m FROM Member m JOIN m.customer c WHERE c.custEmail = :custEmail ORDER BY m.id DESC")
-    Page<Member> findAllByCustEmailOrderByIdDesc(@Param("custEmail") String custEmail, Pageable pageable);
+    Page<Member> findAllByCustomer_CustEmailContainsOrderByIdDesc(String custEmail, Pageable pageable);
 
-    @Query("SELECT m FROM Member m JOIN m.customer c WHERE c.custHp = :custHp ORDER BY m.id DESC")
-    Page<Member> findAllByCustHpOrderByIdDesc(@Param("custHp") String custHp, Pageable pageable);
+    Page<Member> findAllByCustomer_CustHpContainsOrderByIdDesc(String custHp, Pageable pageable);
 
 }
