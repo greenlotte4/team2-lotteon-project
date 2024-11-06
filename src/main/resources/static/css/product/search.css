@@ -1,152 +1,216 @@
-@charset "UTF-8";
-
-*{margin: 0; padding:0; font-family: "Inter", sans-serif; font-size: 12px; font-weight: 400;}
-html{color:#111; position:relative;}
-html, body{height:100%; }
-body{font-size:12px; line-height:18px; font-family: 'Noto Sans KR', sans-serif;}
-a, address, blockquote, br, fieldset, legend, label, form, input, select, textarea, button, cite, code, dl, dt, dd, h1, h2, h3, h4, h5, h6, p, div, iframe, ul, ol, li, hr, img {margin: 0; padding: 0; outline:none;}
-a{color:#111; text-decoration: none;}
-img{border:none; vertical-align: top;}
-ul, ol{list-style:none;}
-address{font-style: normal;}
-/* clearfix */
-.cf{}
-.cf::after {content: ""; display: block; clear: both;}
-
-/* hyper link */
-#wrap a, a:link, a:visited, a:active, a:hover{text-decoration: none; color: inherit;}
-
-/* input outline */
-#wrap input:active{outline: none;}
-#wrap input:focus{outline: none;}
-
-#wrap{
-    display: flex;
-    justify-content: center;
-    gap: 6px;
+:root {
+    --secondary: #666666;
+    --highlight: #d9534f;
+    --background: #ffffff;
+    --product-list-background: #fdfdfd;
+    --card-background: #ffffff;
+    --text-color: #333333;
+    --hover-background: #d9534f;
+    --card-shadow: rgba(0, 0, 0, 0.06);
+    --primary-color: #333333;
+    --hover-underline-color: #ff4343;
+    --hover-text-color: #d9534f;
 }
 
-#wrap .aside{
-    display: flex;
-    flex-direction: column;
-    width: auto;
-    height: auto;
+body {
+    font-family: 'Roboto', sans-serif;
+    color: var(--text-color);
+    background-color: var(--background);
 }
 
-#wrap .aside1, .aside2{
-    background-color: #111;
-    padding: 20px;
-    margin-bottom: 10px;
-    width: 236px;
+/* 네비게이션 스타일 */
+.sub_tit {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fd0000;
+    margin-bottom: 5px;
 }
-
-#wrap #main {
-    width: 811px;
-    height: auto;
+.location {
+    font-size: 14px; /* 경로 글자 크기 */
+    color: #666666; /* 연한 회색 */
     margin-top: 10px;
 }
+.location span {
+    font-size: 14px;
+    color: var(--secondary);
+}
 
-#wrap #navi {
-    width: 800px;
-    height: auto;
+.location span::after {
+    content: ' > ';
+}
+
+.location span:last-child::after {
+    content: '';
+}
+
+/* 검색 결과 및 정렬 탭 */
+.tb_search th {
+    font-size: 18px;
+    color: var(--primary-color);
+}
+
+.tb_search .search {
+    width: 90%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.center-align-container {
     display: flex;
-    justify-content: space-between; /* 두 요소를 양 끝에 배치 */
-    align-items: center;
-    border-bottom: 2px solid #000000;
-    margin: 0 auto;;
-}
-
-#wrap .sub_tit {
-   font-size: 16px;
-   font-weight: 700;
-   margin-left: 3px;
-   margin-bottom: 8px;
-   margin-top: 5px;
-}
-/* 로케이션 */
-#wrap .location > span::after{content: ' \003E'; }
-#wrap .location > span:last-of-type{font-weight: 700;}
-#wrap .location > span:last-of-type:after{content:none;}
-
-/* 검색창 */
-#wrap .tb_search {width: 768px; height: 134px; border: 1px solid #d9d9d9;
-            margin:0 auto; margin-top: 13px; border-collapse: collapse;
-}
-#wrap .tb_search th{border-bottom: 1px solid #d9d9d9; text-align: left;}
-#wrap .tb_search th > span{font-size: 20px;}
-#wrap .tb_search th > span:first-of-type{margin-left: 18px;}
-#wrap .tb_search th > span:nth-child(3){font-size: 16px;}
-#wrap .tb_search th > span:nth-child(4){font-size: 16px;}
-#wrap .tb_search th > span:nth-child(5){font-size: 16px;}
-#wrap .tb_search td{width: 100%; text-align: right; font-size: 16px;}
-#wrap .search {float: left; width: 190px; height: 37px; margin-left: 18px;}
-#wrap .btn_search {float: left; color: #ffffff; border: none; background-color: #c00000;
-            width: 69px; height: 41px; margin-top: -1px;
-}
-#wrap .tb_search td input:nth-child(4),
-#wrap .tb_search td input:nth-child(5),
-#wrap .tb_search td input:nth-child(6) {margin-right: 5px;}
-#wrap .tb_search td input:nth-child(4) {width: 102px; height: 37px;}
-#wrap .tb_search td input:nth-child(6) {width: 102px; height: 37px; margin-right: 8px;}
-
-/* tab menu | 텝메뉴 */
-#wrap .array {
-    display: flex;
-    flex-direction: row;
-    gap: 3px;
-    align-items: center;
-    width: 765px;
-    color: #595959;
-
-    margin-left: 50px;
-}
-
-#wrap .array > li:nth-child(1) {
-    margin-left: 30px;
-}
-#wrap .array > li > a {
-    display: inline-block;
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-#wrap .array > li::after{content: "ㅣ"; }
-#wrap .array > li:last-of-type:after{content:none;}
-
-/* table 부분 */
-#wrap .tb1 {
-    margin: 0 auto;
-    width: 765px;
-    height: auto;
-    border-collapse: collapse;
-}
-
-#wrap .tb1 td {
-    border-top: 1px solid #bfbfbf;
-    height: 133px;
-}
-
-#wrap tr:last-of-type {
-    border-bottom: 1px solid #bfbfbf;
-}
-
-/* page 버튼 부분 */
-#wrap .page {
-    margin-top: 5px;
-    text-align: center;
-    display: flex;
-    width: 100%;
     justify-content: center;
     align-items: center;
     gap: 10px;
+    margin-top: 20px;
 }
-#wrap .page > a{color: #595959;}
 
-#wrap button {
-    background-color: #ffffff;
-    border: 0.5px solid #bfbfbf;
-    width: 30px;
-    height: 30px;
-    margin-left: 1px;
-    margin-right: 1px;
+.tb_search .btn_search {
+    padding: 8px 16px;
+    background-color: var(--highlight);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.tb_search .btn_search:hover {
+    background-color: #b52f2b;
+}
+
+/* 정렬 탭 컨테이너 스타일 */
+.tab .array {
+    display: flex;
+    justify-content: center;
+    gap: 23px;
+    padding: 10px 20px;
+    background-color: var(--background);
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    list-style: none;
+    margin-top: 20px;
+}
+
+/* 각각의 정렬 링크 스타일 */
+.tab .array li {
+    display: inline-block;
+}
+
+.tab .array li a {
+    color: var(--primary-color);
+    font-size: 16px;
+    font-weight: bold;
+    padding: 8px 20px;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+    position: relative;
+}
+
+/* 밑줄 호버 효과 */
+.tab .array li a::after, .sort a::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: var(--hover-underline-color);
+    transition: width 0.3s ease, left 0.3s ease;
+}
+
+/* 호버 및 활성 상태 스타일 */
+.tab .array li a:hover, .sort a:hover {
+    color: var(--hover-text-color);
+}
+
+.tab .array li a:hover::after, .sort a:hover::after {
+    width: 100%;
+    left: 0;
+}
+
+.tab .array li a.active, .sort a.navOn {
+    color: #fff;
+    background-color: var(--highlight);
+    border-radius: 8px;
+}
+
+/* 상품 리스트 스타일 */
+.tb1 {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.table-tr {
+    background-color: var(--card-background);
+    box-shadow: 0 4px 10px var(--card-shadow);
+    border-radius: 8px;
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.table-tr:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.tb1 img {
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tb1 .realPrice {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--highlight);
+}
+
+.tb1 .originalPrice {
+    font-size: 16px;
+    color: #7f7f7f;
+    text-decoration: line-through;
+}
+
+.tb1 .discountRate {
+    font-size: 16px;
+    color: #c00000;
+}
+
+/* 페이지네이션 스타일 */
+.page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 8px;
+}
+
+.page a {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 12px;
+    color: #333;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-size: 14px;
+}
+
+.page a.none {
+    color: #aaa;
+}
+
+.page a.active {
+    background-color: var(--highlight);
+    color: #fff;
+    font-weight: bold;
+}
+
+.page a:hover {
+    background-color: var(--hover-background);
+    color: #fff;
 }
