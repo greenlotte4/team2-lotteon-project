@@ -1,24 +1,34 @@
 :root {
-    --secondary: #757575;        /* 서브 강조색 (회색) */
-    --highlight: #FFC107;        /* 강조 색상 (노란색) */
-    --background: #f5f5f5;       /* 배경 색상 */
-    --card-background: #fafafa;  /* 리스트 카드 배경 색상 */
-    --text-color: #333;
-    --hover-background: #e0e0e0; /* 연한 회색 호버 배경 */
-    --card-shadow: rgba(0, 0, 0, 0.1);
+    --secondary: #666666; /* 약간 더 어두운 회색 */
+    --highlight: #d9534f; /* 톤 다운된 빨간색 */
+    --background: #ffffff; /* 상단과 페이지 배경 흰색 */
+    --product-list-background: #fdfdfd; /* 아주 연한 크림색 배경 */
+    --card-background: #ffffff; /* 카드 배경 흰색 */
+    --text-color: #333333;
+    --hover-background: #d9534f; /* 다운된 빨간색 호버 */
+    --card-shadow: rgba(0, 0, 0, 0.06); /* 더 부드러운 그림자 */
+    --primary-color: #333333;
+    --hover-underline-color: #d9534f; /* 부드러운 빨간색 밑줄 */
+    --hover-text-color: #d9534f;
 }
 
 body {
     font-family: 'Roboto', sans-serif;
     color: var(--text-color);
-    background-color: var(--background);
+    background-color: var(--background); /* 기본 배경 */
 }
 
 .product-nav {
     width: 100%;
     padding: 20px;
     margin-bottom: 20px;
-    background-color: var(--card-background);
+    background-color: var(--background); /* 상단 배경 흰색 */
+}
+
+.title-and-location {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .sub_tit {
@@ -29,11 +39,9 @@ body {
 }
 
 .location {
-    margin-top: 15px;
-    padding-bottom: 10px;
     font-size: 20px;
     color: var(--secondary);
-    margin-bottom: 15px;
+    margin-top: 15px;
 }
 
 /* 정렬 탭 */
@@ -41,64 +49,49 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid #ccc;
     border-radius: 12px;
-    padding: 8px 20px;
+    padding: 10px 25px;
     list-style-type: none;
     width: fit-content;
-    margin: 0 auto; /* 중앙 정렬 */
-    background-color: #fff;
-    box-shadow: 0px 2px 6px var(--card-shadow);
-    gap: 15px; /* 각 항목 간의 간격을 일정하게 */
+    margin: 20px auto; /* 위아래 여백을 추가해 더 시각적으로 중심 배치 */
+    gap: 43px;
+    background-color: var(--background-color);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* 현대적인 그림자 효과 */
 }
-
-.sort li {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .sort a {
-    color: var(--text-color);
+    color: var(--primary-color);
     text-decoration: none;
-    font-weight: bold;
-    font-size: 12px;
-    padding: 6px 10px;
-    border-radius: 4px;
-    transition: color 0.3s ease, background-color 0.3s ease;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 15px;
+    border-radius: 8px;
     position: relative;
+    transition: color 0.3s ease;
 }
-
-.sort a:hover, .sort a.navOn {
-    background-color: var(--hover-background); /* 호버 시 연한 회색 배경 */
-    color: var(--text-color);
-}
-
 .sort a::after {
     content: "";
     position: absolute;
-    left: 50%;
-    bottom: -2px;
-    transform: translateX(-50%);
+    bottom: 0; /* 텍스트 바로 아래에 밑줄 위치 */
+    left: 50%; /* 가운데에서 시작 */
     width: 0;
-    height: 2px;
-    background-color: var(--primary);
-    transition: width 0.3s ease;
+    height: 2px; /* 밑줄 두께 */
+    background-color: #ff4343; /* 빨간색 밑줄 */
+    transition: width 0.3s ease, left 0.3s ease;
 }
 
-.sort a:hover::after, .sort a.navOn::after {
-    width: 100%; /* 호버 시 하단 밑줄 확장 */
+.sort a:hover {
+    color: var(--hover-text-color); /* 호버 시 텍스트 색상 변경 */
 }
 
-.view-options a {
-    font-size: 14px; /* VIEW, 목록보기, 바둑보기의 폰트 크기 통일 */
-    color: var(--text-color);
-    text-decoration: none;
-    padding: 5px 8px;
+.sort a:hover::after {
+    width: 100%; /* 호버 시 밑줄이 전체 너비로 확장 */
+    left: 0; /* 왼쪽으로 확장 */
 }
 
-.view-options a:hover {
-    color: var(--primary);
+.sort a.navOn {
+    color: #ff4343;
+    background-color: rgba(255, 0, 0, 0.1); /* 활성 탭 배경색 */
+    border-radius: 8px; /* 활성 탭 배경 모서리 */
 }
 
 /* 상품 리스트 */
@@ -107,22 +100,24 @@ body {
     flex-direction: column;
     gap: 25px;
     padding: 15px 0;
+    width: 100%;
+    background-color: var(--product-list-background); /* 상품 리스트 배경 아주 연한 크림색 */
 }
 
 .product-item {
     display: flex;
     align-items: flex-start;
-    background-color: var(--card-background);
+    background-color: var(--card-background); /* 카드 배경 흰색 */
     border-radius: 8px;
-    border: 1px solid var(--secondary); /* 검은색 테두리 */
-    box-shadow: 0 4px 12px var(--card-shadow);
+    border: 1px solid #dddddd; /* 더 차분한 회색 테두리 */
+    box-shadow: 0 4px 10px var(--card-shadow); /* 부드러운 그림자 */
     padding: 25px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .product-item:hover {
-    transform: scale(1.02);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    transform: scale(1.01);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
 .product-image img {
@@ -142,10 +137,12 @@ body {
     font-weight: bold;
     color: var(--text-color);
     text-decoration: none;
+    transition: color 0.3s ease, text-decoration 0.3s ease; /* 호버 효과에 자연스러운 전환 추가 */
 }
 
 .product-name a:hover {
-    color: var(--primary);
+    color: var(--highlight); /* 강조 색상으로 텍스트 색 변경 */
+    text-decoration: underline; /* 호버 시 밑줄 추가 */
 }
 
 .product-summary {
@@ -164,7 +161,7 @@ body {
 .current-price {
     font-size: 22px;
     font-weight: bold;
-    color: var(--primary);
+    color: var(--highlight); /* 가격 강조 색상 */
 }
 
 .original-price {
@@ -173,29 +170,11 @@ body {
     text-decoration: line-through;
 }
 
-.discount {
-    font-size: 16px;
-    color: var(--highlight);
-    font-weight: bold;
-}
-
-.delivery-info {
-    color: var(--secondary);
-    font-size: 14px;
-    margin-top: 5px;
-}
-
 .badge-container {
     display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.badge-container {
-    display: flex;
-    flex-direction: column; /* 세로로 나열 */
-    gap: 8px; /* 각 뱃지 간의 간격 */
-    align-items: flex-start; /* 왼쪽 정렬 */
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
 }
 
 .badge {
@@ -204,19 +183,56 @@ body {
     padding: 5px 10px;
     border-radius: 15px;
     font-size: 12px;
-    background-color: var(--secondary);
+    background-color: #d9534f; /* 다운된 빨간색 */
     color: #fff;
     font-weight: bold;
 }
 
-.badge.company {
-    background-color: #ef5350;
+.badge.company { background-color: #d9534f; } /* 다운된 빨간색 */
+.badge.customer-satisfaction { background-color: #757575; } /* 따뜻한 회색 */
+.badge.grade { background-color: #ffd700; } /* 골드 톤의 노란색 */
+
+.page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 8px;
+    width: 100%; /* 부모 요소의 전체 너비 */
 }
 
-.badge.customer-satisfaction {
-    background-color: #757575;
+.page a {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 15px; /* 클릭하기 쉬운 영역 */
+    color: #333;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-size: 16px;
 }
 
-.badge.grade {
-    background-color: #FFC107;
+.page a.none {
+    color: #666; /* 비활성 페이지 링크 색상 */
+}
+
+.page a.active {
+    background-color: #ffd700; /* 활성 페이지 골드 톤 노란색 */
+    color: #fff;
+    border-color: #ffd700;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.page a:hover {
+    background-color: #e0e0e0; /* 호버 시 배경색 */
+    color: #333;
+    border-color: #e0e0e0;
+}
+
+.page a:focus {
+    outline: none;
+    box-shadow: 0 0 5px #ffc107; /* 포커스 상태에서 약간의 그림자 */
 }

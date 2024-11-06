@@ -48,11 +48,47 @@
         }
 
         document.getElementById('sortText').innerText = sortText;
+        renderPagination();
     }
 
     function sort(sortType) {
         const currentUrl = new URL(window.location.href);
         currentUrl.searchParams.set('sort', sortType);
+        window.location.href = currentUrl.toString();
+    }
+
+    // 페이지네이션 함수
+    function renderPagination() {
+        const totalPages = 10;  // 예시 페이지 수
+        const currentPage = 1;  // 예시 현재 페이지
+        const paginationList = document.getElementById('pagination-list');
+        paginationList.innerHTML = '';
+
+        if (currentPage > 1) {
+            const prevButton = document.createElement('li');
+            prevButton.innerHTML = `<a href="#" onclick="goToPage(${currentPage - 1})">이전</a>`;
+            paginationList.appendChild(prevButton);
+        }
+
+        for (let i = 1; i <= totalPages; i++) {
+            const pageButton = document.createElement('li');
+            pageButton.innerHTML = `<a href="#" onclick="goToPage(${i})">${i}</a>`;
+            if (i === currentPage) {
+                pageButton.querySelector('a').classList.add('active');
+            }
+            paginationList.appendChild(pageButton);
+        }
+
+        if (currentPage < totalPages) {
+            const nextButton = document.createElement('li');
+            nextButton.innerHTML = `<a href="#" onclick="goToPage(${currentPage + 1})">다음</a>`;
+            paginationList.appendChild(nextButton);
+        }
+    }
+
+    function goToPage(pageNumber) {
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('page', pageNumber);
         window.location.href = currentUrl.toString();
     }
 </script>
@@ -63,8 +99,7 @@
         <main id="main" class="content-container">
             <!-- 상품 목록 네비게이션 -->
             <nav id="navi" class="product-nav">
-                <!-- 상품 목록 제목 -->
-                <nav class="product-nav">
+                <div class="title-and-location">
                     <h2 class="sub_tit">상품목록</h2>
                     <p class="location">
                         <span>[[${location.level3Name}]]</span> &gt;
@@ -72,26 +107,21 @@
                         <span>[[${location.level1Name}]]</span>
                         <span th:if="${param.sort != null}" id="sortText"></span>
                     </p>
+                </div>
+            </nav>
 
-                    <!-- 정렬 탭 및 보기 옵션 -->
-                    <ul class="sort">
-                        <li><a href="#" onclick="sort('prodSold')">판매많은순</a></li>
-                        <li><a href="#" onclick="sort('prodLowPrice')">낮은가격순</a></li>
-                        <li><a href="#" onclick="sort('prodHighPrice')">높은가격순</a></li>
-                        <li><a href="#" onclick="sort('prodScore')">평점높은순</a></li>
-                        <li><a href="#" onclick="sort('prodReview')">후기많은순</a></li>
-                        <li><a href="#" onclick="sort('prodRdate')">최근등록순</a></li>
+            <!-- 정렬 탭 및 보기 옵션 -->
+            <ul class="sort">
+                <li><a href="#" onclick="sort('prodSold')">판매많은순</a></li>
+                <li><a href="#" onclick="sort('prodLowPrice')">낮은가격순</a></li>
+                <li><a href="#" onclick="sort('prodHighPrice')">높은가격순</a></li>
+                <li><a href="#" onclick="sort('prodScore')">평점높은순</a></li>
+                <li><a href="#" onclick="sort('prodReview')">후기많은순</a></li>
+                <li><a href="#" onclick="sort('prodRdate')">최근등록순</a></li>
+            </ul>
+            </nav>
 
-                        <!-- VIEW, 목록보기, 바둑보기 옵션 -->
-                        <li class="view-options">
-                            <a href="#">목록보기</a>
-                            <a href="#">바둑보기</a>
-                        </li>
-                    </ul>
-                </nav>
-
-
-                <!-- 상품 목록 카드 스타일 -->
+            <!-- 상품 목록 카드 스타일 -->
             <div class="product-list">
                 <div class="product-item" th:each="product : ${products.getDtoList()}">
                     <div class="product-image">
@@ -112,23 +142,33 @@
                         </div>
                     </div>
                     <div class="badge-container">
-                        <!-- 판매 회사 뱃지 -->
                         <div class="badge company">
                             <i class="fas fa-store"></i>
                             <span>[[${product.getSellCompany}]]</span>
                         </div>
-                        <!-- 고객만족우수 뱃지 -->
                         <div class="badge customer-satisfaction">
                             <i class="fas fa-thumbs-up"></i>
                             <span>고객만족우수</span>
                         </div>
-                        <!-- 판매 등급 뱃지 -->
                         <div class="badge grade">
                             <i class="fas fa-star"></i>
                             <span>[[${product.getSellGrade()}]]</span>
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Pagination Controls -->
+            <div class="page" th:if="${not #lists.isEmpty(products.dtoList)}">
+                <th:block th:if="${products.prev}">
+                    <a th:href="@{/prod/products/(pg=${products.start - 1}, cate=${cate})}" class="first"><<</a>
+                </th:block>
+                <th:block th:each="num:${#numbers.sequence(products.start, products.end)}">
+                    <a th:href="@{/prod/products(pg=${num}, cate=${cate})}" th:class="${num == products.pg} ? 'on' : 'num'">[[${num}]]</a>
+                </th:block>
+                <th:block th:if="${products.next}">
+                    <a th:href="@{/prod/products/(pg=${products.end + 1}, cate=${cate})}" class="first"><<</a>
+                </th:block>
             </div>
         </main>
     </div>
