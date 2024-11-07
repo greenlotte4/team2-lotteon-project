@@ -143,7 +143,6 @@ public class MyController {
 
         return "pages/my/info";
     }
-
     // 나의 쇼핑정보 > 나의 설정 end
 
     @GetMapping("/orders")

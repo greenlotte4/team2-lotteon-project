@@ -31,8 +31,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.servlet.http.HttpSession; // javax 대신 jakarta 패키지 사용
 
+ 
 
 import java.time.LocalDate;
 import java.util.Arrays;

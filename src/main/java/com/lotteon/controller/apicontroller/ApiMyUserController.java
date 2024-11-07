@@ -19,20 +19,7 @@ public class ApiMyUserController {
 
     private final CustomerService customerService;
 
-    // 나의설정 정보 수정
-//    @PutMapping("/info/{id}")
-//    public ResponseEntity<GetMyInfoDTO> updateInfo(
-//                        @PathVariable("id") Long id,
-//                        @RequestBody GetMyInfoDTO getMyInfoDTO) {
-//        GetMyInfoDTO updateInfo = customerService.updateInfo(id, getMyInfoDTO);
-//        log.info("MyInfo 정보수정 아이디: "+id);
-//        log.info("MyInfo 정보수정 디티오 : "+ getMyInfoDTO);
-//
-//        return ResponseEntity.ok().build(updateInfo);
-//    }
-
-
-    // 나의 설정 수정
+    // 나의 설정 정보 수정
     @PatchMapping("/info/{type}")
     public ResponseEntity<?> modifyInfo(@PathVariable("type") String type,
                                         @RequestBody PatchMyInfoDTO patchMyInfoDTO,
@@ -44,7 +31,6 @@ public class ApiMyUserController {
         if ("password".equals(type)) { // 비밀번호가 변경된 경우에만 세션을 무효화합니다.
             session.invalidate(); // 세션 무효화
         }
-
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", success);

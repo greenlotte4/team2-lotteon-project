@@ -52,12 +52,12 @@
                   <input type="text" name="email2" th:value="${cust.custEmail2}" class="email2"/>
 
                    <!-- 이메일 select 시 변경 -->
-                  <select id="emailDomainSelect">
+                  <select onchange="changeDomain()" id="emailDomainSelect">
                     <option value="" selected>직접입력</option> <!-- "직접입력" 이 기본 선택된 상태로 보여짐 -->
                     <option value="gmail.com">gmail.com</option>
                     <option value="naver.com">naver.com</option>
                     <option value="daum.net">daum.net</option>
-                  </select>
+                  </select><!-- #emailDomainSelect -->
                   <input type="button" class="btn modify" data-type="email" value="수정하기" />
                 </td>
               </tr>
@@ -72,7 +72,7 @@
 
                 </td>
               </tr>
-              <tr> ㅌ
+              <tr>
                 <th>주소</th>
                 <td>
 <!--                  <input name="zip" type="text" placeholder="우편번호" readonly />-->
@@ -98,94 +98,55 @@
   </div>
 </main>
 <script>
-    document.addEventListener('click',function (e){
-        if(e.target.classList.contains('modify')){
-            e.preventDefault();
-            const button = e.target;
-            button.disabled = true; // 버튼 중복 클릭 방지
-
-            if(!confirm("수정하시겠습니까?")){
-                // button.disabled = false; // 취소 시 버튼 다시 활성화 (GPT 가 알려줌)
-                return;
-            }
-            // 콘솔
-            console.log('1. custId : '+document.querySelector('#custId').value);
-            console.log('2. pass : '+document.querySelector('.pass').value);
-            console.log('3. email1 : '+document.querySelector('.email1').value);
-            console.log('4. email2 : '+document.querySelector('.email2').value);
-            console.log('5. hp1 : '+document.querySelector('.hp1').value);
-            console.log('6. hp2 : '+document.querySelector('.hp2').value);
-            console.log('7. hp3 : '+document.querySelector('.hp3').value);
-            console.log('8. addr3 : '+document.querySelector('.addr2').value);
-            console.log('9 .addr3 : '+document.querySelector('.addr3').value);
-
-            const type = button.dataset.type;
-            console.log('10. 버튼 데이터 셋 타입 : '+button.dataset.type);
-
-            const jsonData = {
-                "custId" : document.querySelector('#custId').value,
-                "memPwd" : document.querySelector('.pass').value,
-                "custEmail1" : document.querySelector('.email1').value,
-                "custEmail2" : document.querySelector('.email2').value,
-                "custHp1" : document.querySelector('.hp1').value,
-                "custHp2" : document.querySelector('.hp2').value,
-                "custHp3" : document.querySelector('.hp3').value,
-                "custAddr2" : document.querySelector('.addr2').value,
-                "custAddr3" : document.querySelector('.addr3').value
-            }
-            console.log('11. 제이슨 데이터 : '+jsonData);
-
-            fetch(`/my/info/${type}`,{
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(jsonData)
-            })
-                .then(resp => {
-                    if (!resp.ok) throw new Error("서버 응답 오류");
-                    return resp.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        alert('나의 정보가 성공적으로 수정되었습니다.');
-                        // location.reload();
-                        //location.href="";
-                    } else {
-                        alert('정보를 수정하는 데 실패했습니다.');
-                    }
-
-                })
-                .catch(err => {
-                    console.error('회원 정보 수정 오류 : ', err);
-                    alert('수정 중 오류가 발생했습니다.');
-                })
-                .finally(() => {
-                    button.disabled = false; // 버튼 비활성화 (fetch 중복 방지)
-                    console.log('버튼 비활성화 (fetch 중복 방지) '+button.disabled);
-                });
-        }
-    });
-
-    // 이메일 직집입력 -> 선택 변경
-    // (구글, 네이버, 다음) 선택 시 이메일 변경 되는 스크립트
-    document.getElementById("emailDomainSelect").addEventListener("change", function() {
-        console.log('이메일 도메인 클릭 되는가 ??');
-        const emailDomain = this.value;
-        console.log('이메일 도메인 값(emailDomain) : '+emailDomain);
-
+    // 페이지가 로드될 때 이메일 도메인 초기화
+    window.onload = function() {
         const email2Input = document.querySelector(".email2");
-        console.log('이메일 도메인 값(email2Input) : '+email2Input);
+        const selectedDomain = document.getElementById("emailDomainSelect").value;
 
-        // 선택한 옵션이 "직접입력"이 아니면 email2 필드에 값을 설정
+        if (selectedDomain) { // 기본값이 있는 경우 설정
+            email2Input.value = selectedDomain;
+            email2Input.setAttribute("readonly", true);
+        }
+    };
+
+    document.getElementById("emailDomainSelect").addEventListener("change", function() {
+        const emailDomain = this.value;
+        const email2Input = document.querySelector(".email2");
+
+        // "직접입력"이 아니면 email2에 값 설정 및 읽기 전용 처리
         if (emailDomain) {
             email2Input.value = emailDomain;
-            email2Input.setAttribute("readonly", true);  // 입력 필드를 읽기 전용으로 설정
-        } else { 
-            email2Input.value = "";  // 입력 필드를 비워서 직접 입력 가능하게 설정
+            email2Input.setAttribute("readonly", true);
+        } else { // 직접 입력 시 필드를 비우고 입력 가능하게 설정
+            email2Input.value = "";
             email2Input.removeAttribute("readonly");
         }
     });
 
+    // 수정 버튼 클릭 시 Fetch 요청 처리
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('modify')) {
+            e.preventDefault();
+            const button = e.target;
+            button.disabled = true; // 중복 클릭 방지
+
+            const type = button.dataset.type;
+            const jsonData = {
+                "custId": document.querySelector('#custId').value,
+                "custEmail1": document.querySelector('.email1').value,
+                "custEmail2": document.querySelector('.email2').value
+            };
+
+            fetch(`/my/info/${type}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(jsonData)
+            })
+                .then(resp => resp.ok ? resp.json() : Promise.reject("서버 응답 오류"))
+                .then(data => alert(data.success ? '이메일이 성공적으로 수정되었습니다.' : '이메일 수정에 실패했습니다.'))
+                .catch(err => alert('수정 중 오류가 발생했습니다.'))
+                .finally(() => button.disabled = false);
+        }
+    });
 </script>
 <footer th:replace="layout/main/footer.html"></footer>
