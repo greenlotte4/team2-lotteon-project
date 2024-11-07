@@ -23,11 +23,21 @@
               <tr>
                 <th>비밀번호</th>
                 <td>
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
                     <input type="password" placeholder="수정할 비밀번호를 입력해 주세요." name="pass" class="pass"/>
                     <a th:href="@{/my/info}" class="btn modify" data-type="pass">수정하기</a>
                     <span>영문, 숫자, 특수문자 8~12자 설정</span>
 
+=======
+                    <input type="password" placeholder="수정할 비밀번호를 입력해 주세요." name="pass" />
+                    <a th:href="@{/my/info}" class="btn">수정하기</a>
+>>>>>>> Stashed changes
+=======
+                    <input type="password" placeholder="수정할 비밀번호를 입력해 주세요." name="pass" />
+                    <a th:href="@{/my/info}" class="btn">수정하기</a>
+>>>>>>> Stashed changes
 <!--                  <input type="button" value="수정하기" class="btn" />-->
                 </td>
               </tr>
@@ -48,6 +58,8 @@
               <tr>
                 <th>Email</th>
                 <td>
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
                   <input type="text" name="email1" th:value="${cust.custEmail1}" class="email1"/> @
                   <input type="text" name="email2" th:value="${cust.custEmail2}" class="email2"/>
 
@@ -59,17 +71,40 @@
                     <option value="daum.net">daum.net</option>
                   </select><!-- #emailDomainSelect -->
                   <input type="button" class="btn modify" data-type="email" value="수정하기" />
+=======
+=======
+>>>>>>> Stashed changes
+                  <input type="text" name="email1" th:value="${cust.custEmail1}" /> @
+                  <input type="text" name="email2" th:value="${cust.custEmail2}" />
+                  <select>
+                    <option selected>직접입력</option>
+                    <option>gmail.com</option>
+                    <option>naver.com</option>
+                    <option>daum.net</option>
+                  </select>
+                  <input type="button" class="btn" value="수정하기" />
+>>>>>>> Stashed changes
                 </td>
               </tr>
               <tr>
                 <th>휴대폰</th>
                 <td>
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
                   <input type="text" th:value="${cust.custHp1}" max="999" class="hp1"/> -
                   <input type="text" th:value="${cust.custHp2}" max="9999" class="hp2"/> -
                   <input type="text" th:value="${cust.custHp3}" max="9999" class="hp3"/>
                   <input type="button" class="btn modify" data-type="hp" value="수정하기" />
 
+=======
+=======
+>>>>>>> Stashed changes
+                  <input type="text" th:value="${cust.custHp1}" max="999" /> -
+                  <input type="text" th:value="${cust.custHp2}" max="9999" /> -
+                  <input type="text" th:value="${cust.custHp3}" max="9999" />
+                  <input type="button" class="btn" value="수정하기" />
+>>>>>>> Stashed changes
                 </td>
               </tr>
               <tr>
