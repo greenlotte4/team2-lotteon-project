@@ -226,6 +226,7 @@
     let jsonData = {};
     function optionModify() {
         const modify = new FormData(document.getElementById('finalModify'));
+        if(confirm('옵션을 저장하시겠습니까?')){
         for (const [key, value] of modify.entries()) {
             console.log(key, value);
             if(key === 'optionName'){
@@ -284,6 +285,8 @@
         }
         console.log(JSON.stringify(optionSubmit));
         document.getElementById('prodStock').value = 1;
+        alert('옵션이 저장되었습니다!');
+    }
     }
     document.addEventListener("DOMContentLoaded", function() {
         // 모든 버튼을 가져옴

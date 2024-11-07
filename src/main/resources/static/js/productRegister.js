@@ -123,6 +123,8 @@ window.onload = function (){
 function confirmOption(event) {
     const optionName = document.getElementById('optionName1');
     const optionStock = document.getElementById('optionStock');
+
+    if(confirm('옵션을 저장하시겠습니까?')){
     if(isSingleOption){
         if (!optionName.value.trim()) {
             alert('옵션 이름을 입력해 주세요.');
@@ -161,6 +163,10 @@ function confirmOption(event) {
     }else{
         document.getElementById('prodStock').value = totalStock;
         totalStock = 0;
+    }
+    alert("옵션이 저장되었습니다!");
+    }else {
+        alert('옵션이 저장되지 않았습니다!');
     }
 }
 
