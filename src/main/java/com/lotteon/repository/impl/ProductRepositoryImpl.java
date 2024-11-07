@@ -139,9 +139,6 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         }else if (type.equals("판매자")) {
             builder.and(qSeller.sellCompany.contains(keyword));
             expression = qSeller.sellCompany.contains(keyword);
-        }else if (type.equals("제조사")) {
-            builder.and(qSeller.sellCompany.contains(keyword));
-            expression = qSeller.sellCompany.contains(keyword);
         }
 
         if("ROLE_admin".equals(role)) {

@@ -6,7 +6,6 @@
         let option1Value = document.getElementsByClassName('cate1')[0];
         let option2Value = document.getElementsByClassName('cate2')[0];
 
-
         fetch("/admin/prod/cate1", {
             method: 'POST',
             headers: {
@@ -93,21 +92,49 @@
         if (button.value.trim() !== "") {
             deleteId.push(button.value);
         }
+
+        const index = deleteCancelId.indexOf(button.value);
+        if (index !== -1) {
+            deleteCancelId.splice(index, 1);  // 배열에서 해당 값을 제거
+        }
+        console.log("deleteId" + deleteId);
         // button의 부모 tr 요소를 찾아서 삭제
         const row = button.closest('tr');
         const deleteBtn = row.querySelector('.deleteOptionBtn');
         const stock = row.querySelector('.optionStock');
         stock.value = 0;
         deleteBtn.innerText = '비활성화';
+        deleteBtn.style.color = '#db4455';
+        deleteBtn.onclick = function() {
+            deleteCancel(button);  // 이벤트가 발생했을 때 deleteCancel을 호출
+        };
+
     }
 
     function deleteCancel(button){
-
-        deleteCancelId.push(button.value);
-
+        if (button.value.trim() !== "") {
+            deleteCancelId.push(button.value);
+        }
+        const index = deleteId.indexOf(button.value);
+        if (index !== -1) {
+            deleteId.splice(index, 1);  // 배열에서 해당 값을 제거
+        }
+        console.log("deleteCancelId" + deleteCancelId);
         const row = button.closest('tr');
         const deleteBtn = row.querySelector('.deleteOptionBtn');
-        deleteBtn.innerText = '삭제';
+        deleteBtn.innerText = '활성화';
+        deleteBtn.style.color = '#000000';
+        deleteBtn.onclick = function() {
+            deleteRow(button);  // 이벤트가 발생했을 때 deleteCancel을 호출
+        };
+    }
+
+    function deleteTr(button) {
+
+        const row = button.closest('tr');
+        if (row) {
+            row.remove();
+        }
     }
 
     function mixOptionPlus(button) {
@@ -157,10 +184,28 @@
         // 새로운 조합 출력
         console.log("새로운 조합들:", newCombinations);
 
+        const cells = document.querySelectorAll('.option-combination');
+        const cellTexts = Array.from(cells).map(cell => cell.innerText.trim());
+        optionCombinations.forEach(combinationText => {
+            Array.from(cells).forEach(cell => {
+                // 각 셀의 텍스트가 현재 조합과 일치하는지 확인
+                if (cell.innerText.trim() === combinationText) {
+                    const row = cell.closest('tr');  // 해당 셀의 tr을 찾기
+                    const button = row ? row.querySelector('.deleteOptionBtn') : null;  // 해당 tr에서 버튼 찾기
+
+                    // 버튼이 존재하고, 버튼의 innerText가 '비활성화'인 경우 클릭
+                    if (button && button.innerText === '비활성화') {
+                        button.click();  // 버튼 클릭
+                    }
+                }
+            });
+        });
         newCombinations.forEach(combinationText => {
+            if(cellTexts.includes(combinationText)){
+                return;
+            }
             createOptionRow(combinationText, 1);
         });
-        const cells = document.querySelectorAll('.option-combination');
         Array.from(cells).forEach(cell => {
             // cell의 텍스트가 missingInOptionCombinations에 포함되면
             missingInOptionCombinations.forEach(missingComb => {
@@ -168,9 +213,10 @@
                     // 해당 cell 내의 버튼을 찾아서 클릭 이벤트를 트리거
                     const row = cell.closest('tr');
                     const button = row ? row.querySelector('.deleteOptionBtn') : null; // row가 존재하는지 확인
-                    console.log(button);
                     if (button) {
-                        button.click();  // 실제로 클릭을 트리거
+                        if(button.innerText !== '비활성화'){
+                            button.click();  // 실제로 클릭을 트리거
+                        }
                     }
                 }
             });
@@ -239,6 +285,33 @@
         console.log(JSON.stringify(optionSubmit));
         document.getElementById('prodStock').value = 1;
     }
+    document.addEventListener("DOMContentLoaded", function() {
+        // 모든 버튼을 가져옴
+        const buttons = document.querySelectorAll('.deleteOptionBtn');
+
+        // 각 버튼에 대해
+        buttons.forEach(button => {
+            // 텍스트가 '비활성화'인 버튼이라면
+            if (button.innerText === '비활성화') {
+                button.style.color = '#db4455';  // 텍스트 색상을 빨간색으로 설정
+            }
+        });
+    });
+
+    function prodImgModalOpen() {
+        const QnaModalBack = document.getElementsByClassName('prodQnaModalBack')[0];
+        QnaModalBack.style.display = "block"
+    }
+
+    // 940 이미지 모달창 닫기
+    function closeQnaModal() {
+        const QnaModalBack = document.getElementsByClassName('prodQnaModalBack')[0];
+        const closeBtn = document.getElementsByClassName('closeBtn')[0];
+        if (event.target === QnaModalBack || event.target === closeBtn) {
+            QnaModalBack.style.display = "none"
+        }
+    }
+
 </script>
 <body>
 <header th:replace="layout/admin/header.html"></header>
@@ -353,17 +426,25 @@
                         <th>상품이미지</th>
                         <td class="td-images">
                             <div class="img1">
-                                <img id="currentProdListImg" th:src="@{'/file/'+${product.getProdListImg()}}" alt="현재 리스트 이미지" style="width:190px; height:190px;">
-                                <input type="file" name="listImage" id="prodListImg">
+                                <input type="file" name="listImage" id="prodListImg" accept="image/*">
                                 <span>크기 190 x 190, 상품 목록에 출력될 이미지입니다.</span>
+                                <div id="previewListImg">
+                                    <img class="imgPreview" th:src="@{'/file/'+${product.getProdListImg()}}">
+                                </div>
                             </div>
                             <div class="img2">
-                                <input type="file" name="basicImage" id="prodBasicImg">
+                                <input type="file" name="basicImage" id="prodBasicImg" accept="image/*">
                                 <span>크기 230 x 230, 상품 메인에 출력될 이미지입니다.</span>
+                                <div id="previewBasicImg">
+                                    <img class="imgPreview" th:src="@{'/file/'+${product.getProdBasicImg()}}">
+                                </div>
                             </div>
                             <div class="img3">
-                                <input type="file" name="detailImage" id="prodDetailImg">
+                                <input type="file" name="detailImage" id="prodDetailImg" accept="image/*">
                                 <span>크기 450 x 450, 상품 상세에 출력될 이미지입니다.</span>
+                                <div id="previewDetailImg">
+                                    <img class="imgPreview" th:src="@{'/file/'+${product.getProdDetailImg()}}">
+                                </div>
                             </div>
                         </td>
                     </tr>
@@ -373,6 +454,9 @@
                             <div class="detail-img">
                                 <input type="file" name="description" id="description">
                                 <span>크기 가로 940px 세로 제약없음 , 크기 최대 1MB</span>
+                                <label onclick="prodImgModalOpen()" class="imgModal">
+                                    <b>클릭해서 이미지 보기</b>
+                                </label>
                             </div>
                         </td>
                     </tr>
@@ -380,6 +464,18 @@
                 </table>
             </div>
         </form>
+
+        <div class="prodQnaModalBack bigImageBox" onclick="closeQnaModal()">
+            <div class="prodImgModal">
+                <div style="display:flex; float: right; margin-bottom: 10px">
+                    <span class="closeBtn" onclick="closeQnaModal()" style="cursor: pointer; margin-right: 10px;">X</span>
+                </div>
+                <div class="prodImg940Modal">
+                    <img th:src="@{'/file/'+${prodDetail.getDescription()}}">
+                </div>
+            </div>
+        </div>
+
         <form id="finalModify">
             <div class="main3">
                 <div class="main-title">옵션 수정</div>
@@ -419,7 +515,7 @@
                             <th>옵션 조합</th>
                             <th>추가금액</th>
                             <th>수량</th>
-                            <th>삭제</th>
+                            <th>상태</th>
                         </tr>
                         <tbody id="optionMixed">
                         <tr class="option1" th:each="option : ${options}">
@@ -458,12 +554,12 @@
                                     <input type="hidden" name="optionId" th:value="${option.id}">
                                     <th:block th:if="${option.optionState == 0}">
                                         <button type="button" th:value="${option.id}" class="deleteOptionBtn"
-                                                onclick="deleteRow(this)">삭제
+                                                onclick="deleteRow(this)">활성화
                                         </button>
                                     </th:block>
                                     <th:block th:if="${option.optionState > 0}">
                                         <button type="button" th:value="${option.id}" class="deleteOptionBtn"
-                                                onclick="deleteCancel(this)">비활성화중
+                                                onclick="deleteCancel(this)">비활성화
                                         </button>
                                     </th:block>
                                 </td>
@@ -486,12 +582,12 @@
                                     <input type="hidden" name="optionId" th:value="${option.id}">
                                     <th:block th:if="${option.optionState == 0}">
                                         <button type="button" th:value="${option.id}" class="deleteOptionBtn"
-                                                onclick="deleteRow(this)">삭제
+                                                onclick="deleteRow(this)">활성화
                                         </button>
                                     </th:block>
                                     <th:block th:if="${option.optionState > 0}">
                                         <button type="button" th:value="${option.id}" class="deleteOptionBtn"
-                                                onclick="deleteCancel(this)">비활성화중
+                                                onclick="deleteCancel(this)">비활성화
                                         </button>
                                     </th:block>
                                 </td>

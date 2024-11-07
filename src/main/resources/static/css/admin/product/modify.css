@@ -8,6 +8,8 @@ input {text-indent: 10px;}
     margin-bottom: 20px;
 }
 
+.imgPreview {width: 190px; height: 190px;}
+
 .main-description {
     background-color: #f2f2f2;
     font-size: 14px;
@@ -250,5 +252,32 @@ input {text-indent: 10px;}
 }
 
 .deleteOptionBtn:hover {
+    cursor: pointer;
+}
+
+.prodQnaModalBack {
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+    height: auto;
+    background-color: rgba(128, 128, 128, 0.5);
+    z-index: 10;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+    text-align: center;
+    align-items: center;
+}
+
+.imgModal {
+    display: inline-block;
+    margin-top: 5px;
+    width: 250px;
+    height: 50px;
+    border: 2px solid #e6e6e6;
+    text-align: center;
+    align-content: center;
     cursor: pointer;
 }

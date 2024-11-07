@@ -6,6 +6,37 @@ window.onload = function (){
     if(document.getElementById('Category3') !== null){
         updateSelect4();
     }
+
+
+    function setupImagePreview(inputId, previewId) {
+        const input = document.getElementById(inputId);
+        const preview = document.getElementById(previewId);
+
+        input.addEventListener("change", function(event) {
+            const file = event.target.files[0];
+            preview.innerHTML = '';  // 기존 미리보기 초기화
+
+            if (file && file.type.startsWith("image/")) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const img = document.createElement("img");
+                    img.src = e.target.result;
+                    img.style.maxWidth = "190px";
+                    img.style.maxHeight = "190px";
+                    preview.appendChild(img);
+                };
+
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    // 각 이미지 입력 필드와 미리보기 영역에 대해 함수 호출
+    setupImagePreview("prodListImg", "previewListImg");
+    setupImagePreview("prodBasicImg", "previewBasicImg");
+    setupImagePreview("prodDetailImg", "previewDetailImg");
+
     const prodInsert = document.getElementsByClassName('submit-btn')[0];
     prodInsert.addEventListener('click', (e) => {
 
@@ -104,7 +135,7 @@ function confirmOption(event) {
         }
     }
     for(let i = 0; i < currentIndex; i++){
-        const inputStock = document.querySelector(`.inputStock[data-id='${i}']`);
+        const inputStock = document.querySelector(`.optionStock[data-id='${i}']`);
         const inputValue = document.querySelector(`.inputAddPrice[data-id='${i}']`);
         submitData[i].stock = inputStock.value;
         submitData[i].additionalPrice = inputValue.value;
@@ -313,6 +344,7 @@ function createOptionRow(combinationText, type) {
     const combinationCell = document.createElement("td");
     const combinationInput = document.createElement('input');
     combinationCell.innerText = combinationText;
+    combinationCell.className = 'option-combination';
     combinationInput.type = "hidden";
     combinationInput.value = combinationText;
     combinationInput.name = "optionName"
@@ -328,6 +360,7 @@ function createOptionRow(combinationText, type) {
     priceInput.className = "inputAddPrice";
     priceInput.placeholder = "추가금액";
     priceInput.name = "optionAddPrice";
+    priceInput.value = 0;
     priceCell.style.textAlign = 'center';
     priceCell.appendChild(priceInput);
     row.appendChild(priceCell);
@@ -337,9 +370,10 @@ function createOptionRow(combinationText, type) {
     const stockInput = document.createElement("input");
     stockInput.type = "text";
     stockInput.dataset.id = `${currentIndex}`;
-    stockInput.className = "inputStock";
+    stockInput.className = "optionStock";
     stockInput.placeholder = "수량";
     stockInput.name = "stock"
+    stockInput.value = 0;
     stockCell.style.textAlign = 'center';
     stockCell.appendChild(stockInput);
     row.appendChild(stockCell);
@@ -347,18 +381,26 @@ function createOptionRow(combinationText, type) {
         const id = 0;
         const deleteCell = document.createElement("td");
         const deleteBtn = document.createElement("button");
+        const deleteBtn2 = document.createElement("button");
         const hiddenInput = document.createElement('input');
         hiddenInput.value = id;
         hiddenInput.type = 'hidden';
         hiddenInput.name = 'optionId';
         deleteBtn.type = 'button';
         deleteBtn.className = 'deleteOptionBtn';
-        deleteBtn.textContent = '삭제';
+        deleteBtn2.className = 'deleteOptionBtn';
+        deleteBtn2.style.marginLeft = '5px';
+        deleteBtn.textContent = '활성화';
+        deleteBtn2.textContent = '/  삭제';
         deleteBtn.onclick = function() {
             deleteRow(this)
         };
+        deleteBtn2.onclick = function() {
+            deleteTr(this)
+        };
         deleteCell.appendChild(hiddenInput);
         deleteCell.appendChild(deleteBtn);
+        deleteCell.appendChild(deleteBtn2);
         row.appendChild(deleteCell);
     }
     // 조합을 테이블에 추가

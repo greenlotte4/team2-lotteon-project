@@ -96,7 +96,6 @@ public class ApiAdminProdController {
         for(PostProductOptionDTO optionDTO : optionDTOS) {
             if(optionDTO.getStock() != null){
                 total += optionDTO.getStock();
-                log.info("optionDtos::::::::::" + optionDTO);
             }
             if(optionDTO.getId() == 0){
                 if(optionDTO.getOptionName() != null){
@@ -119,8 +118,6 @@ public class ApiAdminProdController {
                 }
             }
         }
-        log.info("total::::::::::" + total);
-        log.info("prodId::::::::::" + prodId);
         productService.updateStock(total, prodId);
 
     }
@@ -128,7 +125,6 @@ public class ApiAdminProdController {
     @PostMapping("/product/delete")
     public ResponseEntity<Map<String, Object>> delete(@RequestBody List<String> ids){
 
-        log.info("9999"+ids.toString());
 
         for(String id : ids){
             productService.deleteProduct(Long.parseLong(id));
