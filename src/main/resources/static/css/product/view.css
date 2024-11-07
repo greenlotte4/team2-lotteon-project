@@ -43,14 +43,14 @@
 }
 
 .sub_tit {
+    margin-left: 20px;
     font-size: 18px;
     font-weight: 700;
     color: #d9534f;
-    margin-left: 3px;
     margin-bottom: 8px;
-    margin-top: 5px;
+    margin-top: 10px;
 }
-
+.location {margin-right: 10px;}
 .location > span:nth-of-type(1)::after , .location > span:nth-of-type(2)::after {
     content: ' > ';
 }
@@ -214,19 +214,12 @@
     border-radius: 8px;
 }
 
-/* 상품 상세 이미지 */
-.detail_image {
-    margin: 0 auto;
-    width: 816px;
-    height: auto;
-    text-align: center;
-}
-
 /* 상품 정보 제공 고시 */
-.sub_tit2 {
+.sub_tit2, .sub_tit3, .sub_tit4 {
     font-size: 18px; /* 제목 폰트 크기 약간 키움 */
     font-weight: 700; /* 굵게 표시 */
     color: #d9534f;
+    margin-left: 20px;
     margin-top: 20px;
     margin-bottom: 15px;
     border-bottom: 2px solid #d9534f; /* 구분선 추가 */
@@ -417,7 +410,74 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .prodOptions {
-    width: auto;
-    height: 20px;
+    width: 150px;
+    height: 30px;
     margin: 0;
+}
+
+.badge.grade { background-color: #ffd700; } /* 골드 톤의 노란색 */
+
+.detail_image_container {
+    position: relative;
+    max-height: 99999px;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.detail_image {
+    max-height: 1000px;
+    overflow: hidden;
+    transition: max-height 3s ease;
+    position: relative;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.detailImg{
+    width: 800px;
+}
+
+.detailBtnDiv {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    background-color: #fff; /* 버튼 배경색 추가하여 가독성 향상 */
+    border-radius: 4px;
+}
+
+.detail_image.expanded {
+    max-height: 99999px; /* 충분히 큰 값으로 설정하여 전체 이미지가 보이도록 */
+}
+
+.detail_image::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
+}
+
+#toggleButton {
+    display: block;
+    width: 100%;
+    height: 56px;
+    font-size: 14px;
+    border-radius: 7px;
+    margin: 10px auto;
+    padding: 8px 16px;
+    border: 1px solid #000000;
+    background-color: #FFFFFF;
+    cursor: pointer;
+}
+
+#coupondl {
+    float: right;
+    margin-right: 20px;
+    font-size: 14px;
+    color: #db4456;
+    cursor: pointer;
 }

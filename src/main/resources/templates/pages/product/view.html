@@ -36,11 +36,16 @@
                                 <td class="prod_name">
                                     <span class="prod_name_span">[[${product.getProdName}]]</span> <br>
                                     <span class="box">
-                                        <span class="ratingBg">
-                                            <span class="rating" th:style="'width:'+ ${product.prodRating * 2}+'%;'"></span>
+                                        <span class="badge grade" style="display: inline-block;">
+                                            <i class="fas fa-star"></i>
+                                            <th:block th:if="${product.prodRating} <= 0">
+                                                <span>0</span>
+                                            </th:block>
+                                            <th:block th:if="${product.prodRating} > 0">
+                                                <span>[[${#numbers.formatDecimal(product.prodRating / 10.0, 1, 1)}]]</span>
+                                            </th:block>
                                         </span>
                                         <a href="#prodReview">
-                                            <span th:text="${#numbers.formatDecimal(product.prodRating / 10.0, 1, 1)}"></span>
                                             상품평보기
                                         </a><a>|</a>
                                         <a href="#related-products">Ai추천 상품 보기</a>
@@ -84,7 +89,7 @@
                                                 th:data-id="${option1.optionId}"
                                                 th:if="${option1.type == 'endOption'}"
                                                 th:each="option1 : ${option1s}"
-                                                th:text="${option1.optionValue} + (${#numbers.formatInteger(option1.optionPrice, 1)} != null ? ' - ' + ${#numbers.formatInteger(option1.optionPrice, 1)} + '원' : '')"></option>
+                                                th:text="${option1.optionValue} + (${#numbers.formatInteger(option1.optionPrice, 1)} != null ? ' (' + ${#numbers.formatInteger(option1.optionPrice, 1)} + '원)' : '')"></option>
                                         <option class="nextOption" th:data-option="${option1.optionValue}" th:if="${option1.type == 'nextOption'}" th:each="option1 : ${option1s}" th:text="${option1.optionValue}"></option>
                                     </select>
                                 </td>
@@ -135,10 +140,13 @@
                             th:alt="${banner.bannerName}">
                 </a>
             </div>
-            <h2 class="sub_tit2">상품보기</h2>
-            <div class="detail_image">
-                <img th:src="@{'/file/'+${prodDetail.getDescription()}}" alt="상품 상세보기 이미지">
-            </div> <!-- .detail_image-->
+            <h2 class="sub_tit2">상품 상세정보</h2>
+            <div class="detail_image_container">
+                <div class="detail_image" id="detailImageContainer">
+                    <img class="detailImg" th:src="@{'/file/'+${prodDetail.getDescription()}}" alt="상품 상세보기 이미지">
+                </div>
+                <button id="toggleButton" onclick="toggleDetail()">상품 정보 더보기 ▼</button>
+            </div>
             <h2 class="sub_tit3">
                 상품정보 제공고시
                 <span>[전자상거래에 관한 상품정보 제공에 관한 고시]항목에 의거 등록된 정보입니다.</span>
@@ -397,7 +405,7 @@
                         <select onclick="optionId2Changer(event)" class="prodOptions">
                     ` + option2.map(v => `
                         <option class="endOption2" data-price="${v.optionPrice}" data-id="${v.optionId}">
-                            ${v.optionValue}${v.optionPrice != null ? ' - ' + v.optionPrice + '원' : ''}
+                            ${v.optionValue}${v.optionPrice != null ? '(' + v.optionPrice + '원)' : ''}
                         </option>
                     `).join('') + `
                         </select>
@@ -601,6 +609,25 @@
                 console.error("리뷰 데이터를 불러오는 중 오류가 발생했습니다:", error);
                 loading = false;
             });
+    }
+
+    function toggleDetail() {
+        const detailContainer = document.getElementById("detailImageContainer");
+        const toggleButton = document.getElementById("toggleButton");
+
+        // 현재 높이 확인
+        if (detailContainer.classList.contains("expanded")) {
+            // 접기 상태로 변경
+            detailContainer.style.maxHeight = "1000px";
+            toggleButton.textContent = "상품 정보 더보기 ▼";
+        } else {
+            // 펼치기 상태로 변경 (scrollHeight 사용)
+            detailContainer.style.maxHeight = detailContainer.scrollHeight + "px";
+            toggleButton.textContent = "상품 정보 접기 ▲";
+        }
+
+        // 'expanded' 클래스 토글
+        detailContainer.classList.toggle("expanded");
     }
 
 </script>

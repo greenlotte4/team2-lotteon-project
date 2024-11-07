@@ -99,7 +99,12 @@
                             </span>
                             <span class="badge grade" style="display: inline-block;">
                                 <i class="fas fa-star"></i>
-                                <span th:text="${product.rating}">등급</span>
+                                <th:block th:if="${product.rating} <= 0">
+                                    <span>0</span>
+                                </th:block>
+                                <th:block th:if="${product.rating} > 0">
+                                    <span>[[${#numbers.formatDecimal(product.rating / 10.0, 1, 1)}]]</span>
+                                </th:block>
                             </span>
                         </span>
                     </td>
