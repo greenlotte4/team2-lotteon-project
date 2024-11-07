@@ -18,17 +18,30 @@ body {
     background-color: var(--background);
 }
 
+.product-nav {
+    width: 100%;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: var(--background); /* 상단 배경 흰색 */
+}
+
+.title-and-location {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 /* 네비게이션 스타일 */
 .sub_tit {
-    font-size: 24px;
-    font-weight: bold;
+    font-size: 30px;
+    font-weight: 700;
     color: #fd0000;
     margin-bottom: 5px;
 }
 .location {
-    font-size: 14px; /* 경로 글자 크기 */
+    font-size: 20px; /* 경로 글자 크기 */
     color: #666666; /* 연한 회색 */
-    margin-top: 10px;
+    margin-top: 15px;
 }
 .location span {
     font-size: 14px;
@@ -43,40 +56,89 @@ body {
     content: '';
 }
 
-/* 검색 결과 및 정렬 탭 */
-.tb_search th {
-    font-size: 18px;
-    color: var(--primary-color);
-}
-
-.tb_search .search {
-    width: 90%;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-right: 10px;
-}
-
-.center-align-container {
+/* 테이블 전체를 감싸는 컨테이너 */
+.tb_search-container {
     display: flex;
     justify-content: center;
-    align-items: center;
-    gap: 10px;
     margin-top: 20px;
 }
 
-.tb_search .btn_search {
-    padding: 8px 16px;
-    background-color: var(--highlight);
-    color: #fff;
+/* 테이블 스타일 */
+.tb_search {
+    width: 100%; /* 검색 테이블의 너비를 전체로 설정 */
+    max-width: 1200px; /* 리스트와 일치하도록 최대 너비를 넓게 설정 */
+    background-color: #ffffff;
+    padding: 20px 40px; /* 넓은 내부 여백 */
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+/* 테이블 헤더 스타일 */
+.tb_search th {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #c00000;
+    padding-bottom: 10px;
+    line-height: 1.5;
+}
+
+/* 테이블 본문 스타일 */
+.tb_search td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 10px 0;
+}
+
+/* 검색 입력 필드 스타일 */
+.search {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 250px; /* 입력 필드 너비를 늘림 */
+    margin: 0 15px; /* 좌우 간격을 넓게 설정 */
+}
+
+/* 검색 버튼 스타일 */
+.btn_search {
+    padding: 10px 20px;
+    font-size: 14px;
+    color: #ffffff;
+    background-color: #d9534f;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
-.tb_search .btn_search:hover {
-    background-color: #b52f2b;
+.btn_search:hover {
+    background-color: #c9302c;
+}
+
+/* 라디오 버튼과 가격 범위 입력의 정렬 및 스타일 */
+.center-align-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px; /* 요소 간 간격을 넓게 조정 */
+    margin-top: 15px; /* 위쪽 여백을 약간 늘림 */
+}
+
+.center-align-container input[type="radio"],
+.center-align-container input[type="number"] {
+    margin: 0 5px;
+    padding: 6px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100px; /* 숫자 입력 필드 너비를 늘림 */
+    text-align: center;
+}
+
+/* 라디오 버튼 및 숫자 입력 필드 텍스트 */
+.center-align-container span {
+    font-size: 16px;
+    color: #333;
 }
 
 /* 정렬 탭 컨테이너 스타일 */
@@ -136,11 +198,24 @@ body {
     border-radius: 8px;
 }
 
+span[style*="font-size: 18px"][style*="font-weight: 700"][style*="cursor: pointer"][style*="display: block"] {
+    color: var(--text-color);
+    transition: color 0.3s ease, text-decoration 0.3s ease; /* 호버 효과에 자연스러운 전환 추가 */
+}
+
+span[style*="font-size: 18px"][style*="font-weight: 700"][style*="cursor: pointer"][style*="display: block"]:hover {
+    color: var(--highlight); /* 강조 색상으로 텍스트 색 변경 */
+    text-decoration: underline; /* 호버 시 밑줄 추가 */
+}
+
 /* 상품 리스트 스타일 */
 .tb1 {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    padding: 15px 0;
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 10px;
+    background-color: var(--product-list-background); /* 상품 리스트 배경 아주 연한 크림색 */
 }
 
 .table-tr {
@@ -153,7 +228,7 @@ body {
 
 .table-tr:hover {
     transform: scale(1.02);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .tb1 img {
@@ -161,10 +236,11 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.tb1 .realPrice {
-    font-size: 20px;
-    font-weight: bold;
-    color: var(--highlight);
+.tb1 .price-container {
+    display: flex;
+    align-items: center; /* 수평 정렬 */
+    gap: 8px; /* 요소 간 간격 */
+    margin-top: 8px;
 }
 
 .tb1 .originalPrice {
@@ -177,6 +253,35 @@ body {
     font-size: 16px;
     color: #c00000;
 }
+
+.tb1 .realPrice {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--highlight);
+    margin-left: auto; /* 오른쪽 정렬 */
+}
+
+.badge-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    background-color: #d9534f; /* 다운된 빨간색 */
+    color: #fff;
+    font-weight: bold;
+}
+
+.badge.company { background-color: #d9534f !important; }  /* 다운된 빨간색 */
+.badge.customer-satisfaction { background-color: #757575; } /* 따뜻한 회색 */
+.badge.grade { background-color: #ffd700; } /* 골드 톤의 노란색 */
 
 /* 페이지네이션 스타일 */
 .page {

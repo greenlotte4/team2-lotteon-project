@@ -134,11 +134,15 @@
                         <p class="product-summary">[[${product.getProdSummary}]]</p>
                         <div class="price-info">
                             <del class="original-price">[[${#numbers.formatInteger(product.getProdPrice(), 1)}]]원</del>
-                            <span class="discount">[[${#numbers.formatInteger(product.getProdDiscount(), 1)}]]%</span>
+                            <span class="discount" style="font-size: 16px; margin-right: 5px; display: inline-block; color: #c00000;">[[${#numbers.formatInteger(product.getProdDiscount(), 1)}]]%</span>
                             <span class="current-price">[[${#numbers.formatInteger(product.getTotalPrice(), 1)}]]원</span>
                         </div>
                         <div class="delivery-info" th:if="${product.getProdDeliver() > 0}">
                             배송비 : [[${product.getProdDeliver}]]원
+                        </div>
+
+                        <div class="free-shipping" th:if="${product.getProdDeliver() == 0}" style="border: 1px solid #8cb3e3; width: 85px; text-align: center; color: #17365D; background-color: #dae5f1;">
+                            무료배송
                         </div>
                     </div>
                     <div class="badge-container">

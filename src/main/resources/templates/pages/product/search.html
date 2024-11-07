@@ -1,5 +1,6 @@
 <link rel="stylesheet" th:href="@{/css/product/search.css}">
 <link rel="stylesheet" th:href="@{/css/basic.css}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <header th:replace="layout/main/header.html"></header>
 <script th:src="@{/js/main.js}"></script>
 <main style="margin-top: 230px; gap: 0">
@@ -7,13 +8,15 @@
     <div id="wrap">
         <!-- .aside -->
         <div id="main" style="height: auto;">
-            <nav id="navi" style="width: 810px">
-                <h2 class="sub_tit">상품검색결과</h2>
-                <p class="location">
-                    <span>HOME</span>
-                    <span>상품검색</span>
-                    <span>검색결과</span>
-                </p>
+            <nav id="navi" class="product-nav">
+                <div class="title-and-location">
+                    <h2 class="sub_tit">상품목록</h2>
+                    <p class="location">
+                        <span>HOME</span>
+                        <span>상품검색</span>
+                        <span>검색결과</span>
+                    </p>
+                </div>
             </nav> <!-- #navi-->
             <table class="tb_search">
                 <tr>
@@ -66,39 +69,38 @@
                     <col style="width: 20%;">
                     <col style="width: 20%;">
                 </colgroup>
-                <tr class="table-tr" th:each="product : ${products}">
+                <tr style="
+                    height: 160px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin-bottom: 20px;"
+                    class="table-tr" th:each="product : ${products}">
                     <td><img style="width: 138px; height:110px;" th:src="'/file/' + ${product.img}" alt="상품 이미지"></td>
-                    <td>
-                        <span th:data-id="${product.id}" onclick="getProduct(event)" th:text="${product.title}" style="font-size: 20px; font-weight: 700; cursor: pointer">상품명</span> <br>
-                        <span th:data-id="${product.id}" onclick="getProduct(event)" th:text="${product.summary}" style="font-size: 16px;  cursor: pointer">간단한 상품 설명</span>
-                    </td>
-                    <td>
+                    <td style="width: 550px; margin-left: 30px;">
+                        <span th:data-id="${product.id}" onclick="getProduct(event)" style="font-size: 18px; font-weight: 700; cursor: pointer; display: block;">[[${product.title.length() > 35 ? product.title.substring(0, 35) + '...' : product.title}]]</span> <br>
+                        <span th:data-id="${product.id}" onclick="getProduct(event)" th:text="${product.summary}" style="font-size: 14px;  display: block; cursor: pointer">간단한 상품 설명</span>
+                        <br>
+                        <del class="originalPrice" th:text="${product.price.intValue()} + '원'" style="display:inline-block;margin-right: 5px; margin-bottom:10px;color: #7f7f7f; font-size: 16px;">30,000원&nbsp;</del>
+                        <span class="discountRate" th:text="${product.discount.intValue()} + '%'" style="font-size: 16px; margin-right: 5px; display: inline-block; color: #c00000;">10%&#8595;</span>
                         <strong class="realPrice" style="font-size: 20px;">27,000원</strong> <br>
-                        <del class="originalPrice" th:text="${product.price.intValue()} + '원'" style="color: #7f7f7f; font-size: 16px;">30,000원&nbsp;</del>
-                        <span class="discountRate" th:text="${product.discount.intValue()} + '%'" style="font-size: 16px; color: #c00000;">10%&#8595;</span> <br>
-                        <span th:text="${product.deli} + '원'" style="font-size: 16px;">배송비 2,500</span>
+                        <span th:if="${product.deli!=0}" th:text="${product.deli} + '원'" style="font-size: 16px;">배송비 2,500</span>
                         <div th:if="${product.deli == 0}" style="border: 1px solid #8cb3e3; width: 85px; text-align: center; color: #17365D; background-color: #dae5f1">무료배송</div>
                     </td>
                     <td>
-                        <span th:text="${product.sell_uid}" style="font-size: 14px;">&nbsp;&nbsp;판매자</span> <br> <br>
-                        <img src="https://via.placeholder.com/76x18"> <br> <br>
-                        <span th:if="${product.rating >= 10 && product.rating <20}" style="font-size: 14px;">
-                            <img style="width: 76px; height: 17px;" th:src="@{/images/star1.png}">
-                        </span>
-                            <span th:if="${product.rating >= 20 && product.rating <30}" style="font-size: 14px;">
-                            <img style="width: 76px; height: 17px;" th:src="@{/images/star2.png}">
-                        </span>
-                            <span th:if="${product.rating >= 30 && product.rating <40}" style="font-size: 14px;">
-                            <img style="width: 76px; height: 17px;" th:src="@{/images/star3.png}">
-                        </span>
-                            <span th:if="${product.rating >= 40 && product.rating <50}" style="font-size: 14px;">
-                            <img style="width: 76px; height: 17px;" th:src="@{/images/star4.png}">
-                        </span>
-                            <span th:if="${product.rating >= 50}" style="font-size: 14px;">
-                            <img style="width: 76px; height: 17px;" th:src="@{/images/star5.png}">
-                        </span>
-                            <span th:if="${product.rating  < 10}" style="font-size: 14px;">
-                            <img style="width: 76px; height: 17px;" th:src="@{/images/star1.png}">
+                        <span class="badge-container">
+                            <span class="badge company" style="display: inline-block;">
+                                <i class="fas fa-store"></i>
+                                <span th:text="${product.sell_uid}">판매 회사</span>
+                            </span>
+                            <span class="badge customer-satisfaction" style="display: inline-block;">
+                                <i class="fas fa-thumbs-up"></i>
+                                <span>고객만족우수</span>
+                            </span>
+                            <span class="badge grade" style="display: inline-block;">
+                                <i class="fas fa-star"></i>
+                                <span th:text="${product.rating}">등급</span>
+                            </span>
                         </span>
                     </td>
                 </tr>
