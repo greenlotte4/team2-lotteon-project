@@ -52,14 +52,17 @@ public class FaqService {
 
     }
 
-    // 카테고리별 FAQ 목록 조회
-    public Page<ArticleDto> getFaqsByCategory(String category, Pageable pageable) {
-        CategoryArticle cate1 = categoryArticleRepository.findByCategoryName(category)
-                .orElseThrow(() -> new IllegalArgumentException("카테고리를 찾을 수 없습니다: " + category));
+    // 1차 및 2차 카테고리 기반 FAQ 조회 메서드
+    public Page<ArticleDto> getFaqsByCate1AndCate2(String cate1Name, String cate2Name, Pageable pageable) {
+        // 카테고리 이름으로 카테고리 객체 조회
+        CategoryArticle cate1 = categoryArticleService.getCategoryByName(cate1Name);
+        CategoryArticle cate2 = categoryArticleService.getCategoryByName(cate2Name);
 
-        Page<Faq> faqPage = faqRepository.findByCate1(cate1, pageable);
-        return faqPage.map(faq -> modelMapper.map(faq, ArticleDto.class));
+        // FAQ 목록을 페이징 처리하여 조회
+        Page<Faq> faqPage = faqRepository.findByCate1AndCate2(cate1, cate2, pageable);
+        return faqPage.map(faq -> modelMapper.map(faq, ArticleDto.class)); // DTO로 변환하여 반환
     }
+
 
     public long getTotalCount() {
         return faqRepository.count();  // JpaRepository의 count 메서드를 통해 전체 개수를 반환
@@ -160,4 +163,11 @@ public class FaqService {
     }
 
 
+    public Page<ArticleDto> getNotAllFaqs(String cate1, String cate2, Pageable pageable) {
+        CategoryArticle categoryArticle = categoryArticleRepository.findByCategoryNameAndCategoryLevelAndCategoryType(cate1,1,2).get();
+        CategoryArticle categoryArticle2 = categoryArticleRepository.findByCategoryNameAndCategoryLevelAndCategoryType(cate2,2,2).get();
+        Page<Faq> faqs = faqRepository.findAllByCate1AndCate2(categoryArticle,categoryArticle2,pageable);
+        return faqs.map(ArticleDto::fromEntity);
+
+    }
 }

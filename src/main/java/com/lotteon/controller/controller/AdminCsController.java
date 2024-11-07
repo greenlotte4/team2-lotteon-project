@@ -2,9 +2,11 @@ package com.lotteon.controller.controller;
 
 import com.lotteon.dto.ArticleDto;
 import com.lotteon.dto.requestDto.PostRecruitDto;
+import com.lotteon.entity.category.CategoryArticle;
 import com.lotteon.service.article.FaqService;
 import com.lotteon.service.article.QnaService;
 import com.lotteon.service.article.RecruitService;
+import com.lotteon.service.category.CategoryArticleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -44,6 +46,8 @@ public class AdminCsController {
     private final QnaService qnaService;
     private final FaqService faqService;
     private final RecruitService recruitService;
+    private final CategoryArticleService categoryArticleService;
+
 
 
     @ModelAttribute
@@ -55,12 +59,6 @@ public class AdminCsController {
         return "cs";  // 실제 config 값을 여기에 설정합니다.
     }
 
-
-/*    @GetMapping("/index")
-    public String index(Model model) {
-        model.addAttribute("config", getSideValue());
-        return "pages/admin/cs/index";
-    }*/
 
 
     /**
@@ -74,9 +72,20 @@ public class AdminCsController {
     // FAQ 자주묻는질문
     // 목록
     @GetMapping("/faqs")
-    public String faqs(Model model, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public String faqs(
+            Model model, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            @RequestParam(value = "cate1",defaultValue = "0") String cate1,
+            @RequestParam(value = "cate2",defaultValue = "0") String cate2
+    ) {
+
+        Page<ArticleDto> faqsPage;
         // 1. faq 서비스에서 페이징 처리된 FAQ를 반환
-        Page<ArticleDto> faqsPage = faqService.getAllFaqs(pageable);
+        if(cate1.equals("0")&&cate2.equals("0")) {
+            faqsPage = faqService.getAllFaqs(pageable);
+        } else {
+            faqsPage = faqService.getNotAllFaqs(cate1,cate2,pageable);
+        }
+
 
         // 2. faqsPage에서 데이터들을 뽑아옴
         List<ArticleDto> faqs = faqsPage.getContent();
@@ -93,6 +102,7 @@ public class AdminCsController {
         // 5. 웹 반환
         return "pages/admin/cs/faq/list";
     }
+
 
 
     @GetMapping("/faq")

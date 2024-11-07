@@ -35,7 +35,6 @@ import java.util.stream.Collectors;
       - 2024/10/31 박경림 - 일반 CS 1차 유형별 글 목록 조회 기능 메서드 수정
 
  * */
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -256,6 +255,7 @@ public class QnaService {
     }
 
     public Long findCnt(LocalDateTime startOfDay, LocalDateTime endOfDay) {
+
         return qnaRepository.countByQnaRdateBetween(startOfDay,endOfDay);
     }
 }

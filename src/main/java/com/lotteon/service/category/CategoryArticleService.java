@@ -48,5 +48,9 @@ public class CategoryArticleService {
                 .collect(Collectors.toList());
     }
 
-    
+    // 카테고리 이름을 통해 카테고리를 가져오는 메서드 추가
+    public CategoryArticle getCategoryByName(String categoryName) {
+        return categoryArticleRepository.findByCategoryName(categoryName)
+                .orElseThrow(() -> new IllegalArgumentException("카테고리를 찾을 수 없습니다: " + categoryName));
+    }
 }

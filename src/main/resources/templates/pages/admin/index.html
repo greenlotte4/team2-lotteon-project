@@ -123,6 +123,15 @@
                 <div class="list">
                     <h4>고객문의</h4>
                     <ul>
+                        <li th:each="qna : ${qnas}">
+                            <a th:href="@{'/admin/cs/qna/view/' + ${qna.id}}">
+                                <p class="content" th:text="${qna.title}">문의 제목</p>
+                                <span class="nick" th:text="${qna.member != null && qna.member.memUid != null ? qna.member.memUid.substring(0, 2) + '**' : 'N/A'}">작성자</span>
+                                <span class="date" th:text="${#temporals.format(qna.rdate, 'yy.MM.dd')}">작성일</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul>
                         <li class="qna"><a href="#">
                             <p class="cate">가입</p> <p class="content">가입문의내용</p>
                             <span class="nick">chh**</span><span class="date">22.10.31</span>
