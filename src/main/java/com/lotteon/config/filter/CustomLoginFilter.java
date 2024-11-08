@@ -68,12 +68,12 @@ public class CustomLoginFilter implements AuthenticationSuccessHandler {
 
         if(user.getUser().getMemState().equals("leave")){
             request.getSession().invalidate();
-            redirectStrategy.sendRedirect(request, response, "/auth/login/view");
+            redirectStrategy.sendRedirect(request, response, "/?memState=leave");
         }
 
         if(user.getUser().getMemState().equals("stop")){
             request.getSession().invalidate();
-            redirectStrategy.sendRedirect(request, response, "/?stop=true");
+            redirectStrategy.sendRedirect(request, response, "/?memState=stop");
         }
 
         LocalDate today = LocalDate.now();

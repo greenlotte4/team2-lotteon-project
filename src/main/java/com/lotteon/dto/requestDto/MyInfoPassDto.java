@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class MyInfoPassDto {
     private Long memId;
-    private String why;
+    private String pass;
 }

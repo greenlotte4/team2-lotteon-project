@@ -1,5 +1,6 @@
 package com.lotteon.controller.apicontroller;
 
+import com.lotteon.dto.requestDto.MyInfoPassDto;
 import com.lotteon.dto.responseDto.GetDeliveryDateDto;
 import com.lotteon.dto.responseDto.GetReceiveConfirmDto;
 import com.lotteon.dto.responseDto.GetSellerInfoDto;
@@ -102,4 +103,5 @@ public class ApiMyOrderController {
         orderService.cancleOrder(id);
         return ResponseEntity.ok().build();
     }
+
 }

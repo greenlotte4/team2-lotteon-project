@@ -50,7 +50,7 @@ public class ApiMyUserController {
     public ResponseEntity<?> modifyPass(@RequestBody MyInfoPassDto myInfoPassDto,HttpSession session) {
         System.out.println("================================");
         log.info("컨트롤러 접속 "+myInfoPassDto);
-        String pass = myInfoPassDto.getWhy();
+        String pass = myInfoPassDto.getPass();
         Long memId = myInfoPassDto.getMemId();
 
         Boolean result = memberService.updateMyPwd(pass, memId);
@@ -60,15 +60,35 @@ public class ApiMyUserController {
         }
         return ResponseEntity.ok().body("false");
     }
+
     @PostMapping("/info")
-    public String updateMyinfo(GetMyInfoDTO getMyInfoDTO) {
+    public ResponseEntity<?> updateMyinfo(@RequestBody GetMyInfoDTO getMyInfoDTO) {
         log.info("컨트롤러 접속 "+getMyInfoDTO);
         Boolean result = customerService.updateCustomer(getMyInfoDTO);
         if(result){
-            return "redirect:/my/info";
+            return ResponseEntity.ok().body(result);
         }else{
-            return "redirect:/my/index";
+            return ResponseEntity.ok().body(result);
         }
     }
 
+    @PostMapping("/info/confirmPass")
+    public ResponseEntity<?> confirmPass(@RequestBody MyInfoPassDto myInfoPassDto,HttpSession session) {
+        String pass = myInfoPassDto.getPass();
+        Long memId = myInfoPassDto.getMemId();
+        log.info("컨트롤러 접속 "+pass + " "+memId);
+        Boolean confirmPass = memberService.confirmPass(pass,memId);
+
+        log.info("패스워드 일치 확인  "+confirmPass);
+        Boolean result = false;
+        if(confirmPass){
+            session.invalidate();
+            log.info("패스워드 일치");
+            result = memberService.leaveUser(memId);
+            log.info("유저 상태 변경 "+result);
+            return ResponseEntity.ok().body(result);
+        }else{
+            return ResponseEntity.ok().body(result);
+        }
+    }
 }

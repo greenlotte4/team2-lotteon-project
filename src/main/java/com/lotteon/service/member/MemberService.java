@@ -124,4 +124,26 @@ public class MemberService {
         Timestamp endTimestamp = Timestamp.valueOf(endOfDay);
         return memberRepository.countByMemRdateBetween(startTimestamp,endTimestamp);
     }
+
+    public Boolean confirmPass(String pass, Long memId) {
+        Optional<Member> optMember = memberRepository.findById(memId);
+        log.info("서비스 패스워드 일치 "+optMember.get());
+        if(optMember.isPresent() && passwordEncoder.matches(pass,optMember.get().getMemPwd())){
+            log.info("여기 안 들어가? 왜? ");
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public Boolean leaveUser(Long memId) {
+        Optional<Member> optMember = memberRepository.findById(memId);
+        if(optMember.isPresent()){
+            Member member = optMember.get();
+            member.updateMemberStateToLeave();
+            return true;
+        }else{
+            return false;
+        }
+    }
 }

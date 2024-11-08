@@ -589,9 +589,12 @@
         alert('생일 축하합니다.')
     }
 
-    let stop = `[[${stop}]]` ;
-    if(stop=='true'){
+    let memState = `[[${memState}]]` ;
+    if(memState=='stop'){
         alert('정지된 회원입니다. 반성하세요.')
+    }
+    if(memState=='leave'){
+        alert('탈퇴한 계정입니다. 새로 가입해주세요.')
     }
 
 
