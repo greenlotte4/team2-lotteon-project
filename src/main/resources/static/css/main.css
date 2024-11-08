@@ -39,7 +39,7 @@
 #headerIn .search2 .ico_sch img{position: absolute; top: 10px; right: 26px; padding-top: 39px;}
 
 /* 연관검색어 */
-.related-search-box{position: absolute;top: 108px;left: 362px;width: 460px; background-color: white;padding: 0 20px 20px; z-index: 1000; display: none;color: #484848;border-radius: 0 0 21px 21px;border: 2.5px solid #ef2a23;border-top: none; min-height: 150px}
+.related-search-box{position: absolute;top: 108px;left: 361px;width: 460px; background-color: white;padding: 0 20px 20px; z-index: 1000; display: none;color: #484848;border-radius: 0 0 21px 21px;border: 2.5px solid #ef2a23;border-top: none; min-height: 150px}
 .related-search-box h4 {margin-top: 10px;font-size: 14px;}
 .related-search-box span {margin-left: 10px;min-width: 60px;display: inline-block;border:1px solid #828282; margin-top: 10px;border-radius: 5px;text-align: center; cursor: pointer;}
 .related-search-box .related-search-inp{width: 600px;height: 44px;text-indent: 13px;border-radius: 34px;border: 2.5px solid #ef2a23;background-color: #fff;text-overflow: ellipsis;}

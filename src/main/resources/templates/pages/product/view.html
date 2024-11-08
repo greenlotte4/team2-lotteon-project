@@ -36,14 +36,14 @@
                                 <td class="prod_name">
                                     <span class="prod_name_span">[[${product.getProdName}]]</span> <br>
                                     <span class="box">
-                                        <span class="ratingBg">
-                                            <span class="rating" th:style="'width:'+ ${product.prodRating * 2}+'%;'"></span>
+                                        <span class="badge grade" style="display: inline-block;">
+                                            <i class="fas fa-star"></i>
+                                            <span>[[${#numbers.formatDecimal(product.prodRating / 10.0, 1, 1)}]]</span>
                                         </span>
-                                        <a href="#review">
-                                            <span th:text="${#numbers.formatDecimal(product.prodRating / 10.0, 1, 1)}"></span>
+                                        <a href="#prodReview">
                                             상품평보기
                                         </a><a>|</a>
-                                        <a href="#related-product">Ai추천 상품 보기</a>
+                                        <a href="#related-products">Ai추천 상품 보기</a>
                                     </span>
 
                                 </td>
@@ -142,13 +142,10 @@
                 </div>
                 <button id="toggleButton" onclick="toggleDetail()">상품 정보 더보기 ▼</button>
             </div>
-                <h2 style="display: flex; align-items: center;">
-                    <span class="sub_tit3" style="display: inline-block; width: 160px">상품정보 제공고시</span>
-                    <span style="font-size: 13px; display: inline-block; width: 480px">[전자상거래에 관한 상품정보 제공에 관한 고시]항목에 의거 등록된 정보입니다.</span>
-                </h2>
-
-
-
+            <h2 class="sub_tit3">
+                상품정보 제공고시
+                <span>[전자상거래에 관한 상품정보 제공에 관한 고시]항목에 의거 등록된 정보입니다.</span>
+            </h2>
             <table class="tb2">
                 <colgroup>
                     <col style="width: 40%;">
@@ -218,7 +215,7 @@
                     <td>[[${product.seller.sellHp}]]</td>
                 </tr>
             </table> <!-- tb3 -->
-            <div class="refund" id="related-product">
+            <div class="refund">
                 <span>소비자가 전자상거래등에서 소비자 보호에 관한 법률 제 17조 1항 또는 제 3항에 따라 청약철회를 하고
                 동법 제 18조 제 1항에 다라 청약철회한 물품을 판매자에게 반환하였음에도 불구하고 결제 대금의 환급이
                 3영업일을 넘게 지연된 경우, 소비자는 전자상거래등에서 소비자보호에 관한 법률 제 18조 제 2항 및 동법 시행령 제 21조 2에
@@ -226,47 +223,38 @@
                 아울러, 교환반품보증 및 결제대금의 환급신청은 [나의 쇼핑정보]에서 하실 수 있으며, 자세한 문의는
                 개별 판매자에게 연락하여 주시기 바랍니다.</span>
             </div> <!-- .refund-->
-            <h2 id="review"class="sub_tit4" style="margin-bottom: 0"><span style="font-size: 14px;color: #7b7b7b; line-height: 23px;">당신을 위한</span><br/>똑똑한 AI 상품 추천</h2>
             <div id="related-products">
                 <div th:each="prod : ${related}" class="relaties">
                     <a th:href="@{/prod/product(prodId=${prod.id})}"><img th:src="@{'/file/'+${prod.getProdBasicImg()}}"></a>
                     <div class="related-descriptions">
-                        <dt>
-                            [[${prod.prodName}]]
-                        </dt>
-                        <dd style="display: flex">
-                            <p class="related-price">[[${#numbers.formatInteger(prod.getProdPrice(), 1,'COMMA')}]]원&nbsp;</p>
-                            <em th:if="${prod.prodDiscount > 0.0}" class="related-DC">[[${#numbers.formatInteger(prod.getProdDiscount(), 1)}]]%&#8595;</em>
-                        </dd>
+                        <p>[[${prod.prodName.length() > 7 ? prod.prodName.substring(0, 7) + '...' : prod.prodName}]]</p>
+                        <p>[[${prod.prodSummary.length() > 7 ? prod.prodSummary.substring(0, 7) + '...' : prod.prodSummary}]]</p>
                     </div>
                 </div>
             </div>
             <h2 class="sub_tit4">상품리뷰</h2>
             <div class="reviewContainer" style="margin: 0 auto;">
                 <div style="display: flex; justify-content: space-between;" th:each="review : ${reviews}" class="cmt" id="prodReview">
-                    <div style="display: flex; justify-content: center; align-items: center;">
-                        <img style="width: 100px; height: 100px;" th:src="@{'/file/'+${review.getImg()}}">
-                    </div>
                     <div style="width: 600px;">
-                        <div>
-                            <div style="display: flex; align-items: center; gap: 20px; justify-content: space-between">
-                                <div style="display: flex;justify-content: left; align-items: center; margin-bottom: 10px;">
-                                    <span class="ratingBg">
-                                        <span class="rating" th:style="'width:'+ ${review.score * 2}+'%;'"></span>
-                                    </span>
-                                    <span th:text="${#numbers.formatDecimal(review.score / 10.0, 1, 1)}" class="cmt-score"></span>
-
-                                    <span class="cmt-memUid">[[${review.memUid}]]</span>
+                        <div style="display: flex; justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: 20px; width: 60%">
+                                <span style="margin-top: 0px;" th:text="${review.prodName}">상품명</span>
+                                <span style="margin-top: 0px;">[[${review.memUid}]]</span>
+                                <div style="display: flex;" class="badge grade">
+                                    <i class="fas fa-star"></i>
+                                    <span style="margin-top: 0px; color: white;">[[${#numbers.formatDecimal(review.score / 10.0, 1, 1)}]]</span>
                                 </div>
-                                <span class="cmt-prodRdate" th:text="${review.rdate}">2024-10-13</span>
                             </div>
-
-                            <span class="cmt-prodName" th:text="${review.prodName}">상품명</span>
+                            <span style="margin-top: 0px;" th:text="${review.rdate}">2024-10-13</span>
                         </div>
                         <span th:text="${review.review}"></span>
                     </div>
+                    <div style="display: flex; justify-content: center; align-items: center;">
+                        <img style="width: 100px; height: 100px;" th:src="@{'/file/'+${review.getImg()}}">
+                    </div>
                 </div>
             </div>
+            <a href="#" class="btnUp">&#8743;</a><!--.btnTop-->
         </main> <!-- #main-->
     </div>
     <input type="hidden" th:value="${options}" id="hiddenOption">
@@ -569,7 +557,7 @@
         const sectionHeight = sectionElement.offsetHeight;
         const scrollPosition = window.scrollY + window.innerHeight;
         if (scrollPosition >= sectionTop && scrollPosition <= sectionTop + sectionHeight) {
-                loadMoreReviews();
+            loadMoreReviews();
         }
     });
 
@@ -588,28 +576,23 @@
                     reviewElement.style.justifyContent = "space-between";
 
                     reviewElement.innerHTML = `
+                        <div style="width: 600px;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <div style="display: flex; align-items: center; gap: 20px; width: 60%">
+                                    <span style="margin-top: 0px;">${review.prodName}</span>
+                                    <span style="margin-top: 0px;">${review.memUid}</span>
+                                    <div style="display: flex;" class="badge grade">
+                                    <i class="fas fa-star"></i>
+                                    <span style="margin-top: 0px; color: white;">${(review.score / 10).toFixed(1)}</span>
+                                </div>
+                                </div>
+                                <span style="margin-top: 0px;">${review.rdate}</span>
+                            </div>
+                            <span>${review.review}</span>
+                        </div>
                         <div style="display: flex; justify-content: center; align-items: center;">
                             <img src="/file/${review.img}" style="width: 100px; height: 100px;">
                         </div>
-                        <div style="width: 600px;">
-                            <div>
-                            <div style="display: flex; align-items: center; gap: 20px; justify-content: space-between">
-                                <div style="display: flex;justify-content: left; align-items: center; margin-bottom: 10px;">
-                                        <span class="ratingBg">
-                                            <span class="rating" style="width: ${review.score * 2}%;"></span>
-                                        </span>
-                                        <span class="cmt-score">${(review.score / 10.0).toFixed(1)}</span>
-
-                                        <span class="cmt-memUid">${review.memUid}</span>
-                                    </div>
-                                    <span class="cmt-prodRdate">${review.rdate}</span>
-                                </div>
-
-                                <span class="cmt-prodName">${review.prodName}</span>
-                            </div>
-                        <span>${review.review}</span>
-                    </div>
-
                     `;
                     document.querySelector(".reviewContainer").appendChild(reviewElement);
                 });
@@ -643,4 +626,16 @@
         detailContainer.classList.toggle("expanded");
     }
 
+    window.addEventListener('scroll', toggleButtonVisibility);
+
+    function toggleButtonVisibility() {
+        const btnUp = document.querySelector('.btnUp');
+
+        // 스크롤 위치가 0보다 크면 버튼을 표시, 0일 때는 숨김
+        if (window.scrollY > 0) {
+            btnUp.classList.add('show'); // show 클래스 추가
+        } else {
+            btnUp.classList.remove('show'); // show 클래스 제거
+        }
+    }
 </script>
