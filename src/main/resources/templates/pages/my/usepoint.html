@@ -1,0 +1,86 @@
+<link rel="stylesheet" th:href="@{/css/my/my.css}">
+<link rel="stylesheet" th:href="@{/css/basic.css}">
+<header th:replace="layout/main/header.html"></header>
+<th:block th:replace="layout/my/modal.html"></th:block>
+<main style="margin-top: 230px">
+    <div id="my">
+        <th:block th:replace="layout/my/aside.html"></th:block>
+        <main>
+            <th:block th:replace="layout/my/banner.html"></th:block>
+            <section>
+                <h3>포인트사용내역</h3>
+
+                <article class="byDate">
+                    <span class="tit">기간별조회</span>
+                    <ul class="date_3ea">
+                        <li><a th:classappend="${type == 'date' && keyword == '7'} ? 'on' : ''" th:href="@{/my/points/use(page=0,type='date',keyword=7)}">1주일</a></li>
+                        <li><a th:classappend="${type == 'date' && keyword == '15'} ? 'on' : ''" th:href="@{/my/points/use(page=0,type='date',keyword=15)}">15일</a></li>
+                        <li><a th:classappend="${type == 'date' && keyword == '30'} ? 'on' : ''" th:href="@{/my/points/use(page=0,type='date',keyword=30)}">1개월</a></li>
+                    </ul>
+                    <ul class="date_5ea">
+                        <li><a th:classappend="${type == 'month' && keyword == '5'} ? 'on' : ''" th:href="@{/my/points/use                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            (page=0,type='month',keyword=5)}" class="5month_before">5월</a></li>
+                        <li><a th:classappend="${type == 'month' && keyword == '6'} ? 'on' : ''" th:href="@{/my/points/use(page=0,type='month',keyword=6)}">6월</a></li>
+                        <li><a th:classappend="${type == 'month' && keyword == '7'} ? 'on' : ''" th:href="@{/my/points/use(page=0,type='month',keyword=7)}">7월</a></li>
+                        <li><a th:classappend="${type == 'month' && keyword == '8'} ? 'on' : ''" th:href="@{/my/points/use(page=0,type='month',keyword=8)}">8월</a></li>
+                        <li><a th:classappend="${type == 'month' && keyword == '9'} ? 'on' : ''" th:href="@{/my/points/use(page=0,type='month',keyword=9)}">9월</a></li>
+                    </ul>
+                    <form th:action="@{/my/points/use}">
+                        <input type="hidden" name="type" value="custom">
+                        <input type="hidden" id="keyword" name="keyword" />
+                        <input type="date" id="startDate" max="9999-12-31" /><span>~</span><input id="endDate" type="date" max="9999-12-31" />
+                        <button onclick="combineDates()" type="submit" class="btnConfirm">조회하기</button>
+                    </form>
+
+                </article>
+                <article>
+                    <table th:if="${!noItem}" border="0" class="point">
+                        <tr>
+                            <th>날짜</th>
+                            <th>구분</th>
+                            <th>주문번호</th>
+                            <th>사용금액</th>
+                            <th>비고</th>
+                        </tr>
+                        <tr th:each="point : ${points}">
+                            <td th:text="${point.rdate}">날짜</td>
+                            <td th:text="${point.pointType}">구분</td>
+                            <td th:text="${point.orderId}">주문번호</td>
+                            <td th:text="${point.pointVar}">적립금액</td>
+                            <td th:text="${point.pointEtc}">비고</td>
+                        </tr>
+                    </table>
+                    <div th:if="${noItem}"
+                         style="
+                          width: 100%;
+                          height: 150px;
+                          font-size: 14px;
+                          line-height: 150px;
+                          text-align: center;
+                        "
+                    >
+                        사용 내역이 없습니다.
+                    </div>
+
+                    <div th:if="${!noItem}" class="page">
+                        <a class="none" th:href="@{/my/points/use(page=0,type=${type},keyword=${keyword})}"><<</a>
+                        <a class="none" th:href="@{/my/points/use(page=${page - 2},type=${type},keyword=${keyword})}" th:if="${page>=2}" th:text="${page}-1"></a>
+                        <a class="none" th:href="@{/my/points/use(page=${page - 1},type=${type},keyword=${keyword})}" th:if="${page>=1}" th:text="${page}"></a>
+                        <a class="active" style="font-weight: 600; text-decoration: underline;" th:text="${page}+1"></a>
+                        <a class="none" th:href="@{/my/points/use(page=${page + 1},type=${type},keyword=${keyword})}" th:if="${(totalPages - page)>=2}" th:text="${page}+2"></a>
+                        <a class="none" th:href="@{/my/points/use(page=${page + 2},type=${type},keyword=${keyword})}" th:if="${(totalPages - page)>=3}" th:text="${page}+3"></a>
+                        <a class="none" th:href="@{/my/points/use(page=${totalPages - 1},type=${type},keyword=${keyword})}">>></a>
+                    </div>
+                </article>
+            </section>
+        </main>
+    </div>
+</main>
+<footer th:replace="layout/main/footer.html"></footer>
+<script>
+    function combineDates() {
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+        document.getElementById('keyword').value = startDate + '~' + endDate;
+    }
+</script>
+
