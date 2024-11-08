@@ -38,12 +38,7 @@
                                     <span class="box">
                                         <span class="badge grade" style="display: inline-block;">
                                             <i class="fas fa-star"></i>
-                                            <th:block th:if="${product.prodRating} <= 0">
-                                                <span>0</span>
-                                            </th:block>
-                                            <th:block th:if="${product.prodRating} > 0">
-                                                <span>[[${#numbers.formatDecimal(product.prodRating / 10.0, 1, 1)}]]</span>
-                                            </th:block>
+                                            <span>[[${#numbers.formatDecimal(product.prodRating / 10.0, 1, 1)}]]</span>
                                         </span>
                                         <a href="#prodReview">
                                             상품평보기
@@ -561,7 +556,7 @@
         const sectionHeight = sectionElement.offsetHeight;
         const scrollPosition = window.scrollY + window.innerHeight;
         if (scrollPosition >= sectionTop && scrollPosition <= sectionTop + sectionHeight) {
-                loadMoreReviews();
+            loadMoreReviews();
         }
     });
 

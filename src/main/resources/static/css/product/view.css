@@ -427,7 +427,7 @@ input[type="number"]::-webkit-inner-spin-button {
 .detail_image {
     max-height: 1000px;
     overflow: hidden;
-    transition: max-height 3s ease;
+    transition: max-height 2s ease;
     position: relative;
     text-align: center;
     margin: 0 auto;

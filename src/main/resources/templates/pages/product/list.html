@@ -133,9 +133,9 @@
                         </h3>
                         <p class="product-summary">[[${product.getProdSummary}]]</p>
                         <div class="price-info">
-                            <del class="original-price">[[${#numbers.formatInteger(product.getProdPrice(), 1)}]]원</del>
+                            <del class="original-price">[[${#numbers.formatInteger(product.getProdPrice(), 1,'COMMA')}]]원</del>
                             <span class="discount" style="font-size: 16px; margin-right: 5px; display: inline-block; color: #c00000;">[[${#numbers.formatInteger(product.getProdDiscount(), 1)}]]%</span>
-                            <span class="current-price">[[${#numbers.formatInteger(product.getTotalPrice(), 1)}]]원</span>
+                            <span class="current-price">[[${#numbers.formatInteger(product.getTotalPrice(), 1,'COMMA')}]]원</span>
                         </div>
                         <div class="delivery-info" th:if="${product.getProdDeliver() > 0}">
                             배송비 : [[${product.getProdDeliver}]]원
@@ -150,13 +150,18 @@
                             <i class="fas fa-store"></i>
                             <span>[[${product.getSellCompany}]]</span>
                         </div>
-                        <div class="badge customer-satisfaction">
+                        <span class="badge customer-satisfaction" style="display: inline-block;">
                             <i class="fas fa-thumbs-up"></i>
-                            <span>고객만족우수</span>
-                        </div>
+                            <span th:if="${product.seller.sellGrade} == 5">플래티넘</span>
+                            <span th:if="${product.seller.sellGrade} == 4">프리미엄</span>
+                            <span th:if="${product.seller.sellGrade} == 3">빅파워</span>
+                            <span th:if="${product.seller.sellGrade} == 2">파워</span>
+                            <span th:if="${product.seller.sellGrade} == 1">새싹</span>
+                            <span th:if="${product.seller.sellGrade} == 0">씨앗</span>
+                        </span>
                         <div class="badge grade">
                             <i class="fas fa-star"></i>
-                            <span>[[${product.getSellGrade()}]]</span>
+                            <span>[[${#numbers.formatDecimal(product.getProdRating / 10.0, 1, 1)}]]</span>
                         </div>
                     </div>
                 </div>
