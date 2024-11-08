@@ -29,7 +29,6 @@ public class SearchService {
         // Redis에 저장
         redisTemplate.opsForList().rightPushAll(key, relatedSearches);
         // 만료 시간 설정 (예: 1시간)
-        redisTemplate.expire(key, 1, TimeUnit.HOURS);
     }
 
     // 연관 검색어 조회
@@ -60,10 +59,13 @@ public class SearchService {
                 String searchKeyword = tuple.getValue();
                 double newScore = 1;
 
-                assert searchKeyword != null;
-                redisTemplate.opsForZSet().add("search_count", searchKeyword, newScore);
+                if (searchKeyword != null) {
+                    // 모든 키워드의 점수를 1로 설정
+                    redisTemplate.opsForZSet().add("search_count", searchKeyword, newScore);
+                }
             }
 
+            // 만료 시간을 2시간으로 연장
             redisTemplate.expire("search_count", 2, TimeUnit.HOURS);
         }
     }

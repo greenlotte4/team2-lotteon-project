@@ -23,7 +23,7 @@ public class MainController {
     private final BannerService bannerService;
 
     @GetMapping(value = {"/","/index"})
-    public String main(Model model, @RequestParam(value = "birth", defaultValue = "false") Boolean birth) {
+    public String main(Model model, @RequestParam(value = "birth", defaultValue = "false") Boolean birth, @RequestParam(value = "stop", defaultValue = "false") String stop) {
         Object category1 = categoryProductService.findCategory();
         System.out.println(category1);
         List<GetBannerDTO> banners = bannerService.selectUsingBannerAt(2);
@@ -31,6 +31,7 @@ public class MainController {
         model.addAttribute("sliderb", banners);
         model.addAttribute("category1", category1);
         model.addAttribute("birth", birth);
+        model.addAttribute("stop", stop);
         return "index";
     }
 }

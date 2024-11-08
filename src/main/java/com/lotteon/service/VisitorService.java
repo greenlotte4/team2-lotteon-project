@@ -43,10 +43,11 @@ public class VisitorService {
         return count != null ? Long.parseLong(String.valueOf(count)) : 0L;
     }
 
-    @Scheduled(cron = "0 59 23 * * ?")
+    @Scheduled(cron = "20 59 23 * * ?")
     public void saveVisitorCount() {
         LocalDate today = LocalDate.now();
-        Long count = getVisitorCount(today.toString());
+        String todayKey = "visitor:count:" + today;
+        Long count = getVisitorCount(todayKey);
         VisitorCount visitorCount = VisitorCount.builder()
                 .visitorCnt(count)
                 .visitorDate(today)

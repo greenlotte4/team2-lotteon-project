@@ -40,7 +40,7 @@
             <th>상태</th>
             <th>확인/신청</th>
           </tr>
-          <tr th:if="${!orders.isEmpty()}" th:each="order : ${orders}">
+          <tr th:if="${!orders.isEmpty()}" class="myOrdersTR" th:each="order : ${orders}">
             <td class="date" th:text="${order.orderRdate}">2022-12-13</td>
             <td>
               <div class="thumb">
@@ -380,7 +380,7 @@
               <li class="discount"><span>할인</span><span>- ${item.discount}원</span></li>
               <li class="delivery"><span>배송비</span><span>${item.delivery}원</span></li>
               <li class="total"><span>결제금액</span><strong>${item.totalPrice}원</strong></li>
-            </ul>
+            </ul> 
           </td>
           <td class="status">${orderStatus}</td>
         </tr>

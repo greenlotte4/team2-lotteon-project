@@ -589,6 +589,12 @@
         alert('생일 축하합니다.')
     }
 
+    let stop = `[[${stop}]]` ;
+    if(stop=='true'){
+        alert('정지된 회원입니다. 반성하세요.')
+    }
+
+
     let isLoading = false;
     const sections = ['bestRank', 'hit', 'recommend', 'recent', 'discount', 'manyPoint'];
     const loadedSections = new Set(); // 이미 로드된 섹션을 저장하여 중복 요청 방지
@@ -614,7 +620,7 @@
                             <em class="dis cf">${v.prodDiscount}%&#8595;</em>
                         </dt><!--.Btit-->
                         <dd class="dPrice">
-                            ${v.prodPrice}
+                           ${(Math.round(v.prodPrice * (1 - v.prodDiscount / 100))).toLocaleString('en-US')} 원
                         </dd><!--.price-->
                     </dl>
                 </a></li>
@@ -670,7 +676,7 @@
                             <em class="dis cf">${v.prodDiscount}%&#8595;</em>
                         </dt><!--.Btit-->
                         <dd class="dPrice">
-                            ${v.prodPrice}
+                            ${(Math.round(v.prodPrice * (1 - v.prodDiscount / 100))).toLocaleString('en-US')} 원
                         </dd><!--.price-->
                     </dl>
                 </a></li>
@@ -690,7 +696,7 @@
                                 <em class="dis cf">${v.prodDiscount}%&#8595;</em>
                             </dd>
                             <dd class="dPrice">
-                                27,000원
+                                ${(Math.round(v.prodPrice * (1 - v.prodDiscount / 100))).toLocaleString('en-US')} 원
                             </dd><!--.price-->
                     </dl>
                     </a></li>

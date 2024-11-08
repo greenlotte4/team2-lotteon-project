@@ -500,4 +500,10 @@ public class OrderService {
             pointRepository.delete(point2.get());
         }
     }
+
+    public Long findByCustomer() {
+        MyUserDetails auth = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return orderRepository.countByCustomer(auth.getUser().getCustomer());
+    }
 }

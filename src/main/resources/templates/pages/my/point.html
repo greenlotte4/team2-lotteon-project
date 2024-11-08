@@ -33,7 +33,7 @@
 
       </article>
       <article>
-        <table th:if="${noItem == false}" border="0" class="point">
+        <table th:if="${!noItem}" border="0" class="point">
           <tr>
             <th>날짜</th>
             <th>구분</th>
@@ -51,7 +51,7 @@
             <td th:classappend="${point.warningExpiration == 'active'} ? 'warning' : ''" th:text="${point.pointExpiration}">유효기간</td>
           </tr>
         </table>
-        <div th:if="${noItem==true}"
+        <div th:if="${noItem}"
                 style="
               width: 100%;
               height: 150px;
@@ -63,7 +63,7 @@
           적립 내역이 없습니다.
         </div>
 
-        <div th:if="${noItem==false}" class="page">
+        <div th:if="${!noItem}" class="page">
           <a class="none" th:href="@{/my/points(page=0,type=${type},keyword=${keyword})}"><<</a>
           <a class="none" th:href="@{/my/points(page=${page - 2},type=${type},keyword=${keyword})}" th:if="${page>=2}" th:text="${page}-1"></a>
           <a class="none" th:href="@{/my/points(page=${page - 1},type=${type},keyword=${keyword})}" th:if="${page>=1}" th:text="${page}"></a>

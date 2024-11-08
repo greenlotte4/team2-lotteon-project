@@ -8,10 +8,10 @@
       <td><a th:href="@{/my/qnas}">문의</a></td>
     </tr>
     <tr>
-      <td><a href="">2</a></td>
+      <td><a th:text="${hasOrder}">2</a></td>
       <td><a th:text="${hasCoupon}" href=""></a></td>
       <td><a th:text="${hasPoint}" href="">1,800</a></td>
-      <td><a href="">1</a></td>
+      <td><a th:text="${hasQna}" href="">1</a></td>
     </tr>
   </table>
 </nav>

@@ -1,6 +1,7 @@
 <link rel="stylesheet" th:href="@{/css/my/address.css}">
 <link rel="stylesheet" th:href="@{/css/basic.css}">
 <script th:src="@{/js/axios.min.js}"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <header th:replace="layout/main/header.html"></header>
 <th:block th:replace="layout/my/modal"></th:block>
 <main style="margin-top: 230px;">
@@ -11,41 +12,49 @@
             <section>
                 <h3>배송지 설정</h3>
                 <div class="address-wrapper">
-                    <div th:classappend="${addr.state==1} ? 'on' : ''" th:each="addr : ${addrs}" class="address-box">
-                        <div th:text="${addr.addrNick}" class="address-name" style="margin-top: 30px; font-size: 17px">
+                    <div th:class="${addr.state==1 ? 'address-box on' : 'address-box'}" th:each="addr,i : ${addrs}">
+                        <div th:text="${addr.addrNick eq '기본배송지'?'내 정보':addr.addrNick}" class="address-name" style="font-size: 17px">
                             기본배송지
                         </div>
-                        <div style="margin-bottom: 30px; height: 15px;"><span th:text="${addr.name} + ' / '">이상훈 /</span><span th:text="${addr.hp}"> 010-1234-1515</span></div>
-                        <div style="margin-bottom: 5px; height: 25px;"><span th:text="${addr.addr2}"></span><span th:text="'(' + ${addr.addr1} + ')'"></span></div>
-                        <div style="margin-bottom: 30px; height: 15px;"><span th:text="${addr.addr3}">우남 101 - 1202호</span></div>
-                        <div style="margin-bottom: 69px; height: 25px;">요청사항 :<span th:text="${addr.request}">문앞에 둬주세요</span></div>
+                        <div style="margin-bottom: 30px; height: 15px;"><span th:text="${addr.name} + ' / '"></span><span th:text="${addr.hp1+'-'+addr.hp2+'-'+addr.hp3}"></span></div>
+                        <div style="margin-bottom: 5px; height: 25px;">
+                            <span th:text="'(' + ${addr.addr1} + ')'"></span><br>
+                            <span th:text="${addr.addr2}"></span>
+                        </div>
+                        <div style="margin-bottom: 30px; height: 15px;"><span th:text="${addr.addr3}"></span></div>
+                        <div style="margin-bottom: 69px; height: 25px;">요청사항 :<span th:text="${addr.request}"></span></div>
                         <div class="card-bottom-box">
                             <div class="left-box">
 <!--                                <img style="width: 95px; height:39px; margin-left: -14px" th:src="@{/images/lotteon-deliver-logo.png}">-->
                                 <button
-                                        th:if="${addr.state != 1}"
                                         class="basic-btn"
                                         style="border: none;
                                         background-color: transparent;"
-                                        onclick="updateBasic(event)" th:data-id="${addr.id}">기본배송지로설정</button>
+                                        onclick="updateBasic(event)" th:data-id="${addr.id}">
+                                    <span class="now" th:data-id="${addr.id}"></span>
+                                    [[${addr.state != 1?'기본 배송지 변경':'기본 배송지'}]]
+                                </button>
                             </div>
                             <div class="right-box" style="display: flex; justify-content: center; align-items: center; font-size: 12px;">
                                 <button
                                         th:data-nick="${addr.addrNick}"
+                                        th:data-name="${addr.name}"
+                                        th:data-hp1="${addr.hp1}"
+                                        th:data-hp2="${addr.hp2}"
+                                        th:data-hp3="${addr.hp3}"
                                         th:data-addr1="${addr.addr1}"
                                         th:data-addr2="${addr.addr2}"
                                         th:data-addr3="${addr.addr3}"
-                                        th:data-hp="${addr.hp}"
                                         th:data-req="${addr.request}"
                                         th:data-state="${addr.state}"
-                                        onclick="addressPopup(event,2)" th:data-id="${addr.id}" style="padding: 1px 5px;">수정</button>
+                                        onclick="addressPopup(event,2)" th:data-id="${addr.id}">수정</button>
                             </div>
                         </div>
-                        <button onclick="deleteAddress(event)" th:data-id="${addr.id}" class="x-btn" th:if="${addr.addrNick != '기본배송지'}" >삭제</button>
+                        <button onclick="deleteAddress(event)" th:data-id="${addr.id}" class="x-btn" th:if="${i.index > 0}" >삭제</button>
 
                     </div>
-                    <div th:if="${number < 3}" style="display: flex; justify-content: center; align-items: center; font-size: 50px; padding: 0px;" class="new-addr">
-                        <button onclick="addressPopup(event,1)" class="noItem" style="border: none; background-color: transparent;">+</button>
+                    <div th:if="${number < 3}" style="display: flex; justify-content: center; align-items: center; font-size: 50px; padding: 0" class="new-addr">
+                        <button onclick="addressPopup(event,1)" class="noItem" style="border: none; background-color: transparent; color:#7F7F7F">+</button>
                     </div>
                 </div>
             </section>
@@ -60,37 +69,73 @@
             const newAddr = document.querySelector('.new-addr')
             newAddr.innerHTML = `
             <div class="new-addr">
-                <div class="address-name" style="margin-top: 30px; font-size: 17px">
-                    <input id="addrNick2" style="width: 120px; border:none;" placeholder="배송지 별명">
+                <div class="address-nick">
+                    <span>배송지 별명</span>
+                    <input id="addrNick2" placeholder="집, 회사 등">
                 </div>
-                <input id="addr22" style="margin-bottom: 5px; border:none;" placeholder="주소">
-                <input id="addr12" style="margin-bottom: 5px; border:none;" placeholder="우편번호">
-                <input id="addr32" style="margin-bottom: 5px; border:none;" placeholder="상세주소">
-                <input id="request2" style="margin-bottom: 30px; border:none;" placeholder="요청사항"><br>
-                기본배송지 설정 : <input id="basicState2" type="checkbox" style="margin-bottom: 5px; border:none;"><br>
-                <button onclick="addAddress(event)" class="add-btn" style="padding: 1px 5px;">추가</button>
+                <div class="address-name">
+                    <span>수취인 </span>
+                    <input id="addrName2" placeholder="받는 사람 이름">
+                </div>
+                <span>연락처 </span>
+                <div id="addrHp2">
+                    <input id="addrHp12" maxlength="3" data-valid="number" style="text-align: right;margin-right: 4px"><span> -</span>
+                    <input id="addrHp22" maxlength="7" data-valid="number" style="text-align: center"><span>- </span>
+                    <input id="addrHp32" maxlength="5" data-valid="number" style="text-align: left;margin: 0 2px">
+                </div>
+                <span class="addrBox" onclick="postcode(2)">배송지 <span>우편번호 검색</span> <a style="margin-left: 3px;text-decoration: underline; color=#E0E0E0">검색하기</a></span>
+                <div id="addrBox2">
+                    <input id="addr12" placeholder="우편번호">
+                    <input id="addr22" placeholder="주소">
+                    <input id="addr32" placeholder="상세주소">
+                </div>
+                <span>배송 요청사항</span>
+                <input id="request2" placeholder="요청사항"><br>
+                <input id="basicState2" type="checkbox" class="screen-reader"><label for="basicState2"><i></i> 이 배송지를 기본배송지로 </label><br>
+                <button onclick="addAddress(event)" class="add-btn">추가</button>
             </div>
         `
+            autofocus('#addrHp2>input');
+
         } else if(a===2){
             const id = event.target.dataset.id;
             const nick = event.target.dataset.nick
+            const name = event.target.dataset.name
             const addr1 = event.target.dataset.addr1
             const addr2 = event.target.dataset.addr2
             const addr3 = event.target.dataset.addr3
             const req = event.target.dataset.req
+            const hp1 = event.target.dataset.hp1
+            const hp2 = event.target.dataset.hp2
+            const hp3 = event.target.dataset.hp3
             const state = event.target.dataset.state
             event.target.parentElement.parentElement.parentElement.style.backgroundColor = 'white'
             event.target.parentElement.parentElement.parentElement.innerHTML = `
 
-            <div class="address-name" style="margin-top: 30px; font-size: 17px;">
-                <input value="${nick}" id="addrNick3" style="width: 120px; border:none;" placeholder="배송지 별명">
+            <div class="address-nick">
+            <span>배송지 별명</span>
+                <input value="${nick}" id="addrNick3" placeholder="집, 회사 등">
             </div>
-            <input value="${addr1}" id="addr23" style="margin-bottom: 5px; border:none;" placeholder="주소">
-            <input value="${addr3}" id="addr13" style="margin-bottom: 5px; border:none;" placeholder="우편번호">
-            <input value="${addr2}" id="addr33" style="margin-bottom: 5px; border:none;" placeholder="상세주소">
-            <input value="${req}" id="request3" style="margin-bottom: 30px; border:none;" placeholder="요청사항"><br>
-            기본배송지 설정 : <input id="basicState3" ${state == 1 ? 'checked' : ''} type="checkbox" style="margin-bottom: 5px; border:none;"><br>
-            <button onclick="putAddress(event)" data-id="${id}" class="add-btn" style="padding: 1px 5px;">수정</button>
+            <div class="address-name">
+                <span>수취인 </span>
+                <input value="${name}" id="addrName3" placeholder="받는 사람 이름">
+            </div>
+            <span>연락처 </span>
+            <div id="addrHp3">
+                <input value="${hp1}" id="addrHp13" type="number" min="000" max="099" maxlength="3">-
+                <input value="${hp2}" id="addrHp23" type="number" min="0000" max="9999" maxlength="4">-
+                <input value="${hp3}" id="addrHp33" type="number" min="0000" max="9999" maxlength="4">
+            </div>
+            <span class="addrBox" onclick="postcode(3)">배송지 <span>우편번호 검색</span></span>
+            <div id="addrBox3">
+                <input value="${addr1}" id="addr13" placeholder="우편번호">
+                <input value="${addr2}" id="addr23" placeholder="주소">
+                <input value="${addr3}" id="addr33" placeholder="상세주소">
+            </div>
+            <span>배송 요청사항</span>
+            <input value="${req}" id="request3" placeholder="요청사항"><br>
+            <input id="basicState3" ${state === 1 ? 'checked' : ''} type="checkbox" class="screen-reader"><label for="basicState3"><i></i> 이 배송지를 기본배송지로 </label><br>
+            <button onclick="putAddress(event)" data-id="${id}" class="add-btn">완료</button>
 
         `
 
@@ -123,6 +168,8 @@
         event.stopPropagation();
         const submitData = {
             'addrNick' : document.getElementById('addrNick2').value,
+            'addrName' : document.getElementById('addrName2').value,
+            'addrHp': document.getElementById('addrHp12').value+document.getElementById('addrHp22').value+document.getElementById('addrHp32').value,
             'addr' : document.getElementById('addr12').value + '/' + document.getElementById('addr22').value + '/' + document.getElementById('addr32').value,
             'request' : document.getElementById('request2').value,
             'basicState' : document.getElementById('basicState2').checked
@@ -145,6 +192,8 @@
         event.stopPropagation();
         const submitData = {
             'addrNick' : document.getElementById('addrNick3').value,
+            'addrName' : document.getElementById('addrName3').value,
+            'addrHp': document.getElementById('addrHp13').value+document.getElementById('addrHp23').value+document.getElementById('addrHp33').value,
             'addr' : document.getElementById('addr13').value + '/' + document.getElementById('addr23').value + '/' + document.getElementById('addr33').value,
             'request' : document.getElementById('request3').value,
             'basicState' : document.getElementById('basicState3').checked,
@@ -185,5 +234,106 @@
         }
     }
 
+    function autofocus(formSelector) {
+        // 유효성 검사 함수
+        function validCheck(rulename, val) {
+            let isValid = true;
+            switch (rulename) {
+                case 'number':
+                    let re = /[^0-9]/g;  // 숫자만 허용
+                    isValid = !re.test(val);
+                    break;
+            }
+            return isValid;
+        }
+
+        // 폼 선택자에 해당하는 모든 input 요소를 가져옵니다.
+        let inputs = document.querySelectorAll(formSelector);
+
+        const hp1 = inputs[0];
+        const hp2 = inputs[1];
+        const hp3 = inputs[2];
+        hp1.style.display = 'none';
+        hp3.style.display = 'none';
+        hp2.style.width='80%';
+
+        inputs.forEach(function(input, idx) {
+            // keyup 이벤트 리스너 추가
+            input.addEventListener('keyup', function(e) {
+                let val = input.value;
+                // 유효성 검사
+                if (!validCheck(input.dataset.valid, val)) {
+                    input.value = val.substring(0, val.length - 1);
+                    return;
+                }
+
+                hp2.addEventListener('keyup', function() {
+                    if (hp2.value.length === 7) {
+                        hp1.value = hp2.value.substr(0, 3);
+                        hp3.value = hp2.value.substr(6, 1);
+                        hp2.value = hp2.value.substr(3, 3);
+                        hp3.setAttribute('maxlength', '5');
+                        hp1.style.display = 'inline-block';
+                        hp3.style.display = 'inline-block';
+                        document.querySelector('#addrHp12+span').style.display='inline-block';
+                        document.querySelector('#addrHp22+span').style.display='inline-block';
+                        hp2.style.width='15%';
+                        hp3.focus();
+                    }
+                });
+
+                // iptPhoneC의 keyup 이벤트
+                hp3.addEventListener('keyup', function() {
+                    if (hp3.value.length === 5) {
+                        if (hp2.value.length === 3) {
+                            hp2.value = hp2.value + hp3.value.substr(0, 1);
+                            hp3.value = hp3.value.substr(1, 4);
+                            hp3.setAttribute('maxlength', '4');
+                        } else if (hp3.value.length === 5) {
+                            hp3.value = hp3.value.substr(0, 4);
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+
+    function postcode(loca) {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 팝업을 통한 검색 결과 항목 클릭 시 실행
+                var addr = ''; // 주소_결과값이 없을 경우 공백
+                var extraAddr = ''; // 참고항목
+
+                //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                if (data.userSelectedType === 'R') { // 도로명 주소를 선택
+                    addr = data.roadAddress;
+                } else { // 지번 주소를 선택
+                    addr = data.jibunAddress;
+                }
+
+                if (data.userSelectedType === 'R') {
+                    if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+                        extraAddr += data.bname;
+                    }
+                    if (data.buildingName !== '' && data.apartment === 'Y') {
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    if (extraAddr !== '') {
+                        extraAddr = '(' + extraAddr + ')';
+                    }
+                } else {
+                    document.getElementById(`addr2${loca}`).value = '';
+                }
+
+                // 선택된 우편번호와 주소 정보를 input 박스에 넣는다.
+                document.getElementById(`addr1${loca}`).value = data.zonecode;
+                document.getElementById(`addr2${loca}`).value = addr;
+                document.getElementById(`addr3${loca}`).value += extraAddr;
+                document.getElementById(`addr3${loca}`).focus(); // 우편번호 + 주소 입력이 완료되었음으로 상세주소로 포커스 이동
+            }
+        }).open();
+    }
 </script>
 

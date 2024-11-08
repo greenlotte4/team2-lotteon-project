@@ -145,13 +145,15 @@ body {
 .tab .array {
     display: flex;
     justify-content: center;
-    gap: 23px;
-    padding: 10px 20px;
-    background-color: var(--background);
+    align-items: center;
     border-radius: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    list-style: none;
-    margin-top: 20px;
+    padding: 10px 25px;
+    list-style-type: none;
+    width: fit-content;
+    margin: 20px auto;
+    gap: 0px;
+    background-color: var(--common-background-color);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* 각각의 정렬 링크 스타일 */

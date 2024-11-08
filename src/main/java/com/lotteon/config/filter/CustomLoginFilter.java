@@ -66,6 +66,16 @@ public class CustomLoginFilter implements AuthenticationSuccessHandler {
             memberService.updateLastLoginDate(user);
         }
 
+        if(user.getUser().getMemState().equals("leave")){
+            request.getSession().invalidate();
+            redirectStrategy.sendRedirect(request, response, "/auth/login/view");
+        }
+
+        if(user.getUser().getMemState().equals("stop")){
+            request.getSession().invalidate();
+            redirectStrategy.sendRedirect(request, response, "/?stop=true");
+        }
+
         LocalDate today = LocalDate.now();
         String birth = customer.getCustBirth();
 

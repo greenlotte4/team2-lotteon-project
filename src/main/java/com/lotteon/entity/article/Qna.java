@@ -1,7 +1,9 @@
 package com.lotteon.entity.article;
 
 import com.lotteon.entity.category.CategoryArticle;
+import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Member;
+import com.lotteon.entity.member.Seller;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -54,6 +56,10 @@ public class Qna {
 
     @Column(name = "qna_views")
     private int qnaViews;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sell_id")
+    private Seller seller;
 
     public void changeAnswer(String answer) {
         qnaAnswer = answer;

@@ -1,5 +1,6 @@
 package com.lotteon.dto.responseDto;
 
+import jakarta.persistence.Column;
 import lombok.*;
 
 @Getter
@@ -10,6 +11,8 @@ import lombok.*;
 @NoArgsConstructor
 public class PostAddressDto {
     private String addrNick;
+    private String addrName;
+    private String addrHp;
     private String addr;
     private String request;
     private Boolean basicState;

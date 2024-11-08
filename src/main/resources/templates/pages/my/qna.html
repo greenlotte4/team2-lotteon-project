@@ -10,7 +10,7 @@
     <section>
       <h3>문의하기</h3>
       <article>
-        <table border="0" class="qna">
+        <table th:if="${!noItem}" border="0" class="qna">
           <tr>
             <th>번호</th>
             <th>문의채널</th>
@@ -31,7 +31,7 @@
           </tr>
 
         </table>
-        <div
+        <div th:if="${noItem}"
                 style="
               width: 100%;
               height: 150px;

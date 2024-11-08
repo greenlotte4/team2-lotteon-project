@@ -19,35 +19,42 @@ body{height: 100vh;}
 #my > nav tr > td > a {display: inline-block; width: 100%;}
 
 #my > main {width: 810px; height: auto;float: left; margin: 30px; box-sizing: border-box;}
-#my > main  .banner {width: 810px; height: 86px;}
+#my > main .banner {width: 810px; height: 86px;overflow: hidden;display: flex;justify-content: center;align-items: center }
+#my > main .banner > img {max-width: 100%;width: auto;height: 100%;}
+
 
 #my .address-box {
     border: 1px solid #e0e0e0;
     padding: 20px;
-    width: 220px;
-    height: 350px;
-    cursor:pointer;
-    /*&:hover {*/
-    /*    background-color: #7f7f7f;*/
-    /*    color: white;*/
-    /*}*/
-    border-radius: 15px;
-}
-#my .on {
-    border: 1px solid #e0e0e0;
-    padding: 20px;
-    width: 220px;
+    width: 250px;
     height: 350px;
     border-radius: 15px;
-    background-color: #cccccc;
+    background: #fdfdfd;
+    position: relative;
 }
+#my .address-box .now{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    position: relative;
+    top: 5px;
+    left: -3px;
+    background: url(/images/ico_sprites.png) no-repeat -622px -306px;
+    zoom: 0.9;
+}
+#my .address-box .basic-btn:hover .now {background-position: -717px -361px!important;}
+#my .address-box.on .basic-btn .now {background-position: -644px -306px!important;}
+#my .address-box.on .basic-btn {cursor: default}
+#my .address-box.on {border: 1px solid #E60012;background: #FFFFFF;}
 
-.new-addr {
+#my .new-addr {
+    position: relative;
     border: 1px solid #e0e0e0;
     padding: 20px;
-    width: 220px;
+    width: 250px;
     height: 350px;
     border-radius: 15px;
+    background: #fdfdfd;
 }
 
 #my .address-wrapper {
@@ -60,52 +67,123 @@ body{height: 100vh;}
     overflow: hidden;
 }
 
-#my .address-name{
-    margin-top: 30px;
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 20px;
-}
-
-#my .card-bottom-box {
+#my .card-bottom-box {display: flex;justify-content: space-between;align-items: center;}
+#my .left-box{
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
 }
-
 #my .right-box {
+    position: absolute;
     font-size: 15px;
+    bottom: 15px;
+    right: 15px;
 }
 
 #my .right-box button {
     background-color: transparent;
     border: 1px solid #e0e0e0;
     border-radius: 3px;
+    padding: 3px 6px;
     &:hover {
-        background-color: #7f7f7f;
-        color: white;
+        border-color: #7f7f7f;
     }
 }
 
 #my .add-btn {
-    margin-top: 79px;
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
     font-size: 12px;
     background-color: transparent;
     border: 1px solid #e0e0e0;
     border-radius: 3px;
+    padding: 3px 6px;
+    &:hover {
+        border-color: #7f7f7f;
+    }
 }
 
 #my .x-btn {
-    position: relative;
-    top: -315px;
-    left: 151px;
-    padding: 2px 5px;
+    position: absolute;
+    top: 15px;
+    right: 15px;
     border-radius: 5px;
-    background-color: transparent;
     border: none;
     cursor: pointer;
-    color: black;
+    font-size: 0;
+    background: url("/images/ico_sprites.png") no-repeat -952px -307px transparent;
+    width: 16px;
+    height: 15px;
+    zoom: 0.8;
+    opacity: 0.7;
     &:hover {
-        opacity: 0.8;
+        background-position: -951px -348px;
+        opacity: 1;
     }
+}
+#my .address-nick{width: 40%; display: inline-block;box-sizing: border-box}
+#my .address-name{width: 58%; display: inline-block;box-sizing: border-box}
+#my .address-nick span, #my .address-name span{padding-left: 3px}
+
+#addrBox2,#addrBox3{width: 100% ; height: auto; border-radius: 10px;background: #F2F2F2;margin-bottom: 10px; padding: 10px;}
+#addr12,#addr13,#addr22,#addr23,#addr32,#addr33{width:100%;background: transparent; border: none;outline: none;}
+#addrHp12, #addrHp22, #addrHp32,#addrHp13, #addrHp23, #addrHp33{border: none; outline: none; width: 30%; background: transparent; padding: 0 10px}
+#addrName2,#addrName3,#addrHp2,#addrHp3,#addrNick2,#addrNick3,#request2,#request3 {width: 100%;border-radius: 10px;border: none;padding: 5px;display: inline-block;margin-bottom: 2px;background: #F2F2F2;}
+#my .address-box > span{padding-left: 3px}
+span.addrBox{display: flex;height: 18px;overflow: hidden;align-items: center; cursor: pointer}
+span.addrBox>span{
+    display: inline-block;
+    font-size: 0;
+    zoom:0.5;
+    background: url('/images/ico_sprite.png') no-repeat -2px -9px;
+    width: 26px;
+    height: 26px;
+    opacity: 0.7;
+    margin-left: 10px;
+}
+#addrHp2>input{padding: 0;}
+#addrHp2 > span {display: none}
+#addr12, #addr13{width: 50px}
+#addrHp2,#addrHp3{text-align: center; margin-bottom: 5px}
+#request2,#request3{margin-bottom: 10px}
+#addrName2,#addrName3,#addrNick2,#addrNick3{margin-bottom: 3px}
+#my .new-addr > label{position: absolute;bottom: 15px;left: 15px;}
+#my .address-box > label{position: absolute;bottom: 15px;left: 15px;}
+#my .screen-reader { /* 스크린 리더를 고려해서 체크박스를 화면에서 숨김 */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    margin: -1px;
+    clip-path: inset(50%);
+}
+#my [type="checkbox"] + label i {
+    display: inline-block;
+    background: url('/images/ico_sprites.png') no-repeat -666px -306px;
+    zoom:0.8;
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+}
+#my .new-addr .add-btn{background: #E60012; color: #FFFFFF; border-color: #E60012; &:hover{opacity: 0.8;}}
+#my [type="checkbox"]:hover + label i{background-position: -688px -335px}
+#my label{display: flex;align-items: center; width: 70%; cursor: pointer}
+#my [type="checkbox"]:checked + label i {background-position: -688px -306px;}
+
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox  */
+input[type='number'] {
+    -moz-appearance: textfield;
 }

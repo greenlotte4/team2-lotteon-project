@@ -4,7 +4,6 @@ import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.ArticleDto;
 import com.lotteon.dto.responseDto.*;
 import com.lotteon.dto.responseDto.cartOrder.ResponseOrdersDto;
-import com.lotteon.entity.article.Qna;
 import com.lotteon.entity.member.Customer;
 import com.lotteon.entity.member.Member;
 import com.lotteon.service.article.QnaService;
@@ -28,9 +27,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -40,7 +37,6 @@ import java.util.stream.Collectors;
 public class MyController {
 
     private final OrderService orderService;
-    private final CouponService couponService;
     private final CustomerCouponService customerCouponService;
     private final CustomerService customerService;
     private final PointService pointService;
@@ -55,6 +51,10 @@ public class MyController {
         model.addAttribute("hasCoupon", hasCoupon);
         int hasPoint = customerService.findByCustomer();
         model.addAttribute("hasPoint", hasPoint);
+        Long hasOrder = orderService.findByCustomer();
+        model.addAttribute("hasOrder", hasOrder);
+        Long hasQna = qnaService.findByCustomer();
+        model.addAttribute("hasQna",hasQna);
     }
 
     @GetMapping(value = {"", "/", "/index"})
@@ -66,7 +66,8 @@ public class MyController {
         Page<GetPointsDto> points = pointService.findAllByCustomer(0);
         if (points.isEmpty()) {
             model.addAttribute("noPoint", true);
-            return "pages/my/index";
+        } else {
+            model.addAttribute("noPoint",false);
         }
         List<GetReviewsDto> reviews = reviewService.findTop3();
         if (reviews != null) {
@@ -98,7 +99,7 @@ public class MyController {
 
         model.addAttribute("orders", orders);
         model.addAttribute("points", points);
-        model.addAttribute("noPoint",false);
+
 
 
         List<GetAddressDto> addrs = addressService.findAllByCustomer();
@@ -123,9 +124,9 @@ public class MyController {
         Page<GetMyCouponDto> coupons = customerCouponService.findAllByCustomer(page);
         if(coupons==null){
             model.addAttribute("noItem",true);
-            return "pages/my/coupon";
+        } else {
+            model.addAttribute("noItem",false);
         }
-        model.addAttribute("noItem",false);
         model.addAttribute("coupons", coupons);
         model.addAttribute("page", page);
         model.addAttribute("totalPages", coupons.getTotalPages());
@@ -134,18 +135,19 @@ public class MyController {
     }
 
     // 나의 쇼핑정보 > 나의 설정
+
     @GetMapping("/info")
-    public String info(Model model) {
-        log.info("컨트롤러 접속 111");
+    public String info(Model model,Authentication authentication) {
+        log.info("컨트롤러 접속 ");
 
         GetMyInfoDTO getCust = customerService.myInfo();
-
-        model.addAttribute("cust",getCust);
-
+        if(getCust!=null){
+            model.addAttribute("cust",getCust);
+        } else {
+            return "/";
+        }
         return "pages/my/info";
     }
-
-    // 나의 쇼핑정보 > 나의 설정 end
 
     @GetMapping("/orders")
     public String order(Model model,
@@ -189,11 +191,12 @@ public class MyController {
         } else {
             points = pointService.findAllByCustomer(page);
         }
+
         if(points.isEmpty()){
             model.addAttribute("noItem",true);
-            return "pages/my/point";
+        } else {
+            model.addAttribute("noItem",false);
         }
-        model.addAttribute("noItem",false);
         model.addAttribute("points", points);
         model.addAttribute("type", type);
         model.addAttribute("keyword", keyword);
@@ -218,9 +221,9 @@ public class MyController {
         }
         if(points.isEmpty()){
             model.addAttribute("noItem",true);
-            return "pages/my/usepoint";
+        } else {
+            model.addAttribute("noItem",false);
         }
-        model.addAttribute("noItem",false);
         model.addAttribute("points", points);
         model.addAttribute("type", type);
         model.addAttribute("keyword", keyword);
@@ -248,7 +251,11 @@ public class MyController {
 
         // 1. 로그인한 사용자의 페이징된 QnA 목록을 가져옴
         Page<ArticleDto> qnasPage = qnaService.getMyQnas(member.getId(), pageable);
-
+        if(qnasPage.isEmpty()){
+            model.addAttribute("noItem",true);
+        } else {
+            model.addAttribute("noItem",false);
+        }
         // 2. 현재 페이지의 QnA 목록 추출
         List<ArticleDto> qnaList = qnasPage.getContent();
 

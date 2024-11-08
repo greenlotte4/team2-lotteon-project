@@ -54,4 +54,6 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
     List<Order> findAllByOrderRdateAfter(Timestamp threeDaysAgo);
 
     Optional<Order> findByIdAndOrderItems_State2(Long orderId, int i);
+
+    Long countByCustomer(Customer customer);
 }

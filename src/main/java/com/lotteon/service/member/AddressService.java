@@ -44,6 +44,8 @@ public class AddressService {
                 .address(customer.getCustAddr())
                 .basicState(1)
                 .addrNick("기본배송지")
+                .addrHp(customer.getCustHp())
+                .addrName(customer.getCustName())
                 .customer(customer)
                 .build();
 
@@ -76,6 +78,8 @@ public class AddressService {
 
         Address newAddress = Address.builder()
                 .address(dto.getAddr())
+                .addrHp(dto.getAddrHp())
+                .addrName(dto.getAddrName())
                 .basicState(state)
                 .customer(customer)
                 .request(dto.getRequest())

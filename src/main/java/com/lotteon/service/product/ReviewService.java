@@ -49,11 +49,6 @@ public class ReviewService {
             return "상품을 구매한 사용자만 리뷰를 작성할 수 있습니다.";
         }
 
-        boolean alreadyReviewed = reviewDocuRepository.existsByCustIdAndProdId(customer.getId(), dto.getProdId());
-        if (alreadyReviewed) {
-            return "이미 리뷰를 작성하셨습니다. 리뷰는 수정할 수 없습니다.";
-        }
-
         ReviewDocu review = ReviewDocu.builder()
                 .reviewScore(dto.getScore())
                 .custId(customer.getId())

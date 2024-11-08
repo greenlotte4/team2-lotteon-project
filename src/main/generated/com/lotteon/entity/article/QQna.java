@@ -44,6 +44,8 @@ public class QQna extends EntityPathBase<Qna> {
 
     public final NumberPath<Integer> qnaViews = createNumber("qnaViews", Integer.class);
 
+    public final com.lotteon.entity.member.QSeller seller;
+
     public QQna(String variable) {
         this(Qna.class, forVariable(variable), INITS);
     }
@@ -65,6 +67,7 @@ public class QQna extends EntityPathBase<Qna> {
         this.cate1 = inits.isInitialized("cate1") ? new com.lotteon.entity.category.QCategoryArticle(forProperty("cate1"), inits.get("cate1")) : null;
         this.cate2 = inits.isInitialized("cate2") ? new com.lotteon.entity.category.QCategoryArticle(forProperty("cate2"), inits.get("cate2")) : null;
         this.member = inits.isInitialized("member") ? new com.lotteon.entity.member.QMember(forProperty("member"), inits.get("member")) : null;
+        this.seller = inits.isInitialized("seller") ? new com.lotteon.entity.member.QSeller(forProperty("seller"), inits.get("seller")) : null;
     }
 
 }
