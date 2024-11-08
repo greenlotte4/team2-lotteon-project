@@ -98,26 +98,16 @@
                 <div class="list">
                     <h4>공지사항</h4>
                     <ul>
-                        <li class="notice"><a href="#">
-                            <p class="cate">안내</p> <p class="content">해외결제사칭 문자주의</p>
-                            <span class="date">22.10.31</span>
-                        </a></li>
-                        <li class="notice"><a href="#">
-                            <p class="cate">안내</p> <p class="content">해외결제사칭 문자주의</p>
-                            <span class="date">22.10.31</span>
-                        </a></li>
-                        <li class="notice"><a href="#">
-                            <p class="cate">안내</p> <p class="content">해외결제사칭 문자주의</p>
-                            <span class="date">22.10.31</span>
-                        </a></li>
-                        <li class="notice"><a href="#">
-                            <p class="cate">안내</p> <p class="content">해외결제사칭 문자주의</p>
-                            <span class="date">22.10.31</span>
-                        </a></li>
-                        <li class="notice"><a href="#">
-                            <p class="cate">안내</p> <p class="content">해외결제사칭 문자주의</p>
-                            <span class="date">22.10.31</span>
-                        </a></li>
+                        <li class="notice" th:each="notice, iterStat : ${notices}" th:if="${iterStat.index} < 5">
+                            <a th:href="@{'/admin/cs/notice/view/' + ${notice.id}}">
+                                <!-- 카테고리 출력 -->
+                                <span class="cate" th:data-value="${notice.cate1.categoryName}" th:text="${notice.cate1.categoryName}">카테고리</span>
+                                <!-- 공지사항 제목 출력 -->
+                                <p class="content" th:text="${notice.noticeTitle}">공지사항 제목</p>
+                                <!-- 작성 날짜 출력 -->
+                                <span class="date" th:text="${#dates.format(notice.noticeRdate, 'yy.MM.dd')}">등록일</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
                 <!--
@@ -125,38 +115,22 @@
                 -->
                 <div class="list">
                     <h4>고객문의</h4>
-                    <ul>
-                        <li th:each="qna : ${qnas}">
-                            <a th:href="@{'/admin/cs/qna/view/' + ${qna.id}}">
-                                <p class="content" th:text="${qna.title}">문의 제목</p>
-                                <span class="nick" th:text="${qna.member != null && qna.member.memUid != null ? qna.member.memUid.substring(0, 2) + '**' : 'N/A'}">작성자</span>
-                                <span class="date" th:text="${#temporals.format(qna.rdate, 'yy.MM.dd')}">작성일</span>
+                    <ul class="qna-list">
+                        <li class="qna" th:each="qna : ${qnas}">
+                            <a th:href="@{'/admin/cs/qna/viewOrReply/' + ${qna.id}}">
+                                <!-- 카테고리 출력 -->
+                                <span class="cate q_cate" th:data-value="${qna.cate2 != null ? qna.cate2.categoryName : ''}" th:data-parent="${qna.cate1 != null ? qna.cate1.categoryName : ''}" th:text="${qna.cate2 != null ? qna.cate2.categoryName : '카테고리2'}">카테고리2</span>
+                                <!-- 문의 제목 출력 -->
+                                <span class="content" th:text="${qna.qnaTitle}">문의 제목</span>
+                                <!-- 닉네임 출력 (닉네임 마스킹 처리) -->
+                                <span class="nick" th:text="${qna.member != null && qna.member.memUid != null ? (qna.member.memUid.length() >= 2 ? qna.member.memUid.substring(0, 2) + '**' : qna.member.memUid + '**') : 'N/A'}">chh**</span>
+                                <!-- 작성 날짜 출력 -->
+                                <span class="date" th:text="${#temporals.format(qna.qnaRdate, 'yy.MM.dd')}">22.10.31</span>
                             </a>
                         </li>
                     </ul>
-                    <ul>
-                        <li class="qna"><a href="#">
-                            <p class="cate">가입</p> <p class="content">가입문의내용</p>
-                            <span class="nick">chh**</span><span class="date">22.10.31</span>
-                        </a></li>
-                        <li class="qna"><a href="#">
-                            <p class="cate">가입</p> <p class="content">가입문의내용</p>
-                            <span class="nick">chh**</span><span class="date">22.10.31</span>
-                        </a></li>
-                        <li class="qna"><a href="#">
-                            <p class="cate">가입</p> <p class="content">가입문의내용</p>
-                            <span class="nick">chh**</span><span class="date">22.10.31</span>
-                        </a></li>
-                        <li class="qna"><a href="#">
-                            <p class="cate">가입</p> <p class="content">가입문의내용</p>
-                            <span class="nick">chh**</span><span class="date">22.10.31</span>
-                        </a></li>
-                        <li class="qna"><a href="#">
-                            <p class="cate">가입</p> <p class="content">가입문의내용</p>
-                            <span class="nick">chh**</span><span class="date">22.10.31</span>
-                        </a></li>
-                    </ul>
                 </div>
+
             </article>
         </section>
     </main>
@@ -248,8 +222,109 @@
             } catch (e) {
 
             }
-        });
+        };
+        const barChart = new ApexCharts(document.querySelector("#barChart"), barOptions);
+        barChart.render();
 
+        const pieOptions = {
+            labels: ['가전', '식품', '의류', '기타'],  // 카테고리 레이블
+            series: [600, 300, 100, 100],  // 매출 데이터
+            chart: {
+                type: 'pie',  // 차트 유형: 파이 차트
+                height: 350,  // 차트 높이
+            },
+            dataLabels: {enabled: false},
+            colors: [
+                '#4F81BD',
+                '#C0504D',
+                '#9BBB59',
+                '#8064A2'
+            ],
+            legend: {position: 'bottom'}, // 범례 위치
+            title: {text: '주요 매출', align: 'center'}
+        };
+
+        const pieChart = new ApexCharts(document.querySelector("#pieChart"), pieOptions);
+        pieChart.render();  // 차트 렌더링
+
+        // 1차 및 2차 카테고리 변환 맵
+        const firstCategoryMap = {
+            "user": "회원",
+            "coupon": "쿠폰/이벤트",
+            "order": "주문/결제",
+            "delivery": "배송",
+            "cancel": "취소/반품/환불",
+            "travel": "여행/숙박/항공",
+            "safe": "안전결제"
+        };
+
+        const secondCategoryMap = {
+            "user": {
+                "regi": "가입",
+                "leave": "탈퇴",
+                "info": "회원정보",
+                "login": "로그인"
+            },
+            "coupon": {
+                "lpoint": "L.POINT",
+                "coupon2": "쿠폰",
+                "event": "이벤트/경품",
+                "attendance": "출석체크",
+                "gift": "사은품"
+            },
+            "order": {
+                "orderMethod": "주문방법",
+                "orderChange": "주문변경",
+                "paymentMethod": "결제방법",
+                "easyPayment": "간편결제",
+                "giftReceive": "선물받기",
+                "mobileGift": "모바일상품권",
+                "phonePayment": "휴대폰결제",
+                "applePay": "애플페이",
+                "product": "상품"
+            },
+            "delivery": {
+                "delivery2": "배송",
+                "deliveryFee": "배송비",
+                "deliveryMethod": "배송방법",
+                "deliverySchedule": "배송일정",
+                "deliveryAddress": "배송지",
+                "todayArrival": "오늘도착",
+                "overseas": "해외직구",
+                "notReceived": "미수령신고",
+                "recipient": "수취인",
+                "purchaseConfirm": "구매확정"
+            },
+            "cancel": {
+                "orderCancel": "주문취소",
+                "refundMethod": "교환/환불",
+                "cardRefund": "카드환불",
+                "refundSchedule": "환불일정",
+                "phoneRefund": "휴대폰결제환불"
+            },
+            "travel": {
+                "ecoupon": "e쿠폰",
+                "flight": "항공",
+                "accommodation": "숙박",
+                "ticket": "티켓"
+            },
+            "safe": {
+                "policyViolation": "법령 및 정책위반 상품",
+                "ipViolation": "지적재산권침해",
+                "serviceViolation": "서비스 이용규칙 위반",
+                "adViolation": "표시광고"
+            }
+        };
+
+        // 카테고리명을 한글로 변환하여 표시
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.q_cate').forEach(function (item) {
+                const value = item.getAttribute('data-value');
+                const parentValue = item.getAttribute('data-parent');
+                // 변환된 카테고리명 적용
+                item.textContent = secondCategoryMap[parentValue]?.[value] || value;
+            });
+        });
 
 
     </script>

@@ -105,10 +105,10 @@ public class QnaService {
 
 
     // qna 답변하기 *관리자 작성
-   public void reply(Long id, String answer){
-       Qna qna = qnaRepository.findById(id)
-               .orElseThrow(() -> new IllegalArgumentException("해당하는 QnA가 없습니다."));
-       qna.changeAnswer(answer); // 답변 내용 업데이트
+    public void reply(Long id, String answer){
+        Qna qna = qnaRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 QnA가 없습니다."));
+        qna.changeAnswer(answer); // 답변 내용 업데이트
     }
 
     public void save(Qna qna) {
@@ -231,7 +231,7 @@ public class QnaService {
     }
 
 
-    /* 일반 CS (목록, 보기) */
+    /* 일반 CS (목, 보기) */
     // index에서 qna 5개 조회
     public List<Qna> getTop5Qnas() {
         return qnaRepository.findTop5ByOrderByQnaRdateDesc();
@@ -274,7 +274,4 @@ public class QnaService {
 
     }
 }
-
-
-
 

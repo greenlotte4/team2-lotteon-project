@@ -33,7 +33,7 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
 
     // 최신 공지사항 10개 조회
     List<Notice> findTop10ByOrderByNoticeRdateDesc();
-
+    List<Notice> findTop5ByOrderByNoticeRdateDesc();
     // cate1의 CategoryName으로 공지사항을 검색하는 메서드 (중복 제거 후 하나만 남김)
     Page<Notice> findByCate1_CategoryName(String cate1Name, Pageable pageable);
 

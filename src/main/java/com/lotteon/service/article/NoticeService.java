@@ -149,7 +149,8 @@ public class NoticeService {
     public List<Notice> getTop10Notices() {
         return noticeRepository.findTop10ByOrderByNoticeRdateDesc();
     }
-
+    public List<Notice> getTop5Notices() { return noticeRepository.findTop5ByOrderByNoticeRdateDesc();
+    }
     // Notice -> NoticeResponseDto 변환 함수
     private NoticeResponseDto mapNoticeToResponseDto(Notice notice) {
         NoticeResponseDto responseDto = modelMapper.map(notice, NoticeResponseDto.class);

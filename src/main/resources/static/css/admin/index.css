@@ -27,6 +27,7 @@ table tr:nth-of-type(even) > *{border-bottom: 1px solid #ddd;}
 .admin_list>.list{width: 380px; margin-top: 30px;}
 
 /* notice */
+/*
 .list>ul{border-top: 2px solid #A6A6A6;}
 .list>h4{ height: 30px; font-size: 16px; font-weight: 900;}
 .list .notice{height: 40px; line-height: 40px; border-bottom: 1px solid #D3D3D3;}
@@ -34,10 +35,93 @@ table tr:nth-of-type(even) > *{border-bottom: 1px solid #ddd;}
 .notice>a{display: flex;}
 .notice>a>.cate{width: 50px;}
 .notice>a>.content{width: 150px;}
+*/
+
+/* 공지사항 스타일 */
+.list>ul {
+    border-top: 2px solid #A6A6A6;
+}
+
+.list>h4 {
+    height: 30px;
+    font-size: 16px;
+    font-weight: 900;
+}
+
+.list .notice {
+    height: 40px;
+    line-height: 40px;
+    border-bottom: 1px solid #D3D3D3;
+}
+
+.notice>a {
+    display: flex;
+    text-decoration: none; /* 링크 밑줄 제거 */
+    color: #000; /* 텍스트 색상 검정으로 */
+}
+
+.notice>a>.cate {
+    width: 80px; /* 카테고리 칸 너비 늘리기 */
+}
+
+.notice>a>.content {
+    width: 250px; /* 제목 칸 너비 조절 */
+}
+
+.notice .date {
+    color: #666; /* 날짜 색상 */
+}
+
 
 /* qna */
-.list .qna{height: 40px; line-height: 40px; border-bottom: 1px solid #D3D3D3;}
+/* 전체 리스트 스타일 */
+.list .qna-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
 
-.qna>a{display: flex;}
-.qna>a>.cate{width: 50px;}
-.qna>a>.content{width: 150px;}
+.list .qna {
+    height: 40px;
+    line-height: 40px;
+    border-bottom: 1px solid #D3D3D3;
+    display: flex;
+    align-items: center;
+}
+
+.qna > a {
+    display: flex;
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+    justify-content: space-between; /* 요소 간의 균등한 간격을 위해 */
+}
+
+.qna > a > .cate {
+    width: 80px;
+    color: #333;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.qna > a > .content {
+    width: 250px;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.qna > a > .nick {
+    width: 80px;
+    text-align: center;
+    color: #666;
+}
+
+.qna > a > .date {
+    width: 80px;
+    text-align: right;
+    color: #666;
+}

@@ -20,6 +20,7 @@ import com.lotteon.repository.member.CustomerRepository;
 import com.lotteon.repository.member.SellerRepository;
 import com.lotteon.repository.point.PointRepository;
 import com.lotteon.repository.product.*;
+import com.lotteon.service.WebSocketService;
 import com.lotteon.service.member.CustomerService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +57,8 @@ public class OrderItemService {
     private final ProductOptionRepository productOptionRepository;
     private final OrderRepository orderRepository;
     private final OrderCancleRepository orderCancleRepository;
+    private final ProductService productService;
+    private final WebSocketService webSocketService;
 
     //주문수 +1
     public void ProductOrderCount(Product product) {

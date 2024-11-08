@@ -82,6 +82,7 @@ public class AuthController {
     public String customer(PostCustSignupDTO postCustSignupDTO) {
 
         log.info("일반회원 정보입력 : " + postCustSignupDTO.toString());
+        postCustSignupDTO.setCustHp(postCustSignupDTO.getCustHp().replaceAll("(\\d{3})(\\d{4})(\\d{4})", "$1-$2-$3"));
         customerService.insertCustomer(postCustSignupDTO);
 
         return "redirect:/auth/login/view";

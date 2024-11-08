@@ -13,7 +13,7 @@ public class WebSocketService {
 
     private final ProductService productService;
 
-    @Scheduled(fixedRate = 600000) // 600,000ms = 10분
+    @Scheduled(fixedRate = 90000) // 600,000ms = 10분
     public void refreshBestProducts() {
         productService.updateBestItems();
     }

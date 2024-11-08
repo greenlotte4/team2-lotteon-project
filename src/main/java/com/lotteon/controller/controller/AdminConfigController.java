@@ -1,7 +1,11 @@
 package com.lotteon.controller.controller;
 
+import com.lotteon.dto.ArticleDto;
 import com.lotteon.dto.responseDto.*;
+import com.lotteon.entity.article.Notice;
+import com.lotteon.entity.article.Qna;
 import com.lotteon.service.VisitorService;
+import com.lotteon.service.article.NoticeService;
 import com.lotteon.service.article.QnaService;
 import com.lotteon.service.config.*;
 import com.lotteon.service.member.MemberService;
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin/config")
@@ -33,6 +38,7 @@ public class AdminConfigController {
     private final VersionService versionService;
     private final TermsService termsService;
     private final VisitorService visitorService;
+    private final NoticeService noticeService;
     private final OrderItemService orderItemService;
     private final MemberService memberService;
     private final QnaService qnaService;
@@ -56,6 +62,13 @@ public class AdminConfigController {
         model.addAttribute("todayCount", todayCount);
         model.addAttribute("yesterdayCount", yesterdayCount);
         model.addAttribute("weekCount", weekCount);
+        // 공지사항 리스트 모델에 추가
+        List<Notice> noticeList = noticeService.getTop5Notices();
+        model.addAttribute("notices", noticeList);
+        // QnA 리스트 모델에 추가
+        List<Qna> qnaList = qnaService.getTop5Qnas();
+        model.addAttribute("qnas", qnaList);
+
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime startOfDay = now.minusDays(7).withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfDay = now.withHour(23).withMinute(59).withSecond(59).withNano(0);

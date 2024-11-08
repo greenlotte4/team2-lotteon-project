@@ -14,6 +14,7 @@ import com.lotteon.entity.product.Order;
 import com.lotteon.entity.product.OrderCancleDocument;
 import com.lotteon.repository.member.UserLogRepository;
 import com.lotteon.repository.product.OrderCancleRepository;
+import com.lotteon.service.WebSocketService;
 import com.lotteon.service.member.UserLogService;
 import com.lotteon.service.point.CouponService;
 import com.lotteon.entity.product.Cart;
@@ -58,6 +59,7 @@ public class ApiProductController {
     private final ProductService productService;
     private final ReviewService reviewService;
     private final OrderCancleRepository orderCancleRepository;
+    private final WebSocketService webSocketService;
 
     @GetMapping("/test/coupon")
     public void toTestCouponIssue(){
@@ -217,7 +219,7 @@ public class ApiProductController {
         if(postOrderDto.getOrderPointAndCouponDto().getCouponId()!=0){
             customerCouponService.useCoupon(postOrderDto.getOrderPointAndCouponDto().getCouponId());
         }
-        productService.top3UpdateBoolean();
+
         OrderCancleDocument orderCancleDocument = OrderCancleDocument.builder()
                 .points(postOrderDto.getOrderPointAndCouponDto().getPoints())
                 .custId(auth.getUser().getCustomer().getId())
@@ -228,7 +230,6 @@ public class ApiProductController {
                 .build();
 
         orderCancleRepository.save(orderCancleDocument);
-
 
         return orderItemResult;
     }
