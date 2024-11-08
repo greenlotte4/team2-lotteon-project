@@ -156,12 +156,7 @@
                         </div>
                         <div class="badge grade">
                             <i class="fas fa-star"></i>
-                            <th:block th:if="${product.getProdRating()} <= 0">
-                            <span>0</span>
-                            </th:block>
-                            <th:block th:if="${product.getProdRating()} > 0">
-                                <span>[[${#numbers.formatDecimal(product.getProdRating / 10.0, 1, 1)}]]</span>
-                            </th:block>
+                            <span>[[${product.getSellGrade()}]]</span>
                         </div>
                     </div>
                 </div>

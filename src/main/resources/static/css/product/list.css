@@ -54,7 +54,7 @@ body {
     list-style-type: none;
     width: fit-content;
     margin: 20px auto; /* 위아래 여백을 추가해 더 시각적으로 중심 배치 */
-    gap: 43px;
+    gap: 20px;
     background-color: var(--background-color);
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* 현대적인 그림자 효과 */
 }
