@@ -512,4 +512,5 @@ div.greyBox{
     color: gray; /* 매진 표시를 위해 색상 조정 */
     pointer-events: none; /* 클릭 불가 처리 */
     cursor: not-allowed;
+
 }

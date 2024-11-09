@@ -5,14 +5,16 @@ import com.lotteon.entity.product.Cart;
 import com.lotteon.entity.product.Product;
 import com.lotteon.repository.product.CartRepository;
 import com.lotteon.repository.product.ProductRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.bson.Document;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-
 import java.util.stream.Collectors;
 import java.util.List;
 
@@ -130,4 +132,5 @@ public class RecommendationService {
 
         return productRepository.findAllByIdIn(relatedProductIds);
     }
+
 }
