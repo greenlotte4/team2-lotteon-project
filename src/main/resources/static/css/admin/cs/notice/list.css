@@ -139,16 +139,63 @@ td {
 }
 
 .paging {
-  font-size: 20px;
-  font-weight: 500;
-  text-align: center;
-}
-.page {
-  width: 100%;
   display: flex;
   justify-content: center;
-  margin-top: 30px;
-  gap: 10px;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+/* 처음과 마지막 페이지 링크 스타일 */
+.paging .first,
+.paging .last {
+  color: #333;
+  text-decoration: none;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.paging .first:hover,
+.paging .last:hover {
+  background-color: #f0f0f0; /* 호버 시 배경색 */
+}
+
+/* 페이지 번호 목록 스타일 */
+.paging ol {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 5px;
+}
+
+.paging ol li a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px; /* 페이지 버튼 너비 */
+  height: 30px; /* 페이지 버튼 높이 */
+  color: #333;
+  text-decoration: none;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 페이지 번호 호버 효과 */
+.paging ol li a:hover {
+  background-color: #f0f0f0;
+}
+
+/* 현재 활성 페이지 스타일 */
+.paging ol li a.active {
+  background-color: #333;
+  color: white !important;
+  font-weight: bold;
+  cursor: default;
 }
 /* 검색 버튼 스타일 (삭제, 수정 버튼 크기에 맞춤) */
 .search button[type="submit"] {

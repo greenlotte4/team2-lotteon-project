@@ -37,7 +37,7 @@
 }
 
 /* faq view */
-.view_title{width: 780px; height: 50px; line-height: 50px; display: flex; flex-wrap: wrap; padding: 10px 0;margin-left: 50px;  
+.view_title{width: 780px; height: 50px; line-height: 50px; display: flex; flex-wrap: wrap; padding: 10px 0;margin-left: 50px;
     border-bottom: 1px solid #D9D9D9; border-top: 2px solid #000;}
 .view_title>.title{width: 700px;}
 .view_content{width: 780px; padding: 30px 0; margin-left: 50px; line-height: 30px; border-bottom: 1px solid #D9D9D9;}

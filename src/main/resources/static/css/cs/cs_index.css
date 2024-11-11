@@ -76,27 +76,35 @@
     margin-right: 10px;
 }
 
-/* 텍스트 영역 */
+/* 텍스트 영역 - 제목과 날짜를 양 끝으로 강제로 정렬 */
 .notice_card .content, .qna_card .content {
-    flex: 1;
-    display: flex;
-    justify-content: space-between;
+    display: flex !important;
+    justify-content: space-between !important;
     align-items: center;
+    width: 100%;
 }
 
+
+/* 제목 스타일 */
 .notice_card .title, .qna_card .title {
     font-size: 1.2em;
     font-weight: 600;
     color: #333;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
+/* 날짜 스타일 */
 .notice_card .date, .qna_card .date {
     font-size: 0.9em;
     color: #999;
-    text-align: right;
-    min-width: 80px;
-    margin-left: auto;
+    text-align: right !important;
+    margin-left: auto !important; /* 오른쪽 끝으로 밀어내기 */
+    white-space: nowrap; /* 줄바꿈 방지 */
+    min-width: 100px; /* 날짜 요소의 최소 너비 설정 */
 }
+
 
 /* 자주 묻는 질문 (FNQ) */
 .cs_index_fnq .fnq_ul {
@@ -154,7 +162,7 @@
     background-color: #fff;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-} 
+}
 
 .info_card:hover {
     transform: scale(1.05);

@@ -42,23 +42,33 @@ td {
 }
 
 .button--back {
-  width: 100px;
-  height: 40px;
-  background: #cfcfcf;
-  border: 0;
-  color: white;
-  font-weight: 700;
+  background-color: #d51b33;
+  color: white !important; /* 글자 색상을 흰색으로 강제 적용 */
+  padding: 6px 9px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
   cursor: pointer;
+  border-radius: 4px;
+  border: none;
+  transition: box-shadow 0.3s ease;
 }
 
 .button--write {
-  width: 100px;
-  height: 40px;
-  background: #8bbedc;
-  border: 0;
-  color: white;
-  font-weight: 700;
+  background-color: #617280;
+  color: white !important; /* 글자 색상을 흰색으로 강제 적용 */
+  padding: 6px 9px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
   cursor: pointer;
+  border-radius: 4px;
+  border: none;
+  transition: box-shadow 0.3s ease;
 }
 
 .paging {

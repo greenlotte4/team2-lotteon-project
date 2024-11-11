@@ -1,8 +1,4 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <title>공지사항 목록</title>
+ <title>공지사항 목록</title>
   <link rel="stylesheet" th:href="@{/css/admin/cs/notice/list.css}" />
   <link rel="stylesheet" th:href="@{/css/basic.css}" />
 </head>
@@ -84,14 +80,21 @@
     </div>
 
     <!-- 페이지네이션 -->
-    <div class="page">
-      <a class="none" th:href="@{/admin/cs/notices(page=0)}"><<</a>
-      <a class="none" th:href="@{/admin/cs/notices(page=${page - 2})}" th:if="${page>=2}" th:text="${page}-1"></a>
-      <a class="none" th:href="@{/admin/cs/notices(page=${page - 1})}" th:if="${page>=1}" th:text="${page}"></a>
-      <a class="active" style="font-weight: 600; text-decoration: underline;" th:text="${page}+1"></a>
-      <a class="none" th:href="@{/admin/cs/notices(page=${page + 1})}" th:if="${(totalPages - page)>=2}" th:text="${page}+2"></a>
-      <a class="none" th:href="@{/admin/cs/notices(page=${page + 2})}" th:if="${(totalPages - page)>=3}" th:text="${page}+3"></a>
-      <a class="none" th:href="@{/admin/cs/notices(page=${totalPages - 1})}" >>></a>
+    <div class="paging">
+      <!-- 처음 페이지로 이동 -->
+      <a class="first" th:href="@{|/admin/cs/notices?page=0|}" th:if="${page > 0}">처음</a>
+
+      <!-- 페이지 목록 -->
+      <ol>
+        <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+          <a th:href="@{'/admin/cs/notices?page=' + ${i}}"
+             th:text="${i + 1}"
+             th:classappend="${page == i} ? 'active'">1</a>
+        </li>
+      </ol>
+
+      <!-- 마지막 페이지로 이동 -->
+      <a class="last" th:href="@{|/admin/cs/notices?page=${totalPages - 1}|}" th:if="${page < totalPages - 1}">마지막</a>
     </div>
   </section>
 </main>
@@ -139,5 +142,3 @@
     });
   });
 </script>
-</body>
-</html>

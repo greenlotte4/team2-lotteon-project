@@ -71,35 +71,28 @@ td {
 }
 
 
-.button--delete {
-  background-color: #f44336;
-  color: white !important; /* 글자 색상을 흰색으로 강제 적용 */
-  padding: 1px 6px;
+.button--delete,
+.button--edit {
+  font-size: 13px; /* 동일한 폰트 크기 */
+  padding: 10px 20px; /* 동일한 패딩 값 */
   text-align: center;
-  text-decoration: none;
   display: inline-block;
-  font-size: 13px;
   margin: 4px 2px;
   cursor: pointer;
   border-radius: 4px;
   border: none;
+  color: white !important;
   transition: box-shadow 0.3s ease;
 }
-
-
 .button--edit {
   background-color: #617280;
-  color: white !important; /* 글자 색상을 흰색으로 강제 적용 */
-  padding: 1px 6px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 12px;
-  margin: 4px 2px;
-  cursor: pointer;
-  border-radius: 4px;
-  border: none;
-  transition: box-shadow 0.3s ease;
+  color: white !important;
+}
+
+/* 삭제 버튼 */
+.button--delete {
+  background-color: #f44336;
+  color: white !important;
 }
 
 /*!* 호버 시 섀도우 효과 *!
@@ -131,38 +124,64 @@ td {
 }
 
 .paging {
-  display: flex; /* 요소들을 중앙에 배치할 수 있도록 설정 */
-  justify-content: center; /* 중앙 정렬 */
-  font-size: 20px;
-  font-weight: 500;
-  margin-top: 20px; /* 상단 여백 추가 */
-}
-
-.paging ol {
   display: flex;
-  list-style-type: none;
-  padding: 0;
-  margin: 0; /* 기본 여백 제거 */
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  font-size: 14px;
 }
 
-.paging ol li {
-  margin: 0 5px;
-}
-
-.paging a {
-  padding: 5px 10px;
-  border: 1px solid #ddd;
-  margin: 0 2px;
+/* 처음과 마지막 페이지 링크 스타일 */
+.paging .first,
+.paging .last {
   color: #333;
   text-decoration: none;
-  display: inline-block; /* 중앙 배치 */
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.paging a.active {
+.paging .first:hover,
+.paging .last:hover {
+  background-color: #f0f0f0; /* 호버 시 배경색 */
+}
+
+/* 페이지 번호 목록 스타일 */
+.paging ol {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 5px;
+}
+
+.paging ol li a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px; /* 페이지 버튼 너비 */
+  height: 30px; /* 페이지 버튼 높이 */
+  color: #333;
+  text-decoration: none;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 페이지 번호 호버 효과 */
+.paging ol li a:hover {
+  background-color: #f0f0f0;
+}
+
+/* 현재 활성 페이지 스타일 */
+.paging ol li a.active {
   background-color: #333;
-  color: #fff;
+  color: white !important;
+  font-weight: bold;
+  cursor: default;
 }
-
 
 .faqCate,
 .faqType {

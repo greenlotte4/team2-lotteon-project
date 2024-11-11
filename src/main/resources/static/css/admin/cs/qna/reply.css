@@ -42,38 +42,45 @@ td {
 }
 
 .button--delete {
-  width: 100px;
-  height: 40px;
-  background: #cfcfcf;
-  border: 0;
-  color: white;
-  font-weight: 700;
-  cursor: pointer;
-}
-.button--reply {
-  width: 100px;
-  height: 40px;
-  background: #cfcfcf;
-  border: 0;
-  color: white;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-
-.button--back {
   background-color: #f44336;
-  color: white !important; /* 글자 색상을 흰색으로 강제 적용 */
+  color: white;
   padding: 10px 20px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 13px;
+  font-size: 16px;
   margin: 4px 2px;
   cursor: pointer;
   border-radius: 4px;
   border: none;
-  transition: box-shadow 0.3s ease;
+}
+.button--reply {
+  background-color: #617280;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  border: none;
+}
+
+
+.button--back {
+  background-color: #8bbedc;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  border: none;
 }
 
 .button--write {
@@ -84,6 +91,18 @@ td {
   color: white;
   font-weight: 700;
   cursor: pointer;
+}
+
+.button--delete:hover {
+  background-color: #d32f2f; /* 호버시 배경 색상 */
+}
+
+.button--reply:hover {
+  background-color: #4f5456; /* 호버시 배경 색상 */
+}
+
+.button--back:hover {
+  background-color: #b5ddf3; /* 호버시 배경 색상 */
 }
 
 .paging {
