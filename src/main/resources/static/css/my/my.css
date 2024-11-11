@@ -197,10 +197,35 @@ body{height: 100vh;}
     font-weight: bold;
 }
 
-.page {
-    width: 100%;
-    display: flex;
+.page ol {
+    display: flex; /* ol 요소를 flex 컨테이너로 설정하여 자식 요소(li)를 가로 정렬 */
     justify-content: center;
-    margin-top: 30px;
-    gap: 10px;
+    padding: 0;
+    margin: 0;
+    list-style: none; /* 기본 목록 스타일 제거 */
 }
+
+.page ol li {
+    margin: 0 5px; /* 각 페이지 번호 사이의 간격 */
+}
+
+.page ol li a {
+    display: inline-block;
+    color: #000;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    border-radius: 7px;
+    border: 1px solid #c7c7c7;
+    box-sizing: border-box;
+}
+
+.page ol li a.active {
+    font-weight: bold;
+    text-decoration: underline;
+    color: #000;
+}
+
+
+

@@ -47,6 +47,7 @@ public class QnaService {
     private final MemberRepository memberRepository;
     private final CategoryArticleRepository categoryArticleRepository;
     private final SellerRepository sellerRepository;
+    private final CategoryArticleService categoryArticleService;
 
 
     /* 관리자 cs 기능 */
@@ -161,6 +162,31 @@ public class QnaService {
         Qna savedQna = qnaRepository.save(qna);
         return savedQna.getId(); // 저장된 QnA ID 반환
     }
+
+    // 1차 및 2차 카테고리 기반 QnA 조회
+    public Page<ArticleDto> getQnasByCate1AndCate2(String cate1Name, String cate2Name, Pageable pageable) {
+        CategoryArticle cate1 = null;
+        CategoryArticle cate2 = null;
+
+        // cate1이 빈 문자열이 아닌 경우에만 검색
+        if (cate1Name != null && !cate1Name.isEmpty()) {
+            cate1 = categoryArticleService.getCategoryByName(cate1Name);
+        }
+
+        // cate2가 빈 문자열이 아닌 경우에만 검색
+        if (cate2Name != null && !cate2Name.isEmpty()) {
+            cate2 = categoryArticleService.getCategoryByName(cate2Name);
+        }
+
+        // cate1 또는 cate2가 null인 경우 전체 조회를 반환하도록 수정
+        if (cate1 == null && cate2 == null) {
+            return getAllQnas(pageable);  // 전체 조회
+        }
+
+        Page<Qna> qnaPage = qnaRepository.findByCate1AndCate2(cate1, cate2, pageable);
+        return qnaPage.map(qna -> modelMapper.map(qna, ArticleDto.class));
+    }
+
 
     // QnA 글 작성 셀러 문의
     public Long insertQnaToSeller(ArticleDto articleDto) {

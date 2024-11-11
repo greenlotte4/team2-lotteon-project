@@ -274,6 +274,8 @@ public class MyController {
         model.addAttribute("qnasPage", qnasPage);       // 전체 페이지 정보 추가
         model.addAttribute("qnaList", qnaList);         // 현재 페이지 QnA 목록 추가
         model.addAttribute("totalQnaCount", totalQnaCount); // 전체 QnA 글 개수 추가
+        model.addAttribute("currentPage", qnasPage.getNumber());           // 현재 페이지 번호
+        model.addAttribute("totalPages", qnasPage.getTotalPages());        // 전체 페이지 수
 
         // 5. 마이페이지 QnA 목록 페이지 반환
         return "pages/my/qna"; // 마이페이지 QnA 목록 뷰 파일

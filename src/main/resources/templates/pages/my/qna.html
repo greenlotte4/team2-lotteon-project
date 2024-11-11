@@ -23,8 +23,10 @@
           <tr th:each="qna, iterStat : ${qnaList}">
             <td th:text="${iterStat.index + 1}">1</td>
             <td>고객센터</td> <!-- 상위 카테고리로 고정 -->
-            <td th:data-value="${qna.cate1.categoryName}" th:text="${qna.cate1.categoryName}">주문/결제</td> <!-- 1차 카테고리 출력 -->
-            <td th:text="${qna.title}">신용카드 결제 중 오류가 난 경우 어떻게 하나요?</td>
+            <td class="cate1" th:data-value="${qna.cate1.categoryName}" th:text="${qna.cate1.categoryName}">1차 유형</td>
+            <td>
+              <a th:href="@{'/cs/qna/view/' + ${qna.id}}" th:text="${qna.title}">문의 제목</a>
+            </td>
             <td th:text="${#temporals.format(qna.rdate, 'yy. MM.dd')}">2024-12-12</td>
             <td><span class="status confirm" th:classappend="${qna.answer != null && !#strings.isEmpty(qna.answer) ? 'answer-complete' : ''}" th:text="${qna.answer != null && !#strings.isEmpty(qna.answer) ? '답변완료' : '검토 중'}"></span>
             </td>
@@ -42,16 +44,31 @@
         >
           문의 내역이 없습니다.
         </div>
+        <div th:if="${!noItem}" class="page"
+             th:with="lastPage=${totalPages > 0 ? totalPages - 1 : 0}">
+          <!-- 첫 번째 페이지로 이동 (비활성화 조건 추가) -->
+          <a th:href="@{/my/qnas?page=0}"
+             th:classappend="${currentPage == 0} ? 'disabled'"
+             th:text="'<<'"></a>
 
-        <ul class="paging">
-          <li><a class="prev" href="#">이전</a></li>
-          <li><a class="num on" href="#">1</a></li>
-          <li><a class="num" href="#">2</a></li>
-          <li><a class="num" href="#">3</a></li>
-          <li><a class="num" href="#">4</a></li>
-          <li><a class="num" href="#">5</a></li>
-          <li><a class="next" href="#"> 다음</a></li>
-        </ul>
+          <!-- 페이지 번호 목록 -->
+          <ol>
+            <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+              <a th:href="@{'/my/qnas?page=' + ${i}}"
+                 th:text="${i + 1}"
+                 th:classappend="${currentPage == i} ? 'active'">
+              </a>
+            </li>
+          </ol>
+
+          <!-- 마지막 페이지로 이동 (totalPages가 1 이상일 때만 표시) -->
+          <a th:if="${totalPages > 1}" th:href="@{'/my/qnas?page=' + ${lastPage}}"
+             th:classappend="${currentPage == lastPage} ? 'disabled'"
+             th:text="'>>'"></a>
+        </div>
+
+
+
       </article>
     </section>
     </main>
@@ -59,4 +76,23 @@
 </main>
 <footer th:replace="layout/main/footer.html"></footer>
 
+<script>
+  const firstCategoryMap = {
+    "user": "회원",
+    "coupon": "쿠폰/이벤트",
+    "order": "주문/결제",
+    "delivery": "배송",
+    "cancel": "취소/반품/환불",
+    "travel": "여행/숙박/항공",
+    "safe": "안전결제"
+  };
 
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.cate1').forEach(function (item) {
+      const value = item.getAttribute('data-value');
+      console.log('data-value:', value);  // data-value 출력
+      console.log('매핑 결과:', firstCategoryMap[value] || value);  // 매핑 결과 확인
+      item.textContent = firstCategoryMap[value] || value;
+    });
+  });
+</script>

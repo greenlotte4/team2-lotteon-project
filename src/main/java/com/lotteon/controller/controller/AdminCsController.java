@@ -199,23 +199,28 @@ public class AdminCsController {
 
     // QNA 문의하기
     @GetMapping("/qnas")
-    public String qnas(Model model, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        // 1. qna 서비스에서 페이징 처리된  qna를 반환
-        Page<ArticleDto> qnasPage = qnaService.getAllQnas(pageable);
-        // 2. qnasPage에서 데이터들을 뽑아옴
-        List<ArticleDto> qnas = qnasPage.getContent();
-        // 3. 전체 QnA 글 개수 가져오기
-        long totalQnaCount = qnaService.getTotalQnaCount(); // QnA 전체 개수
+    public String qnas(Model model, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                       @RequestParam(value = "cate1", defaultValue = "") String cate1,
+                       @RequestParam(value = "cate2", defaultValue = "") String cate2) {
 
-        // 4. 모델에 데이터 추가
-        model.addAttribute("qnasPage", qnasPage); // 전체 페이지 정보를 추가하여 페이징 처리가 가능하도록 합니다.
-        model.addAttribute("qnas", qnas);         // QnA 목록을 모델에 추가
-        model.addAttribute("totalQnaCount", totalQnaCount); // 전체 QnA 글 개수
+        Page<ArticleDto> qnasPage;
 
-        // 5. QnA 목록 페이지로 반환
-        return "pages/admin/cs/qna/list"; // QnA 목록 페이지
+        // cate1 또는 cate2가 빈 문자열일 경우 전체 조회
+        if (cate1.isEmpty() && cate2.isEmpty()) {
+            qnasPage = qnaService.getAllQnas(pageable);
+        } else {
+            qnasPage = qnaService.getQnasByCate1AndCate2(cate1, cate2, pageable);
+        }
 
+        model.addAttribute("qnasPage", qnasPage);
+        model.addAttribute("qnas", qnasPage.getContent());
+
+        long totalQnaCount = qnaService.getTotalQnaCount();
+        model.addAttribute("totalQnaCount", totalQnaCount);
+
+        return "pages/admin/cs/qna/list";
     }
+
 
 
     // 답변 여부에 따라 view 또는 reply 페이지로 리다이렉트

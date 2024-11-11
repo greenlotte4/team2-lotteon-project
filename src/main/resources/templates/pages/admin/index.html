@@ -222,7 +222,7 @@
             } catch (e) {
 
             }
-        };
+        });
         const barChart = new ApexCharts(document.querySelector("#barChart"), barOptions);
         barChart.render();
 
@@ -247,7 +247,7 @@
         const pieChart = new ApexCharts(document.querySelector("#pieChart"), pieOptions);
         pieChart.render();  // 차트 렌더링
 
-        // 1차 및 2차 카테고리 변환 맵
+        // 카테고리 맵
         const firstCategoryMap = {
             "user": "회원",
             "coupon": "쿠폰/이벤트",
@@ -259,72 +259,21 @@
         };
 
         const secondCategoryMap = {
-            "user": {
-                "regi": "가입",
-                "leave": "탈퇴",
-                "info": "회원정보",
-                "login": "로그인"
-            },
-            "coupon": {
-                "lpoint": "L.POINT",
-                "coupon2": "쿠폰",
-                "event": "이벤트/경품",
-                "attendance": "출석체크",
-                "gift": "사은품"
-            },
-            "order": {
-                "orderMethod": "주문방법",
-                "orderChange": "주문변경",
-                "paymentMethod": "결제방법",
-                "easyPayment": "간편결제",
-                "giftReceive": "선물받기",
-                "mobileGift": "모바일상품권",
-                "phonePayment": "휴대폰결제",
-                "applePay": "애플페이",
-                "product": "상품"
-            },
-            "delivery": {
-                "delivery2": "배송",
-                "deliveryFee": "배송비",
-                "deliveryMethod": "배송방법",
-                "deliverySchedule": "배송일정",
-                "deliveryAddress": "배송지",
-                "todayArrival": "오늘도착",
-                "overseas": "해외직구",
-                "notReceived": "미수령신고",
-                "recipient": "수취인",
-                "purchaseConfirm": "구매확정"
-            },
-            "cancel": {
-                "orderCancel": "주문취소",
-                "refundMethod": "교환/환불",
-                "cardRefund": "카드환불",
-                "refundSchedule": "환불일정",
-                "phoneRefund": "휴대폰결제환불"
-            },
-            "travel": {
-                "ecoupon": "e쿠폰",
-                "flight": "항공",
-                "accommodation": "숙박",
-                "ticket": "티켓"
-            },
-            "safe": {
-                "policyViolation": "법령 및 정책위반 상품",
-                "ipViolation": "지적재산권침해",
-                "serviceViolation": "서비스 이용규칙 위반",
-                "adViolation": "표시광고"
-            }
+            "user": { "regi": "가입", "leave": "탈퇴", "info": "회원정보", "login": "로그인" },
+            "coupon": { "lpoint": "L.POINT", "coupon2": "쿠폰", "event": "이벤트/경품", "attendance": "출석체크", "gift": "사은품" },
+            "order": { "orderMethod": "주문방법", "orderChange": "주문변경", "paymentMethod": "결제방법", "easyPayment": "간편결제", "giftReceive": "선물받기", "mobileGift": "모바일상품권", "phonePayment": "휴대폰결제", "applePay": "애플페이", "product": "상품" },
+            "delivery": { "delivery2": "배송", "deliveryFee": "배송비", "deliveryMethod": "배송방법", "deliverySchedule": "배송일정", "deliveryAddress": "배송지", "todayArrival": "오늘도착", "overseas": "해외직구", "notReceived": "미수령신고", "recipient": "수취인", "purchaseConfirm": "구매확정" },
+            "cancel": { "orderCancel": "주문취소", "refundMethod": "교환/환불", "cardRefund": "카드환불", "refundSchedule": "환불일정", "phoneRefund": "휴대폰결제환불" },
+            "travel": { "ecoupon": "e쿠폰", "flight": "항공", "accommodation": "숙박", "ticket": "티켓" },
+            "safe": { "policyViolation": "법령 및 정책위반 상품", "ipViolation": "지적재산권침해", "serviceViolation": "서비스 이용규칙 위반", "adViolation": "표시광고" }
         };
 
         // 카테고리명을 한글로 변환하여 표시
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('.q_cate').forEach(function (item) {
-                const value = item.getAttribute('data-value');
-                const parentValue = item.getAttribute('data-parent');
-                // 변환된 카테고리명 적용
-                item.textContent = secondCategoryMap[parentValue]?.[value] || value;
-            });
+        document.querySelectorAll('.cate q_cate').forEach(function (item) {
+            const value = item.getAttribute('data-value');
+            const parentValue = item.getAttribute('data-parent');
+            item.textContent = secondCategoryMap[parentValue]?.[value] || value;
         });
-
+        });
 
     </script>

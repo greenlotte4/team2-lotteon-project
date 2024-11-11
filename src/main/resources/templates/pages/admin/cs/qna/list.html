@@ -10,11 +10,11 @@
         <h3>문의하기 목록</h3>
         <p>HOME > 고객센터 > <strong>문의하기</strong></p>
       </nav>
-      <form action="@{'/article/' + ${cate.cateGroup} + '/' + ${cate.cateName}}" class="search">
+      <form th:action="@{/admin/cs/qnas}" method="get"  id="cateSearch" class="search">
         <input type="hidden" name="content" value="list"/>
         <input type="hidden" name="cateNo"/>
-        <select class="qnaCate" name="qnaCate" onchange="firstOption()">
-          <option>1차선택</option>
+        <select class="qnaCate" name="cate1" onchange="updateSecondCategory()">
+          <option disabled selected>1차선택</option>
           <option value="user">회원</option>
           <option value="coupon">쿠폰/이벤트</option>
           <option value="order">주문/결제</option>
@@ -23,8 +23,8 @@
           <option value="travel">여행/숙박/항공</option>
           <option value="safe">안전결제</option>
         </select>
-        <select class="qnaType" name="qnaType" onchange="redirectToCateType()">
-          <option>2차선택</option>
+        <select id="select2" class="qnaType" name="cate2">
+          <option disabled selected>2차선택</option>
           <option value="regi">가입</option>
           <option value="leave">탈퇴</option>
           <option value="info">회원정보</option>
@@ -171,4 +171,95 @@
       alert('삭제할 항목을 선택하세요.');
     }
   }
+
+  const secondOptions = {
+    "user": [
+      { value: "regi", text: "가입" },
+      { value: "leave", text: "탈퇴" },
+      { value: "info", text: "회원정보" },
+      { value: "login", text: "로그인" }
+    ],
+    "coupon": [
+      { value: "lpoint", text: "L.POINT" },
+      { value: "coupon2", text: "쿠폰" },
+      { value: "event", text: "이벤트/경품" },
+      { value: "attendance", text: "출석체크" },
+      { value: "gift", text: "사은품" }
+    ],
+    "order": [
+      { value: "orderMethod", text: "주문방법" },
+      { value: "orderChange", text: "주문변경" },
+      { value: "paymentMethod", text: "결제방법" },
+      { value: "easyPayment", text: "간편결제" }
+      // 필요한 다른 옵션 추가
+    ],
+    "delivery": [
+      { value: "delivery2", text: "배송" },
+      { value: "deliveryFee", text: "배송비" },
+      { value: "deliveryMethod", text: "배송방법" },
+      { value: "deliverySchedule", text: "배송일정" },
+      { value: "deliveryAddress", text: "배송지" },
+      { value: "todayArrival", text: "오늘도착" },
+      { value: "overseas", text: "해외직구" },
+      { value: "notReceived", text: "미수령신고" },
+      { value: "recipient", text: "수취인" },
+      { value: "purchaseConfirm", text: "구매확정" }
+    ],
+    "cancel": [
+      { value: "orderCancel", text: "주문취소" },
+      { value: "refundMethod", text: "환불방법" },
+      { value: "cardRefund", text: "카드환불" },
+      { value: "refundSchedule", text: "환불일정" },
+      { value: "phoneRefund", text: "휴대폰결제환불" }
+    ],
+    "travel": [
+      { value: "ecoupon", text: "e쿠폰" },
+      { value: "flight", text: "항공" },
+      { value: "accommodation", text: "숙박" },
+      { value: "ticket", text: "티켓" }
+    ],
+    "safe": [
+      { value: "policyViolation", text: "법령 및 정책위반 상품" },
+      { value: "ipViolation", text: "지적재산권침해" },
+      { value: "serviceViolation", text: "서비스 이용규칙 위반" },
+      { value: "adViolation", text: "표시광고" }
+    ]
+  };
+
+  function updateSecondCategory() {
+    const selectedValue = document.querySelector('.qnaCate').value;
+    const select2 = document.getElementById("select2");
+
+    // 기존 옵션 초기화
+    select2.innerHTML = '<option value="" selected>2차 선택</option>';
+
+    // 1차 선택에 해당하는 2차 선택 옵션을 추가
+    if (secondOptions[selectedValue]) {
+      secondOptions[selectedValue].forEach(option => {
+        const newOption = document.createElement("option");
+        newOption.value = option.value;
+        newOption.textContent = option.text;
+        select2.appendChild(newOption);
+      });
+    }
+  }
+
+  // 전체 선택 / 해제 기능
+  document.getElementById('selectAll').addEventListener('change', function () {
+    const isChecked = this.checked;
+    document.querySelectorAll('tbody input[type="checkbox"]').forEach((checkbox) => {
+      checkbox.checked = isChecked;
+    });
+  });
+
+
+  document.getElementById("select2").addEventListener("change", function (e) {
+    const selectedCate1 = document.getElementById("select1").value;
+    const selectedCate2 = this.value;
+
+    if (selectedCate1 && selectedCate2) {
+      window.location.href = `/admin/cs/faqs?cate1=${selectedCate1}&cate2=${selectedCate2}&page=${e.target.dataset.page}`
+    }
+  });
+
 </script>

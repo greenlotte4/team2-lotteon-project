@@ -98,7 +98,7 @@ table tr:nth-of-type(even) > *{border-bottom: 1px solid #ddd;}
 }
 
 .qna > a > .cate {
-    width: 80px;
+    width: 100px;
     color: #333;
     text-align: left;
     white-space: nowrap;

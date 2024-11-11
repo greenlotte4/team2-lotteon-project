@@ -1,5 +1,6 @@
 package com.lotteon.repository.article;
 
+import com.lotteon.entity.article.Faq;
 import com.lotteon.entity.article.Qna;
 import com.lotteon.entity.category.CategoryArticle;
 import com.lotteon.entity.member.Customer;
@@ -24,6 +25,7 @@ public interface QnaRepository extends JpaRepository<Qna,Long> {
 
     // 1차 카테고리로 QnA 목록 조회
     Page<Qna> findByCate1(CategoryArticle cate1, Pageable pageable);
+    List<Qna> findByCate1AndCate2(CategoryArticle cate1Id, CategoryArticle cate2Id, Limit limit);
 
     List<Qna> findByMemberId(Long memberId);
     // 사용자 ID로 조회하는 메서드 추가
