@@ -53,6 +53,7 @@ public class ApiAdminProdController {
             postProdAllDTO.getPostProdDetailDTO().setMdate(timestamp);
 
             // 디테일이랑 카테고리 insert 하기전에 productId 넣어주는 작업
+            postProdAllDTO.getPostProductDTO().setProdReviewCnt(0);
             Product result = productService.insertProduct(postProdAllDTO.getPostProductDTO(), postProdAllDTO.getPostProdDetailDTO());
             postProdAllDTO.getPostProdCateMapperDTO().setProductId(result.getId());
             postProdAllDTO.getPostProdDetailDTO().setProductId(result.getId());
