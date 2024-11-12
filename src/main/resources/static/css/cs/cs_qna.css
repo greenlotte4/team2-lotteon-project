@@ -132,7 +132,9 @@ body, .box, .cs_aside, .qna_box, .view_content, .view_title, .autolink {
 }
 
 .cate_title > img {
-    width: 30px;
+    margin-block: -4px;
+    width: 24px;
+    height: 20px;
 }
 
 .cate_title > p {
