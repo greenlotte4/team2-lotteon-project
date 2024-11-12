@@ -37,6 +37,7 @@
 
 <body>
     <header id="header">
+
         <a id="topBanner"
            th:unless="${topBanner eq null}"
            th:href="@{'/'+${topBanner.bannerLink}}"
@@ -47,29 +48,13 @@
         <div id="headerIn">
             <div class="utill">
             <ul>
-                <li class="login" sec:authorize="!isAuthenticated()">
-                    <a th:href="@{/auth/login/view}">로그인</a>
-                </li><!-- .login -->
-
-                <li class="logout" sec:authorize="isAuthenticated()">
-                    <a th:href="@{/auth/logout}">로그아웃</a>
-                </li><!-- .logout -->
-
-                <li class="join" sec:authorize="!isAuthenticated()">
-                    <a th:href="@{/auth/join}">회원가입</a>
-                </li><!-- .join -->
-
-                <li class="cs"><a th:href="@{/cs/index}">고객센터</a></li><!-- .cs -->
-                <li sec:authorize="hasRole('admin')"><a th:href="@{/admin/config/index}">관리자</a></li>
-                <li sec:authorize="hasRole('seller')"><a th:href="@{/admin/prod/products}">판매자</a></li>
-
                 <!-- 로그인 시 || 안녕하세요, 000님 (관리자) -->
                 <!-- 관리자: admin / 판매자: seller / 사용자: customer (사용자면 사용자 등급 표시)  -->
                 <li sec:authorize="hasRole('admin')"><a>안녕하세요, 관리자님 환영합니다.</a></li>
                 <li sec:authorize="hasRole('seller')"><a>안녕하세요, 판매자님 환영합니다.</a></li>
 
                 <!-- (customer)일반사용자로 로그인 시 사용자등급별 출력 -->
-                <li sec:authorize="hasRole('customer')">
+                <li sec:authorize="hasRole('customer')" class="loginCust">
                     안녕하세요&nbsp;
                     <span th:text="${#authentication.principal.user.customer.custName}"></span>&nbsp;님&nbsp;
                     &#40;<span th:switch="${#authentication.principal.user.customer.custGrade}">
@@ -79,26 +64,83 @@
                             <span th:case="'SILVER'">SILVER</span>
                             <span th:case="'FAMILY'">FAMILY</span>
                         </span>&#41;
-                </li>
+                </li><!-- .loginCust -->
+
+                <li class="login" sec:authorize="!isAuthenticated()">
+                    <a th:href="@{/auth/login/view}">로그인</a>
+                </li><!-- .login -->
+
+                <li class="logout" sec:authorize="isAuthenticated()">
+                    <a th:href="@{/auth/logout}">로그아웃</a>
+                </li><!-- .logout  -->
+
+                <li class="join" sec:authorize="!isAuthenticated()">
+                    <a th:href="@{/auth/join}">회원가입</a>
+                </li><!-- .join -->
+
+                <li class="cs"><a th:href="@{/cs/index}">고객센터</a></li><!-- .cs -->
+                <li sec:authorize="hasRole('admin')"><a th:href="@{/admin/config/index}">관리자</a></li>
+                <li sec:authorize="hasRole('seller')"><a th:href="@{/admin/prod/products}">판매자</a></li>
 
 
             </ul>
         </div><!--.utill-->
 
-            <section id="top-box">
-                <h1 class="logo">
-                    <a th:href="@{/}">
+            <h1 class="logo">
+                <a th:href="@{/}">
                     <img class="hlogo" th:src="@{'/file/'+${site.configHeaderLogo}}" alt="LotteON logo">
-                </a></h1><!--.logo-->
+                </a>
+            </h1><!--.logo-->
+            <section id="top-box">
+
                 <!-- 내 도구:마이롯데, 장바구니, 나의 찜 -->
+                <!--
                 <div class="myTool">
                     <a th:href="@{/my/index}"><img class="img-header-link" th:src="@{/images/header-my.png}"></a>
                     <a th:href="@{/prod/cart}"><img class="img-header-link" th:src="@{/images/header-cart.png}"><span class="cartCount" th:if="${cartCount!=null&&cartCount!=0}">[[${cartCount}]]</span></a>
                     <a th:href="@{/prod/hearts}"><img class="img-header-link" th:src="@{/images/header-zzim.png}"></a>
                     <button onclick="openChatBot()">챗봇</button>
-                </div><!-- .myTool -->
+                </div>
+                -->
             </section>
 
+
+            <div class="myTool2">
+                <ul >
+                    <li>
+                        <a th:href="@{/my/index}">
+                            <img class="img-header-link" th:src="@{/images/index_icon(my).png}">
+                            <p class="img-header-tit">마이롯데</p>
+                        </a>
+                    </li>
+                    <li class="prodCart">
+                        <a th:href="@{/prod/cart}">
+                            <img class="img-header-link prodCart" th:src="@{/images/index_icon(cart).png}">
+                            <span class="cartCount">0</span>
+                            <!-- .cartCount -->
+                            <p class="img-header-tit">장바구니</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a>
+                            <img class="img-header-link" th:src="@{/images/index_icon(heart).png}">
+                            <p class="img-header-tit">나의 찜</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a onclick="openChatBot()">
+                            <img class="img-header-link" th:src="@{/images/index_icon(chatbot).png}">
+                            <p class="img-header-tit">챗봇</p>
+                        </a>
+                    </li>
+                    <!-- <button onclick="openChatBot()">챗봇</button> -->
+
+                    </ul><!-- .myTool2 -->
+                </div>
+
+            </section><!-- #top-box -->
+
+            <!-- 연관 검색어 start -->
             <section class="search-container">
                 <form th:action="@{/prod/products/search}" method="get" style="z-index: 2;" class="t-search">
                     <input autocomplete="off" onclick="openRelated()" type="text" id="search" name="search" placeholder="어떤 상품을 찾으세요?">
@@ -114,6 +156,7 @@
                     <div class="related-keyword"></div><!--.related-keyword -->
                 </div><!--#related-box .related-search-box -->
             </section>
+            <!-- 연관 검색어 end -->
 
             <!-- 메뉴 박스 -->
             <div class="menu-box">

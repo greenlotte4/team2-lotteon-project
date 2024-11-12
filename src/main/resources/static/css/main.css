@@ -5,6 +5,8 @@
 
      수정이력
       - 2024/10/30 (수) 김민희 : 마이페이지, gnb 메뉴, 실시간 검색어 수정 (myTool, menu-box, search-slider)
+      - 2024/11/11 (월) 김민희 : 스크롤 시 top 버튼 수정,우측 상단 아이콘 4개 수정 (마이롯데, 장바구니, 나의찜, 챗봇)
+
 */
 
 /* reset: 실시간 검색어 ico 수평 설정 */
@@ -25,8 +27,16 @@
 #header #top-box {position: relative; width: 100%; padding: 60px 30px; display: flex; justify-content: space-between; align-items: center;transition:all 0.5s;}
 
 /* 로고 */
+/*h1.logo{z-index: 3}*/
+/*.logo a{display: inline-block;width: 205px;height: 42px;box-sizing:border-box;overflow:hidden;z-index: 3;transition: top 0.5s ease, left 0.5s ease;}*/
+/*.logo a img{vertical-align: top;  width:100%; font-size:50px; line-height:1em; transition:all 0.5s;}*/
+/*#headerIn > .logo > a > img.hlogo{vertical-align: top; display: inline-block; width: 100%; height: auto; font-size:50px; line-height:1em; transition:all 0.5s;z-index: 2}*/
+
+
 h1.logo{z-index: 3}
-.logo a{display: inline-block;width: 205px;height: 42px;box-sizing:border-box;overflow:hidden;z-index: 3;transition: top 0.5s ease, left 0.5s ease;}
+.logo a{display: inline-block;width: 169px;height: 36px;box-sizing:border-box;overflow:hidden;z-index: 3;transition: top 0.5s ease, left 0.5s ease;
+margin-top: 75px;}
+.logo a:hover{cursor: pointer;}
 .logo a img{vertical-align: top;  width:100%; font-size:50px; line-height:1em; transition:all 0.5s;}
 #headerIn > .logo > a > img.hlogo{vertical-align: top; display: inline-block; width: 100%; height: auto; font-size:50px; line-height:1em; transition:all 0.5s;z-index: 2}
 
@@ -37,6 +47,7 @@ h1.logo{z-index: 3}
     background-color: #fff;text-overflow: ellipsis;transition: all 0.5s ease;}
 .search-container.open .t-search input{border-radius: 21px 21px 0 0; border-bottom: 1px solid #F2F2F2;}
 .search-container .t-search .ico_sch img{position: absolute; top: -25px; right: 20px; padding-top: 39px;}
+
 /* 연관검색어 */
 .search-container .related-search-box{
     width: 460px;
@@ -61,30 +72,44 @@ h1.logo{z-index: 3}
 .search-container .related-search-box .related-search-ico{position: absolute;top: -25px;right: 90px;padding-top: 39px;}
 .search-container .related-search-box .close-related {position: absolute;right: 20px;font-size: 14px;top: 10px;cursor: pointer;}
 
-/* 마이롯데, 장바구니, 나의 찜 */
-#header .myTool {display: flex;gap: 25px;justify-content: flex-end;z-index: 3;}
-#header .myTool .img-header-link {width: 50px; height: 50px; cursor:pointer;}
-.cartCount{background: #E60012;
-    display: inline-block;
-    border-radius: 50%;
-    width: 23px;
-    height: 23px;
-    color: #fff;
-    font-weight: 900;
-    text-align: center;
-    line-height: 19px;
-    position: relative;
-    font-size: 11px;
-    left: -18px;
-    font-family: 'Noto Sans KR', sans-serif;
-    top: -10px;
-    border: 1px solid #fff;
-    box-sizing: border-box;}
 
 /* 메뉴 박스 (gnb) : 히트상품 ~ */
 /*#header .menu-box:before {display: block; content:""; clear: both; width:100%; height: 1px; background: #f0f0f0;} !* 메뉴 박스 위에 line *!*/
 /*#header .menu-box .menu-box-in:before {display: block; content:""; clear: both; width:100%; height: 1px; background: #f0f0f0;}*/
 
+/* 아이콘 4개 : 마이롯데, 장바구니, 나의 찜, 챗봇 */
+#header .myTool2 {position: absolute; top: 85px; right: 0;}
+#header .myTool2 ul {display: flex;gap: 18px;justify-content: flex-end;}
+#header .myTool2 ul li {text-align: center; margin-bottom: 3px;}
+#header .myTool2 ul li.prodCart{width: 49px;}
+
+#header .myTool2 ul li a {text-align: center; width: 26px; margin:0 auto;}
+#header .myTool2 ul li a.prodCart {width: 49px; margin-right: -10px;}  /* 장바구니 */
+
+/* 아이콘 */
+#header .myTool2 ul li a .img-header-link { position: relative; horiz-align: center; margin: 0 auto; text-align: center; width: 26px; height: 26px; cursor:pointer; }
+#header .myTool2 ul li a .img-header-link.prodCart{position: relative; left:11px;}
+#header .myTool2 ul li a .img-header-link .img-header-tit{text-align: center;}
+
+/* 장바구니 카운트 */
+.cartCount{background: #E60012;
+    display: inline-block;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    color: #fff;
+    font-weight: 500;
+    text-align: center;
+    line-height: 17px;
+    position: relative;
+    font-size: 10px;
+    right: -10px;
+    top: -10px;
+    border: 2px solid #fff;
+    box-sizing: border-box;}
+/* 마이롯데, 장바구니, 나의 찜 end ----------------------------------------------- */
+
+/* 메뉴 박스 (gnb) : 히트상품 ~ */
 #header .menu-box .menu-box-in .gnb{position:absolute; top:162px; left:0;}
 #header .menu-box .menu-box-in .gnb li{float:left; margin-right:10px;}
 
@@ -125,14 +150,18 @@ h1.logo{z-index: 3}
 
 /* 스크롤이 발생할 때 변경될 #header 스타일 */
 #header.fix {height:80px;}
-#header.fix #headerTop {margin-top:-50px;}
+#header.fix #headerTop {margin-top:-55px;}
 #header.fix #top-box {padding-bottom:0}
 
+/* 연관 검색어 */
 #header.fix .search-container{margin-top:-47px;}
 
 #header.fix .menu-box{display: none;}
+#header.fix .myTool2{top:70px;} /* 아이콘 4개 */
 #header.fix #headerIn .search-slider{top:22px;}
+/* 스크롤 #header 스타일 end */
 
+/* 챗봇 */
 .chat-bot{
     position: fixed;
     background-color: white;
@@ -387,7 +416,10 @@ h1.logo{z-index: 3}
 .fcs .fsns ul li a{display:block; width:50px; height:50px; text-indent:-9999px;} /*투명버튼 만들기*/
 
 /* 스크롤시 생기는 top 버튼 */
-.btnTop{display:block; width:20px; height:80px;  background:#fff; border-radius:50px; text-align: center; border: 1px solid #bfbfbf; margin-left: 8px; font-size:16px; text-align:center; padding:20px; position:fixed; right:45px; bottom:45px;}
+.btnTop{width:20px; height:20px; display: flex; align-items: center; justify-content: center; background:#fff; border-radius:50px; text-align: center; border: 1px solid #bfbfbf;
+    box-sizing: border-box; font-size:16px; padding:20px; position:fixed; right:45px; bottom:45px; box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);}
+.btnTop:hover{cursor: pointer;}
+.btnTop > img{display: inline-block; width: 12px; height: 14px;}
 
 .fade-in {
     display: block; !important;/* Block으로 설정하여 CSS transition을 사용할 수 있도록 함 */
