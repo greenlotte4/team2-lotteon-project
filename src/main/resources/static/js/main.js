@@ -25,10 +25,10 @@ async function openCategory(event){
             console.log(subCategories)
             return `
         <li class="dep2_line">
-            <a href="#" onmouseover="hoverFunction(event)" data-id="${v.id}" class="d2_tit cf">${v.name}
+            <a href="#" onmouseover="hoverFunction(event)" onclick="productList(${v.id})" data-id="${v.id}" class="d2_tit cf" style="z-index: 1000">${v.name}
                 <ul class="dep3 cf" id="${v.id}" style="display: none">
                     ${subCategories.map(sub => `
-                        <li><a href="#" data-value="${sub.id}" onclick="productList(${v.id})">${sub.name}</a></li>
+                        <li><a href="#" data-value="${sub.id}" onclick="productList(${sub.id})">${sub.name}</a></li>
                     `).join('')}
                 </ul>
             </a>
