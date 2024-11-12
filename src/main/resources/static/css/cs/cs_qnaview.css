@@ -1,0 +1,110 @@
+/* 공통 스타일 설정 */
+body, .cs_aside, .view_content, .view_title, .autolink {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    color: #333;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 사이드바 */
+.cs_aside {
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+/* 카테고리 제목 */
+.cate_title {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #d9534f; /* 사진과 일치하도록 붉은 색상 적용 */
+    margin-right: 10px;
+    display: inline-block;
+}
+
+.cate_des {
+    font-size: 1em;
+    color: #333;
+    margin-bottom: 20px;
+    display: block;
+}
+
+/* Q&A 제목 및 날짜 */
+.view_title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0 10px 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.view_title .cate {
+    font-size: 1em;
+    font-weight: bold;
+    color: #d9534f;
+    margin-right: 15px;
+}
+
+.view_title .title {
+    flex: 1;
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #333333;
+    line-height: 1.2;
+    text-align: left;
+}
+
+.view_title .rdate {
+    font-size: 0.9em;
+    color: #999999;
+    white-space: nowrap;
+    margin-left: 20px;
+    align-self: flex-end;
+}
+
+/* 공지사항 본문 */
+.view_content {
+    margin-top: 15px;
+}
+
+.view_content p {
+    line-height: 1.6;
+    font-size: 16px;
+    color: #555;
+}
+
+/* 경고 메시지 (오토링크) */
+.autolink {
+    display: block;
+    margin: 20px 0; /* 경고 메시지 위아래 간격 추가 */
+    padding: 12px 18px;
+    font-size: 14px;
+    color: #d9534f;
+    background-color: #fdf2f2;
+    border-left: 4px solid #ff6666;
+    border-radius: 5px;
+    line-height: 1.8;
+    white-space: pre-line;
+}
+
+/* 목록으로 돌아가기 버튼 */
+.btn_list {
+    display: block; /* 가운데 정렬을 위해 block 설정 */
+    padding: 12px 24px;
+    background-color: #e0e0e0;
+    color: #333;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    text-align: center;
+    margin: 30px auto 0; /* auto로 가운데 정렬 */
+    width: fit-content; /* 버튼 너비를 내용에 맞춤 */
+}
+
+.btn_list:hover {
+    background-color: #cccccc;
+}
