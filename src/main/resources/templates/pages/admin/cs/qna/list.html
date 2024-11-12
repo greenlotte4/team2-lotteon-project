@@ -13,7 +13,7 @@
       <form th:action="@{/admin/cs/qnas}" method="get"  id="cateSearch" class="search">
         <input type="hidden" name="content" value="list"/>
         <input type="hidden" name="cateNo"/>
-        <select class="qnaCate" name="cate1" onchange="updateSecondCategory()">
+        <select class="qnaCate" name="cate1" id="select1" onchange="updateSecondCategory()">
           <option disabled selected>1차선택</option>
           <option value="user">회원</option>
           <option value="coupon">쿠폰/이벤트</option>
@@ -258,7 +258,7 @@
     const selectedCate2 = this.value;
 
     if (selectedCate1 && selectedCate2) {
-      window.location.href = `/admin/cs/faqs?cate1=${selectedCate1}&cate2=${selectedCate2}&page=${e.target.dataset.page}`
+      window.location.href = `/admin/cs/qnas?cate1=${selectedCate1}&cate2=${selectedCate2}&page=${e.target.dataset.page}`
     }
   });
 

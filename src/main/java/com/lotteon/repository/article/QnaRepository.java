@@ -20,11 +20,13 @@ public interface QnaRepository extends JpaRepository<Qna,Long> {
 
     // 1차 및 2차 카테고리로 FAQ 목록을 조회 (페이징 처리 포함)
     Page<Qna> findByCate1AndCate2(CategoryArticle cate1Id, CategoryArticle cate2Id, Pageable pageable);
+    Page<Qna> findAllByCate1AndCate2(CategoryArticle categoryArticle, CategoryArticle categoryArticle2, Pageable pageable);
 
     List<Qna> findTop5ByOrderByQnaRdateDesc();
 
     // 1차 카테고리로 QnA 목록 조회
     Page<Qna> findByCate1(CategoryArticle cate1, Pageable pageable);
+
     List<Qna> findByCate1AndCate2(CategoryArticle cate1Id, CategoryArticle cate2Id, Limit limit);
 
     List<Qna> findByMemberId(Long memberId);

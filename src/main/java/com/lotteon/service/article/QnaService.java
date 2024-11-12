@@ -87,7 +87,6 @@ public class QnaService {
     }
 
 
-
     // 답변 여부 확인
     public boolean hasAnswer(Long id) {
         Qna qna = qnaRepository.findById(id)
@@ -184,7 +183,21 @@ public class QnaService {
         }
 
         Page<Qna> qnaPage = qnaRepository.findByCate1AndCate2(cate1, cate2, pageable);
-        return qnaPage.map(qna -> modelMapper.map(qna, ArticleDto.class));
+        return qnaPage.map(ArticleDto::fromEntity);
+    }
+
+    public Page<ArticleDto> getNotAllQnas(String cate1, String cate2, Pageable pageable) {
+        // 1차 및 2차 카테고리로 CategoryArticle 객체 조회
+        CategoryArticle categoryArticle1 = categoryArticleRepository.findByCategoryNameAndCategoryLevelAndCategoryType(cate1, 1, 2)
+                .orElseThrow(() -> new IllegalArgumentException("해당 1차 카테고리를 찾을 수 없습니다: " + cate1));
+        CategoryArticle categoryArticle2 = categoryArticleRepository.findByCategoryNameAndCategoryLevelAndCategoryType(cate2, 2, 2)
+                .orElseThrow(() -> new IllegalArgumentException("해당 2차 카테고리를 찾을 수 없습니다: " + cate2));
+
+        // 1차 및 2차 카테고리로 필터링된 QnA 목록을 페이징하여 조회
+        Page<Qna> qnas = qnaRepository.findAllByCate1AndCate2(categoryArticle1, categoryArticle2, pageable);
+
+        // QnA 엔티티를 ArticleDto로 변환하여 반환
+        return qnas.map(ArticleDto::fromEntity);
     }
 
 
