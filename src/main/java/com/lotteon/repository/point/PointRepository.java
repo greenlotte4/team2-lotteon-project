@@ -57,4 +57,6 @@ public interface PointRepository extends JpaRepository<Point, Long> {
     List<Point> findAllByCustomer_IdAndPointTypeAndPointUdateBetween(Long custId, int i, LocalDateTime before, LocalDateTime after);
 
     Optional<Point> findFirstByOrderIdAndPointEtc(Long orderId, String s);
+
+    Optional<Point> findFirstByOrderIdAndPointType(Long orderId, int i);
 }

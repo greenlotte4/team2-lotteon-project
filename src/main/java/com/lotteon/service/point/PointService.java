@@ -70,9 +70,9 @@ public class PointService {
 
         Customer customer = auth.getUser().getCustomer();
 
-        Page<Point> points = pointRepository.findAllByCustomerAndPointTypeOrderByPointRdateDesc(customer,2,pageable);
+        Page<Point> points = pointRepository.findAllByCustomerAndPointTypeOrderByPointRdateDesc(customer,3,pageable);
 
-        Page<GetPointsDto> dtos = points.map(v->v.toGetPointsDto());
+        Page<GetPointsDto> dtos = points.map(Point::toGetPointsDto);
 
         return dtos;
     }
@@ -143,7 +143,7 @@ public class PointService {
         String eDate = keyword.substring(keyword.indexOf("~")+1);
         LocalDate startDate = LocalDate.parse(sDate);
         LocalDate endDate = LocalDate.parse(eDate);
-        Page<Point> points = pointRepository.findAllByCustomerAndPointTypeAndPointRdateBetweenOrderByPointRdateDesc(customer,2,startDate,endDate,pageable);
+        Page<Point> points = pointRepository.findAllByCustomerAndPointTypeAndPointRdateBetweenOrderByPointRdateDesc(customer,3,startDate,endDate,pageable);
 
         return points;
     }
@@ -151,7 +151,7 @@ public class PointService {
     private Page<Point> findAllByMonth2(Pageable pageable, Customer customer, String keyword) {
         LocalDate today = LocalDate.now();
         LocalDate varDay = today.minusMonths(Integer.parseInt(keyword));
-        Page<Point> points = pointRepository.findAllByCustomerAndPointTypeAndPointRdateBetweenOrderByPointRdateDesc(customer,2,varDay,today,pageable);
+        Page<Point> points = pointRepository.findAllByCustomerAndPointTypeAndPointRdateBetweenOrderByPointRdateDesc(customer,3,varDay,today,pageable);
 
         return points;
     }
@@ -159,7 +159,7 @@ public class PointService {
     private Page<Point> findAllByDate2(Pageable pageable, Customer customer, String keyword) {
         LocalDate today = LocalDate.now();
         LocalDate varDay = today.minusDays(Integer.parseInt(keyword));
-        Page<Point> points = pointRepository.findAllByCustomerAndPointTypeAndPointRdateBetweenOrderByPointRdateDesc(customer,2,varDay,today,pageable);
+        Page<Point> points = pointRepository.findAllByCustomerAndPointTypeAndPointRdateBetweenOrderByPointRdateDesc(customer,3,varDay,today,pageable);
 
         return points;
     }
@@ -288,11 +288,22 @@ public class PointService {
                 remainingPoints = 0;
             }
 
+
             int points2 = customerService.updateCustomerPoint(customer);
             customer.updatePoint(points2);
             customerRepository.save(customer);
 
         }
+        Point usePoint = Point.builder()
+                .pointEtc("상품 구매 포인트 사용")
+                .pointVar(points)
+                .pointType(3)
+                .customer(customer)
+                .orderId(orderId)
+                .pointExpiration(LocalDate.now())
+                .build();
+
+        pointRepository.save(usePoint);
 
     }
 

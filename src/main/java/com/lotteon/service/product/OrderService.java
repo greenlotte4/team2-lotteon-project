@@ -499,6 +499,9 @@ public class OrderService {
         if(point2.isPresent()){
             pointRepository.delete(point2.get());
         }
+
+        Optional<Point> point3 = pointRepository.findFirstByOrderIdAndPointType(orderId,3);
+        pointRepository.delete(point3.get());
     }
 
     public Long findByCustomer() {

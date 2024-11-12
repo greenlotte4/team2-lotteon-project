@@ -92,6 +92,18 @@ public class CustomerService {
 
             customerRepository.save(customer);
 
+            Address address = Address.builder()
+                    .addrNick("기본배송지")
+                    .address(postCustSignupDTO.getAddr1() + "/" + postCustSignupDTO.getAddr2() + "/" + postCustSignupDTO.getAddr3())
+                    .request("없음")
+                    .basicState(1)
+                    .addrName(postCustSignupDTO.getCustName())
+                    .addrHp(postCustSignupDTO.getCustHp())
+                    .customer(customer)
+                    .build();
+
+            addressRepository.save(address);
+
             Point point = this.insertPoint(customer);
 
             pointRepository.save(point);

@@ -338,7 +338,7 @@ public class CustomerCouponService {
         Pageable pageable = PageRequest.of(page,10);
 
 
-        Page<CustomerCoupon> coupons = customerCouponRepository.findAllByCustomer(auth.getUser().getCustomer(),pageable);
+        Page<CustomerCoupon> coupons = customerCouponRepository.findAllByCustomerAndCouponState(auth.getUser().getCustomer(),1,pageable);
         if(coupons.getTotalElements()==0){
             return null;
         }

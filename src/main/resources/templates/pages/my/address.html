@@ -16,7 +16,7 @@
                         <div th:text="${addr.addrNick eq '기본배송지'?'내 정보':addr.addrNick}" class="address-nick" style="font-size: 17px">
                             기본배송지
                         </div>
-                        <div style="margin-bottom: 30px; height: 15px;"><span th:text="${addr.name} + ' / '"></span><span th:text="${addr.hp1+'-'+addr.hp2+'-'+addr.hp3}"></span></div>
+                        <div style="margin-bottom: 30px; height: 15px;"><span th:text="${addr.name} + ' / '"></span><span th:text="${addr.hp1+addr.hp2+addr.hp3}"></span></div>
                         <div style="margin-bottom: 5px; height: 25px;">
                             <span th:text="'(' + ${addr.addr1} + ')'"></span><br>
                             <span th:text="${addr.addr2}"></span>

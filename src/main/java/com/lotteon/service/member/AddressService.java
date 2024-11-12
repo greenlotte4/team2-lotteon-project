@@ -75,10 +75,28 @@ public class AddressService {
         } else {
             state = 0;
         }
+        System.out.println(dto.getAddrHp());
+        String hp1 = dto.getAddrHp().substring(0,3);
+        String hp2 = dto.getAddrHp().substring(3,7);
+        String hp3 = dto.getAddrHp().substring(7,11);
+        String hp4 = hp1+"-"+hp2+"-"+hp3;
+        System.out.println(hp4);
+//        String hp = dto.getAddrHp();
+//        StringBuilder formattedHp = new StringBuilder();
+//        System.out.println(hp);
+//        if (hp.length() == 10) {
+//            formattedHp.append(hp, 0, 3).append("-")
+//                    .append(hp, 3, 6).append("-")
+//                    .append(hp, 6, 10);
+//        } else {
+//            // 주소 길이가 10자가 아닐 경우 예외 처리
+//            System.out.println("주소의 길이가 올바르지 않습니다.");
+//        }
+
 
         Address newAddress = Address.builder()
                 .address(dto.getAddr())
-                .addrHp(dto.getAddrHp())
+                .addrHp(hp4)
                 .addrName(dto.getAddrName())
                 .basicState(state)
                 .customer(customer)

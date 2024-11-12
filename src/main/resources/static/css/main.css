@@ -230,7 +230,7 @@ h1.logo{z-index: 3}
     border: none;
     background-color: white;
     cursor: pointer;
-    color: black;
+    color: black; 
 }
 #aside .menu ul .dep1 .dep2 .dep3{}
 #aside .menu ul .dep1 .dep2 .dep3{}
