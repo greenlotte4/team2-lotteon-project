@@ -204,7 +204,7 @@
 
 /* 문의글 작성 링크 스타일 */
 .qna_link {
-    font-size: 0.9em;
+    font-size: 18px;
     font-weight: bold;
     color: #717171;
     text-decoration: underline;

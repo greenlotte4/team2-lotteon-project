@@ -152,14 +152,31 @@ public class CsController {
         return "pages/cs/qna/list";
     }
 
+/*    @GetMapping("/qna/view/{id}")
+    public String qnaView(@PathVariable Long id, @RequestParam(value = "selectedCate1", required = false) String selectedCate1,
+                          Model model) {
+        ArticleDto qna = qnaService.getQnaById(id);
+        model.addAttribute("qna", qna);
+        model.addAttribute("hasAnswer", qna.getAnswer() != null && !qna.getAnswer().isEmpty());
+        return "pages/cs/qna/view";
+    }*/
+
     @GetMapping("/qna/view/{id}")
     public String qnaView(@PathVariable Long id, Model model) {
         ArticleDto qna = qnaService.getQnaById(id);
         model.addAttribute("qna", qna);
-
         model.addAttribute("hasAnswer", qna.getAnswer() != null && !qna.getAnswer().isEmpty());
+
+        // QnA의 1차 카테고리 정보 가져와서 모델에 추가
+        CategoryArticle cate1 = qna.getCate1();
+        if (cate1 != null) {
+            model.addAttribute("selectedCate1", cate1.getCategoryName()); // 카테고리 이름 설정
+            model.addAttribute("categoryWarning", cate1.getCategoryWarning()); // 카테고리 경고 메시지 설정 (필요 시)
+        }
+
         return "pages/cs/qna/view";
     }
+
 
     @GetMapping("/qna/write")
     public String qnaWrite() {

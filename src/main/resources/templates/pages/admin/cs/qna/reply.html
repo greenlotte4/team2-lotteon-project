@@ -32,8 +32,10 @@
           <tbody>
           <tr style="height: 60px">
             <th style="width: 100px">유형</th>
-            <td class="qna-type" th:text="|${qna.cate1.categoryName} - ${qna.cate2.categoryName}|">회원 - 가입</td>
-          </tr>
+            <td>
+              <span class="cate1" th:data-value="${qna.cate1.categoryName}"></span> -
+              <span class="cate2" th:data-value="${qna.cate2.categoryName}" th:data-parent="${qna.cate1.categoryName}"></span>
+            </td>              </tr>
           <tr style="height: 60px">
             <th>제목</th>
             <td class="qna-title" th:text="${qna.title}">개인회원과 법인회원에 차이가 있나요?</td>

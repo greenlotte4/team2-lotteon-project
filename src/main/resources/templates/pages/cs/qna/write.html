@@ -6,13 +6,13 @@
     <aside class="cs_aside">
         <h3 class="aside_title">문의하기</h3>
         <ul class="aside_cate">
-            <li class="cate_list"><a href="#">회원</a></li>
-            <li class="cate_list"><a href="#">쿠폰/이벤트</a></li>
-            <li class="cate_list"><a href="#">주문/결제</a>
-            <li class="cate_list"><a href="#">배송</a></li>
-            <li class="cate_list"><a href="#">취소/반품/교환</a></li>
-            <li class="cate_list"><a href="#">여행/숙박/항공</a></li>
-            <li class="cate_list"><a href="#">안전거래</a></li>
+            <li class="cate_list"><a th:href="@{/cs/qnas(category='user')}" th:classappend="${selectedCate1 == 'user'} ? 'active' : ''">회원</a></li>
+            <li class="cate_list"><a th:href="@{/cs/qnas(category='coupon')}" th:classappend="${selectedCate1 == 'coupon'} ? 'active' : ''">쿠폰/이벤트</a></li>
+            <li class="cate_list"><a th:href="@{/cs/qnas(category='order')}" th:classappend="${selectedCate1 == 'order'} ? 'active' : ''">주문/결제</a></li>
+            <li class="cate_list"><a th:href="@{/cs/qnas(category='delivery')}" th:classappend="${selectedCate1 == 'delivery'} ? 'active' : ''">배송</a></li>
+            <li class="cate_list"><a th:href="@{/cs/qnas(category='cancel')}" th:classappend="${selectedCate1 == 'cancel'} ? 'active' : ''">취소/반품/교환</a></li>
+            <li class="cate_list"><a th:href="@{/cs/qnas(category='travel')}" th:classappend="${selectedCate1 == 'travel'} ? 'active' : ''">여행/숙박/항공</a></li>
+            <li class="cate_list"><a th:href="@{/cs/qnas(category='safe')}" th:classappend="${selectedCate1 == 'safe'} ? 'active' : ''">안전거래</a></li>
         </ul>
     </aside>
     <div id="main" style=" height: auto">
@@ -20,11 +20,10 @@
             <p class="cs_nav_tit"><span>홈</span> > <span>문의하기</span></p>
         </nav>
         <div class="box">
-
             <section class="cs_qna_list">
                 <div class="cate_bar">
-                    <h3 class="cate_title">회원</h3>
-                    <p class="cate_des">회원 관련 문의내용입니다.</p>
+                    <h3 class="cate_title">문의하기</h3>
+                    <p class="cate_des">상품에 대한 문의는 마이페이지 > 판매자 정보 > [문의하기ㄹ] 를 통해 문의해주세요. </p>
                 </div>
                 <form action="/cs/qna/write" method="post">
                     <table class="qna_table">
