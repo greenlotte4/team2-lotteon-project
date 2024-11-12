@@ -8,7 +8,12 @@
     <main>
       <th:block th:replace="layout/my/banner.html"></th:block>
     <section>
-      <h3 class="myinfo_nav">나의설정</h3>
+        <div class="passInfo_nav">
+            <div class="passInfo_dd">
+                <h4>나의설정</h4>
+                <p class="passInfoP">가입하신 계정의 LotteON 회원 정보입니다.</p>
+            </div>
+        </div>
 
       <article>
         <form id="myInfoForm" th:action="@{/my/info}" method="post">

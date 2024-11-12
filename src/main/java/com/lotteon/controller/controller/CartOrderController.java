@@ -64,7 +64,7 @@ public class CartOrderController {
             List<Product> findRelatedCart = recommendationService.findRelatedCart(cart);
             model.addAttribute("related", findRelatedCart);
         }
-
+        log.info("컨트롤러 뽑은 카트 "+cart);
         List<GetCartDto> cartItems = cartService.selectCartItem(cart);
         model.addAttribute("cartItems", cartItems);
 

@@ -9,7 +9,7 @@
     <main>
       <th:block th:replace="layout/my/banner.html"></th:block>
     <section>
-      <h3>최근 주문내역<a href="/my/orders">더보기 &gt; </a></h3>
+      <h3>최근 주문내역<a th:if="${!orders.isEmpty()}" href="/my/orders">더보기 &gt; </a></h3>
       <article>
         <table border="0" class="order">
           <tr>
@@ -19,10 +19,10 @@
             <th>상태</th>
             <th>확인/신청</th>
           </tr>
-          <tr th:if="${orders.isEmpty()}" >
-            <td colspan="4" ><div> 주문 내역이 없습니다. </div></td>
+          <tr th:if="${orders.isEmpty()}">
+            <td colspan="4" ><div style="width: 810px; font-size: 13px;"> 주문 내역이 없습니다... </div></td>
           </tr>
-          <tr th:unless="${orders.isEmpty()}" th:each="order, iterStat : ${orders}" th:if="${iterStat.index}<5">
+          <tr th:unless="${orders.isEmpty()}" th:each="order, iterStat : ${orders}" th:if="${iterStat.index}<3">
             <td class="date" th:text="${order.orderRdate}">2022-12-13</td>
             <td>
               <div class="thumb">
@@ -46,6 +46,7 @@
               <span th:case="2">확인중</span>
               <span th:case="3">개별처리중</span>
               <span th:case="4">주문완료</span>
+              <span th:case="5">취소완료</span>
             </td>
             <td class="confirm">
               <button th:if="${order.orderState==0}" th:data-id="${order.orderId}" onclick="orderCancel(event)" class="exchange grey">주문취소</button>
@@ -59,7 +60,7 @@
         </table>
       </article>
 
-      <h3>포인트 적립내역<a th:href="@{/my/points}">더보기 &gt; </a></h3>
+      <h3>포인트 적립내역<a th:if="${!noPoint}" th:href="@{/my/points}">더보기 &gt; </a></h3>
       <article>
         <table th:if="${!noPoint}" border="0" class="point">
           <tr>
@@ -78,13 +79,16 @@
             <td th:text="${point.pointEtc}">비고</td>
             <td th:classappend="${point.warningExpiration == 'active'} ? 'warning' : ''" th:text="${point.pointExpiration}">유효기간</td>
           </tr>
+          <tr  th:if="${noPoint}">
+            <td colspan="4" ><div style="width: 810px; font-size: 13px;">포인트 적립내역이 없습니다... </div></td>
+          </tr>
         </table>
-        <div th:if="${noPoint}">포인트 적립내역 없음</div>
+        <div th:if="${noPoint}" class="noReview">포인트 적립내역이 없습니다...</div>
       </article>
 
-      <h3>상품평<a th:href="@{/my/reviews/{page}(page=${page})}">더보기 &gt; </a></h3>
+      <h3>상품평<a th:if="${!noReview}" th:href="@{/my/reviews/{page}(page=${page})}">더보기 &gt; </a></h3>
       <article>
-        <table th:if="${!noReview}" border="0" class="review">
+        <table border="0" class="review">
           <tr>
             <th>번호</th>
             <th>상품명</th>
@@ -92,7 +96,7 @@
             <th>평점</th>
             <th>작성일</th>
           </tr>
-          <tr th:each="review, stat : ${reviews}">
+          <tr th:if="${!noReview}" th:each="review, stat : ${reviews}">
             <td th:text="${stat.index + 1}">1</td>
             <td><span th:text="${review.prodId}">상품번호</span> / <span> [[${#strings.length(review.prodName) > 10 ? #strings.substring(review.prodName, 0, 10) + '...' : review.prodName}]]</span></td>
             <td style="text-align: center;" th:text="${review.review}">배송이 빠릅니다. 잘 사용하겠습니다.</td>
@@ -103,14 +107,14 @@
             </td>
             <td th:text="${review.rdate}">2024-12-10</td>
           </tr>
+          <tr th:if="${noReview}">
+            <td colspan="4" ><div style="width: 810px; font-size: 13px;"> 등록된 상품평이 없습니다... </div></td>
+          </tr>
         </table>
-        <div th:if="${noReview}">
-          등록된 상품평이 없습니다...
-        </div>
       </article>
 
 
-      <h3>문의내역 <a th:href="@{/my/qnas}" target="_self">더보기 &gt;</a></h3>
+      <h3>문의내역 <a th:href="@{/my/qnas}" target="_self"  th:if="${!#lists.isEmpty(qnaList)}">더보기 &gt;</a></h3>
       <article>
         <table border="0" class="qna">
           <tr>
@@ -122,7 +126,7 @@
             <th>상태</th>
           </tr>
           <tr th:if="${#lists.isEmpty(qnaList)}">
-            <td colspan="6">문의내역이 없습니다!</td>
+            <td colspan="6">문의내역이 없습니다...</td>
           </tr>
           <tr th:each="qna, iterStat : ${qnaList}">
             <td th:text="${iterStat.index + 1}">1</td>

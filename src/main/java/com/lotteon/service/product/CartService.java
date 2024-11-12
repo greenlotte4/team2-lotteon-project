@@ -224,21 +224,29 @@ public class CartService {
         Long custId = auth.getUser().getCustomer().getId();
 
         String cartId = getCookieValue(req, "cartId");
+
         Optional<Cart> optCustCart = cartRepository.findByCustId(custId);
+        Cart cart;
+        if(!optCustCart.isPresent()) {
+            log.info("커스터머 카트 없으면 저장해 ");
+            cart = cartRepository.save(Cart.builder().custId(custId).build());
+            log.info("저장한 카트 "+cart);
+        }else {
+            cart = optCustCart.get();
 
-        if(cartId != null) {
-            Optional<Cart> optCookieCart = cartRepository.findById(Long.parseLong(cartId));
-            optCookieCart.get().getItems().forEach(cartItem -> {
-                cartItem.setCart(optCustCart.get());
-            });
-            Cookie newCookie = new Cookie("cartId", null);
-            newCookie.setPath("/");
-            newCookie.setMaxAge(0);
-            resp.addCookie(newCookie);
+            if(cartId != null) {
+                Optional<Cart> optCookieCart = cartRepository.findById(Long.parseLong(cartId));
+                optCookieCart.get().getItems().forEach(cartItem -> {
+                    cartItem.setCart(optCustCart.get());
+                });
+                Cookie newCookie = new Cookie("cartId", null);
+                newCookie.setPath("/");
+                newCookie.setMaxAge(0);
+                resp.addCookie(newCookie);
+            }
+
         }
-
-
-        return optCustCart.get();
+        return cart;
     }
 
     public Cart selectCartFornoAuth(HttpServletRequest req, HttpServletResponse resp) {
@@ -261,7 +269,7 @@ public class CartService {
 
     public List<GetCartDto> selectCartItem(Cart cart) {
         // 3. 카트가 없으면 빈 리스트 반환
-        if (cart == null) {
+        if (cart.getItems() == null) {
             return Collections.emptyList();  // 카트가 없을 경우
         }
 

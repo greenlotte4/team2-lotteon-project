@@ -31,6 +31,9 @@ body{height: 100vh;}
     border-radius: 15px;
     background: #fdfdfd;
     position: relative;
+    padding: 35px 25px;
+    display: flex;
+    flex-direction: column;
 }
 #my .address-box .now{
     display: inline-block;
@@ -42,6 +45,7 @@ body{height: 100vh;}
     background: url(/images/ico_sprites.png) no-repeat -622px -306px;
     zoom: 0.9;
 }
+#my .address-box span{font-size: 13px;}
 #my .address-box .basic-btn:hover .now {background-position: -717px -361px!important;}
 #my .address-box.on .basic-btn .now {background-position: -644px -306px!important;}
 #my .address-box.on .basic-btn {cursor: default}

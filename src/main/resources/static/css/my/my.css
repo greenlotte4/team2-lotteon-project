@@ -44,17 +44,20 @@ body{height: 100vh;}
 #my section > .byDate > .date_5ea .on {font-weight: 600;}
 
 /* 테이블 공통설정 */
-#my article > table {table-layout: fixed;}
+#my article > table {table-layout: fixed;padding: 10px 0;}
 #my article > table  {width: 100%;height: auto;margin-top: 26px;border-collapse: collapse; font-size: 14px !important;}
 #my article > table  * {font-family: '돋움';color: #444;}
 #my article > table tr{height: 50px;}
-#my article > table>tbody>tr>th {padding: 6px;box-sizing: border-box;color: #333; font-weight: 600;text-align: center}
-#my article > table td {padding: 10px;box-sizing: border-box;overflow: hidden; padding: 20px 0; text-align: center}
+#my article > table>tbody>tr>th {font-size: 13px;padding: 6px;box-sizing: border-box;color: #333; font-weight: 600;text-align: center}
+#my article > table td {font-size: 13px;padding: 10px;box-sizing: border-box;overflow: hidden; padding: 20px 0; text-align: center}
 .myOrdersTR{border: 1px solid #444; border-radius: 30px;}
 #my article > table .warning {color:red;}
 #my table.review td:nth-of-type(3),
 #my table.qna td:nth-of-type(4){text-align: left;}
 
+#my article > table td span,
+#my article > table td li,
+#my article > table td a {font-size: 13px;}
 #my table.review td:nth-of-type(3),
 #my table.qna td:nth-of-type(4){white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
 
@@ -72,7 +75,7 @@ body{height: 100vh;}
 
 #my table.order .confirm{height: 150px; display: flex; flex-direction: column; justify-content: center; align-items: center;}
 #my table.order .confirm > button {display: block;width: 100px;height: 35px; padding: 6px; box-sizing: border-box; font-size: 12px; border:none;}
-#my table.order button {border-radius: 10px; margin-top: 2px;font-family: '돋움';color: #676767;line-height: 19px;}
+#my table.order button { font-size: 14px;border-radius: 10px; margin-top: 2px;font-family: '돋움';color: #676767;line-height: 19px;}
 
 
 #my table.order .color{background: #E60012; color: #FFF;     border: none;}
@@ -100,6 +103,7 @@ body{height: 100vh;}
 #my table.review tr > th:nth-of-type(3) { width: 33%; }
 #my table.review tr > th:nth-of-type(4) { width: 18%; }
 #my table.review tr > th:nth-of-type(5) { width: 19.5%; }
+#my .noReview{box-shadow: 0 0 8px #e3e3e3;text-align: center; font-size: 13px; height: 50px; border-radius: 15px; line-height: 50px; padding: 0 30px; margin-top: 20px;}
 
 /* 문의내역 테이블 */
 #my table.qna {border-collapse: separate;
@@ -119,6 +123,7 @@ body{height: 100vh;}
 /* 쿠폰내역 테이블 */
 #my table.coupon {border-collapse: separate;
     border-spacing: 0;
+    padding: 10px 0 !important;
     border-radius: 20px; /* 원하는 border-radius 값 */
     overflow: hidden; box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);}
 #my table.coupon tr > th:nth-child(1) { width: 25.5%; }
@@ -129,20 +134,20 @@ body{height: 100vh;}
 
 /* 쿠폰내역 안내 */
 #my ul.notice {list-style: disc; margin: 30px; width: 90%;}
-#my ul.notice > li { padding-left: 20px; color: #777; line-height: 17px; font-size: 14px; font-weight: 400;}
+#my ul.notice > li { padding-left: 10px; color: #777; line-height: 17px; font-size: 12px; font-weight: 400;}
 
 /* 나의설정 테이블 */
-/*#my section.user {display: flex; justify-content: space-between; padding: 20px}*/
-/*#my section.user > article {border: 0.5px solid #BFBFBF; text-align: left; padding: 50px 20px; height: 130px; width: 33%; border-radius: 5px; display: flex; flex-direction: column; justify-content: center}*/
-/*#my section.user > article > div{display: flex; justify-content: space-between;}*/
-/*#my section.user b{font-size: 16px;}*/
-/*#my section.user a[href]{text-decoration: underline; color: #0070C0;}*/
-/*#my section.user p{ color: #808080; text-align: left; box-sizing: border-box; margin-top: 10px;}*/
-/*#my section.user > article:hover{border: 0.5px solid #808080; cursor: pointer}*/
+#my section.user {display: flex; justify-content: space-between; padding: 20px}
+#my section.user > article {border: 0.5px solid #BFBFBF; text-align: left; padding: 50px 20px; height: 130px; width: 33%; border-radius: 15px; display: flex; flex-direction: column; justify-content: center}
+#my section.user > article > div{display: flex; justify-content: space-between;}
+#my section.user b{font-size: 16px;}
+#my section.user a[href]{text-decoration: underline; color: #0070C0;}
+#my section.user p{ color: #808080; text-align: left; box-sizing: border-box; margin-top: 10px;}
+#my section.user > article:hover{box-shadow: 0 0 8px #e3e3e3; cursor: pointer}
 
 #my .myinfo_nav{ position: relative; left: 30px;}
 
-#my table.myInfo{position:relative; left: 30px;height: auto; padding: 30px 0; border-radius: 30px; box-shadow: 0 0 8px #e3e3e3; margin-top: 30px;border-collapse: collapse;}
+#my table.myInfo{position:relative; left: 30px;height: auto; margin-top: 30px;border-collapse: collapse;}
 #my table.myInfo  * {font-family: '돋움';color: #444; text-align: left;}
 #my table.myInfo th {padding: 6px;box-sizing: border-box;width: 150px;font-size: 14px;font-weight: 500; padding-left: 20px; vertical-align: top; padding-top: 15px;}
 #my table.myInfo td {padding: 5px 10px;box-sizing: border-box;overflow: hidden; font-size: 14px;}
