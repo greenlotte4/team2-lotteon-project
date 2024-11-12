@@ -1,5 +1,5 @@
 <link rel="stylesheet" th:href="@{/css/cs/cs_common.css}">
-<link rel="stylesheet" th:href="@{/css/cs/cs_qnaview.css}">
+<link rel="stylesheet" th:href="@{/css/cs/cs_qna.css}">
 <link rel="stylesheet" th:href="@{/css/basic.css}">
 <header th:replace="layout/main/header.html"></header>
 <main style="margin: 0 auto; margin-bottom: 50px; margin-top: 230px;">
@@ -43,10 +43,11 @@
                 </div>
                 <div class="qna_view">
                     <div class="view_title">
-                        <p class="v_title cate" th:text="${qna.cate2.categoryName}">카테고리2</p>
-                        <p class="v_title title" th:text="${qna.title}">가입문의내용</p>
-                        <p class="nick" th:text="${qna.memId != null && qna.memId.toString().length() >= 2 ? qna.memId.toString().substring(0, 2) + '**' : 'N/A'}">chh**</p>
-                        <p class="date rdate" th:text="${#temporals.format(qna.rdate, 'yyyy-MM-dd')}">2022-11-21</p>
+                        <div class="cate_title">
+                            <p class="cate q_cate" th:data-value="${qna.cate2.categoryName}" th:data-parent="${qna.cate1.categoryName}" th:text="${qna.cate2.categoryName}">카테고리2</p>
+                            <p class="title" th:text="${qna.title}">가입문의내용</p> <!-- QNA 제목 -->
+                        </div>
+                        <p><span class="nick" th:text="${qna.memId != null && qna.memId.toString().length() >= 2 ? qna.memId.toString().substring(0, 2) + '**' : 'N/A'}">chh**</span> <span class="date" th:text="${#temporals.format(qna.rdate, 'yyyy-MM-dd')}">2022-11-21</span></p> <!-- 작성자 닉네임과 작성일 -->
                     </div>
                     <div class="view_content">
                         <p th:text="${qna.content}">회원가입하고 싶어요. 어떻게 해야 하나요?</p> <!-- QNA 내용 -->
@@ -66,11 +67,6 @@
                     <!-- 여기까지 답변 출력 조건 추가 -->
                 </div>
 
-                <div class="autolink" th:if="${categoryWarning}">
-                    <p th:text="${categoryWarning}">
-                        <!-- category_warning 내용이 여기에 표시됩니다. -->
-                    </p>
-                </div>
 
                 <a th:href="@{/cs/qnas}" class="btn_gray btn_list">목록</a>
 
