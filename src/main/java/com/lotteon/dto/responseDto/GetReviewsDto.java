@@ -16,4 +16,5 @@ public class GetReviewsDto {
     private String rdate;
     private String img;
     private String memUid;
+    private String reviewImg;
 }

@@ -547,7 +547,9 @@
 
     
 
-    <a href="#" class="btnTop">TOP</a><!--.btnTop-->
+    <a href="#" class="btnTop">
+        <img th:src="@{/images/btnTop.svg}" alt="클릭 시 가장 상단으로 이동하기">
+    </a><!--.btnTop-->
 </div><!--#wrap-->
 <footer th:replace="layout/main/footer.html"></footer>
 
@@ -703,13 +705,45 @@
         $('.totalSlider').text(' / ' + slider.getSlideCount());
     });
     const main = document.getElementById("main");
-    window.addEventListener("scroll", function () {
-        // 현재 스크롤 위치를 가져옵니다.
-        const scrollY = window.scrollY;
-
-        // 스크롤 위치에 따라 배너와 헤더를 이동시킵니다.
-        document.getElementById("header").style.transform = `translateY(-${Math.min(80, scrollY)}px)`;
-        main.style.transform = `translateY(-${Math.min(80, scrollY)}px)`;
+    window.addEventListener("click", function (e) {
+        if(e.target.classList.contains("bnClose")){
+            document.getElementById("header").style.transform = `translateY(-80px)`;
+            document.getElementsByClassName("bnClose")[0].style.transform = `translateY(-80px)`;
+            document.getElementsByClassName("bnClose")[0].style.display = `none`;
+            document.getElementById("topBanner").style.transform = `translateY(-80px)`;
+            main.style.transform = `translateY(-80px)`;
+        }
     });
+
+
+    // .btnTop 버튼 없음
+    $(".btnTop").hide();
+    // .btnTop 버튼 보이기 (120px 만큼 스크롤 했을 때)
+    $(window).scroll(function(){
+        if($(this).scrollTop()>120){
+            $(".btnTop").fadeIn();
+        }else{
+            $(".btnTop").fadeOut();
+        }
+    })
+    // .btnTop 버튼 클릭했을 때
+    // $(".btnTop").click(function(){
+    //     $("body, html").animate({
+    //         scrollTop:0
+    //     },500);
+    //     return false;
+    // })
+
+    // .btnTop 버튼 클릭 시 html top으로 부드럽게 스크롤
+    $(".btnTop").click(function() {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth" // 부드러운 스크롤 효과
+        });
+        return false;
+    });
+
+
+
 </script>
 

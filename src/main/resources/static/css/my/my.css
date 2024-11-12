@@ -21,8 +21,8 @@ body{height: 100vh;}
 #my > nav tr > td > a {display: inline-block; width: 100%;}
 
 #my > main {width: 810px; height: auto;float: left; margin: 30px; box-sizing: border-box;}
-#my > main .banner {width: 810px; height: 86px;overflow: hidden;display: flex;justify-content: center;align-items: center }
-#my > main .banner > img {max-width: 100%;width: auto;height: 100%;}
+#my > main > .banner {width: 810px; height: 86px;overflow: hidden;display: flex;justify-content: center;align-items: center }
+#my > main > .banner > img {max-width: 100%;width: auto;height: 100%;}
 
 /* 기간별 조회 */
 #my section > .byDate ul,

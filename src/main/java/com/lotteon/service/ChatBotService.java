@@ -5,9 +5,13 @@ import com.lotteon.config.MyUserDetails;
 import com.lotteon.dto.responseDto.GetDeliveryDateDto;
 import com.lotteon.entity.category.CategoryProduct;
 import com.lotteon.entity.member.Customer;
+import com.lotteon.entity.point.CustomerCoupon;
 import com.lotteon.entity.product.Order;
+import com.lotteon.entity.product.OrderItem;
 import com.lotteon.entity.product.Product;
 import com.lotteon.repository.category.CategoryProductRepository;
+import com.lotteon.repository.point.CustomerCouponRepository;
+import com.lotteon.repository.product.OrderItemRepository;
 import com.lotteon.repository.product.OrderRepository;
 import com.lotteon.service.product.OrderItemService;
 import com.lotteon.service.product.OrderService;
@@ -32,6 +36,8 @@ public class ChatBotService {
     private final CategoryProductRepository categoryProductRepository;
     private final OrderItemService orderItemService;
     private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
+    private final CustomerCouponRepository customerCouponRepository;
 
 
     public String findBestProduct(String prompt) {
@@ -148,5 +154,105 @@ public class ChatBotService {
             result += dto.getProdName() + "상품의 배송예정일 :" + dto.getDate();
         }
         return result;
+    }
+
+    public String possibleReturn(String prompt) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
+            return "로그인 후 이용가능한 서비스입니다.";
+        }
+        MyUserDetails auth = (MyUserDetails) authentication.getPrincipal();
+        Customer customer = auth.getUser().getCustomer();
+        List<Order> orders = orderRepository.findAllByOrderStateAndCustomer(2,customer);
+        if(orders.isEmpty()){
+            return "반품가능한 주문이 없습니다. \n 자세한 내역은 마이페이지에서 확인해주세요.";
+        }
+        List<Long> orderIds = orders.stream()
+                .flatMap(order -> order.getOrderItems().stream())
+                .filter(orderItem -> orderItem.getState2() == 4)
+                .map(OrderItem::getId)
+                .toList();
+
+        String orderIdsString = orderIds.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(","));
+
+        return "반품가능한 주문번호 : " + orderIdsString;
+    }
+
+    public String selectReturn(String prompt) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
+            return "로그인 후 이용가능한 서비스입니다.";
+        }
+        Long orderId = Long.parseLong(prompt.substring(prompt.indexOf(":")+1).trim());
+        orderItemService.patchItemState(orderId,2,1,3);
+
+        return "주문번호 : " + orderId + "번의 상품이 반품되었습니다.";
+    }
+
+    public String possibleChange(String prompt) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
+            return "로그인 후 이용가능한 서비스입니다.";
+        }
+        MyUserDetails auth = (MyUserDetails) authentication.getPrincipal();
+        Customer customer = auth.getUser().getCustomer();
+        List<Order> orders = orderRepository.findAllByOrderStateAndCustomer(2,customer);
+        if(orders.isEmpty()){
+            return "교환가능한 주문이 없습니다. \n 자세한 내역은 마이페이지에서 확인해주세요.";
+        }
+        List<Long> orderIds = orders.stream()
+                .flatMap(order -> order.getOrderItems().stream())
+                .filter(orderItem -> orderItem.getState2() == 4)
+                .map(OrderItem::getId)
+                .toList();
+
+        String orderIdsString = orderIds.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(","));
+
+        return "교환가능한 주문번호 : " + orderIdsString;
+    }
+
+    public String selectChange(String prompt) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
+            return "로그인 후 이용가능한 서비스입니다.";
+        }
+        Long orderId = Long.parseLong(prompt.substring(prompt.indexOf(":")+1).trim());
+        orderItemService.patchItemState(orderId,3,1,3);
+
+        return "주문번호 : " + orderId + "번의 상품이 교환신청 되었습니다. 자세한 사항은 판매자에게 문의하세요.";
+    }
+
+    public String possibleCustomerCoupon() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
+            return "로그인 후 이용가능한 서비스입니다.";
+        }
+        MyUserDetails auth = (MyUserDetails) authentication.getPrincipal();
+        Customer customer = auth.getUser().getCustomer();
+        List<CustomerCoupon> coupons = customerCouponRepository.findAllByCustomerAndCouponState(customer,1);
+        if(coupons.isEmpty()){
+            return "사용가능한 쿠폰이 없습니다.";
+        }
+        List<String> couponNames = coupons.stream().map(v->v.getCoupon().getCouponName()).collect(Collectors.toList());
+        String couponNameStr = couponNames.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(","));
+
+        return "사용가능한 쿠폰은 : " + couponNameStr + "입니다.";
+    }
+
+    public String findAllCustomerPoint() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
+            return "로그인 후 이용가능한 서비스입니다.";
+        }
+        MyUserDetails auth = (MyUserDetails) authentication.getPrincipal();
+        Customer customer = auth.getUser().getCustomer();
+
+        return "사용가능한 포인트 : "+customer.getCustPoint();
     }
 }

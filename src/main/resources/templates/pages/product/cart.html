@@ -342,7 +342,7 @@
     const optionId = selectedOption.dataset.id;
     const prodId = selectedOption.dataset.prod;
     const prodStock = selectedOption.dataset.stock;
-    const quantity = document.querySelector('.prod-quantity')
+    const quantity = event.target.closest('.parent-closet').querySelector('.prod-quantity')
     if(Number(prodStock) < Number(quantity.value)){
       alert(`주문가능한 수량 : ${prodStock}`)
       quantity.value = Number(prodStock)

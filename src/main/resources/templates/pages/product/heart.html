@@ -41,7 +41,7 @@
                     <td>[[${heart != null ? #numbers.formatInteger(heart.discount, 1, 'COMMA') : 0}]] %</td>
                 </tr>
                 <tr th:if="${noItem}">
-                    <td colspan="10" style="color: #000;">찜목록에 닮긴 상품이 없습니다.</td>
+                    <td colspan="10" style="color: #000;">찜목록에 담긴 상품이 없습니다.</td>
                 </tr>
             </table>
             <button onclick="deleteHeart()" class="btnDel" id="btnDel"><a href="#">선택삭제</a></button>

@@ -51,7 +51,7 @@
                     <td onclick="openCouponPopup(1,event)" th:data-id="${coupon.id}" th:text="${coupon.id}" style="text-decoration: underline; cursor:pointer; width: 45px;">10121111</td>
                     <td style="width:70px;" th:text="${coupon.couponType}">abc1</td>
                     <td style="width: 140px;" th:text="${coupon.couponName}">김유신</td>
-                    <td style="width: 80px;" th:text="${coupon.couponDiscount} + ${coupon.couponDiscountOption}">OOO</td>
+                    <td style="width: 80px;" th:text="${coupon.couponDiscountOption1}+${coupon.couponDiscount} + ${coupon.couponDiscountOption2}">OOO</td>
                     <td style="width: 110px;" th:text="${coupon.couponExpiration}">2</td>
                     <td style="width: 80px;" th:text="${coupon.couponIssuer}">102,999</td>
                     <td style="width: 40px;" th:text="${coupon.couponIssueCount}">신용카드</td>

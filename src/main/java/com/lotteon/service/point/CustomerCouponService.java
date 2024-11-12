@@ -360,7 +360,7 @@ public class CustomerCouponService {
                 .build();
 
         customerCouponRepository.save(newCustomerCoupon);
-        return "쿠폰 발급 완료";
+        return "쿠폰 발급이 완료되었습니다.";
     }
 
     public List<GetCouponDto>   findByCustomerAndSeller(List<Long> prodIds) {

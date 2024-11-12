@@ -15,7 +15,8 @@ public class GetCouponDto {
     private String couponType;
     private String couponName;
     private int  couponDiscount;
-    private String couponDiscountOption;
+    private String couponDiscountOption1;
+    private String couponDiscountOption2;
     private String couponExpiration;
     private String couponIssuer;
     private int couponIssueCount;
@@ -24,4 +25,5 @@ public class GetCouponDto {
     private String couponRdate;
     private String couponCaution;
     private String couponBannerState;
+    private int couponMinPrice;
 }

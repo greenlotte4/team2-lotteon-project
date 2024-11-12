@@ -76,13 +76,12 @@ public class Coupon {
 
     public GetCouponDto toGetCouponDto() {
 
-        String realOption;
+        String realOption1 ="상품 ";
+        String realOption2 ="원 할인 쿠폰";
         if(couponDiscountOption.equals("p")) {
-            realOption = "% 할인";
+            realOption2 = "% 할인 쿠폰";
         } else if (couponDiscountOption.equals("d")){
-            realOption = "배달비 할인";
-        } else {
-            realOption = "원 할인";
+            realOption1 = "배송비 ";
         }
         String issuer ;
         if(member.getMemRole().equals("admin")){
@@ -109,11 +108,13 @@ public class Coupon {
                 .id(id)
                 .couponType(couponType)
                 .couponDiscount(couponDiscount)
-                .couponDiscountOption(realOption)
+                .couponDiscountOption1(realOption1)
+                .couponDiscountOption2(realOption2)
                 .couponName(couponName)
                 .couponUseCount(couponUseCount)
                 .couponCaution(couponCaution)
                 .couponBannerState(banner)
+                .couponMinPrice(couponMinPrice)
                 .build();
     }
 

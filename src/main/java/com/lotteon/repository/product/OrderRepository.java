@@ -58,4 +58,6 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
     Long countByCustomer(Customer customer);
 
     List<Order> findAllByOrderStateAndCustomer(int i, Customer customer);
+
+    List<Order> findAllByOrderItems_State2AndCustomer(int i, Customer customer);
 }

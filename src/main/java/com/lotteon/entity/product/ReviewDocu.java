@@ -62,6 +62,7 @@ public class ReviewDocu {
                 .prodName(prodName)
                 .img(prodImg)
                 .memUid(memUid)
+                .reviewImg(reviewImg)
                 .rdate(rdate)
                 .build();
     }

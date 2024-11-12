@@ -232,8 +232,6 @@ public class CartService {
             cart = cartRepository.save(Cart.builder().custId(custId).build());
             log.info("저장한 카트 "+cart);
         }else {
-            cart = optCustCart.get();
-
             if(cartId != null) {
                 Optional<Cart> optCookieCart = cartRepository.findById(Long.parseLong(cartId));
                 optCookieCart.get().getItems().forEach(cartItem -> {
@@ -244,7 +242,7 @@ public class CartService {
                 newCookie.setMaxAge(0);
                 resp.addCookie(newCookie);
             }
-
+            cart = optCustCart.get();
         }
         return cart;
     }
@@ -274,7 +272,7 @@ public class CartService {
         }
 
         // 4. 카트에 담긴 아이템 목록을 조회
-        List<CartItem> cartItems = cart.getItems();
+        List<CartItem> cartItems = cartItemRepository.findAllByCart(cart);
         List<GetCartDto> cartDtoList = new ArrayList<>();
 
         // 5. 각 카트 아이템을 DTO로 변환

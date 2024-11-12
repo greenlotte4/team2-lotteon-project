@@ -108,7 +108,7 @@ public class ApiProductController {
                 .getPrincipal();
         String cacheKey = "dailyCoupon::daily_" + dto.getId() + "_" + auth.getUser().getId() +"_" + LocalDate.now();
         if (Boolean.TRUE.equals(redisTemplate.hasKey(cacheKey))) {
-            return ResponseEntity.ok("이미 수령하였습니다.");
+            return ResponseEntity.ok("이미 수령한 쿠폰입니다.");
         }
         
         String dailyCoupon = customerCouponService.postDailyCoupon(dto.getId(),auth);

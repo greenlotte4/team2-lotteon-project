@@ -24,14 +24,10 @@
                     <form th:action="@{/prod/cart}" method="POST" id="productForm">
                         <table class="tb1">
                             <tr>
-                                <td class="td_company">
+                                <td class="td_company" colspan="2">
                                     <span>[[${product.getSellCompany}]]</span>
                                     <span>상품번호 : [[${product.getId}]]</span>
                                     <input type="hidden" th:value="${product.getId}" name="prodId">
-
-                                    <span th:if="${heart=='none'}" onclick="postHeart(event)" th:data-id="${product.getId()}" class="heart-img"></span>
-                                    <span th:if="${heart=='active'}" onclick="postHeart(event)" th:data-id="${product.getId()}" class="heart-active"></span>
-
                                     <span id="coupondl" th:if="${couponId != 0}" th:data-id="${couponId}" th:data-seller="${product.seller.id}" onclick="getCustomerCoupon(event)">
                                         쿠폰받기
                                         <span class="img"></span>
@@ -40,7 +36,8 @@
                             </tr>
                             <tr>
                                 <td class="prod_name">
-                                    <span class="prod_name_span">[[${product.getProdName}]]</span> <br>
+                                    <span class="prod_name_span">[[${product.getProdName}]]</span>
+                                    <br>
                                     <span class="box">
                                         <span class="ratingBg">
                                             <span class="rating" th:style="'width:'+ ${product.prodRating * 2}+'%;'"></span>
@@ -54,21 +51,25 @@
                                     </span>
 
                                 </td>
+                                <td style="display: flex;align-items: flex-start;">
+                                    <span th:if="${heart=='none'}" onclick="postHeart(event)" th:data-id="${product.getId()}" class="heart"></span>
+                                    <span th:if="${heart=='active'}" onclick="postHeart(event)" th:data-id="${product.getId()}" class="heart on"></span>
+                                </td>
                             </tr>
                             <tr>
-                                <td class="price">
-                                    <del th:style="${product.getProdDiscount()>0.0?'':'text-decoration:none;color:#000;font-weight:bold'}">[[${#numbers.formatInteger(product.getProdPrice(), 1,'COMMA')}]]원&nbsp;</del>
+                                <td class="price" colspan="2">
+                                    <del th:style="${product.getProdDiscount()>0.0?'font-size:14px':'text-decoration:none;color:#000;font-weight:bold'}">[[${#numbers.formatInteger(product.getProdPrice(), 1,'COMMA')}]]원&nbsp;</del>
                                     <span th:if="${product.getProdDiscount()>0.0}">[[${#numbers.formatInteger(product.getProdDiscount(), 1)}]]%&#8595;</span>
                                     <i class="install"></i>
                                     <span th:if="${prodDetail.installmentable}">무이자할부</span>
                                     <span th:unless="${prodDetail.installmentable}">할부(무이자X)</span>
                                     <i class="cardEvent"></i>
                                     <span>카드 추가 혜택</span> <br>
-                                    <span id="finalPrice" th:style="${product.getProdDiscount()>0.0?'':'font-size:0;'}">[[${#numbers.formatInteger(product.getTotalPrice(), 1,'COMMA')}]]원</span>
+                                    <span id="finalPrice" th:style="${product.getProdDiscount()>0.0?'font-size:16px;text-decoration:none;color:#000;font-weight:bold':'font-size:0;'}">[[${#numbers.formatInteger(product.getTotalPrice(), 1,'COMMA')}]]원</span>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="delivery">
+                                <td class="delivery" colspan="2">
                                     <span th:text="'배송비 : ' + ${product.prodDeliver > 0 ?
                                     #numbers.formatInteger(product.getProdDeliver(), 1,'COMMA') + '원' : '무료배송'}"></span>
                                     <span id="delivery-date"></span> <br>
@@ -77,12 +78,12 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>
+                                <td colspan="2">
                                     <span class="des">원산지 - [[${prodDetail.origin}]]</span>
                                 </td>
                             </tr>
                             <tr>
-                                <td>
+                                <td colspan="2">
                                     <span class="optName" th:text="${option1s[0].optionName}" th:style="${option1s[0].optionName!='옵션없음'?'':'color:transparent'}"></span>
                                     <select onchange="optionIdChanger(event)" name="options" class="prodOptions" id="select1"
                                             th:attr="disabled=${option1s[0].optionName == '옵션없음' ? 'disabled' : null}"
@@ -100,7 +101,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td id="select2" style="display: none;height: 50px">
+                                <td id="select2" style="display: none;height: 50px" colspan="2">
 
                                 </td>
                             </tr>
@@ -113,7 +114,7 @@
                                 </td>
                             </tr>
                             <tr class="count_qty">
-                                <td>
+                                <td colspan="2">
                                     <div class="greyBox">
                                         <div id="qty" class="d-flex align-items-center">
                                             <button type="button" class="decrement">-</button> <!-- 감소 버튼 -->
@@ -148,9 +149,10 @@
             </div> <!-- .product_info -->
 
             <nav id="sticky-element" class="list-group-horizontal">
-                    <a href="#productDetail" class="list-group-item-action">상세설명</a>
-                    <a href="#productReview" class="list-group-item-action">상품평<span th:text="${product.prodReviewCnt eq null?'(0)':'('+product.prodReviewCnt+')'}" style="font-weight: inherit"></span></a>
-                    <a href="#" class="list-group-item-action">교환/반품</a>
+                    <a href="#productDetail" class="list-group-item-action text-center">상세설명</a>
+                    <a href="#productReview" class="list-group-item-action text-center">상품평<span th:text="${product.prodReviewCnt eq null?'(0)':'('+product.prodReviewCnt+')'}" style="font-weight: inherit"></span></a>
+                    <a href="" class="list-group-item-action"></a>
+                    <a href="" class="list-group-item-action"></a>
                     <a href="" class="list-group-item-action"></a>
             </nav>
             <h2 class="sub_tit2">상품 상세정보</h2>
@@ -251,8 +253,8 @@
                     </div>
                 </div>
                 <div style="display: flex; justify-content: space-between;" th:each="review : ${reviews}" class="cmt" id="prodReview">
-                    <div style="display: flex; justify-content: center; align-items: center;">
-                        <img style="width: 100px; height: 100px;" th:src="@{'/file/'+${review.getImg()}}">
+                    <div style="display: flex; justify-content: center; align-items: center;" th:if="${review.reviewImg!=null}">
+                        <img style="width: 100px; height: 100px;" th:src="@{'/file/'+${review.reviewImg}}">
                     </div>
                     <div style="width: 600px;">
                         <div>
@@ -296,7 +298,6 @@
                     </div>
                 </div>
             </div>
-            <div style="height: 800px"></div>
         </main> <!-- #main-->
     </div>
     <div class="popup"></div>
@@ -347,12 +348,8 @@
                 }
             })
 
-            if(resp.data==="active"){
-                event.target.classList.remove('heart-img')
-                event.target.classList.add('heart-active')
-            } else if(resp.data==="none"){
-                event.target.classList.remove('heart-active')
-                event.target.classList.add('heart-img')
+            if(resp.data){
+                document.getElementsByClassName('heart')[0].classList.toggle('on');
             }
 
         } catch (e) {
@@ -370,30 +367,28 @@
             })
             const coupons = resp.data
             document.querySelector('.popup').innerHTML
-                = `<h1>발급가능한 쿠폰리스트</h1><section>`
+                = `<h1><span>발급가능한 쿠폰리스트</span><button onclick="closeCouponBtn()" class="bi bi-x"></button></h1><section>`
                 +coupons.map(v=>
-                `<article onclick="postCoupon(event)" data-id="${v.id}" class="coupon-box">
-                    <div data-id="${v.id}">${v.couponName}</div>
-                    <div data-id="${v.id}">${v.couponDiscount} ${v.couponDiscountOption}</div>
-                    <div data-id="${v.id}">${v.couponCaution}</div>
+                `<article class="coupon-box">
+                    <div>
+                        <div data-id="${v.id}" class="cpnTit">${v.couponName}</div>
+                        <div data-id="${v.id}" class="cpnDC">${v.couponDiscountOption1}${v.couponDiscount}${v.couponDiscountOption2}</div>
+                        <div data-id="${v.id}" class="cpnLimit">
+                                    ${v.couponMinPrice!==0? v.couponMinPrice.toLocaleString('en-US')+'원 이상 구매시 ':''}
+                                    (~${v.couponExpiration.substring(16).replace('-','/')})
+                        </div>
+                        <div data-id="${v.id}" class="cpnCaution">${v.couponCaution}</div>
+                    </div>
+                    <div onclick="postCoupon(event)" data-id="${v.id}" style="display: flex">
+                        <i class="bi bi-download"></i>
+                    </div>
                  </article>
             `).join('')
                 +`</section><button onclick="closeCouponBtn()">닫기</button>
-            <div class="notification" id="popupNotification">쿠폰이 적용된 가격을 확인해보세요!</div>`;
+            <div class="notification" id="popupNotification"></div>`;
             document.querySelector('.popup').style.display = 'flex';
             document.querySelector('.bg').style.display = "block";
             document.querySelector('body').style.overflow = 'hidden';
-            const notification = document.getElementById('popupNotification');
-
-            // 알림 메시지를 나타내기
-            setTimeout(() => {
-                notification.classList.add('show');
-            }, 100); // 약간의 지연 후에 나타나게 함
-
-            // 3초 후 알림 메시지를 숨기기
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000); // 3초 동안 보여줌
         } catch (e) {
 
         }
@@ -404,16 +399,19 @@
             'id': event.target.dataset.id
         }
         console.log(submitData)
+        const notification = document.getElementById('popupNotification');
         try {
             const resp = await axios.post("/prod/customer/coupon", submitData, {
                 headers: {
                     "Content-Type": "application/json"
                 }
             })
-            alert(resp.data)
-
+            notification.textContent = resp.data;
         } catch (e) {
-            alert("로그인이 필요합니다.")
+            notification.textContent ="로그인이 필요한 서비스입니다!"
+        }finally {
+            setTimeout(() => {notification.classList.add('show');}, 0);
+            setTimeout(() => {notification.classList.remove('show');}, 2000);
         }
     }
 
