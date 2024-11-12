@@ -223,29 +223,6 @@
 
             }
         });
-        // const barChart = new ApexCharts(document.querySelector("#barChart"), barOptions);
-        // barChart.render();
-        //
-        // const pieOptions = {
-        //     labels: ['가전', '식품', '의류', '기타'],  // 카테고리 레이블
-        //     series: [600, 300, 100, 100],  // 매출 데이터
-        //     chart: {
-        //         type: 'pie',  // 차트 유형: 파이 차트
-        //         height: 350,  // 차트 높이
-        //     },
-        //     dataLabels: {enabled: false},
-        //     colors: [
-        //         '#4F81BD',
-        //         '#C0504D',
-        //         '#9BBB59',
-        //         '#8064A2'
-        //     ],
-        //     legend: {position: 'bottom'}, // 범례 위치
-        //     title: {text: '주요 매출', align: 'center'}
-        // };
-        //
-        // const pieChart = new ApexCharts(document.querySelector("#pieChart"), pieOptions);
-        // pieChart.render();  // 차트 렌더링
 
         // 카테고리 맵
         const firstCategoryMap = {
@@ -269,10 +246,12 @@
         };
 
         // 카테고리명을 한글로 변환하여 표시
-        document.querySelectorAll('.cate q_cate').forEach(function (item) {
-            const value = item.getAttribute('data-value');
-            const parentValue = item.getAttribute('data-parent');
-            item.textContent = secondCategoryMap[parentValue]?.[value] || value;
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.q_cate').forEach(function (item) {
+                const value = item.getAttribute('data-value');
+                const parentValue = item.getAttribute('data-parent');
+                item.textContent = secondCategoryMap[parentValue]?.[value] || value;
+            });
         });
 
 
