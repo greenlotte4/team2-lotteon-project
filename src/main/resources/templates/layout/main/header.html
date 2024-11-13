@@ -97,7 +97,10 @@
                 <!--
                 <div class="myTool">
                     <a th:href="@{/my/index}"><img class="img-header-link" th:src="@{/images/header-my.png}"></a>
-                    <a th:href="@{/prod/cart}"><img class="img-header-link" th:src="@{/images/header-cart.png}"><span class="cartCount" th:if="${cartCount!=null&&cartCount!=0}">[[${cartCount}]]</span></a>
+                    <a th:href="@{/prod/cart}">
+                        <img class="img-header-link" th:src="@{/images/header-cart.png}">
+                        <span class="cartCount" th:if="${cartCount!=null&&cartCount!=0}">[[${cartCount}]]</span>
+                    </a>
                     <a th:href="@{/prod/hearts}"><img class="img-header-link" th:src="@{/images/header-zzim.png}"></a>
                     <button onclick="openChatBot()">챗봇</button>
                 </div>
@@ -114,7 +117,6 @@
                         <a th:href="@{/prod/cart}">
                             <img class="img-header-link prodCart" th:src="@{/images/index_icon(cart).png}">
                             <span class="cartCount" th:if="${cartCount>0}">[[${cartCount}]]</span>
-                            <!-- .cartCount -->
                             <p class="img-header-tit">장바구니</p>
                         </a>
                     </li>
