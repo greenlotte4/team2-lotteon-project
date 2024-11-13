@@ -225,8 +225,15 @@ public class OrderItemService {
         log.info("셀러인지 어드민인지 확인하기 "+role+memId);
 
 
-        List<OrderItem> orderItems = orderItemRepository.findAllBySellerAndOrder_Id(seller,orderId);
-        log.info("오더 조회 잘 되었는지 확인!! "+orderItems.size());
+        List<OrderItem> orderItems = new ArrayList<>();
+
+        if(role.equals("admin")){
+            orderItems = orderItemRepository.findAllByOrder_Id(orderId);
+        }else if(role.equals("seller")){
+            orderItems = orderItemRepository.findAllBySellerAndOrder_Id(seller,orderId);
+            log.info("오더 조회 잘 되었는지 확인!! "+orderItems.size());
+        }
+
 
 
         List<ResponseOrderItemDto> orderItemDtos = new ArrayList<>();

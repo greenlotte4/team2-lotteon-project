@@ -144,12 +144,14 @@ public class ApiAdminProdController {
         log.info("컨트롤러에서 어드민인지 셀러인지 확인 "+auth2.getUser().getMemRole());
         Map<String,Object> map = new HashMap<>();
         ResponseOrderDto responseOrderDto = orderItemService.selectAdminOrder(orderId);
+        log.info("r개가튼 거 "+responseOrderDto.toString());
+
         List<GetAdminOrderNameDto> itemNames = orderItemService.selectAdminOrderItem(orderId);
-        map.put("order", responseOrderDto);
-        map.put("itemNames", itemNames);
         if(responseOrderDto==null ){
             return ResponseEntity.ok().body(false);
         }
+        map.put("order", responseOrderDto);
+        map.put("itemNames", itemNames);
 
         return ResponseEntity.ok().body(map);
     }

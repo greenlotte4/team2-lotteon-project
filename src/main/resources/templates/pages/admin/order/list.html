@@ -49,7 +49,15 @@
                     <td th:text="${order.orderItemCount}">2</td>
                     <td th:text="${order.orderItemTotal}">102,999</td>
                     <td th:text="${order.memUid}">신용카드</td>
-                    <td style="color: #00B050;"  th:text="${order.orderState}">결제완료</td>
+                    <td style="color: #00B050;"  th:switch="${order.orderState}">
+                        <span th:case="0">결제완료</span>
+                        <span th:case="1" style="color: #444">배송중</span>
+                        <span th:case="2" style="color: #444">반품</span>
+                        <span th:case="3" style="color: #444">교환</span>
+                        <span th:case="4" style="color: #444">배송완료</span>
+                        <span th:case="5" style="color: #444">구매확정</span>
+                        <span th:case="6" style="color: #e30614">주문취소</span>
+                    </td>
                     <td th:text="${order.orderRdate}">2024.10.16<br>00:00:00</td>
                     <td th:onclick="openOrderPopup(2,[[${order.orderId}]])" style="cursor:pointer">배송하기</td>
                 </tr>
@@ -86,6 +94,41 @@
                 data = await response.json();
 
                 console.log(data)
+            let paymentMethod;
+            switch (data.order.payment) {
+                case 1:
+                    paymentMethod = "신용카드";
+                    break;
+                case 2:
+                    paymentMethod = "체크카드";
+                    break;
+                case 3:
+                    paymentMethod = "계좌이체";
+                    break;
+                case 4:
+                    paymentMethod = "무통장입금";
+                    break;
+                case 5:
+                    paymentMethod = "휴대폰결제";
+                    break;
+                case 6:
+                    paymentMethod = "카카오페이";
+                    break;
+            }
+            let orderState;
+            switch (data.order.orderState){
+                case 0: orderState = "결제완료"; break;
+                case 1: orderState = "배송중"; break;
+                case 2: orderState = "배송완료"; break;
+                case 3: orderState = "배송완료"; break;
+                case 4: orderState = "주문완료"; break;
+                case 5: orderState = "주문취소"; break;
+
+            }
+            const totalProdPrice = data.order.orderItemDtos.reduce((sum, item) => sum + item.prodPrice, 0);
+            const totalDiscount = data.order.orderItemDtos.reduce((sum, item) => sum + item.discount*item.quantity, 0);
+            const totalDeliPrice = data.order.orderItemDtos.reduce((sum, item) => sum + item.delivery, 0);
+            const totalOrderPrice = data.order.orderItemDtos.reduce((sum, item) => sum + item.totalPrice, 0);
 
                 if(a===1){
                     popup.innerHTML = `
@@ -126,13 +169,13 @@
                         <div class="total">
                             <div class="right-bg">
                                 <div>
-                                    <p>총 상품금액</p><p>스크립트 처리</p>
+                                    <p>총 상품금액</p><p>${totalProdPrice}원</p>
                                 </div>
                                 <div>
-                                    <p>총 할인금액</p><p>-7,100원</p>
+                                    <p>총 할인금액</p><p>${totalDiscount}원</p>
                                 </div>
                                 <div>
-                                    <p>배송비</p><p>3,000원</p>
+                                    <p>배송비</p><p>${totalDeliPrice}원</p>
                                 </div>
                                 <div>
                                     <p>총 결제금액</p><p style="color: red">${data.order.orderTotal}</p>
@@ -151,7 +194,7 @@
                             </tr>
                             <tr>
                                 <th>결제방법</th>
-                                <td>${data.order.payment}</td>
+                                <td>${paymentMethod}</td>
                             </tr>
                             <tr>
                                 <th>주문자 / 연락처</th>
@@ -159,7 +202,7 @@
                             </tr>
                             <tr>
                                 <th>결제상태</th>
-                                <td>${data.order.orderState}</td>
+                                <td>${orderState}</td>
                             </tr>
                         </table>
                         <div class="total-price">
