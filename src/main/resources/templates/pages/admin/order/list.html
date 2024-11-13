@@ -30,16 +30,15 @@
             </form>
             <table class="tb1">
                 <tr>
-                    <th>주문번호</th>
-                    <th>주문자</th>
-                    <th>주문자명</th>
+                    <th style="width: 7%;">주문번호</th>
+                    <th style="width: 7%;">주문자</th>
+                    <th style="width: 7%;">주문자명</th>
                     <th>상품명</th>
-                    <th>주문건수</th>
-                    <th>주문합계</th>
-                    <th>결제수단</th>
-                    <th>주문상태</th>
+                    <th style="width: 7%;">주문건수</th>
+                    <th style="width: 12%;">주문합계</th>
+                    <th style="width: 7%;">주문상태</th>
                     <th>주문일</th>
-                    <th>배송</th>
+                    <th style="width: 7%;">배송</th>
                 </tr>
                 <tr th:each="order:${orders}">
                     <td th:onclick="openOrderPopup(1,[[${order.orderId}]])" style="text-decoration: underline; cursor:pointer;" th:text="${order.orderId}">10121111</td>
@@ -47,8 +46,7 @@
                     <td th:text="${order.custName}">김유신</td>
                     <td th:text="${order.prodName}">OOO</td>
                     <td th:text="${order.orderItemCount}">2</td>
-                    <td th:text="${order.orderItemTotal}">102,999</td>
-                    <td th:text="${order.memUid}">신용카드</td>
+                    <td th:text="${#numbers.formatInteger(order.orderItemTotal, 1,'COMMA')+'원'}">102,999</td>
                     <td style="color: #00B050;"  th:switch="${order.orderState}">
                         <span th:case="0">결제완료</span>
                         <span th:case="1" style="color: #444">배송중</span>

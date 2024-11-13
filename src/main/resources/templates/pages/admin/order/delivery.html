@@ -31,16 +31,16 @@
             </form>
             <table class="tb1">
                 <tr>
-                    <th>송장번호</th>
-                    <th>택배사</th>
-                    <th>주문번호</th>
-                    <th>수령인</th>
+                    <th style="width: 7%;">송장번호</th>
+                    <th style="width: 7%;">택배사</th>
+                    <th style="width: 7%;">주문번호</th>
+                    <th style="width: 5%;">수령인</th>
                     <th>상품명</th>
-                    <th>건수</th>
-                    <th>물품합계</th>
-                    <th>배송비</th>
-                    <th>배송상태</th>
-                    <th>접수일</th>
+                    <th style="width: 5%;">건수</th>
+                    <th style="width: 9%;">물품합계</th>
+                    <th style="width: 7%;">배송비</th>
+                    <th style="width: 8%;">배송상태</th>
+                    <th style="width: 10%;">접수일</th>
                 </tr>
                 <tr th:if="${deli.deliveryId} != null" th:each="deli : ${deliverys}">
                     <td th:data-deli="${deli.deliveryId}" th:text="${deli.deliveryId}" onclick="openDeliveryPopup(event)" style="text-decoration: underline; cursor: pointer">10121111</td>
@@ -49,8 +49,8 @@
                     <td th:text="${deli.receiverName}">김유신</td>
                     <td th:text="${deli.prodName}">OOO</td>
                     <td th:text="${deli.orderItemSize}">3</td>
-                    <td th:text="${deli.orderItemTotalPrice}">68,400</td>
-                    <td th:text="${deli.prodDeli}">무료</td>
+                    <td th:text="${#numbers.formatInteger(deli.orderItemTotalPrice, 1,'COMMA')+'원'}">68,400</td>
+                    <td th:text="${deli.prodDeli>0?#numbers.formatInteger(deli.prodDeli, 1,'COMMA')+'원':'무료'}">무료</td>
                     <td th:text="${deli.orderItemState2}" style="color: #00B050;">배송준비</td>
                     <td th:text="${deli.orderRdate}">2024.10.16<br>00:00:00</td>
                 </tr>
