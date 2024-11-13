@@ -157,26 +157,26 @@
                                 <td>${item.prodId}</td>
                                 <td>${item.prodName}</td>
                                 <td>${item.sellerName}</td>
-                                <td>${item.prodPrice}</td>
-                                <td>${item.discount}</td>
+                                <td>${item.prodPrice.toLocaleString()}원</td>
+                                <td>${item.discount.toLocaleString()}원</td>
                                 <td>${item.quantity}</td>
-                                <td>${item.delivery}</td>
-                                <td>${item.totalPrice}</td>
+                                <td>${item.delivery>0?item.delivery.toLocaleString()+'원':'무료'}</td>
+                                <td>${item.totalPrice.toLocaleString()}원</td>
                             </tr>`).join('')}
                         </table>
                         <div class="total">
                             <div class="right-bg">
                                 <div>
-                                    <p>총 상품금액</p><p>${totalProdPrice}원</p>
+                                    <p>총 상품금액</p><p>${totalProdPrice.toLocaleString()}원</p>
                                 </div>
                                 <div>
-                                    <p>총 할인금액</p><p>${totalDiscount}원</p>
+                                    <p>총 할인금액</p><p>${totalDiscount.toLocaleString()}원</p>
                                 </div>
                                 <div>
-                                    <p>배송비</p><p>${totalDeliPrice}원</p>
+                                    <p>배송비</p><p>${totalDeliPrice>0?totalDeliPrice.toLocaleString()+'원':'무료'}</p>
                                 </div>
                                 <div>
-                                    <p>총 결제금액</p><p style="color: red">${data.order.orderTotal}</p>
+                                    <p>총 결제금액</p><p style="color: red">${data.order.orderTotal.toLocaleString()}원</p>
                                 </div>
                             </div>
                         </div>
@@ -204,7 +204,7 @@
                             </tr>
                         </table>
                         <div class="total-price">
-                            <p>총 결제금액</p><p style="color: red">${data.order.orderTotal}</p>
+                            <p>총 결제금액</p><p style="color: red">${data.order.orderTotal.toLocaleString()}원</p>
                         </div>
                         <div class="header2">
                             <span class="header-title">배송정보</span>
