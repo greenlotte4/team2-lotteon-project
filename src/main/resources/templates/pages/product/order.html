@@ -562,26 +562,7 @@
           </tr>
         </table>
         <!-- .tb1-->
-        <div id="related-products">
-          <div th:each="prod : ${related}" class="relaties">
-            <a th:href="@{/prod/product(prodId=${prod.id})}"><img th:src="@{'/file/'+${prod.getProdBasicImg()}}"></a>
-            <div class="related-descriptions">
-              <dt style="font-weight: 400">
-                [[${prod.prodName}]]
-              </dt>
-              <dd style="display: flex; margin-top: 5px">
-                <p class="related-total">[[${#numbers.formatInteger(prod.getProdPrice() - prod.getProdPrice() * (prod.getProdDiscount()/100), 1,'COMMA')}]]원</p>
-                <p class="related-price" th:if="${prod.prodDiscount > 0.0}">[[${#numbers.formatInteger(prod.getProdPrice(), 1,'COMMA')}]]원&nbsp;</p>
-              </dd>
-              <div class="d-flex align-items-center">
-                            <span class="ratingBg" style="zoom: 0.8">
-                                <span class="rating" th:style="'width:'+ ${prod.prodRating * 2}+'%;'"></span>
-                            </span>
-                <span th:text="${prod.prodReviewCnt eq null?'(0)':'('+prod.prodReviewCnt+')'}" style="margin-left: 5px;color: #7b7b7b"></span>
-              </div>
-            </div>
-          </div>
-        </div>
+
         <div>
           <div class="order_info">
             <h2 class="sub_tit2">배송정보</h2>
@@ -714,7 +695,28 @@
           </div>
           <!-- .total-->
         </div>
+
       </form>
+      <div id="related-products">
+        <div th:each="prod : ${related}" class="relaties">
+          <a th:href="@{/prod/product(prodId=${prod.id})}"><img th:src="@{'/file/'+${prod.getProdBasicImg()}}"></a>
+          <div class="related-descriptions">
+            <dt style="font-weight: 400">
+              [[${prod.prodName}]]
+            </dt>
+            <dd style="display: flex; margin-top: 5px">
+              <p class="related-total">[[${#numbers.formatInteger(prod.getProdPrice() - prod.getProdPrice() * (prod.getProdDiscount()/100), 1,'COMMA')}]]원</p>
+              <p class="related-price" th:if="${prod.prodDiscount > 0.0}">[[${#numbers.formatInteger(prod.getProdPrice(), 1,'COMMA')}]]원&nbsp;</p>
+            </dd>
+            <div class="d-flex align-items-center">
+                            <span class="ratingBg" style="zoom: 0.8">
+                                <span class="rating" th:style="'width:'+ ${prod.prodRating * 2}+'%;'"></span>
+                            </span>
+              <span th:text="${prod.prodReviewCnt eq null?'(0)':'('+prod.prodReviewCnt+')'}" style="margin-left: 5px;color: #7b7b7b"></span>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
     <!-- #main-->
   </div>
