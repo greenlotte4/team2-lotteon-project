@@ -328,7 +328,7 @@
             body: JSON.stringify(jsonData)
         })
             .then(resp => resp.ok ? resp.json() : Promise.reject("서버 응답 오류"))
-            .then(data => alert(data.success ? '성공적으로 수정되었습니다.' : '수정에 실패했습니다.'), location.reload)
+            .then(data => alert(data.success ? '수정에 실패했습니다.' : '성공적으로 수정되었습니다.'), location.reload)
             .catch(err => alert('수정 중 오류가 발생했습니다.'))
             .finally(() => button.disabled = false);
     }
