@@ -199,25 +199,19 @@
             <span class="h3 title-chat">
                 안녕하세요! 무엇을 도와드릴까요?
             </span>
-            <span onclick="closeChat()" class="x-btn-chat h3">
-                <img src="@{/images/chat-bot-close.png}" class="chat-bot-close" alt="챗봇 창 닫기 버튼">
-<!--                x-->
-            </span><br>
+            <span onclick="closeChat()" class="x-btn-chat h3"></span><br>
 
             <div class="chat-bot-text-box">
                 <div id="chatResponse">
                     <div class="resp-chat">
                         안녕하세요! 승우 입니다. 😉 <br />
-                        <!-- 안녕하세요 승우에요. 궁금한점과 관련된 키워드를 입력해주세요. -->
                     </div>
                     <div class="resp-chat">궁금한 점과 관련된 키워드를 <br /> 입력해 주세요.</div>
                 </div>
             </div>
             <div class="chat-bot-message-box">
                 <input type="text" id="userMessage" placeholder="메시지를 입력하세요">
-                <button onclick="sendMessage()" class="chat-bot-message-send">
-                    <img src="" alt="챗봇 문의하기 전송">
-                </button>
+                <button onclick="sendMessage()" class="chat-bot-message-send"></button>
             </div>
         `
         document.querySelector('.chat-bot').style.display = 'block'
