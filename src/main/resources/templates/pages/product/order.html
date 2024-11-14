@@ -721,6 +721,7 @@
     <!-- #main-->
   </div>
   <div class="popup"></div>
+  <div class="bg"></div>
 </main>
 <footer th:replace="layout/main/footer.html"></footer>
 
@@ -792,14 +793,18 @@
         }
       })
       const address = resp.data
-      document.querySelector('.popup').innerHTML = address.map((addr, i) => `
-            <div class="address-wrapper">
+      document.querySelector('.popup').innerHTML = `<h1><span>나의 배송지</span></h1><section>`+address.map((addr, i) => `
+
+            <div class="address-wrapper" style="margin-bottom: 5px">
                 <div class="${addr.state === 1 ? 'address-box on' : 'address-box'}">
-                    <div class="address-nick" style="font-size: 17px">
-                        ${addr.addrNick === '기본배송지' ? '내 정보' : addr.addrNick}
+                    <div style="display: flex; justify-content: space-between">
+                      <div class="address-nick" style="font-size: 17px">
+                          ${addr.addrNick === '기본배송지' ? '내 정보' : addr.addrNick}
+                      </div>
+                        <button onclick="changeAddress(event)" data-id="${addr.id}">선택하기</button>
                     </div>
                     <div style="margin-bottom: 30px; height: 15px;">
-                        <span>${addr.name}</span><span>${addr.hp1 + '-' + addr.hp2 + '-' + addr.hp3}</span>
+                        <span>${addr.name}</span><span style="margin-left: 10px">${''+addr.hp1 + addr.hp2 + addr.hp3}</span>
                     </div>
                     <div style="margin-bottom: 5px; height: 25px;">
                         <span>(${addr.addr1})</span><br>
@@ -810,10 +815,12 @@
                         요청사항 :<span>${addr.request}</span>
                     </div>
                 </div>
-                <button onclick="changeAddress(event)" data-id="${addr.id}">선택하기</button>
             </div>
-        `).join('')+`<button onclick="addrClose()">닫기</button>`;
+
+        `).join('')+`
+</section><button onclick="addrClose()">닫기</button>`;
       document.querySelector('.popup').style.display = 'flex'
+      document.querySelector('.bg').style.display = 'flex'
     } catch (e) {
 
     }
@@ -867,6 +874,7 @@
               </tr>
             `
       document.querySelector('.popup').style.display = 'none';
+      document.querySelector('.bg').style.display = 'none'
     } catch (e) {
 
     }
@@ -874,6 +882,7 @@
 
   function addrClose(){
     document.querySelector('.popup').style.display = 'none'
+    document.querySelector('.bg').style.display = 'none'
   }
 
 </script>

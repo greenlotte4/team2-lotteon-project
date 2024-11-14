@@ -57,11 +57,11 @@ input:focus{outline: none;}
 }
 
 .sub_tit {
-   font-size: 16px;
-   font-weight: 700;
-   margin-left: 3px;
-   margin-bottom: 8px;
-   margin-top: 5px;
+    font-size: 16px;
+    font-weight: 700;
+    margin-left: 3px;
+    margin-bottom: 8px;
+    margin-top: 5px;
 }
 /* 로케이션 */
 .location > span::after{content: ' \003E'; }
@@ -79,12 +79,12 @@ input:focus{outline: none;}
 .tb1 td:last-child{color: #c00000;}
 
 /* 선택 삭제 버튼 */
-.btnDel {width: 96px; 
-        height: 36px; 
-        background-color: #f2f2f2; 
-        border: 1px solid #d9d9d9;
-        margin-left: 15px;
-        margin-top: 10px;    
+.btnDel {width: 96px;
+    height: 36px;
+    background-color: #f2f2f2;
+    border: 1px solid #d9d9d9;
+    margin-left: 15px;
+    margin-top: 10px;
 }
 
 /* 주문 정보 */
@@ -93,7 +93,7 @@ input:focus{outline: none;}
 
 /* 배송 정보 */
 .sub_tit2 {width: 418px; font-size: 16px; font-weight: 700;
-           border-bottom: 1px solid #d9d9d9;}
+    border-bottom: 1px solid #d9d9d9;}
 input{text-indent: 5px; border: 1px solid #d9d9d9;
     height: 30px;}
 .tb2 {width: 430px; height: auto; margin-left: 20px;}
@@ -126,21 +126,21 @@ input{text-indent: 5px; border: 1px solid #d9d9d9;
 
 /* 전체합계 */
 .total {width: 291px; height: auto;
-        border: 1px solid #d9d9d9; float: right;
+    border: 1px solid #d9d9d9; float: right;
     border-radius: 30px;
-         margin-top: 50px; margin-left: 40px;
+    margin-top: 50px; margin-left: 40px;
     padding: 30px 30px;
 }
 .tb5 {width: 277px; height: auto; margin-bottom: 30px;}
 .tb5 tr:first-child th{text-align: left; font-size: 16px; height: 40px;
-        font-weight: 700;}
+    font-weight: 700;}
 .tb5 th{font-size: 14px;}
 .tb5 td {font-size: 14px; height: 32px;}
 .tb5 tr:nth-of-type(7) > td:last-child {color: #c00000;}
 
-.btn_order {width: 198px; height: 41px; 
-            border: none; color: #fff;
-            background-color: #cc3434;margin-left: 12px;}
+.btn_order {width: 198px; height: 41px;
+    border: none; color: #fff;
+    background-color: #cc3434;margin-left: 12px;}
 
 .btn_order > a {font-size: 20px;}
 
@@ -187,6 +187,27 @@ input{text-indent: 5px; border: 1px solid #d9d9d9;
 .related-price{color: #a8a8a8; text-decoration: line-through}
 .related-total{font-weight: bold; margin-right: 5px}
 
+.address-box {
+    border: 1px solid black;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+
+.popup, .bg {
+    display: none;
+}
+
+.bg{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+}
+
 .popup {
     position: fixed;
     top: 50%;
@@ -194,16 +215,55 @@ input{text-indent: 5px; border: 1px solid #d9d9d9;
     transform: translate(-50%, -50%);
     width: 500px;
     background-color: white;
-    z-index: 1000;
-    overflow: scroll;
+    z-index: 1001;
+    overflow: auto;
     height: 550px;
     flex-direction: column;
     gap: 20px;
-    padding: 40px;
     display: none;
+    border-radius: 20px;
+}
+.popup > h1{
+    width: 100%;
+    position: fixed;
+    height: 70px;
+    padding: 20px;
+    background: #FFF;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.popup > h1 > * {font-size: 15px;}
+.popup > h1 > button {border: none; background: transparent}
+.popup > section{
+    display: flex;
+    margin-top: 70px;
+    overflow-y: auto;
+    padding: 20px 40px;
+    height: 410px;
+    box-sizing: border-box;
+    flex-direction: column;
+}
+.popup > section button{
+    border:none;
+    padding:10px 20px;
+    border-radius:8px;
+
+}
+.popup > section+button{
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border: none;
+    height: 70px;
 }
 
-.address-box {
-    border: 1px solid black;
-    padding: 20px;
+.popup > section::-webkit-scrollbar{width: 9px;}
+.popup > section::-webkit-scrollbar-thumb{
+    background-color: #5f5f5f75;
+    background-clip: padding-box;
+    border: 1px solid transparent;
+    border-radius: 50px;
 }
