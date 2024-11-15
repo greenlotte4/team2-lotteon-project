@@ -172,3 +172,4 @@ Thanks For
 <img align="center" width="100%" alt="header:Lotteon" src="https://capsule-render.vercel.app/api?type=waving&height=150&color=0:e99ab5,100:f9cad4&descAlign=41&descAlignY=34&fontColor=E60029&reversal=false&animation=fadeIn&fontAlignY=64&section=footer">
 # lotteonProject
 # team2-lotteon-project
+# team2-lotteon-project
